@@ -2,10 +2,15 @@
   "name": "live-study",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "homepage": "https://github.com/janke-learning/live-study",
+  "preferGlobal": true,
+  "bin": {
+    "live-study": "./bin/index.js"
+  }
 }
