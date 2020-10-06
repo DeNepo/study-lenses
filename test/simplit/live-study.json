@@ -1,0 +1,23 @@
+{
+  "dependencies": [
+    {
+      "path": "./lib/module-a.js",
+      "module": true
+    },
+    {
+      "path": "./lib/module-b.js",
+      "module": true
+    }
+  ],
+  "languages": {
+    "javascript": {
+      "loopGuard": [
+        false,
+        {
+          "active": false,
+          "max": 10
+        }
+      ]
+    }
+  }
+}

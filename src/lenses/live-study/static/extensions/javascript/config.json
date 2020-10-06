@@ -1,0 +1,27 @@
+{
+  "eval": false,
+  "loopGuard": [
+    false,
+    {
+      "active": true,
+      "max": 0
+    }
+  ],
+  "clearScheduled": false,
+  "openIn": [
+    "jsTutor",
+    "jsTutorLive",
+    "loupe",
+    "promisees",
+    "esprima",
+    "babel"
+  ],
+  "aran": [
+    true,
+    {
+      "more": "detailed options"
+    }
+  ],
+  "flowchart": false,
+  "tests": false
+}

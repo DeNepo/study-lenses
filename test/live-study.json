@@ -1,0 +1,12 @@
+{
+  "dependencies": [
+    {
+      "path": "./lib/not-module.js",
+      "module": false
+    },
+    {
+      "path": "./lib/module-b.js",
+      "module": true
+    }
+  ]
+}

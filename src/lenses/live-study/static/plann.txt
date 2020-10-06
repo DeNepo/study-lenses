@@ -1,0 +1,12 @@
+LiveStudy
+  the current static-study
+  does language detection
+
+* extends LiveStudy
+  - for anything beyond parsons/diff/edit
+  JavaScript
+  P5
+  Testercise
+  Markdown
+
+

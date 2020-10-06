@@ -2,7 +2,7 @@
   "name": "live-study",
   "version": "0.0.2",
   "description": "",
-  "main": "./lib/index.js",
+  "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,6 +11,15 @@
   "homepage": "https://github.com/janke-learning/live-study",
   "preferGlobal": true,
   "bin": {
-    "live-study": "./bin/index.js"
+    "study": "./bin/index.js"
+  },
+  "dependencies": {
+    "local-modules": "file:./src/local-modules",
+    "docco-next": "^0.9.3",
+    "marked": "^1.1.1",
+    "monaco": "^1.201704190613.0",
+    "monaco-editor": "^0.21.2",
+    "open": "^7.2.1",
+    "prettier": "^2.1.1"
   }
 }
