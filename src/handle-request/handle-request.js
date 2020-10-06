@@ -1,6 +1,8 @@
 const path = require('path');
 const http = require('http');
 
+const lenses = require('../lenses/index.js');
+
 const staticise = require('./staticise.js');
 
 const log = (msg) => {
@@ -34,29 +36,22 @@ const handleRequest = async (req, res) => {
     : [];
   // console.log(lenseParams)
 
-  const loadedLenses = lenseParams
+  const requestedLenses = lenseParams
     .map(lenseParam => {
-      try {
-        const loaded = require(path.join(__dirname, '../lenses', lenseParam[0], 'index.js'));
-        // close with serverConfig
-        //  static prefix - lense-resource/${lenseParamName}
-        return {
-          loaded,
-          name: lenseParam[0],
-          config: lenseParam[1] || ''
-        }
-      } catch (err) {
-        console.log(err)
-        return null;
+      // close with serverConfig
+      //  static prefix - lense-resource/${lenseParamName}
+      return {
+        logic: lenses[lenseParam[0]],
+        name: lenseParam[0],
+        config: lenseParam[1] || ''
       }
-    })
-    .filter(item => item !== null);
+    });
   // console.log(loadedLenses);
 
 
-  let lenses = []; // used for logging the req/res cycle
+  let usedLenses = []; // used for logging the req/res cycle
   let didLense = false; // used to determine if the file needs to be sent raw
-  for (const lense of loadedLenses) {
+  for (const lense of requestedLenses) {
     try {
       const config = {
         param: lense.config,
@@ -69,7 +64,7 @@ const handleRequest = async (req, res) => {
       const {
         newReq = req,
         newRes = res,
-      } = await lense.loaded(req, res, config);
+      } = await lense.logic(req, res, config);
 
       if (newReq instanceof http.ClientRequest) {
         req = newReq;
@@ -78,7 +73,7 @@ const handleRequest = async (req, res) => {
         res = newRes;
       }
       didLense = true;
-      lenses.push(lense.name);
+      usedLenses.push(lense.name);
     } catch (err) {
       didLense = false;
       console.log(err);
@@ -105,7 +100,7 @@ const handleRequest = async (req, res) => {
 
   res.end();
 
-  log(cycle + '. res: ' + lenses.join(', ') + ': ' + relPath);
+  log(cycle + '. res: ' + usedLenses.join(', ') + ': ' + relPath);
 };
 
 module.exports = handleRequest;
