@@ -38,6 +38,9 @@ const handleRequest = async (req, res) => {
 
   const requestedLenses = lenseParams
     .map(lenseParam => {
+      if (typeof lenses[lenseParam[0]] !== 'function') {
+        return null;
+      }
       // close with serverConfig
       //  static prefix - lense-resource/${lenseParamName}
       return {
@@ -45,7 +48,8 @@ const handleRequest = async (req, res) => {
         name: lenseParam[0],
         config: lenseParam[1] || ''
       }
-    });
+    })
+    .filter(item => item !== null);
   // console.log(loadedLenses);
 
 
@@ -61,7 +65,7 @@ const handleRequest = async (req, res) => {
         // and find a better name for this property
         staticPrefix: 'lense-resource/' + lense.name
       };
-      const {
+      const { // in case a lense creates new instances
         newReq = req,
         newRes = res,
       } = await lense.logic(req, res, config);
@@ -83,7 +87,7 @@ const handleRequest = async (req, res) => {
 
   if (!didLense) {
     try {
-      const renderedPath = await renderPath(absPath);
+      const renderedPath = await renderPath({ absPath, relPath });
       if (renderedPath.error) {
         throw renderedPath.error;
       }

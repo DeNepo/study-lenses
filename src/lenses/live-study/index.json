@@ -5,8 +5,8 @@
     "reset": false,
     "save": false
   },
-  "language": "txt",
-  "languages": {
+  "type": "",
+  "extensions": {
     "css": {},
     "html": {
       "newTab": true,

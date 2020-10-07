@@ -4,7 +4,7 @@ const http = require('http');
 
 const handleRequest = require('./handle-request/handle-request.js');
 
-const PORT = process.env.PORT || 1337;
+const PORT = process.env.PORT || 3456;
 
 const log = (msg) => {
   const cleanedMsg = msg.split(process.cwd()).join(' ... ');
