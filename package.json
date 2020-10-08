@@ -8,7 +8,7 @@
   },
   "author": "",
   "license": "MIT",
-  "homepage": "https://github.com/janke-learning/live-study",
+  "homepage": "https://github.com/janke-learning/study-lenses",
   "preferGlobal": true,
   "bin": {
     "study": "./bin/index.js"
