@@ -60,7 +60,6 @@ const register = (nextPath, parent = { path: '' }, gitignore = []) => {
     children: []
   };
 
-
   const paths = fs.readdirSync(thisPathAbs);
 
   if (paths.includes('.gitignore')) {

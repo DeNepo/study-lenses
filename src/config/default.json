@@ -1,0 +1,6 @@
+{
+  "PORT": 4600,
+  "LOGGER": {
+    "STDOUT": true
+  }
+}

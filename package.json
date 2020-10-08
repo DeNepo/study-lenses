@@ -14,12 +14,18 @@
     "study": "./bin/index.js"
   },
   "dependencies": {
-    "local-modules": "file:./src/local-modules",
+    "config": "^3.3.2",
     "docco-next": "^0.9.3",
+    "express": "^4.17.1",
+    "local-modules": "file:./src/local-modules",
+    "lodash": "^4.17.20",
     "marked": "^1.1.1",
     "monaco": "^1.201704190613.0",
     "monaco-editor": "^0.21.2",
+    "morgan": "^1.10.0",
     "open": "^7.2.1",
-    "prettier": "^2.1.1"
+    "prettier": "^2.1.1",
+    "serve-index": "^1.9.1",
+    "winston": "^3.3.3"
   }
 }

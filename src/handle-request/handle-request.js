@@ -2,22 +2,13 @@ const path = require('path');
 const http = require('http');
 
 const lenses = require('../lenses/index.js');
+const Logger = require('../lib/logger')
 
 const staticise = require('./staticise.js');
 
-const log = (msg) => {
-  const cleanedMsg = msg.split(process.cwd()).join(' ... ').split(__dirname).join(' ... ');
-  console.log(cleanedMsg);
-};
-
 const renderPath = require('local-modules').renderPath;
 
-let cycles = 0;
-
 const handleRequest = async (req, res) => {
-  const cycle = ++cycles;
-
-  log(`${cycle}. req: ${req.method} ${req.url}`);
 
   const relPath = staticise(req.url.split('?')[0]);
   const absPath = path.join(process.cwd(), relPath);
@@ -76,7 +67,7 @@ const handleRequest = async (req, res) => {
       usedLenses.push(lense.name);
     } catch (err) {
       didLense = false;
-      console.log(err);
+      Logger.error(err);
     }
   }
   // console.log(didLense)
@@ -90,7 +81,7 @@ const handleRequest = async (req, res) => {
       res.writeHead(200, { 'Content-Type': renderedPath.mime.type });
       res.write(renderedPath.content, 'utf-8');
     } catch (err) {
-      console.log(err)
+      Logger.error(err)
       const errMsg = `Server error: ${err.code} ..`;
       res.writeHead(500);
       res.end(errMsg);
@@ -99,8 +90,6 @@ const handleRequest = async (req, res) => {
   };
 
   res.end();
-
-  log(cycle + '. res: ' + usedLenses.join(', ') + ': ' + relPath);
 };
 
 module.exports = handleRequest;

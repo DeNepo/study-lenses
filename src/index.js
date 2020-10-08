@@ -1,38 +1,44 @@
 'use strict';
 
-const http = require('http');
+const config = require('config');
+const express = require('express');
+const morgan = require('morgan');
+const serveIndex = require('serve-index');
 
+const Logger = require('./lib/logger')
 const handleRequest = require('./handle-request/handle-request.js');
 
-const PORT = process.env.PORT || 1337;
-
-const log = (msg) => {
-  const cleanedMsg = msg.split(process.cwd()).join(' ... ');
-  console.log(cleanedMsg);
-};
-
-const listeningCB = (err) => {
-  if (err) {
-    log(err.stack);
-  } else {
-    log('Server running at http://localhost:' + PORT + '/');
-  };
-}
-
-http
-  .createServer(handleRequest)
-  .listen(PORT, listeningCB);
+const PORT = config.get('PORT');
 
 process.on('exit', function onExit(code) {
-  log('process.exit with code ' + code);
+  Logger.info(`process.exit with code ${code}`);
 });
 
 process.on('SIGINT', function onSIGINT() {
-  log('\nstopping server ...');
+  Logger.info('SIGINT received, stopping server');
   process.exit(0);
 });
 
 process.on('uncaughtException', function onUncaughtException(e) {
-  log('- uncaughtException -\n' + e.stack);
+  Logger.error('uncaughtException', e);
   process.exit(99);
 });
+
+process.on('uncaughtException', function onUncaughtException(e) {
+  Logger.error('uncaughtException', e);
+  process.exit(99);
+});
+
+const app = express()
+
+app.use(morgan('dev'))
+app.use(handleRequest)
+
+app.listen(PORT, err => {
+  if (err) {
+    Logger.error(`Failed to start server on port: ${PORT}`, err)
+    process.exit(1)
+  }
+
+  Logger.info(`Server started successfully on port: ${PORT}`)
+})
