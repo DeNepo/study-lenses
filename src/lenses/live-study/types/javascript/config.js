@@ -1,4 +1,7 @@
-{
+
+const staticConfig = require('../static/config.js');
+
+const config = {
   "eval": false,
   "loopGuard": [
     false,
@@ -16,12 +19,9 @@
     "esprima",
     "babel"
   ],
-  "aran": [
-    true,
-    {
-      "more": "detailed options"
-    }
-  ],
-  "flowchart": false,
-  "tests": false
-}
+  "tests": false,
+  "dependencies": [],
+  // "aran": false,
+};
+
+module.exports = Object.assign({}, config, staticConfig);

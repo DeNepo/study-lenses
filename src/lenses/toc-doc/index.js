@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const renderPath = require('../../local-modules/render-path.js');
+const renderPath = require('local-modules/render-path');
 const renderTocDoc = require('./render-toc-doc.js');
 
 const tocDocLense = async (req, res, config) => {
@@ -14,7 +14,7 @@ const tocDocLense = async (req, res, config) => {
     absPath = path.dirname(absPath);
   };
 
-  const renderedPath = await renderPath(absPath);
+  const renderedPath = await renderPath(config);
 
   const virDir = renderedPath.content;
   const content = renderTocDoc(JSON.parse(virDir));

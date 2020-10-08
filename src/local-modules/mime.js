@@ -2,7 +2,7 @@
 const mime = {
   'default': {
     type: 'text/plain;charset=UTF-8',
-    lense: ''
+    lense: 'live-study'
   },
   'md': {
     type: 'text/markdown',

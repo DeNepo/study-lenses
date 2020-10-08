@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const renderPath = require('../../local-modules/render-path.js')
+const renderPath = require('local-modules/render-path')
 
 const simplit = require('./simplit.js');
 

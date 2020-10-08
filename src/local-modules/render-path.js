@@ -8,7 +8,8 @@ const renderVirtualDirectory = require('./render-virtual-directory.js');
 const mimes = require('./mime.js');
 const readFilePromise = util.promisify(fs.readFile);
 
-const renderPath = async (absPath) => {
+const renderPath = async (config) => {
+  const { relPath, absPath } = config;
 
   const pathExists = fs.existsSync(absPath);
   const requestedADirectory = pathExists && fs.lstatSync(absPath).isDirectory();
@@ -29,6 +30,7 @@ const renderPath = async (absPath) => {
       mime = mimes['html'];
     }
   } catch (err) {
+    console.log(err)
     error = err;
   }
 
