@@ -1,5 +1,5 @@
 const jsonFormatterLense = async (req, res, config) => {
-  const { absPath, relPath, param, staticPrefix } = config;
+  const { absPath, relPath, param, static } = config;
 
   const content = `<!DOCTYPE html>
 <html>
@@ -7,7 +7,7 @@ const jsonFormatterLense = async (req, res, config) => {
     <meta charset="utf-8">
     <title>${relPath}</title>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-    <script src='${staticPrefix}/json-formatter.umd.js'></script>
+    <script src='${static}/json-formatter.umd.js'></script>
   </head>
   <body>
     <script>

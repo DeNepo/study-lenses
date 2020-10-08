@@ -1,7 +1,7 @@
 const renderPath = require('local-modules').renderPath;
 
 const mermaidLense = async (req, res, config) => {
-  const { absPath, relPath, param, staticPrefix } = config;
+  const { absPath, relPath, param, static } = config;
 
   const renderedPath = await renderPath(absPath);
 
@@ -14,7 +14,7 @@ const mermaidLense = async (req, res, config) => {
   </head>
   <body>
     <div class="mermaid">${renderedPath.content}</div>
-    <script src='${staticPrefix}/mermaid.js'></script>
+    <script src='${static}/mermaid.js'></script>
   </body>
 </html>`;
   res.writeHead(200, { 'Content-Type': 'text/html' });

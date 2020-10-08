@@ -24,4 +24,4 @@ const config = {
   // "aran": false,
 };
 
-module.exports = Object.assign({}, config, staticConfig);
+module.exports = Object.assign({}, staticConfig, config);

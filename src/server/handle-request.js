@@ -2,52 +2,29 @@ const path = require('path');
 const http = require('http');
 
 const lenses = require('../lenses/index.js');
-
-const staticise = require('./staticise.js');
-
-const log = (msg) => {
-  const cleanedMsg = msg.split(process.cwd()).join(' ... ').split(__dirname).join(' ... ');
-  console.log(cleanedMsg);
-};
+// const Logger = require('../lib/logger')
 
 const renderPath = require('local-modules').renderPath;
 
-let cycles = 0;
-
 const handleRequest = async (req, res) => {
-  const cycle = ++cycles;
 
-  log(`${cycle}. req: ${req.method} ${req.url}`);
 
-  const relPath = staticise(req.url.split('?')[0]);
+  const relPath = req.path;
   const absPath = path.join(process.cwd(), relPath);
-  const params = req.url.split('?')[1];
   // console.log(params)
 
-  const lenseParams = params
-    ? params.split('&')
-      .map(lenseParam => {
-        const splitParam = lenseParam.split('=');
-        if (splitParam.length === 2) {
-          splitParam[1] === decodeURIComponent(splitParam[1]);
-        };
-        return splitParam;
-      })
-    : [];
-  // console.log(lenseParams)
+  const lenseParams = Object.entries(req.query);
+
 
   const requestedLenses = lenseParams
     .map(lenseParam => {
-      if (typeof lenses[lenseParam[0]] !== 'function') {
+      const lense = lenses.find(next => next.name === lenseParam[0])
+      if (typeof lense.module !== 'function') {
         return null;
       }
+      lense.config = lenseParam[1];
       // close with serverConfig
-      //  static prefix - lense-resource/${lenseParamName}
-      return {
-        logic: lenses[lenseParam[0]],
-        name: lenseParam[0],
-        config: lenseParam[1] || ''
-      }
+      return lense;
     })
     .filter(item => item !== null);
   // console.log(loadedLenses);
@@ -61,14 +38,14 @@ const handleRequest = async (req, res) => {
         param: lense.config,
         absPath,
         relPath,
-        // lense-resource should be server-config option
         // and find a better name for this property
-        staticPrefix: 'lense-resource/' + lense.name
+        ownStatic: lense.ownStatic,
+        sharedStatic: lense.sharedStatic
       };
       const { // in case a lense creates new instances
         newReq = req,
         newRes = res,
-      } = await lense.logic(req, res, config);
+      } = await lense.module(req, res, config);
 
       if (newReq instanceof http.ClientRequest) {
         req = newReq;
@@ -80,7 +57,8 @@ const handleRequest = async (req, res) => {
       usedLenses.push(lense.name);
     } catch (err) {
       didLense = false;
-      console.log(err);
+      // Logger.error(err);
+      console.error(err);
     }
   }
   // console.log(didLense)
@@ -94,7 +72,8 @@ const handleRequest = async (req, res) => {
       res.writeHead(200, { 'Content-Type': renderedPath.mime.type });
       res.write(renderedPath.content, 'utf-8');
     } catch (err) {
-      console.log(err)
+      // Logger.error(err)
+      console.error(err)
       const errMsg = `Server error: ${err.code} ..`;
       res.writeHead(500);
       res.end(errMsg);
@@ -103,8 +82,6 @@ const handleRequest = async (req, res) => {
   };
 
   res.end();
-
-  log(cycle + '. res: ' + usedLenses.join(', ') + ': ' + relPath);
 };
 
 module.exports = handleRequest;

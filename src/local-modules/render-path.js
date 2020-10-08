@@ -26,7 +26,7 @@ const renderPath = async (config) => {
       content = await readFilePromise(absPath, 'utf-8');
       mime = mimes[path.extname(absPath)];
     } else {
-      content = `<!DOCTYPE html><html><head><title>404</title></head><body><h1>404: ${relPath}</h1></body></html>`;
+      content = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>404</title></head><body><h1>404: ${relPath}</h1></body></html>`;
       mime = mimes['html'];
     }
   } catch (err) {

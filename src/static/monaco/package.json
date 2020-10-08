@@ -1,19 +1,19 @@
 {
-  "_from": "monaco-editor",
+  "_from": "monaco-editor@^0.21.2",
   "_id": "monaco-editor@0.21.2",
   "_inBundle": false,
   "_integrity": "sha512-jS51RLuzMaoJpYbu7F6TPuWpnWTLD4kjRW0+AZzcryvbxrTwhNy1KC9yboyKpgMTahpUbDUsuQULoo0GV1EPqg==",
   "_location": "/monaco-editor",
   "_phantomChildren": {},
   "_requested": {
-    "type": "tag",
+    "type": "range",
     "registry": true,
-    "raw": "monaco-editor",
+    "raw": "monaco-editor@^0.21.2",
     "name": "monaco-editor",
     "escapedName": "monaco-editor",
-    "rawSpec": "",
+    "rawSpec": "^0.21.2",
     "saveSpec": null,
-    "fetchSpec": "latest"
+    "fetchSpec": "^0.21.2"
   },
   "_requiredBy": [
     "#USER",
@@ -21,8 +21,8 @@
   ],
   "_resolved": "https://registry.npmjs.org/monaco-editor/-/monaco-editor-0.21.2.tgz",
   "_shasum": "37054e63e480d51a2dd17d609dcfb192304d5605",
-  "_spec": "monaco-editor",
-  "_where": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/live-study-package/00-repo--live-study",
+  "_spec": "monaco-editor@^0.21.2",
+  "_where": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/live-study-package/00-repo--live-study/test",
   "author": {
     "name": "Microsoft Corporation"
   },
