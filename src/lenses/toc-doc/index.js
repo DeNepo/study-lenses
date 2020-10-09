@@ -1,30 +1,22 @@
 const fs = require('fs');
 const path = require('path');
 
-const renderPath = require('local-modules/render-path');
 const renderTocDoc = require('./render-toc-doc.js');
+const renderPath = require('local-modules').renderPath;
 
-const tocDocLense = async (req, res, config) => {
-  let absPath = config.absPath;
+const tocDocLense = async (resource, config) => {
+  const { absPath } = config;
 
-  const pathExists = fs.existsSync(absPath);
-  const requestedADirectory = pathExists && fs.lstatSync(absPath).isDirectory();
+  const requestedADirectory = fs.existsSync(absPath) && fs.lstatSync(absPath).isDirectory();
 
-  if (!requestedADirectory) {
-    absPath = path.dirname(absPath);
-  };
+  const toRender = !requestedADirectory
+    ? (await renderPath(path.dirname(absPath))).content
+    : resource.content;
 
-  const renderedPath = await renderPath(config);
+  resource.content = renderTocDoc(JSON.parse(toRender));
+  resource.mime = 'text/html';
 
-  const virDir = renderedPath.content;
-  const content = renderTocDoc(JSON.parse(virDir));
-  res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.write(content, 'utf-8');
-
-  return {
-    req,
-    res
-  }
+  return resource;
 };
 
 module.exports = tocDocLense;

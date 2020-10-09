@@ -1,85 +1,124 @@
 const path = require('path');
-const http = require('http');
+const config = require('config');
 
 const lenses = require('../lenses/index.js');
-// const Logger = require('../lib/logger')
+const fs = require('fs');
+const { query } = require('express');
+const Logger = require('local-modules').logger;
 
 const renderPath = require('local-modules').renderPath;
 
+const staticMaps = [
+  [[config.STATIC.shared], path.join(__dirname, '..', 'static')],
+  ...lenses.reduce((all, next) => {
+    all.push([[`${config.STATIC.own}-${next.name}`], path.join(__dirname, '..', 'lenses', next.name, 'static')]);
+    return all;
+  }, [])
+];
+
 const handleRequest = async (req, res) => {
 
+  const preRelPath = req.path;
 
-  const relPath = req.path;
-  const absPath = path.join(process.cwd(), relPath);
-  // console.log(params)
+  // could not get this to work with express.static
+  const staticMap = staticMaps.find(map => preRelPath.includes(map[0]));
 
-  const lenseParams = Object.entries(req.query);
+  const relPath = staticMap
+    ? preRelPath.replace(staticMap[0], staticMap[1])
+    : preRelPath;
+  const absPath = staticMap
+    ? relPath
+    : path.join(process.cwd(), relPath);
 
 
-  const requestedLenses = lenseParams
-    .map(lenseParam => {
-      const lense = lenses.find(next => next.name === lenseParam[0])
-      if (typeof lense.module !== 'function') {
-        return null;
+  // read the file/directory
+  //  if unsuccessful, send response and return early
+  const pathRendered = await renderPath({ absPath, relPath });
+
+  if (pathRendered.error) {
+    const errMsg = `Server error: ${error.code} ..`;
+    res.writeHead(pathRendered.status);
+    res.end(errMsg, 'utf-8');
+    return;
+  }
+
+  if (pathRendered.status === 404) {
+    res.writeHead(pathRendered.status, { 'Content-Type': pathRendered.mime.type });
+    res.end(renderPath.content, 'utf-8');
+    return;
+  }
+
+
+  /* will be an array like, in the order of the params:
+    [
+      {
+        module: [AsyncFunction: liveStudyLense],
+        name: 'live-study',
+        static: {
+          own: 'http://localhost:4600/own-resource-live-study',
+          shared: 'http://localhost:4600/shared-resource'
+        },
+        queryValue: '1234'
       }
-      lense.config = lenseParam[1];
-      // close with serverConfig
+    ]
+  */
+  const queryKeys = Object.keys(req.query);
+
+  const requestedLenses = queryKeys
+    .map(queryKey => {
+      const lense = lenses.find(lense => lense.name === queryKey);
+      lense.query = req.query[lense.name];
       return lense;
-    })
-    .filter(item => item !== null);
-  // console.log(loadedLenses);
+    });
 
-
-  let usedLenses = []; // used for logging the req/res cycle
-  let didLense = false; // used to determine if the file needs to be sent raw
+  let nextResource = {
+    content: pathRendered.content,
+    mime: pathRendered.mime.type,
+  };
+  let previousResource = {};
   for (const lense of requestedLenses) {
     try {
       const config = {
-        param: lense.config,
         absPath,
         relPath,
-        // and find a better name for this property
-        ownStatic: lense.ownStatic,
-        sharedStatic: lense.sharedStatic
+        name: lense.name,
+        query: lense.query,
+        ownStatic: lense.static.own,
+        sharedStatic: lense.static.shared,
+        url: req.url,
       };
-      const { // in case a lense creates new instances
-        newReq = req,
-        newRes = res,
-      } = await lense.module(req, res, config);
 
-      if (newReq instanceof http.ClientRequest) {
-        req = newReq;
+
+      const returnedResource = await lense.module(nextResource, config);
+
+      if (typeof returnedResource !== 'object' || returnedResource === previousResource) {
+        nextResource = Object.assign({}, previousResource);
+      } else {
+        nextResource = Object.assign({}, previousResource, returnedResource);
+        previousResource = returnedResource;
       }
-      if (newRes instanceof http.ServerResponse) {
-        res = newRes;
+
+      if (typeof nextResource.content !== 'string') {
+        throw new Error(lense.name + ': returned content must be a string');
       }
-      didLense = true;
-      usedLenses.push(lense.name);
-    } catch (err) {
-      didLense = false;
-      // Logger.error(err);
-      console.error(err);
+      if (typeof nextResource.mime !== 'string') {
+        throw new Error(lense.name + ': returned mime must be a string');
+      }
+
+    } catch (error) {
+      Logger.error(error);
+      console.log(error)
+      // questionable?  fall back to sending raw content if there is an error in any lense
+      res.writeHead(500, { 'Content-Type': 'text/plain' });
+      res.end(`error in lense "${lense.name}", try removing this query from your URL`, 'utf-8');
+      return;
     }
   }
   // console.log(didLense)
 
-  if (!didLense) {
-    try {
-      const renderedPath = await renderPath({ absPath, relPath });
-      if (renderedPath.error) {
-        throw renderedPath.error;
-      }
-      res.writeHead(200, { 'Content-Type': renderedPath.mime.type });
-      res.write(renderedPath.content, 'utf-8');
-    } catch (err) {
-      // Logger.error(err)
-      console.error(err)
-      const errMsg = `Server error: ${err.code} ..`;
-      res.writeHead(500);
-      res.end(errMsg);
-      return;
-    }
-  };
+  res.writeHead(200, { 'Content-Type': nextResource.mime });
+  res.write(nextResource.content, 'utf-8');
+
 
   res.end();
 };

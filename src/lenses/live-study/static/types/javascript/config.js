@@ -1,5 +1,5 @@
 
-const staticConfig = require('../static/config.js');
+const staticConfig = require('../static-study/config.js');
 
 const config = {
   "eval": false,

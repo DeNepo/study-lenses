@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const renderPath = require('local-modules/render-path')
+const renderPath = require('local-modules').renderPath;
 
 const simplit = require('./simplit.js');
 
@@ -21,24 +21,16 @@ const simplitLense = async (req, res, config) => {
 
   const correctedPath = isSimplit ? absPath + '.md' : absPath;
 
-  const mockResponse = {
-    source: '',
-    writeHead() { },
-    write(source) {
-      this.source = source;
-    }
-  }
-  await defaultLense(req, mockResponse, { absPath: correctedPath });
+  const rendered = await renderPath({ absPath: correctedPath, relPath });
 
-  const content = isSimplit ? simplit(absPath, mockResponse.source) : mockResponse.source;
+  const content = isSimplit ? simplit(absPath, rendered.content) : rendered.content;
 
-  res.writeHead(200, { 'Content-Type': 'text/' + path.extname(absPath).split('.')[0] });
+  res.writeHead(200, { 'Content-Type': rendered.mime.type });
   res.write(content, 'utf-8');
 
   return {
     req,
-    res,
-    content
+    res
   }
 };
 

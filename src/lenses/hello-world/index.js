@@ -1,33 +1,22 @@
-const renderPath = require('local-modules').renderPath;
+const helloWorldLense = async (resource, config) => {
 
-const helloWorldLense = async (req, res, config) => {
-  const { absPath, relPath, param, ownStatic, sharedStatic } = config;
-
-  const renderedPath = await renderPath(config);
-
-  const content = `
+  resource.mime = 'text/html';
+  resource.content = `
 <!DOCTYPE html>
   <html>
   <head></head>
   <body>
     <pre>
-relPath: ${relPath}
-param: ${param}
-mime: ${renderedPath.mime.type}
+${JSON.stringify(config, null, '  ')}
     </pre>
-    <textarea>${renderedPath.content}</textarea>
+    <textarea style="height: 100vh; width: 100vw;">${resource.content}</textarea>
   </body>
-  <script src="${ownStatic}/script.js"></script>
-  <script src="${sharedStatic}/hello.js"></script>
-  <link rel="stylesheet" href="${ownStatic}/style.css">
+  <script src="${config.ownStatic}/script.js"></script>
+  <script src="${config.sharedStatic}/hello.js"></script>
+  <link rel="stylesheet" href="${config.ownStatic}/style.css">
 </html>`;
-  res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.write(content, 'utf-8');
 
-  return {
-    req,
-    res
-  }
+  return resource;
 };
 
 module.exports = helloWorldLense;

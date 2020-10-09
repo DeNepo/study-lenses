@@ -1,13 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-const config = require('../config/default.js');
+const config = require('config');
 
 const isItADirectory = (nextPath) => fs.existsSync(path.join(__dirname, nextPath)) && fs.lstatSync(path.join(__dirname, nextPath)).isDirectory();
 
 const lensePaths = fs.readdirSync(__dirname)
   .filter(nextPath => isItADirectory(nextPath));
 
+const localOrigin = config.get('ORIGIN.local') + config.get('PORT');
 
 const lenses = lensePaths
   .map((nextPath) => {
@@ -15,8 +16,11 @@ const lenses = lensePaths
       return {
         module: require(path.join(__dirname, nextPath, 'index.js')),
         name: nextPath,
-        ownStatic: `${config.ORIGIN.local}/${config.STATIC.own}/${nextPath}/static`,
-        sharedStatic: `${config.ORIGIN.local}/${config.STATIC.shared}`,
+        // can configurize this for build
+        static: {
+          own: `${localOrigin}/${config.STATIC.own}-${nextPath}`,
+          shared: `${localOrigin}/${config.STATIC.shared}`,
+        }
       }
     } catch (err) {
       console.log(err)

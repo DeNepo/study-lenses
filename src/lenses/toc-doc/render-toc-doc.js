@@ -7,7 +7,7 @@ const tableOfContents = (dirElement, indent = '', first = false) => {
 
   if (dirElement.type === 'file') {
     const ext = pathModule.extname(dirElement.path);
-    const query = mime[ext]?.lense ? `?${mime[ext].lense}` : '';
+    const query = (mime[ext] && mime[ext].lense) ? `?${mime[ext].lense}` : '';
     return `${indent}<li><a href="./${dirElement.path}${query}">${dirElement.path.split('/').pop()}</a></li>\n`;
   }
 

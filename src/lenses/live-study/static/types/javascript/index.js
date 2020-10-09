@@ -1,4 +1,4 @@
-import { Static } from '../static/index.js';
+import { Static } from '../static-study/index.js';
 
 export class JavaScript extends Static {
 

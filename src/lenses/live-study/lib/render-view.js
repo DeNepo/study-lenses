@@ -1,7 +1,6 @@
 const renderDependencies = require('./render-dependencies.js');
 
 const renderView = (type, lenseConfig, liveStudyConfig) => {
-  const { sharedStatic, ownStatic } = lenseConfig;
 
   return `<html>
 
@@ -19,12 +18,12 @@ const renderView = (type, lenseConfig, liveStudyConfig) => {
   <div id='controls-panel'></div>
   <div id='editor-container'></div>
 
-  <link rel="stylesheet" data-name="vs/editor/editor.main" href="${sharedStatic}/monaco/min/vs/editor/editor.main.css">
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="${lenseConfig.static.shared}/monaco/min/vs/editor/editor.main.css">
 
-  <script>var require = { paths: { 'vs': '${sharedStatic}/monaco/min/vs' } };</script>
-  <script src="${sharedStatic}/monaco/min/vs/loader.js"></script>
-  <script src="${sharedStatic}/monaco/min/vs/editor/editor.main.nls.js"></script>
-  <script src="${sharedStatic}/monaco/min/vs/editor/editor.main.js"></script>
+  <script>var require = { paths: { 'vs': '${lenseConfig.static.shared}/monaco/min/vs' } };</script>
+  <script src="${lenseConfig.static.shared}/monaco/min/vs/loader.js"></script>
+  <script src="${lenseConfig.static.shared}/monaco/min/vs/editor/editor.main.nls.js"></script>
+  <script src="${lenseConfig.static.shared}/monaco/min/vs/editor/editor.main.js"></script>
 
 
   <script>
@@ -34,7 +33,7 @@ const renderView = (type, lenseConfig, liveStudyConfig) => {
   </script>
 
 
-  <script type='module' src='${ownStatic}/types/${type}/index.js'></script>
+  <script type='module' src='${lenseConfig.static.own}/types/${type}/index.js'></script>
 
 
 </body>

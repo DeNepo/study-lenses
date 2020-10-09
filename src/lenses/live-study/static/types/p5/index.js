@@ -1,4 +1,4 @@
-import { Static } from '../static/index.js';
+import { Static } from '../static-study/index.js';
 
 export class P5 extends Static {
 

@@ -1,4 +1,4 @@
-# Study Server
+# Study Lenses
 
 a cli app to open directories of code in the browser with varying types of interactivity.
 

@@ -8,7 +8,7 @@ const renderPath = require('local-modules').renderPath;
 const compileConfig = require('./lib/compile-config.js');
 
 const liveStudyLense = async (req, res, config) => {
-  const { absPath, relPath, param, ownStatic, sharedStatic } = config;
+  const { absPath, relPath, param } = config;
 
   const requestedADirectory = fs.existsSync(absPath) && fs.lstatSync(absPath).isDirectory();
 
@@ -38,7 +38,7 @@ const liveStudyLense = async (req, res, config) => {
 
   const type = detectType(absPath);
 
-  const typePath = `${ownStatic}/types/${type}/index.js`;
+  const typePath = `${config.static.own}/types/${type}/index.js`;
 
   let defaultConfig = {};
   try {

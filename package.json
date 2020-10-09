@@ -1,5 +1,5 @@
 {
-  "name": "live-study",
+  "name": "study-lenses",
   "version": "0.0.2",
   "description": "",
   "main": "./src/index.js",
@@ -23,6 +23,7 @@
     "monaco": "^1.201704190613.0",
     "monaco-editor": "^0.21.2",
     "morgan": "^1.10.0",
+    "node-mocks-http": "^1.9.0",
     "open": "^7.2.1",
     "prettier": "^2.1.1",
     "serve-index": "^1.9.1",
