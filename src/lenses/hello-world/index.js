@@ -1,32 +1,30 @@
-const renderPath = require('local-modules').renderPath;
+const helloWorldLense = async (simpReq, resource, config) => {
 
-const helloWorldLense = async (req, res, config) => {
-  const { absPath, relPath, param, staticPrefix } = config;
-
-  const renderedPath = await renderPath(absPath);
-  console.log(renderedPath)
-  const content = `
+  resource.mime = 'text/html';
+  resource.content = `
 <!DOCTYPE html>
   <html>
   <head></head>
   <body>
     <pre>
-relPath: ${relPath}
-param: ${param}
-mime: ${renderedPath.mime.type}
+simpReq -> ${JSON.stringify(simpReq, null, '  ')}
     </pre>
-    <textarea>${renderedPath.content}</textarea>
-  </body>
-  <script src="${staticPrefix}/static/script.js"></script>
-  <link rel="stylesheet" href="${staticPrefix}/static/style.css">
-</html>`;
-  res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.write(content, 'utf-8');
+    <pre>
+resource.mime -> ${resource.mime}
+resource.status -> ${resource.status}
+    </pre>
+    <pre>
+config -> ${JSON.stringify(config, null, '  ')}
+    </pre>
 
-  return {
-    req,
-    res
-  }
+    <textarea style="height: 100vh; width: 100vw;">${resource.content}</textarea>
+    <script src="${config.ownStatic}/script.js"></script>
+    <script src="${config.sharedStatic}/hello.js"></script>
+    <link rel="stylesheet" href="${config.ownStatic}/style.css">
+  </body>
+</html>`;
+
+  return resource;
 };
 
 module.exports = helloWorldLense;

@@ -1,11 +1,9 @@
-const renderPath = require('local-modules').renderPath;
 
-const mermaidLense = async (req, res, config) => {
-  const { absPath, relPath, param, staticPrefix } = config;
 
-  const renderedPath = await renderPath(absPath);
+const mermaidLense = async (simpReq, resource, config) => {
+  const { relPath, sharedStatic, content } = resource;
 
-  const content = `<!DOCTYPE html>
+  resource.content = `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
@@ -13,17 +11,13 @@ const mermaidLense = async (req, res, config) => {
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   </head>
   <body>
-    <div class="mermaid">${renderedPath.content}</div>
-    <script src='${staticPrefix}/mermaid.js'></script>
+    <div class="mermaid">${resource}</div>
+    <script src='${sharedStatic}/mermaid/index.js'></script>
   </body>
 </html>`;
-  res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.write(content, 'utf-8');
+  resource.mime = 'text/html';
 
-  return {
-    req,
-    res
-  }
+  return resource
 };
 
 module.exports = mermaidLense;

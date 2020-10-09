@@ -8,7 +8,7 @@ const renderPath = require('local-modules').renderPath;
 const compileConfig = require('./lib/compile-config.js');
 
 const liveStudyLense = async (req, res, config) => {
-  const { absPath, relPath, param, staticPrefix } = config;
+  const { absPath, relPath, param } = config;
 
   const requestedADirectory = fs.existsSync(absPath) && fs.lstatSync(absPath).isDirectory();
 
@@ -37,12 +37,12 @@ const liveStudyLense = async (req, res, config) => {
   };
 
   const type = detectType(absPath);
-  console.log(type)
-  const typePath = `${staticPrefix}/types/${type}/index.js`;
+
+  const typePath = `${config.static.own}/types/${type}/index.js`;
 
   let defaultConfig = {};
   try {
-    defaultConfig = require(`./types/${type}/config.js`);
+    defaultConfig = require(`./static/types/${type}/config.js`);
   } catch (err) {
     console.log(err);
   };
@@ -51,7 +51,8 @@ const liveStudyLense = async (req, res, config) => {
   liveStudyConfig.path = relPath;
   liveStudyConfig.type = type;
   liveStudyConfig.source = (await renderPath(config)).content;
-  const view = renderView(type, staticPrefix, liveStudyConfig);
+
+  const view = renderView(type, config, liveStudyConfig);
   res.writeHead(200, { 'Content-Type': 'text/html' });
   res.write(view, 'utf-8');
 

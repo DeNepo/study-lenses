@@ -15,6 +15,7 @@ const renderPath = async (config) => {
   const requestedADirectory = pathExists && fs.lstatSync(absPath).isDirectory();
 
   let content = '';
+  let status = 0;
   let error = null;
   let mime = {};
   try {
@@ -22,12 +23,15 @@ const renderPath = async (config) => {
       const virDir = renderVirtualDirectory(path.relative(process.cwd(), absPath));
       content = JSON.stringify(virDir, null, '  ');
       mime = mimes['html'];
+      status = 200
     } else if (pathExists) {
       content = await readFilePromise(absPath, 'utf-8');
       mime = mimes[path.extname(absPath)];
+      status = 200
     } else {
-      content = `<!DOCTYPE html><html><head><title>404</title></head><body><h1>404: ${relPath}</h1></body></html>`;
+      content = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>404</title></head><body><h1>404: ${relPath}</h1></body></html>`;
       mime = mimes['html'];
+      status = 404;
     }
   } catch (err) {
     console.log(err)
@@ -37,6 +41,7 @@ const renderPath = async (config) => {
   return {
     content,
     mime,
+    status,
     error
   };
 

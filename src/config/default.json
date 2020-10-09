@@ -1,0 +1,15 @@
+{
+  "PORT": 4600,
+  "LOGGER": {
+    "STDOUT": true
+  },
+  "LENSE": "directory",
+  "STATIC": {
+    "own": "own-resource",
+    "shared": "shared-resource"
+  },
+  "ORIGIN": {
+    "build": "https://janke-learning.github.io/study-lenses",
+    "local": "http://localhost:"
+  }
+}

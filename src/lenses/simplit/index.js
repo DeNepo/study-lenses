@@ -1,45 +1,38 @@
-const path = require('path');
 const fs = require('fs');
 
-const renderPath = require('local-modules/render-path')
+const path = require('path');
+
+const mimes = require('local-modules').mime;
 
 const simplit = require('./simplit.js');
 
-const tocDocLense = require('../toc-doc/index.js');
+const simplitLense = async (simpReq, resource, config) => {
+  const { absPath, relPath } = resource;
 
-const simplitLense = async (req, res, config) => {
-  const absPath = config.absPath;
-
-  const pathExists = fs.existsSync(absPath);
-  const requestedADirectory = pathExists && fs.lstatSync(absPath).isDirectory();
+  const requestedADirectory = fs.existsSync(absPath) && fs.lstatSync(absPath).isDirectory();
   if (requestedADirectory) {
-    return tocDocLense(req, res, config);
+    return resource;
   }
 
-  const isSimplit = pathExists && fs.existsSync(absPath + '.md');
-
-
-  const correctedPath = isSimplit ? absPath + '.md' : absPath;
-
-  const mockResponse = {
-    source: '',
-    writeHead() { },
-    write(source) {
-      this.source = source;
-    }
+  const extName = path.extname(absPath);
+  if (extName !== '.md') {
+    // only .md files can be simplit
+    return resource;
   }
-  await defaultLense(req, mockResponse, { absPath: correctedPath });
 
-  const content = isSimplit ? simplit(absPath, mockResponse.source) : mockResponse.source;
-
-  res.writeHead(200, { 'Content-Type': 'text/' + path.extname(absPath).split('.')[0] });
-  res.write(content, 'utf-8');
-
-  return {
-    req,
-    res,
-    content
+  const embeddedPath = absPath.replace(new RegExp('.md$'), '');
+  const embeddedExtension = path.extname(embeddedPath);
+  if (embeddedExtension === '') {
+    // it is not a simplit file
+    return resource;
   }
+
+  resource.content = simplit(absPath, resource.content);
+  resource.mime = mimes[embeddedExtension];
+  resource.absPath = absPath.replace(new RegExp('.md$'), '');
+  resource.relPath = relPath.replace(new RegExp('.md$'), '');
+
+  return resource
 };
 
 module.exports = simplitLense;

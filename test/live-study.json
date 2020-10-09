@@ -1,11 +1,11 @@
 {
   "dependencies": [
     {
-      "path": "./lib/not-module.js",
+      "path": "./lib/not-module-b.js",
       "module": false
     },
     {
-      "path": "./lib/module-b.js",
+      "path": "./lib/module-a.js",
       "module": true
     }
   ]
