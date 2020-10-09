@@ -7,11 +7,12 @@ process.env['NODE_CONFIG_DIR'] = path.join(__dirname, '..', "config");
 const config = require('config');
 const express = require('express');
 const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const serveIndex = require('serve-index');
 
 
 const Logger = require('local-modules').logger;
-const lenses = require('../lenses');
 const handleRequest = require('./handle-request.js');
 
 const PORT = config.get('PORT');
@@ -38,6 +39,10 @@ process.on('uncaughtException', function onUncaughtException(e) {
 const app = express()
 
 app.use(morgan('dev'))
+
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+app.use(cookieParser())
 
 app.use(handleRequest)
 

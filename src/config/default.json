@@ -3,7 +3,7 @@
   "LOGGER": {
     "STDOUT": true
   },
-  "LENSE": "toc-doc",
+  "LENSE": "directory",
   "STATIC": {
     "own": "own-resource",
     "shared": "shared-resource"

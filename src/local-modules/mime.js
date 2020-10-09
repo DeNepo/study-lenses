@@ -1,53 +1,18 @@
 
 const mime = {
-  'default': {
-    type: 'text/plain;charset=UTF-8',
-    lense: 'live-study'
-  },
-  'md': {
-    type: 'text/markdown',
-    lense: 'live-study'
-  },
-  'html': {
-    type: 'text/html;charset=UTF-8',
-    lense: ''
-  },
-  'txt': {
-    type: 'text/plain;charset=UTF-8',
-    lense: ''
-  },
-  '': {
-    type: 'text/plain;charset=UTF-8',
-    lense: ''
-  },
-  'js': {
-    type: 'application/javascript',
-    lense: 'live-study'
-  },
-  'css': {
-    type: 'text/css',
-    lense: 'live-study'
-  },
-  'json': {
-    type: 'application/json',
-    lense: 'json-formatter'
-  },
-  'png': {
-    lense: 'image/png',
-    lense: ''
-  },
-  'jpg': {
-    lense: 'image/jpg',
-    lense: ''
-  },
-  'gif': {
-    type: 'image/gif',
-    lense: ''
-  },
-  'mmd': {
-    type: 'text/plain;charset=UTF-8',
-    lense: 'mermaid'
-  }
+  'default': 'text/plain;charset=UTF-8',
+  'md': 'text/markdown',
+  'html': 'text/html;charset=UTF-8',
+  'txt': 'text/plain;charset=UTF-8',
+  '': 'text/plain;charset=UTF-8',
+  'js': 'application/javascript',
+  'css': 'text/css',
+  'json': 'application/json',
+  'png': 'image/png',
+  'jpg': 'image/jpg',
+  'gif': 'image/gif',
+  'svg': 'image/svg+xml',
+  'mmd': 'text/plain;charset=UTF-8',
 };
 
 module.exports = new Proxy(mime, {

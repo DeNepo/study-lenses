@@ -1,8 +1,8 @@
 const fs = require('fs');
 const prettier = require('prettier');
 
-const prettierLense = async (resource, config) => {
-  const { absPath } = config;
+const prettierLense = async (simpReq, resource, config) => {
+  const { absPath } = resource;
 
   if (fs.existsSync(absPath) && fs.lstatSync(absPath).isDirectory()) {
     return resource

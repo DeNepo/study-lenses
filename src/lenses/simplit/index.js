@@ -1,37 +1,38 @@
-const path = require('path');
 const fs = require('fs');
 
-const renderPath = require('local-modules').renderPath;
+const path = require('path');
+
+const mimes = require('local-modules').mime;
 
 const simplit = require('./simplit.js');
 
-const tocDocLense = require('../toc-doc/index.js');
+const simplitLense = async (simpReq, resource, config) => {
+  const { absPath, relPath } = resource;
 
-const simplitLense = async (req, res, config) => {
-  const absPath = config.absPath;
-
-  const pathExists = fs.existsSync(absPath);
-  const requestedADirectory = pathExists && fs.lstatSync(absPath).isDirectory();
+  const requestedADirectory = fs.existsSync(absPath) && fs.lstatSync(absPath).isDirectory();
   if (requestedADirectory) {
-    return tocDocLense(req, res, config);
+    return resource;
   }
 
-  const isSimplit = pathExists && fs.existsSync(absPath + '.md');
-
-
-  const correctedPath = isSimplit ? absPath + '.md' : absPath;
-
-  const rendered = await renderPath({ absPath: correctedPath, relPath });
-
-  const content = isSimplit ? simplit(absPath, rendered.content) : rendered.content;
-
-  res.writeHead(200, { 'Content-Type': rendered.mime.type });
-  res.write(content, 'utf-8');
-
-  return {
-    req,
-    res
+  const extName = path.extname(absPath);
+  if (extName !== '.md') {
+    // only .md files can be simplit
+    return resource;
   }
+
+  const embeddedPath = absPath.replace(new RegExp('.md$'), '');
+  const embeddedExtension = path.extname(embeddedPath);
+  if (embeddedExtension === '') {
+    // it is not a simplit file
+    return resource;
+  }
+
+  resource.content = simplit(absPath, resource.content);
+  resource.mime = mimes[embeddedExtension];
+  resource.absPath = absPath.replace(new RegExp('.md$'), '');
+  resource.relPath = relPath.replace(new RegExp('.md$'), '');
+
+  return resource
 };
 
 module.exports = simplitLense;

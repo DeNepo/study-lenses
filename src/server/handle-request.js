@@ -42,8 +42,9 @@ const handleRequest = async (req, res) => {
     return;
   }
 
+
   if (pathRendered.status === 404) {
-    res.writeHead(pathRendered.status, { 'Content-Type': pathRendered.mime.type });
+    res.writeHead(pathRendered.status, { 'Content-Type': pathRendered.mime });
     res.end(renderPath.content, 'utf-8');
     return;
   }
@@ -71,31 +72,41 @@ const handleRequest = async (req, res) => {
       return lense;
     });
 
-  let nextResource = {
-    content: pathRendered.content,
-    mime: pathRendered.mime.type,
+
+  const simpleRequest = {
+    url: req.url,
+    method: req.method,
+    body: req.body,
+    header: req.headers,
+    cookies: req.cookies,
+    query: req.query
   };
-  let previousResource = {};
+
+  let previousResource = {
+    absPath,
+    relPath,
+    content: pathRendered.content,
+    mime: pathRendered.mime,
+    status: pathRendered.status
+  };
+
+  let nextResource = { ...previousResource };
   for (const lense of requestedLenses) {
     try {
       const config = {
-        absPath,
-        relPath,
         name: lense.name,
         query: lense.query,
         ownStatic: lense.static.own,
         sharedStatic: lense.static.shared,
-        url: req.url,
       };
 
 
-      const returnedResource = await lense.module(nextResource, config);
+      const returnedResource = await lense.module(Object.assign({}, simpleRequest), nextResource, config);
 
       if (typeof returnedResource !== 'object' || returnedResource === previousResource) {
         nextResource = Object.assign({}, previousResource);
       } else {
         nextResource = Object.assign({}, previousResource, returnedResource);
-        previousResource = returnedResource;
       }
 
       if (typeof nextResource.content !== 'string') {
@@ -103,6 +114,9 @@ const handleRequest = async (req, res) => {
       }
       if (typeof nextResource.mime !== 'string') {
         throw new Error(lense.name + ': returned mime must be a string');
+      }
+      if (isNaN(nextResource.status)) {
+        throw new Error(lense.name + ': returned status must be numbery');
       }
 
     } catch (error) {
@@ -116,7 +130,7 @@ const handleRequest = async (req, res) => {
   }
   // console.log(didLense)
 
-  res.writeHead(200, { 'Content-Type': nextResource.mime });
+  res.writeHead(nextResource.status, { 'Content-Type': nextResource.mime });
   res.write(nextResource.content, 'utf-8');
 
 

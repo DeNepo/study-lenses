@@ -31,3 +31,12 @@ To see lenses in action, open the test directory as indicated in __Getting Start
   4. `/messy-code/file.css?prettier&prism`
   5. `/messy-code/file.css?hello-world`
   6. `/messy-code/file.css?prettier&hello-world`
+
+---
+
+## The Student's Perspective
+
+There are a lot of different lenses, and they sometimes will pipe in unhelpful or unexpected ways.  it's also not very student-friendly to be adjusting params all the time. so ...
+
+the `/src/lenses/directory` lense addresses this problem by configuring default (and hopefully helpful) lenses / url queries for different file types.  this way students can benefit from the most productive instructor-configured settings out of the box.  ie. no need to know the tool to use it.
+

@@ -1,13 +1,13 @@
 'use strict';
 
 const pathModule = require('path');
-const mime = require('local-modules').mime;
+const defaults = require('./default-lenses.js');
 
 const tableOfContents = (dirElement, indent = '', first = false) => {
 
   if (dirElement.type === 'file') {
     const ext = pathModule.extname(dirElement.path);
-    const query = (mime[ext] && mime[ext].lense) ? `?${mime[ext].lense}` : '';
+    const query = defaults[ext] ? `?${defaults[ext]}` : '';
     return `${indent}<li><a href="./${dirElement.path}${query}">${dirElement.path.split('/').pop()}</a></li>\n`;
   }
 
@@ -16,7 +16,7 @@ const tableOfContents = (dirElement, indent = '', first = false) => {
       ? dirElement.children.map(child => tableOfContents(child, indent + '  ')).join('\n')
       : '';
     return first ? subIndex
-      : (`${indent}<li><details><summary><a href="./${dirElement.path}?toc-doc">${dirElement.path.split('/').pop()}</a></summary>\n`
+      : (`${indent}<li><details><summary><a href="./${dirElement.path}?directory">${dirElement.path.split('/').pop()}</a></summary>\n`
         + (subIndex ? '\n<ul>' + subIndex + '</ul>' : '')
         + '</details></li>');
   }

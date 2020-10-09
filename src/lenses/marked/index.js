@@ -1,11 +1,11 @@
 const path = require('path');
 const marked = require('marked');
 
-const markedLense = async (resource, config) => {
-  const { absPath } = config;
+const markedLense = async (simpReq, resource, config) => {
+  const { absPath } = resource;
 
   if (path.extname(absPath) !== '.md') {
-    return resource
+    return resource;
   }
 
   resource.content = marked(resource.content);
