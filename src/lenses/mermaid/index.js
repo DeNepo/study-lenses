@@ -1,7 +1,8 @@
 
 
 const mermaidLense = async (simpReq, resource, config) => {
-  const { relPath, sharedStatic, content } = resource;
+  const { relPath, content } = resource;
+  const { sharedStatic } = config;
 
   resource.content = `<!DOCTYPE html>
 <html>
@@ -11,7 +12,7 @@ const mermaidLense = async (simpReq, resource, config) => {
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
   </head>
   <body>
-    <div class="mermaid">${resource}</div>
+    <div class="mermaid">${content}</div>
     <script src='${sharedStatic}/mermaid/index.js'></script>
   </body>
 </html>`;
