@@ -1,6 +1,6 @@
-import { Static } from '../static-study/index.js';
+import { JavaScript } from '../javascript/index.js';
 
-export class P5 extends Static {
+export class P5 extends JavaScript {
 
 }
 

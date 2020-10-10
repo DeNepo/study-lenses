@@ -23,6 +23,7 @@
     "local-modules": "file:./src/local-modules",
     "lodash": "^4.17.20",
     "marked": "^1.1.1",
+    "mime": "^2.4.6",
     "monaco": "^1.201704190613.0",
     "monaco-editor": "^0.21.2",
     "morgan": "^1.10.0",

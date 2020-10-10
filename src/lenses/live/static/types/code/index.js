@@ -1,10 +1,10 @@
 
 
-export class Static {
+export class Code {
 
 };
 
-console.log('static');
+console.log('code');
 
 
 /*

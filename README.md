@@ -19,21 +19,31 @@ at it's base, this is just a static server.  requesting a path inside the folder
 
 URL params can be used to view the source through different lenses.  once you have test running try entering the path to a file, adding `?hello-world` to the end of the URL and refreshing.  You can find the source code for this lense in [./src/lenses/hello-world](./src/lenses/hello-world)
 
-To see lenses in action, open the test directory as indicated in __Getting Started__ and try these different requests:
+To see lenses in action, open the test directory as indicated in __Getting Started__ and try these different requests (all of these paths assume you are in `/test`):
 
 - `/README.md`
-  1. `/README.md` - no lense, the markdown source is returned as-is
-  2. `/README.md?hello-world` - the markdown will be rendered into a textarea in an HTML file
-  3. `/README.md?hello-world=1234` - the markdown will be rendered into a textarea in an HTML file, with the value 1234 passed as a query
-  4. `/README.md?render` - the markdown will be rendered to HTML using marked, it will now be a web page
-  5. `/README.md?render&hello-world` - like the previous hello-world, but with the rendered HTML code instead of the raw markdown
+  - `/README.md` - no lense, the markdown source is returned as-is
+  - `/README.md?hello-world` - the markdown will be rendered into a textarea in an HTML file
+  - `/README.md?hello-world=1234` - the markdown will be rendered into a textarea in an HTML file, with the value 1234 passed as a query
+  - `/README.md?render` - the markdown will be rendered to HTML using marked, it will now be a web page
+  - `/README.md?render&hello-world` - like the previous hello-world, but with the rendered HTML code instead of the raw markdown
 - `/messy-code/file.css`
-  1. `/messy-code/file.css`
-  2. `/messy-code/file.css?highlight`
-  3. `/messy-code/file.css?format`
-  4. `/messy-code/file.css?format&highlight`
-  5. `/messy-code/file.css?hello-world`
-  6. `/messy-code/file.css?format&hello-world`
+  - `/messy-code/file.css`
+  - `/messy-code/file.css?highlight`
+  - `/messy-code/file.css?format`
+  - `/messy-code/file.css?format&highlight`
+  - `/messy-code/file.css?hello-world`
+  - `/messy-code/file.css?format&hello-world`
+- `/languages/file.js`
+  - `/languages/file.js?highlight`
+  - `/languages/file.js?flowchart`
+  - `/languages/file.js?review`
+- `/simplit`
+  - `/simplit/file.js.md`
+  - `/simplit/file.js.md?render`
+  - `/simplit/file.js.md?highlight`
+  - `/simplit/file.js.md?simplit&highlight`
+  - `/simplit/file.js.md?simplit&flowchart`
 
 ---
 
