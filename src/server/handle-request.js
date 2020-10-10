@@ -36,8 +36,8 @@ const handleRequest = async (req, res) => {
   const pathRendered = await renderPath({ absPath, relPath });
 
   if (pathRendered.error) {
-    const errMsg = `Server error: ${error.code} ..`;
-    res.writeHead(pathRendered.status);
+    const errMsg = `Server error: ${pathRendered.error.code} ..`;
+    res.writeHead(500);
     res.end(errMsg, 'utf-8');
     return;
   }
