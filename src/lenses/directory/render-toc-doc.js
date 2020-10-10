@@ -1,7 +1,7 @@
 'use strict';
 
 const pathModule = require('path');
-const defaults = require('./default-lenses.js');
+const defaults = require('config').LENSES;
 
 const tableOfContents = (dirElement, indent = '', first = false) => {
 
@@ -16,7 +16,7 @@ const tableOfContents = (dirElement, indent = '', first = false) => {
       ? dirElement.children.map(child => tableOfContents(child, indent + '  ')).join('\n')
       : '';
     return first ? subIndex
-      : (`${indent}<li><details><summary><a href="./${dirElement.path}?directory">${dirElement.path.split('/').pop()}</a></summary>\n`
+      : (`${indent}<li><details><summary><a href="./${dirElement.path}?${defaults.directory}">${dirElement.path.split('/').pop()}</a></summary>\n`
         + (subIndex ? '\n<ul>' + subIndex + '</ul>' : '')
         + '</details></li>');
   }

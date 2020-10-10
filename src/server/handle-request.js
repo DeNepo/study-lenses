@@ -67,10 +67,16 @@ const handleRequest = async (req, res) => {
 
   const requestedLenses = queryKeys
     .map(queryKey => {
-      const lense = lenses.find(lense => lense.name === queryKey);
-      lense.query = req.query[lense.name];
-      return lense;
-    });
+      try {
+        const lense = lenses.find(lense => lense.name === queryKey);
+        lense.query = req.query[lense.name];
+        return lense;
+      } catch (err) {
+        console.log(err)
+        return null;
+      }
+    })
+    .filter(lense => lense !== null);
 
 
   const simpleRequest = {

@@ -4,7 +4,7 @@ const util = require('util');
 const writeFilePromise = util.promisify(fs.writeFile);
 
 const notepadLense = async (req, resource, config) => {
-  const { absPath, relPath } = config;
+  const { absPath, relPath } = resource;
 
   if (req.method === 'POST') {
     console.log('-- POST')
@@ -47,7 +47,7 @@ const notepadLense = async (req, resource, config) => {
   <script src="${config.sharedStatic}/monaco/min/vs/editor/editor.main.js"></script>
 
   <script src="${config.ownStatic}/init.js"></script>
-  <script> init("${config.relPath}"); </script>
+  <script> init("${relPath}"); </script>
 
 </body>
 

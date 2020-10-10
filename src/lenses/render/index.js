@@ -9,7 +9,18 @@ const renderLense = async (simpReq, resource, config) => {
   }
 
   try {
-    resource.content = marked(resource.content);
+    resource.content = `
+<!DOCTYPE html>
+  <html>
+  <head>
+    <link rel="stylesheet" href="${config.sharedStatic}/gh-styles.css">
+    <link rel="stylesheet" href="${config.sharedStatic}/prism/style.css">
+  </head>
+  <body>
+    <main class="markdown-body">${marked(resource.content)}</main>
+    <script src="${config.sharedStatic}/prism/script.js"></script>
+  </body>
+</html>`;
     resource.mime = 'text/html';
     resource.absPath = resource.absPath.replace('.md', '.html')
     resource.relPath = resource.relPath.replace('.md', '.html')

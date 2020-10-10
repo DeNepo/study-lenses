@@ -3,7 +3,23 @@
   "LOGGER": {
     "STDOUT": true
   },
-  "LENSE": "directory",
+  "LENSES": {
+    "default": "",
+    ".md": "live",
+    ".html": "",
+    ".txt": "notepad",
+    "": "",
+    ".js": "live",
+    ".css": "live",
+    ".json": "json-formatter",
+    ".png": "",
+    ".jpeg": "",
+    ".jpg": "",
+    ".gif": "",
+    ".svg": "",
+    ".mmd": "mermaid",
+    "directory": "directory"
+  },
   "STATIC": {
     "own": "own-resource",
     "shared": "shared-resource"
