@@ -11,8 +11,9 @@ pre[class*="language-"] {
 	color: #f8f8f2;
 	background: none;
 	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
-	font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-	font-size: 1em;
+  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  /* font-size: 1em; */
+	font-size: 0.7em;
 	text-align: left;
 	white-space: pre;
 	word-spacing: normal;
@@ -138,8 +139,9 @@ pre[class*="language-"].line-numbers > code {
 .line-numbers .line-numbers-rows {
 	position: absolute;
 	pointer-events: none;
-	top: 0;
-	font-size: 100%;
+  top: 0;
+  /* font-size: 100%; */
+	font-size: 70%;
 	left: -3.8em;
 	width: 3em; /* works for line-numbers below 1000 lines */
 	letter-spacing: -1px;
@@ -458,8 +460,9 @@ span.inline-color {
 .command-line-prompt {
 	border-right: 1px solid #999;
 	display: block;
-	float: left;
-	font-size: 100%;
+  float: left;
+  /* font-size: 100%; */
+	font-size: 80%;
 	letter-spacing: -1px;
 	margin-right: 1em;
 	pointer-events: none;
@@ -536,7 +539,8 @@ div.code-toolbar > .toolbar a,
 div.code-toolbar > .toolbar button,
 div.code-toolbar > .toolbar span {
 	color: #bbb;
-	font-size: .8em;
+  /* font-size: .8em; */
+  font-size: .6em;
 	padding: 0 .5em;
 	background: #f5f2f0;
 	background: rgba(224, 224, 224, 0.2);

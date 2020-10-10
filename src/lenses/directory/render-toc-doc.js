@@ -1,22 +1,23 @@
 'use strict';
 
 const pathModule = require('path');
-const defaults = require('./default-lenses.js');
+const defaults = require('config').LENSES;
 
-const tableOfContents = (dirElement, indent = '', first = false) => {
+const tableOfContents = (dirElement, first = false) => {
+
 
   if (dirElement.type === 'file') {
     const ext = pathModule.extname(dirElement.path);
     const query = defaults[ext] ? `?${defaults[ext]}` : '';
-    return `${indent}<li><a href="./${dirElement.path}${query}">${dirElement.path.split('/').pop()}</a></li>\n`;
+    return `<li><a href="/${dirElement.path}${query}">${dirElement.name}</a></li>\n`;
   }
 
   if (dirElement.type === 'directory') {
     const subIndex = Array.isArray(dirElement.children)
-      ? dirElement.children.map(child => tableOfContents(child, indent + '  ')).join('\n')
+      ? dirElement.children.map(child => tableOfContents(child)).join('\n')
       : '';
     return first ? subIndex
-      : (`${indent}<li><details><summary><a href="./${dirElement.path}?directory">${dirElement.path.split('/').pop()}</a></summary>\n`
+      : (`<li><details><summary><a href="/${dirElement.path}?${defaults.directory}">${dirElement.name}</a></summary>\n`
         + (subIndex ? '\n<ul>' + subIndex + '</ul>' : '')
         + '</details></li>');
   }
@@ -41,7 +42,7 @@ module.exports = function renderTocDoc(virDir) {
   <body>
     <ul list-style='none'>
       <li><a href='./'>..</a></li>
-      ${tableOfContents(virDir, '', true)}
+      ${tableOfContents(virDir, true)}
     </ul>
 
   </body>

@@ -36,8 +36,8 @@ const handleRequest = async (req, res) => {
   const pathRendered = await renderPath({ absPath, relPath });
 
   if (pathRendered.error) {
-    const errMsg = `Server error: ${error.code} ..`;
-    res.writeHead(pathRendered.status);
+    const errMsg = `Server error: ${pathRendered.error.code} ..`;
+    res.writeHead(500);
     res.end(errMsg, 'utf-8');
     return;
   }
@@ -67,10 +67,16 @@ const handleRequest = async (req, res) => {
 
   const requestedLenses = queryKeys
     .map(queryKey => {
-      const lense = lenses.find(lense => lense.name === queryKey);
-      lense.query = req.query[lense.name];
-      return lense;
-    });
+      try {
+        const lense = lenses.find(lense => lense.name === queryKey);
+        lense.query = req.query[lense.name];
+        return lense;
+      } catch (err) {
+        console.log(err)
+        return null;
+      }
+    })
+    .filter(lense => lense !== null);
 
 
   const simpleRequest = {

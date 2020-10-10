@@ -1,5 +1,6 @@
 const jsonFormatterLense = async (simpReq, resource, config) => {
-  const { relPath, ownStatic } = resource;
+  const { relPath } = resource;
+  const { ownStatic } = config;
 
   resource.content = `<!DOCTYPE html>
 <html>
