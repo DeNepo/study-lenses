@@ -10,6 +10,7 @@ a tool to add new perspectives and layers of interactivity on top of existing co
   - [Options](#options)
 - [Deploying](#deploying)
 - [Source Walk-Through](#source-walk-through)
+- [Docs](./DOCS.md)
 
 ---
 
@@ -114,7 +115,9 @@ besides local studying, this module should be equipped for deployment.  it shoul
 
 ---
 
-## Source Walk-Through*
+## Source Walk-Through
+
+> also, [the docs](./DOCS.md)
 
 Head over to [./bin/index.js](./bin/index.js) and follow the comments for a guided walk-through of the code base.  Some files will contain a comment at the bottom indicating which files to read next.  If nothing is mentioned, you can take abstractions at face value unless you're the curious type.
 
