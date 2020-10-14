@@ -1,0 +1,22 @@
+{
+  "dependencies": [
+    {
+      "path": "./lib/not-module-a.js"
+    },
+    {
+      "path": "./lib/module-b.js",
+      "module": true
+    }
+  ],
+  "languages": {
+    "javascript": {
+      "loopGuard": [
+        false,
+        {
+          "active": false,
+          "max": 10
+        }
+      ]
+    }
+  }
+}
