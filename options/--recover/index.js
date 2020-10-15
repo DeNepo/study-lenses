@@ -5,7 +5,7 @@ const recoverOption = () => {
     console.error(error)
 
     return {
-      continue: true
+      recover: true
     }
 
   }

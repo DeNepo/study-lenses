@@ -16,7 +16,7 @@ resource.content:
     <textarea style="height: 50vh; width: 100vw;">${JSON.stringify(resource.content, null, '  ')}</textarea>
 
     <pre>
-config -> ${JSON.stringify(config, null, '  ')}
+config: ${JSON.stringify(config, null, '  ')}
     </pre>
 
     <pre>
