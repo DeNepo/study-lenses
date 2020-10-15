@@ -174,7 +174,7 @@ While Lenses and Options are represented by the same data type, they are called 
 {
   module: () => { "the plugin function" },
   queryKey: `identifying query name - the folder name`,
-  queryValue: 'parsed from the URL queries',
+  queryValue: { "express-parsed": "query value" },
   ownStatic: `own_static_resource__lenses__folder-name`,
   sharedStatic: `shared_static_resource`,
   userGuide: 'markdown text from the user guide'
@@ -186,6 +186,8 @@ While Lenses and Options are represented by the same data type, they are called 
 
 ### `config`
 
+> update docs to include directory-based .json config merging
+
 The config object is passed as an argument to plugin modules.  They're just a copy of the module's `plugin` object with the `.module` removed.  this takes place in [./server/handle-request/4-evaluate-options/index.js](./server/handle-request/4-evaluate-options/index.js) and [./server/handle-request/5-pipe-resource/index.js](./server/handle-request/5-pipe-resource/index.js)
 
 <details>
@@ -195,7 +197,7 @@ The config object is passed as an argument to plugin modules.  They're just a co
 {
   module: () => { "the plugin function" },
   queryKey: `identifying query name - the folder name`,
-  queryValue: 'parsed from the URL queries',
+  queryValue: { "express-parsed": "query value" },
   ownStatic: `own_static_resource__lenses__folder-name`,
   sharedStatic: `shared_static_resource`,
   userGuide: 'markdown text from the user guide'
@@ -374,4 +376,6 @@ Once all this works and is reliable:
     - when running locally, sure. when deployed, no
     - this can be passed as config into lenses & options
     - then a lense can modify their behavior if `trust` is true (ie. saving changes to disk)
-  -
+- directory-specific lense configurations
+  - `lenses.json` will apply to anything below
+  - `{ "lense-name": { anything goes inside this object } }`

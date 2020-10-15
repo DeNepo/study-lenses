@@ -6,12 +6,12 @@ const util = require('util')
 
 const readFilePromise = util.promisify(fs.readFile)
 
-const isItADirectory = require('./lib/is-it-a-directory.js')
+const isItADirectory = require('./is-it-a-directory.js')
 
 
 const loadPlugins = async (type) => {
 
-  const pluginsPath = path.join(__dirname, '..', '..', type)
+  const pluginsPath = path.join(__dirname, '..', '..', '..', type)
 
   // array of absolute paths to each plugin folder
   const pluginPaths = fs.readdirSync(pluginsPath)

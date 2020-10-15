@@ -5,9 +5,11 @@
 
 const areDifferent = require('./lib/are-different.js')
 
-const loadPlugins = require('./load-plugins.js')
+const loadPlugins = require('./lib/load-plugins.js')
 const optionsPromise = loadPlugins('options')
 const lensesPromise = loadPlugins('lenses')
+
+const compileLenseConfigs = require('./lib/compile-lense-configs.js')
 
 const subsetHttpData = require('./1-subset-http-data')
 const filePathFromRequestPath = require('./2-file-path-from-url')
@@ -56,17 +58,28 @@ const handleRequest = async (req, res) => {
   // console.log(requestedOptions)
 
 
-  // filter selected options and assign query values
+  // filter selected options, assign query values, and assign lense.json configurations
   const lenses = (await lensesPromise)
   const requestedLenses = Object.keys(req.query)
     .map(queryKey => {
       return lenses.find(lense => lense.queryKey === queryKey)
     })
     .filter(lense => lense !== undefined)
-  for (const lense of requestedLenses) {
-    lense.queryValue = req.query[lense.queryKey] || ''
+
+  // assign configurations to the lenses if any were requested
+  if (requestedLenses.length > 0) {
+    // assign the express-parsed query value
+    for (const lense of requestedLenses) {
+      lense.queryValue = req.query[lense.queryKey] || ''
+    }
+    // scan the directory of content for any local configurations
+    const lenseConfigs = compileLenseConfigs(absolutePath, process.cwd())
+    for (const lense of requestedLenses) {
+      Object.assign(lense, lenseConfigs[lense.queryKey])
+    }
+    // console.log(JSON.stringify(lenseConfigs, null, '  '))
+    // console.log(requestedLenses)
   }
-  // console.log(requestedLenses)
 
 
   let returnedHooks = {

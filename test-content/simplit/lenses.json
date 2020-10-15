@@ -1,0 +1,24 @@
+{
+  "live": {
+    "dependencies": [
+      {
+        "path": "./lib/not-module-b.js",
+        "module": false
+      },
+      {
+        "path": "./lib/toad.js",
+        "module": true
+      }
+    ],
+    "loopGuard": [
+      false,
+      {
+        "active": false,
+        "max": 10
+      }
+    ]
+  },
+  "hello-world": {
+    "/simplit": "yo"
+  }
+}

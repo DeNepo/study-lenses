@@ -1,0 +1,12 @@
+{
+  "live": {
+    "languages": {
+      "javascript": {
+        "loopGuard": true
+      }
+    }
+  },
+  "hello-world": {
+    "/languages": "hi"
+  }
+}
