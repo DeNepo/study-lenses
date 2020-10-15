@@ -111,7 +111,7 @@ const pipeResource = async ({
       // console.log(onErrorReturned)
       if (!onErrorReturned.recover) {
         // send no matter what, do not recover from an error in a lense
-        resource.content = `an error occurred in the "${lense.queryKey}" lense.\n\ntry removing it from the URL and refreshing`
+        resource.content = `an error occurred in the "${lense.queryKey}" lense.\n\ntry removing it from the URL and refreshing.\n\nor add the --debug option to learn more`
         resource.info.ext = '.txt'
         responseData.status = 500
         // in case of a lense error, fall back to the original resource

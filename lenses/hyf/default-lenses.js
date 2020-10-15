@@ -1,19 +1,19 @@
 const mime = {
   'directory': 'hyf',
-  'md': 'render',
+  'md': 'study',
   'html': '',
   'txt': '',
   '': '',
-  'js': 'format&highlight',
+  'js': 'study',
   'jsx': '',
-  'css': 'format&highlight',
+  'css': 'study',
   'json': 'json-explore',
   'png': '',
   'jpeg': '',
   'jpg': '',
   'gif': '',
   'svg': '',
-  'ts': 'format&highlight',
+  'ts': 'study',
   'mmd': 'mermaid',
   'default': ''
 };

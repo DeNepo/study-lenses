@@ -1,9 +1,7 @@
 {
-  "live": {
+  "study": {
     "languages": {
-      "javascript": {
-        "loopGuard": true
-      }
+      "loopGuard": true
     }
   },
   "hello-world": {

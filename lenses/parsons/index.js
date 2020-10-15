@@ -1,19 +1,10 @@
 'use strict'
 
-/*
-  config.queryValue: {
-    // where to begin and end parsonizing
-    startLine: 3,
-    endLine: 4
-    // this over-rides the resource, if provided
-    code: 'asdf'
-  }
-*/
-
-
-// JSON.parse(atob(decodeURIComponent(encodeURIComponent(btoa(JSON.stringify(f))))))
-
 const parsonsLense = ({ resource, config }) => {
+
+  if (!resource.info && !config.queryValue.code) {
+    return
+  }
 
   let code = resource.content
   let ext = resource.info.ext
@@ -40,11 +31,11 @@ const parsonsLense = ({ resource, config }) => {
     end = config.queryValue.end
   }
 
-  console.log(config.queryValue)
 
   code = code.split('\n').slice(start, end + 1).join('\n')
 
-  resource.content = `<html>
+  resource.content = `<!DOCTYPE html>
+<html>
 
 <head>
   <meta charset="UTF-8">

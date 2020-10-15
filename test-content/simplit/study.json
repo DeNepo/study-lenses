@@ -1,6 +1,5 @@
 {
-  "--ignore": true,
-  "live": {
+  "study": {
     "dependencies": [
       {
         "path": "./lib/not-module-b.js",
@@ -17,7 +16,10 @@
         "active": false,
         "max": 10
       }
-    ]
+    ],
+    "lenses": {
+      ".ts": "format&highlight"
+    }
   },
   "hello-world": {
     "/simplit": "yo"

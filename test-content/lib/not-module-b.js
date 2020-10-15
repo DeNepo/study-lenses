@@ -1,1 +1,1 @@
-console.log(3)
+console.log('not-module b')

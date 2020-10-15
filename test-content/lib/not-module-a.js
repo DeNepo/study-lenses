@@ -1,3 +1,1 @@
-const log = (thing) => (console.log(thing), thing);
-
-log(log);
+console.log('not-module a')

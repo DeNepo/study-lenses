@@ -45,10 +45,9 @@ const handleRequest = async (req, res) => {
 
 
   const localConfigs = compileLocalConfigs(absolutePath, process.cwd())
+  // console.log(JSON.stringify(localConfigs, null, '  '))
 
-
-  const ignore = localConfigs['--ignore']
-  if (ignore) {
+  if (localConfigs['--ignore']) {
     //    compile and send the response
     compileAndSendResponse({
       req, res,
