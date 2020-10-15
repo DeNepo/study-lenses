@@ -376,6 +376,3 @@ Once all this works and is reliable:
     - when running locally, sure. when deployed, no
     - this can be passed as config into lenses & options
     - then a lense can modify their behavior if `trust` is true (ie. saving changes to disk)
-- directory-specific lense configurations
-  - `lenses.json` will apply to anything below
-  - `{ "lense-name": { anything goes inside this object } }`
