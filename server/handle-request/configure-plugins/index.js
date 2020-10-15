@@ -31,12 +31,16 @@ const configurePlugins = async (localConfigs, parsedQuery) => {
 
   // assign configurations to the lenses if any were requested
   if (requestedLenses.length > 0) {
-    // assign the express-parsed query value
     for (const lense of requestedLenses) {
-      lense.queryValue = parsedQuery[lense.queryKey] || ''
-    }
-    // scan the directory of content for any local configurations
-    for (const lense of requestedLenses) {
+      // assign the express-parsed query value
+      //  if possible, JSON parse the string
+      try {
+        lense.queryValue = JSON.parse(parsedQuery[lense.queryKey])
+      } catch (o_0) {
+        lense.queryValue = parsedQuery[lense.queryKey]
+      }
+
+      // assign local configurations
       Object.assign(lense, localConfigs[lense.queryKey])
     }
     // console.log(JSON.stringify(localConfigs, null, '  '))

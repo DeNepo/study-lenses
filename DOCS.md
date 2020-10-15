@@ -199,11 +199,14 @@ The server will also scan the request's directory and parents (up to `cwd`) sear
 ```javascript
 {
   queryKey: `identifying query name - the folder name`,
-  queryValue: { "express-parsed": "query value" },
+  queryValue: {
+    "express-parsed": "query value",
+    "the server will try": "to JSON.parse each one"
+  },
   ownStatic: `own_static_resource__lenses__folder-name`,
   sharedStatic: `shared_static_resource`,
   userGuide: 'markdown text from the user guide'
-  // ... any other local configurations
+  // ... any other local configurations, lenses can have arbitrary configuration fields
 }
 ```
 

@@ -1,7 +1,7 @@
 'use strict'
 
 /*
-  queryValue: {
+  config.queryValue: {
     // where to begin and end parsonizing
     startLine: 3,
     endLine: 4
@@ -15,19 +15,12 @@
 
 const parsonsLense = ({ resource, config }) => {
 
-
-  let queryValue = {}
-  try {
-    queryValue = JSON.parse(config.queryValue)
-  } catch (o_0) { }
-
-
   let code = resource.content
   let ext = resource.info.ext
 
-  if (typeof queryValue.code === 'string') {
-    code = queryValue.code
-    ext = queryValue.ext || ''
+  if (typeof config.queryValue.code === 'string') {
+    code = config.queryValue.code
+    ext = config.queryValue.ext || ''
   } else if (typeof resource.content !== 'string') {
     return
   }
@@ -39,15 +32,15 @@ const parsonsLense = ({ resource, config }) => {
   let start = 0
   let end = code.split('\n').length
 
-  if (typeof queryValue.start === 'number') {
-    start = queryValue.start
+  if (typeof config.queryValue.start === 'number') {
+    start = config.queryValue.start
   }
 
-  if (typeof queryValue.end === 'number') {
-    end = queryValue.end
+  if (typeof config.queryValue.end === 'number') {
+    end = config.queryValue.end
   }
 
-  console.log(queryValue)
+  console.log(config.queryValue)
 
   code = code.split('\n').slice(start, end + 1).join('\n')
 
