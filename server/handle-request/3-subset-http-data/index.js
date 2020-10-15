@@ -2,7 +2,7 @@
 
 const deepClone = require('../lib/deep-clone.js')
 
-const subsetHttpData = (req, res) => {
+const subsetHttpData = (req) => {
 
   /* a copy of the data provided in the HTTP request
      this will be available to lenses and options when the resource is processed */

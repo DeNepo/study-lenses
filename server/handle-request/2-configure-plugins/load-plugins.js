@@ -6,7 +6,7 @@ const util = require('util')
 
 const readFilePromise = util.promisify(fs.readFile)
 
-const isItADirectory = require('./is-it-a-directory.js')
+const isItADirectory = require('../lib/is-it-a-directory.js')
 
 
 const loadPlugins = async (type) => {
@@ -27,7 +27,7 @@ const loadPlugins = async (type) => {
     try {
       module = require(path.join(absolutePluginPath, 'index.js'))
       if (typeof module !== 'function') {
-        throw new Error('module is not a function')
+        throw new Error(path.basename(absolutePluginPath) + ': module is not a function')
       }
     } catch (err) {
       console.log(err)

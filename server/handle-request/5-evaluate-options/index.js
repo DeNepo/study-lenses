@@ -4,7 +4,7 @@
 const deepClone = require('../lib/deep-clone.js')
 
 const evaluateOptions = async ({ requestData, responseData, resource, options, lenses }) => {
-  console.log('evaluating options')
+  console.log(': evaluating options')
 
   let optionedResponseData = responseData
   let optionedResource = resource

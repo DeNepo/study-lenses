@@ -34,11 +34,11 @@ const combineMerge = (target, source, options) => {
   return destination
 }
 
-const compileConfig = (absPath, cwd, config = {}) => {
+const compileLocalConfigs = (absPath, cwd, config = {}) => {
 
   const isFile = fs.existsSync(absPath) && fs.lstatSync(absPath).isFile();
   if (isFile) {
-    return compileConfig(path.dirname(absPath), cwd);
+    return compileLocalConfigs(path.dirname(absPath), cwd);
   };
 
   const configPath = path.join(absPath, 'lenses.json');
@@ -65,10 +65,10 @@ const compileConfig = (absPath, cwd, config = {}) => {
     return newConfig;
   } else {
     const oneUp = path.dirname(absPath);
-    return compileConfig(oneUp, cwd, newConfig);
+    return compileLocalConfigs(oneUp, cwd, newConfig);
   }
 
 
 };
 
-module.exports = compileConfig;
+module.exports = compileLocalConfigs;

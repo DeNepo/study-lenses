@@ -10,7 +10,7 @@ const pipeResource = async ({
   requestData, responseData, resource, lenses, hooks
 }) => {
 
-  console.log('piping request')
+  console.log(': piping request')
 
   let pipedRequestData = deepClone(requestData)
   let pipedResponseData = deepClone(responseData)
