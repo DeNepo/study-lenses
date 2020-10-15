@@ -41,7 +41,7 @@ const compileLocalConfigs = (absPath, cwd, config = {}) => {
     return compileLocalConfigs(path.dirname(absPath), cwd);
   };
 
-  const configPath = path.join(absPath, 'lenses.json');
+  const configPath = path.join(absPath, 'study.json');
   const hasConfig = fs.existsSync(configPath);
 
   if (!absPath.match(cwd) && !hasConfig) {

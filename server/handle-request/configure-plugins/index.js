@@ -4,10 +4,8 @@ const loadPlugins = require('./load-plugins.js')
 const optionsPromise = loadPlugins('options')
 const lensesPromise = loadPlugins('lenses')
 
-const compileLocalConfigs = require('./compile-local-configs.js')
 
-
-const configurePlugins = async (absolutePath, parsedQuery) => {
+const configurePlugins = async (localConfigs, parsedQuery) => {
 
 
   // filter selected options and assign query values
@@ -38,11 +36,10 @@ const configurePlugins = async (absolutePath, parsedQuery) => {
       lense.queryValue = parsedQuery[lense.queryKey] || ''
     }
     // scan the directory of content for any local configurations
-    const lenseConfigs = compileLocalConfigs(absolutePath, process.cwd())
     for (const lense of requestedLenses) {
-      Object.assign(lense, lenseConfigs[lense.queryKey])
+      Object.assign(lense, localConfigs[lense.queryKey])
     }
-    // console.log(JSON.stringify(lenseConfigs, null, '  '))
+    // console.log(JSON.stringify(localConfigs, null, '  '))
     // console.log(requestedLenses)
   }
 

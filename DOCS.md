@@ -40,7 +40,7 @@ These data types are the core of this application, they are used throughout `han
 
 ### `requestData`
 
-A subset of the HTTP request will be passed to lenses and options, see [3-subset-http-data](./server/handle-request/3-subset-http-data/index.js) for implementation.  it is created by reading from the express-parsed request:
+A subset of the HTTP request will be passed to lenses and options, see [subset-http-data](./server/handle-request/subset-http-data/index.js) for implementation.  it is created by reading from the express-parsed request:
 
 <details>
 <summary>request data initialized to:</summary>
@@ -60,7 +60,7 @@ const requestData = {
 
 ### `responseData`
 
-A subset of the HTTP response will be passed to lenses and options, see [3-subset-http-data](./server/handle-request/3-subset-http-data/index.js) for implementation.  it is created by reading from the express-parsed response.  lenses don't have direct access to the `.body` property because the body will be generated from `resource`, to modify the body lenses modify `resource.content` (and `resource.info.ext` if changing mime type):
+A subset of the HTTP response will be passed to lenses and options, see [subset-http-data](./server/handle-request/subset-http-data/index.js) for implementation.  it is created by reading from the express-parsed response.  lenses don't have direct access to the `.body` property because the body will be generated from `resource`, to modify the body lenses modify `resource.content` (and `resource.info.ext` if changing mime type):
 
 <details>
 <summary>response data initialized to:</summary>
@@ -79,7 +79,7 @@ const responseData = {
 
 ### `resource`
 
-When a user requests a resource it will be represented as an object, see [4-resource-from-absolute-path](./server/handle-request/4-resource-from-absolute-path/index.js) for implementation.  Examples:
+When a user requests a resource it will be represented as an object, see [resource-from-absolute-path](./server/handle-request/resource-from-absolute-path/index.js) for implementation.  Examples:
 
 <details>
 <summary>A file resource</summary>
@@ -189,7 +189,7 @@ While Lenses and Options are represented by the same data type, they are called 
 ### `config`
 
 
-The config object is passed as an argument to plugin modules.  They're just a copy of the module's `plugin` object with the `.module` removed.  this takes place in [./server/handle-request/5-evaluate-options/index.js](./server/handle-request/5-evaluate-options/index.js) and [./server/handle-request/6-pipe-resource/index.js](./server/handle-request/6-pipe-resource/index.js)
+The config object is passed as an argument to plugin modules.  They're just a copy of the module's `plugin` object with the `.module` removed.  this takes place in [./server/handle-request/evaluate-options/index.js](./server/handle-request/evaluate-options/index.js) and [./server/handle-request/pipe-resource/index.js](./server/handle-request/pipe-resource/index.js)
 
 The server will also scan the request's directory and parents (up to `cwd`) searching for a `lenses.json` file, generating a custom configuration by deep assigning configurations lower in the folder structure onto higher ones. At the end there will be an object with keys corresponding to plugin `.queryKey`s. For each requested plugin the local configuration will be assigned into the the `config` object.  This allows repositories of content to be written and configured specifically for a lense. ie. indicating that javascript files are `eval`-friendly, or loading helper functions like `deepCompare`.
 
@@ -223,7 +223,7 @@ Lenses are used to process the `resource`, `requestData` and `responseData`, tra
 
 Lense arguments and return values are copied, not passed by reference. The only way for them to modify the response is to return modified data.  If a Lense returns nothing or an invalid `requestData`, `responseData` or `resource`, the previous data will be passed again to the next lense.
 
-- Lenses are called in [./server/handle-request/6-pipe-resource/index.js](./server/handle-request/6-pipe-resource/index.js)
+- Lenses are called in [./server/handle-request/pipe-resource/index.js](./server/handle-request/pipe-resource/index.js)
 
 <details>
 <summary>example Lense function</summary>
@@ -258,7 +258,7 @@ Inspired by [cli conventions](https://nullprogram.com/blog/2020/08/01/) (but not
 
  Options will be executed in order passing the (possibly) modified res/req on to the next, each one receiving the same original data.  If an Option returns a `resource` or `responseData` object, they will be used to generate the response and the Lenses will not be piped. After the first Option returns valid data, the others will still be executed but their data will be ignored (useful for debugging or reporting Options).
 
-- Options are called in [./server/handle-request/5-evaluate-options/index.js](./server/handle-request/5-evaluate-options/index.js)
+- Options are called in [./server/handle-request/evaluate-options/index.js](./server/handle-request/evaluate-options/index.js)
 
 <details>
 <summary>example option function</summary>
@@ -296,9 +296,9 @@ const anOption = async ({
 
 Hooks are functions returned from an option that will be executed at different points in the lense pipeline.  If a Hook returns a valid `responseData` or `resource`, the cycle will be ended without piping then next Lense and the Hook's data will be rendered into an HTTP response.
 
-- Hooks are returned from their option in [./server/handle-request/5-evaluate-options/evaluate-hooks.js](./server/handle-request/5-evaluate-options/evaluate-hooks.js)
+- Hooks are returned from their option in [./server/handle-request/evaluate-options/evaluate-hooks.js](./server/handle-request/evaluate-options/evaluate-hooks.js)
 - Hooks are assigned the `.queryKey` from their Option when returned. This is helpful for debugging later on as they are stored as an array of functions, and hook function names cannot be configured by their Option
-- Hooks are called in [./server/handle-request/6-pipe-resource/evaluate-hooks.js](./server/handle-request/6-pipe-resource/evaluate-hooks.js)
+- Hooks are called in [./server/handle-request/pipe-resource/evaluate-hooks.js](./server/handle-request/pipe-resource/evaluate-hooks.js)
 
 > this needs some help, in concept and in code
 

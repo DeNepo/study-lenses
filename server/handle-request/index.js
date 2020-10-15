@@ -5,12 +5,15 @@
 
 const areDifferent = require('./lib/are-different.js')
 
-const filePathFromRequestPath = require('./1-file-path-from-url')
-const configurePlugins = require('./2-configure-plugins')
-const subsetHttpData = require('./3-subset-http-data')
-const resourceFromAbsolutePath = require('./4-resource-from-absolute-path')
-const evaluateOptions = require('./5-evaluate-options')
-const pipeResource = require('./6-pipe-resource')
+const filePathFromRequestPath = require('./file-path-from-url')
+const configurePlugins = require('./configure-plugins')
+const subsetHttpData = require('./subset-http-data')
+const resourceFromAbsolutePath = require('./resource-from-absolute-path')
+const evaluateOptions = require('./evaluate-options')
+const pipeResource = require('./pipe-resource')
+const compileLocalConfigs = require('./compile-local-configs')
+
+
 const compileAndSendResponse = require('./compile-and-send-response')
 // const handleError = require('./handle-error')
 //  i'm not sure how to handle errors, or where (this file or sub-folders)
@@ -22,31 +25,45 @@ const compileAndSendResponse = require('./compile-and-send-response')
 const handleRequest = async (req, res) => {
 
 
-  //    1. get absolute file path from request path
+  //  get absolute file path from request path
   //  detects static resource paths and adjusts them
   const absolutePath = filePathFromRequestPath(req.path)
   // console.log(absolutePath)
 
-
-  //    2. configure plugins
-  //  filter out the requested options and lenses
-  //  assign query values
-  //  assign local lense.json configurations
-  const { requestedOptions, requestedLenses } = await configurePlugins(absolutePath, req.query)
-
-
-  //    3. subset http data
-  const { requestData, responseData } = subsetHttpData(req)
-  // console.log(requestData)
-  // console.log(responseData)
-
-
-  //    4. render resource from absolute path
+  // render resource from absolute path
   // render the path into a resource
   // -> see docs for the resource data type
   const resource = await resourceFromAbsolutePath(absolutePath, process.cwd())
   // console.log(resource)
 
+
+  //   subset http data
+  const { requestData, responseData } = subsetHttpData(req)
+  // console.log(requestData)
+  // console.log(responseData)
+
+
+
+  const localConfigs = compileLocalConfigs(absolutePath, process.cwd())
+
+
+  const ignore = localConfigs['--ignore']
+  if (ignore) {
+    //    compile and send the response
+    compileAndSendResponse({
+      req, res,
+      finalResource: resource,
+      finalResponseData: responseData
+    })
+
+    return
+  }
+
+  //  configure plugins
+  //  filter out the requested options and lenses
+  //  assign query values
+  //  assign local lense.json configurations
+  const { requestedOptions, requestedLenses } = await configurePlugins(localConfigs, req.query)
 
 
   let returnedHooks = {
@@ -57,7 +74,7 @@ const handleRequest = async (req, res) => {
     onError: []
   }
   if (requestedOptions) { // only evaluate options if the user requested any
-    //    5. evaluate options
+    // evaluate options
     // if the options modify the resource or response data, send immediately
     // options are not lenses, they shouldn't be used to change the response
     //  only to intercept it

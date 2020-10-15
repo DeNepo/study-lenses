@@ -9,13 +9,13 @@ const debugOption = () => {
       .map(lense => `"${lense.queryKey}"`)
       .join(', ')
 
-    console.log('--debug:  before lenses ', lensesString)
+    console.log('--debug:  before all ', lensesString)
   }
   const afterAll = ({ lenses }) => {
     const lensesString = lenses
       .map(lense => `"${lense.queryKey}"`)
       .join(', ')
-    console.log('--debug:  after lenses ', lensesString)
+    console.log('--debug:  after all ', lensesString)
   }
   const beforeEach = ({ lense }) => {
     console.log(`--debug:  before lense "${lense.queryKey}"`)
