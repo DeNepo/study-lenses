@@ -92,7 +92,8 @@ When a user requests a resource it will be represented as an object, see [4-reso
     base: 'file-name.js',
     ext: '.js',
     name: 'file-name',
-    type: 'file'
+    type: 'file',
+    toCwd: '../..',
   },
   contents: "file contents as a string",
   error: null
@@ -114,7 +115,8 @@ When a user requests a resource it will be represented as an object, see [4-reso
     base: 'path',
     ext: '',
     name: 'path',
-    type: 'directory'
+    type: 'directory',
+    toCwd: '../..',
   },
   content: {
     root: '/Users/absolute/path/to/working/directory',
@@ -346,7 +348,7 @@ To see hooks in action, check out the `--debug` option.  This one is useful for 
 2. query `?reverse` - the text will be reversed
 3. query `?reverse&hello-world` - the text will be reversed, and embedded in the hello-world lense
 4. query `?reverse&error` after your query.  this lense just throws an error, you will see the default handling of a lense error
-5. now try `?--debug&reverse&error` or `?reverse&--debug&error` or `?reverse&error&--debug`.  Be sure to check your console!
+5. now try `?--debug&reverse&error&hello-world` or `?reverse&--debug&error&hello-world` or `?reverse&error&hello-world&--debug`.  Be sure to check your console!
 
 ### [`--recover`](./options/--recover)
 

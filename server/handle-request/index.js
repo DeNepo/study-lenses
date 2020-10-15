@@ -97,6 +97,7 @@ const handleRequest = async (req, res) => {
     returnedHooks = hooks
   }
 
+  // pipe the resource through the lenses and hooks, if any lenses were requested
   let finalResource = resource
   let finalResponseData = responseData
   if (requestedLenses) { // only pipe resource if the user requested it

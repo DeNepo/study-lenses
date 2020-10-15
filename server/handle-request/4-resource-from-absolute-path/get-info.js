@@ -6,6 +6,8 @@ const isItADirectory = require('../lib/is-it-a-directory.js')
 
 const getInfo = (absoluteFilePath = '', cwd = process.cwd()) => {
 
+  const toCwd = path.relative(absoluteFilePath, cwd)
+
   /*
     {
       root: '/',
@@ -31,7 +33,8 @@ const getInfo = (absoluteFilePath = '', cwd = process.cwd()) => {
     {
       root: cwd,
       dir: path.relative(cwd, preInfo.dir),
-      type: isItADirectory(absoluteFilePath) ? 'directory' : 'file'
+      type: isItADirectory(absoluteFilePath) ? 'directory' : 'file',
+      toCwd
     }
   )
 

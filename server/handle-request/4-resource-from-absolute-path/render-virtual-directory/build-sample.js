@@ -5,7 +5,7 @@ const path = require('path')
 
 const renderVirtualDirectory = require('./index.js')
 
-const renderPathPath = path.join(__dirname, '..')
+const renderPathPath = path.join(__dirname, 'sample-directory')
 const virtualDirectoryRenderPath = renderVirtualDirectory(renderPathPath)
 const stringifiedVirtualDirectory = JSON.stringify(virtualDirectoryRenderPath, null, '  ')
 

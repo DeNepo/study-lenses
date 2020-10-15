@@ -8,11 +8,14 @@ const deepSortChildren = require('./deep-sort-children.js')
 
 const renderVirtualDirectory = (absolutePath, gitignore = []) => {
 
+  const toCwd = path.relative(absolutePath, process.cwd())
+
   if (isItAFile(absolutePath)) {
     return getInfo(absolutePath, process.cwd())
   }
 
   const virDir = getInfo(absolutePath, process.cwd())
+  virDir.toCwd = toCwd
   virDir.children = []
 
   const paths = fs.readdirSync(absolutePath)

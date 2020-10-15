@@ -1,67 +1,79 @@
 {
-  "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/render-path/render-virtual-directory",
-  "dir": "../..",
-  "base": "render-path",
+  "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/4-resource-from-absolute-path/render-virtual-directory",
+  "dir": "",
+  "base": "sample-directory",
   "ext": "",
-  "name": "render-path",
+  "name": "sample-directory",
   "type": "directory",
   "children": [
     {
-      "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/render-path/render-virtual-directory",
-      "dir": "..",
-      "base": "render-virtual-directory",
+      "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/4-resource-from-absolute-path/render-virtual-directory",
+      "dir": "sample-directory",
+      "base": "nested-1-a",
       "ext": "",
-      "name": "render-virtual-directory",
+      "name": "nested-1-a",
       "type": "directory",
       "children": [
         {
-          "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/render-path/render-virtual-directory",
-          "dir": "",
-          "base": "build-sample.js",
-          "ext": ".js",
-          "name": "build-sample",
-          "type": "file"
-        },
-        {
-          "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/render-path/render-virtual-directory",
-          "dir": "",
-          "base": "deep-sort-children.js",
-          "ext": ".js",
-          "name": "deep-sort-children",
-          "type": "file"
-        },
-        {
-          "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/render-path/render-virtual-directory",
-          "dir": "",
-          "base": "index.js",
-          "ext": ".js",
-          "name": "index",
-          "type": "file"
-        },
-        {
-          "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/render-path/render-virtual-directory",
-          "dir": "",
-          "base": "sample-virtual-directory.json",
-          "ext": ".json",
-          "name": "sample-virtual-directory",
+          "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/4-resource-from-absolute-path/render-virtual-directory",
+          "dir": "sample-directory/nested-1-a",
+          "base": "file.md",
+          "ext": ".md",
+          "name": "file",
           "type": "file"
         }
       ]
     },
     {
-      "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/render-path/render-virtual-directory",
-      "dir": "..",
-      "base": "get-info.js",
-      "ext": ".js",
-      "name": "get-info",
+      "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/4-resource-from-absolute-path/render-virtual-directory",
+      "dir": "sample-directory",
+      "base": "nested-1-b",
+      "ext": "",
+      "name": "nested-1-b",
+      "type": "directory",
+      "children": [
+        {
+          "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/4-resource-from-absolute-path/render-virtual-directory",
+          "dir": "sample-directory/nested-1-b",
+          "base": "nested-1-a-2",
+          "ext": "",
+          "name": "nested-1-a-2",
+          "type": "directory",
+          "children": [
+            {
+              "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/4-resource-from-absolute-path/render-virtual-directory",
+              "dir": "sample-directory/nested-1-b/nested-1-a-2",
+              "base": "file.css",
+              "ext": ".css",
+              "name": "file",
+              "type": "file"
+            }
+          ]
+        },
+        {
+          "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/4-resource-from-absolute-path/render-virtual-directory",
+          "dir": "sample-directory/nested-1-b",
+          "base": "file.html",
+          "ext": ".html",
+          "name": "file",
+          "type": "file"
+        }
+      ]
+    },
+    {
+      "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/4-resource-from-absolute-path/render-virtual-directory",
+      "dir": "sample-directory",
+      "base": "file.txt",
+      "ext": ".txt",
+      "name": "file",
       "type": "file"
     },
     {
-      "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/render-path/render-virtual-directory",
-      "dir": "..",
-      "base": "index.js",
-      "ext": ".js",
-      "name": "index",
+      "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/4-resource-from-absolute-path/render-virtual-directory",
+      "dir": "sample-directory",
+      "base": "file.js.md",
+      "ext": ".md",
+      "name": "file.js",
       "type": "file"
     }
   ]

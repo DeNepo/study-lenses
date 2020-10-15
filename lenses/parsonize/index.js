@@ -9,3 +9,6 @@ module.exports = () => { }
     code: 'asdf'
   }
 */
+
+
+// JSON.parse(atob(decodeURIComponent(encodeURIComponent(btoa(JSON.stringify(f))))))
