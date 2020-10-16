@@ -34,18 +34,17 @@ const absPathToStudy = path.join(process.cwd(), pathToStudy);
 //   throw new Error(pathToStudy + ': is not a valid path');
 // };
 
-// -- the following lines will need to be rewritten when config works --
-// detect and render the default plugin options for this mime type
-// const defaultPlugins = require('../plugins/default-plugins.js');
-// const pluginName = fs.lstatSync(absPathToStudy).isDirectory()
-//   ? defaultPlugins.directory
-//   : defaultPlugins[path.extname(pathToStudy)];
+
+const defaultLenses = require('config').LENSES;
+const defaultLense = fs.lstatSync(absPathToStudy).isDirectory()
+  ? defaultLenses.directory
+  : defaultLenses[path.extname(pathToStudy)];
 
 // -- the following lines will need to be rewritten when config works --
 // construct a url using global configurations and the user-provided sub-path
 const pathToOpen = path.normalize(pathToStudy);
 // const url = `http://localhost:${config.get('PORT')}/${pathToOpen}?${pluginName}`;
-const url = `http://localhost:4600/${pathToOpen}?hyf`;
+const url = `http://localhost:4600/${pathToOpen}?${defaultLense}`;
 console.log('studying: ', url);
 
 
