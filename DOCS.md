@@ -17,6 +17,7 @@ How does this work?  Let me explain you
   - [`--defaults`](#--defaults)
   - [`--ignore`](#--ignore)
 - [Hooks](#hooks)
+- [Local Configurations](#local-configurations)
 - [All Together](#all-together)
 - [Next Steps](#next-steps)
 
@@ -33,6 +34,8 @@ By default (without any options or lenses), this is a basic static server. All r
 Lenses and Options can be written to treat POST request differently from GET requests, can make arbitrary network calls, and have access to the file system. More on this later.
 
 If a user has requested any plugins with URL parameters (ie. `/file.js?format&highlight`) then the `resource`, `requestData`, and `responseData` will be processed consecutively by the `format` and the `highlight` Lenses before being appended to the request body and sent.
+
+[TOP](#study-lense-docs)
 
 ---
 
@@ -221,6 +224,8 @@ The server will also scan the request's directory and parents (up to `cwd`) sear
 </details>
 <br>
 
+[TOP](#study-lense-docs)
+
 ---
 
 
@@ -260,6 +265,8 @@ Lense behavior can go from very simple to very complex, here's an artificial hie
 3. **CRUD**: lenses have access to the file system.  You could write a static lense that "routes" POST requests to itself using URL params then updates or creates files on disk. (no examples of this yet)
 4. **Web**: lenses can send & receive HTTP requests (`http`, `node-fetch`, ...).  Imagine a `?translate=dutch` lense that uses the DeepL API to translate a text before forwarding the response to the browser. (no examples of this yet)
 5. **Client/Server**: One of these is essentially a fullstack server embedded within the study server.  The lense can send a frontend app that "routes" all requests back to the lense using it's URL parameter.  It can can then send arbitrary data back and forth using the req/res bodies. (no examples of this yet)
+
+[TOP](#study-lense-docs)
 
 ---
 
@@ -302,6 +309,8 @@ const anOption = async ({
 
 </details>
 <br>
+
+[TOP](#study-lense-docs)
 
 ---
 
@@ -371,7 +380,7 @@ another option:
 2. query `?reverse&error&hello-world`
 3. now try `?reverse&error&--recover&hello-world` or `?--recover&reverse&error&hello-world` ...
 
-### `--defaults`
+### [`--defaults`](./options/--defaults)
 
 > does not have a plugin.  used to configure the handler at the beginning of a cycle
 
@@ -390,11 +399,55 @@ this is all-or-nothing.   there is no way to ignore selected lenses
 
 the idea here is to force the server into basic static-serverhood with local configurations
 
+[TOP](#study-lense-docs)
+
+---
+
+## Local Configurations
+
+The `study` server also supports local configurations, there are two supported local Option configurations and one field per lense.
+
+- __Lense Configurations__: When a request is parsed, the server will read local configurations and search for a key matching each requested lense.  If a matching local configuration key exists, all properties will be assigned onto the the Lense's `config` object.  There is no standard for local Lense configurations, each lense can support whatever field it chooses.
+- __Option Configurations__: there are two supported configurations.
+  - `--default` _object_: configures the default lenses by file type for the current directory and below. This will only impact lenses that refer to global defaults. For example with the `hyf` lense, changing this configuration will change how files open when navigating in the browser.  Check out [./test-content/parsons](./test-contents/parsons) to see this configuration in action
+  - `--ignore` _boolean_: don't parse or evaluate any Options or Lenses.  Converts the server to a basic static server, useful if code in a sub-directory uses it's own parameters
+
+<details>
+<summary>example `study.json` config file</summary>
+
+```json
+{
+  "study": {
+    "readOnly": false,
+    "eval": true,
+    "loopGuard": {
+      "active": true,
+      "max": 15
+    },
+    "openIn": [
+      "jsTutor"
+    ]
+  },
+  "--defaults": {
+    ".md": "render",
+    ".css": "parsons"
+  }
+}
+```
+
+</details>
+<br>
+
+
+[TOP](#study-lense-docs)
+
 ---
 
 ## All together
 
 play around with this: `?reverse&error&--debug&hello-world=bye&--recover`
+
+[TOP](#study-lense-docs)
 
 ---
 
@@ -411,3 +464,5 @@ Once all this works and is reliable:
     - when running locally, sure. when deployed, no
     - this can be passed as config into lenses & options
     - then a lense can modify their behavior if `trust` is true (ie. saving changes to disk)
+
+[TOP](#study-lense-docs)
