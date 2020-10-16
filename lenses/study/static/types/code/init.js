@@ -1,20 +1,19 @@
 
+//   `
+// <section id='control-panels>
 
-`
-<section id='control-panels>
+//   <div id='virdir-panel'</div>
 
-  <div id='virdir-panel'</div>
+//   <div id='config-panel'></div>
 
-  <div id='config-panel'></div>
+//   <div id='editor-panel'></div>
 
-  <div id='editor-panel'></div>
+//   <div id='static-study-panel'></div>
 
-  <div id='static-study-panel'></div>
+//   <div id='language-panel'></div>
 
-  <div id='language-panel'></div>
-
-</section>
-`
+// </section>
+// `
 
 
 
@@ -64,11 +63,10 @@ const initLiveStudy = (
   saveButton.addEventListener('click', editorStuff.handlers.save);
 
   parsonizeSelectionButton.addEventListener('click',
-    () => parsonizeSelection(editorStuff.editor));
+    () => studySelection('parsons', editorStuff.editor));
 
-  const closedDiffSelection = diffSelection(config);
   diffSelectionButton.addEventListener('click',
-    () => closedDiffSelection(editorStuff.editor));
+    () => studySelection('diff-scramble', editorStuff.editor));
 
 
   return {

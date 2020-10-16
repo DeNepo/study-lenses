@@ -1,5 +1,5 @@
 
-const getSelection = (monacoThing) => {
+const getMonacoSelection = (monacoThing) => {
   const editorSelection = monacoThing.getSelection();
   const editorSelectionEntries = Object.entries(editorSelection);
   const columnEntries = [];

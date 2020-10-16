@@ -9,7 +9,16 @@ const liveStudyLense = async ({ config, resource }) => {
 
   const type = detectType(resource)
 
-  let typeView = require(`./views/${type}.js`)
+
+  let typeView = require(`./views/code.js`)
+  // try {
+  //   typeView = require(`./views/${type}.js`)
+  // } catch (o_0) {
+  //   typeView = require(`./views/code.js`)
+  // }
+
+  config.code = encodeURIComponent(resource.content)
+  config.ext = resource.info.ext
 
   resource.content = typeView({ resource, config, type })
   resource.info.ext = '.html'
@@ -18,13 +27,6 @@ const liveStudyLense = async ({ config, resource }) => {
     resource
   }
 
-  // const typePath = `${config.ownStatic}/types/${type}/index.js`
-
-  // config.path = resource.info.toCwd + '/' + resource.info.dir
-  // config.type = type
-  // config.source = resource.content
-
-  // const view = renderView(type, config)
 
 }
 

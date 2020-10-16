@@ -1,5 +1,7 @@
 const detectType = (resource) => {
 
+  return 'code'
+
   if (resource.info.base.includes('.p5.js')) {
     return 'p5';
   }

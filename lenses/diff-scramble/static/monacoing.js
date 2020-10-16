@@ -8,7 +8,7 @@ const anEditor = ({
 
   const options = Object.assign(
     {
-      language: 'text',
+      language: monacoExtToLanguage[config.ext] || '',
       roundedSelection: true,
       scrollBeyondLastLine: false,
       theme: "vs-dark",
@@ -88,7 +88,7 @@ const anEditor = ({
   };
 
   const reset = () => {
-    editor.setValue(code);
+    editor.setValue(config.code);
   };
 
   const save = (monacoThing, path) => () => {

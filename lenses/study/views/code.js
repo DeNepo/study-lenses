@@ -2,7 +2,7 @@
 
 const renderDependencies = require('../lib/render-dependencies')
 
-const codeView = ({ config, resource, type }) => {
+const codeView = ({ config, resource }) => {
   return `<!DOCTYPE html>
 <html>
 
@@ -19,8 +19,17 @@ const codeView = ({ config, resource, type }) => {
 
 <body>
 
-  <div id='buttons-panel'></div>
-  <div id='editor-container'></div>
+  <div id='buttons-panel'>
+    <input type='checkbox' checked='true' /> read-only
+    <button style="display: none;">format code</button>
+    <button style="display: none;">reset code</button>
+    <button style="display: none;">save</button>
+    <br>
+    <br>
+    <button>parsonize selection</button>
+    <button>diff selection</button>
+  </div>
+  <div id='editor-container' style='height: 90vh'></div>
 
 
   <script>var require = { paths: { 'vs': '${config.sharedStatic}/monaco/min/vs' } };</script>
@@ -30,16 +39,19 @@ const codeView = ({ config, resource, type }) => {
 
 
 
+  <script src='${config.sharedStatic}/lib/monaco-ext-to-language.js'></script>
+
+  <script src='${config.ownStatic}/lib/monacoing.js'></script>
+  <script src='${config.ownStatic}/lib/get-monaco-selection.js'></script>
+  <script src='${config.ownStatic}/lib/study-selection.js'></script>
+
+  <script src='${config.ownStatic}/types/code/init.js'></script>
+
   <script>
-
     const config = ${JSON.stringify(config, null, '  ')};
-
+    config.code = decodeURIComponent(config.code)
+    initLiveStudy(config, document.getElementById('buttons-panel'), document.getElementById('editor-container'))
   </script>
-
-
-  <script src='${config.ownStatic}/init.js'></script>
-  <script src='${config.ownStatic}/types/${type}/index.js' type='module'></script>
-
 
 </body>
 
