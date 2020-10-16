@@ -406,20 +406,9 @@ the idea here is to force the server into basic static-serverhood with local con
 
 ## Local Configurations
 
-The `study` server also supports local configurations, there are two supported local Option configurations and one field per lense.
+The `study` server also supports local configurations in `study.json` files.  Configurations in a directory apply to all sub-directories. If there is a `study.json` file in a sub-directory, matching keys in the lower config will be assigned onto the higher config (ie. lense configurations are cumulative)
 
-### Lense Configurations
-
-When a request is parsed, the server will read local configurations and search for a key matching each requested lense.  If a matching local configuration key exists, all properties will be assigned onto the the Lense's `config` object.
-
-There is no standard for local Lense configurations, each lense can support whatever field it chooses.
-
-### Option Configurations
-
-there are two supported configurations:
-
-- `--defaults` _object_: configures the default lenses by file type for the current directory and below. This will only impact lenses that refer to global defaults. For example with the `hyf` lense, changing this configuration will change how files open when navigating in the browser.  Check out [./test-content/parsons](./test-contents/parsons) to see this configuration in action
-- `--ignore` _boolean_: don't parse or evaluate any Options or Lenses.  Converts the server to a basic static server, useful if code in a sub-directory uses it's own parameters
+There are two supported local Option configurations and one field per lense.
 
 <details>
 <summary>example `study.json` config file</summary>
@@ -447,6 +436,19 @@ there are two supported configurations:
 </details>
 <br>
 
+
+### Lense Configurations
+
+When a request is parsed, the server will read local configurations and search for a key matching each requested lense.  If a matching local configuration key exists, all properties will be assigned onto the the Lense's `config` object.
+
+There is no standard for local Lense configurations, each lense can support whatever field it chooses.
+
+### Option Configurations
+
+there are two supported configurations:
+
+- `--defaults` _object_: configures the default lenses by file type for the current directory and below. This will only impact lenses that refer to global defaults. For example with the `hyf` lense, changing this configuration will change how files open when navigating in the browser.  Check out [./test-content/parsons](./test-contents/parsons) to see this configuration in action
+- `--ignore` _boolean_: don't parse or evaluate any Options or Lenses.  Converts the server to a basic static server, useful if code in a sub-directory uses it's own parameters
 
 [TOP](#study-lense-docs)
 
