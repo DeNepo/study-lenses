@@ -407,10 +407,18 @@ the idea here is to force the server into basic static-serverhood with local con
 
 The `study` server also supports local configurations, there are two supported local Option configurations and one field per lense.
 
-- __Lense Configurations__: When a request is parsed, the server will read local configurations and search for a key matching each requested lense.  If a matching local configuration key exists, all properties will be assigned onto the the Lense's `config` object.  There is no standard for local Lense configurations, each lense can support whatever field it chooses.
-- __Option Configurations__: there are two supported configurations.
-  - `--default` _object_: configures the default lenses by file type for the current directory and below. This will only impact lenses that refer to global defaults. For example with the `hyf` lense, changing this configuration will change how files open when navigating in the browser.  Check out [./test-content/parsons](./test-contents/parsons) to see this configuration in action
-  - `--ignore` _boolean_: don't parse or evaluate any Options or Lenses.  Converts the server to a basic static server, useful if code in a sub-directory uses it's own parameters
+### Lense Configurations
+
+When a request is parsed, the server will read local configurations and search for a key matching each requested lense.  If a matching local configuration key exists, all properties will be assigned onto the the Lense's `config` object.
+
+There is no standard for local Lense configurations, each lense can support whatever field it chooses.
+
+### Option Configurations
+
+there are two supported configurations:
+
+- `--defaults` _object_: configures the default lenses by file type for the current directory and below. This will only impact lenses that refer to global defaults. For example with the `hyf` lense, changing this configuration will change how files open when navigating in the browser.  Check out [./test-content/parsons](./test-contents/parsons) to see this configuration in action
+- `--ignore` _boolean_: don't parse or evaluate any Options or Lenses.  Converts the server to a basic static server, useful if code in a sub-directory uses it's own parameters
 
 <details>
 <summary>example `study.json` config file</summary>
@@ -445,7 +453,7 @@ The `study` server also supports local configurations, there are two supported l
 
 ## All together
 
-play around with this: `?reverse&error&--debug&hello-world=bye&--recover`
+play around with this: `?reverse&--ignore&error&--debug&hello-world=bye&--recover`
 
 [TOP](#study-lense-docs)
 
@@ -457,9 +465,9 @@ Once all this works and is reliable:
 
 - tests for new lenses and options
 - architected for deployment on netlify
-- global configurations
+- global server configurations
   - `port`
-  - `trust`
+  - `trust` ?
     - should requests be trusted?
     - when running locally, sure. when deployed, no
     - this can be passed as config into lenses & options
