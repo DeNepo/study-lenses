@@ -13,7 +13,7 @@ pre[class*="language-"] {
 	text-shadow: 0 1px rgba(0, 0, 0, 0.3);
   font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
   /* font-size: 1em; */
-	font-size: 0.7em;
+	font-size: 0.8em;
 	text-align: left;
 	white-space: pre;
 	word-spacing: normal;
@@ -141,7 +141,7 @@ pre[class*="language-"].line-numbers > code {
 	pointer-events: none;
   top: 0;
   /* font-size: 100%; */
-	font-size: 70%;
+	font-size: 80%;
 	left: -3.8em;
 	width: 3em; /* works for line-numbers below 1000 lines */
 	letter-spacing: -1px;
@@ -540,7 +540,7 @@ div.code-toolbar > .toolbar button,
 div.code-toolbar > .toolbar span {
 	color: #bbb;
   /* font-size: .8em; */
-  font-size: .6em;
+  font-size: .7em;
 	padding: 0 .5em;
 	background: #f5f2f0;
 	background: rgba(224, 224, 224, 0.2);

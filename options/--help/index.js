@@ -5,13 +5,17 @@ const path = require('path')
 const util = require('util')
 const readFilePromise = util.promisify(fs.readFile)
 
+const isItADirectory = require('../../server/handle-request/lib/is-it-a-directory')
+
 const optionGuideInfo = fs.readdirSync(path.join(__dirname, '..'))
+  .filter(isItADirectory)
   .map(optionPath => ({
     queryKey: optionPath,
     userGuide: readFilePromise(path.join(__dirname, '..', optionPath, 'user-guide.md'), 'utf-8')
   }))
 
 const lenseGuideInfo = fs.readdirSync(path.join(__dirname, '..', '..', 'lenses'))
+  .filter(isItADirectory)
   .map(lensePath => ({
     queryKey: lensePath,
     userGuide: readFilePromise(path.join(__dirname, '..', '..', 'lenses', lensePath, 'user-guide.md'), 'utf-8')

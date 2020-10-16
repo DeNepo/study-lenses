@@ -2,6 +2,7 @@ const renderTocDoc = require('./render-toc-doc.js');
 
 const hyfLense = async ({ resource }) => {
 
+
   if (!resource.content || typeof resource.content === 'string') {
     return
   }

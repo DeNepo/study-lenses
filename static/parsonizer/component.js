@@ -12,6 +12,29 @@ class JSParsons extends HTMLElement {
     this.language = language;
     // console.dir(this)
 
+    // process the code:
+    //  - register all distractor lines
+    const distractorIndices = []
+    const codeLines = this.code.split('\n')
+    for (let i = 0; i < codeLines.length; i++) {
+      if ((codeLines[i].search(/\/\/( |\t)+distractor\s*$/) >= 0) || (codeLines[i].search(/\/\/distractor\s*$/) >= 0)) {
+        distractorIndices.push(i)
+      }
+    }
+    // - remove all comments
+    const strippedCode = strip(this.code)
+    // - replace all distractor comments
+    const finalCode = strippedCode
+      .split('\n')
+      .map((line, index) => {
+        if (distractorIndices.includes(index)) {
+          return line + ' // distractor'
+        }
+        return line
+      })
+      .join('\n')
+    this.code = finalCode
+
   }
 
   async connectedCallback() {

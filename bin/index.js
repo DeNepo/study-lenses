@@ -50,10 +50,8 @@ console.log('studying: ', url);
 
 
 // launch the server
-require('../server/index.js');
+require('../server/index.js')(() => require('open')(url));
 
-// open a new tab in the user's default browser
-require('open')(url);
 
 
 

@@ -5,6 +5,7 @@
     padding-left: 0px;
     margin-left: 2%;
     float: left;
+    width: 40%;
 }
 #sortableTrash { width: 38%; }
 #sortable { width: 56%; }

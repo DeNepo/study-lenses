@@ -18,10 +18,13 @@ const loadPlugins = async (type) => {
     .map(subPath => path.join(pluginsPath, subPath))
     .filter(isItADirectory)
 
-
   const plugins = []
 
   for (const absolutePluginPath of pluginPaths) {
+
+    if (!isItADirectory(absolutePluginPath)) {
+      continue
+    }
 
     let module = null
     try {

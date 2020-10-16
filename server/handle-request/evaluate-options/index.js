@@ -33,6 +33,7 @@ const evaluateOptions = async ({ requestData, responseData, resource, options, l
         options: deepClone(options),
         lenses: deepClone(lenses)
       })
+        || {}
 
       // todo: validate objects before continuing
       //  if they fail validation, use the previous

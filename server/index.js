@@ -55,15 +55,22 @@ app.use(cookieParser())
 // this is where it all happens
 app.use(handleRequest)
 
-// launch the app
-app.listen(PORT, err => {
-  if (err) {
-    Logger.error(`Failed to start server on port: ${PORT}`, err)
-    process.exit(1)
-  }
 
-  Logger.info(`Server started successfully on port: ${PORT}`)
-})
+// launch the app
+// to open browser after success
+const startServer = (cb) => {
+  app.listen(PORT, err => {
+    if (err) {
+      Logger.error(`Failed to start server on port: ${PORT}`, err)
+      process.exit(1)
+    }
+
+    Logger.info(`Server started successfully on port: ${PORT}`)
+    cb()
+  })
+}
+
+module.exports = startServer
 
 /*
   go to ./handle-request/index.js for the next step in your journey

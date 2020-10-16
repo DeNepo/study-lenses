@@ -3,7 +3,7 @@
 // config
 // logger
 
-const areDifferent = require('./lib/are-different.js')
+const util = require('util')
 
 const filePathFromRequestPath = require('./file-path-from-url')
 const configurePlugins = require('./configure-plugins')
@@ -90,14 +90,14 @@ const handleRequest = async (req, res) => {
       lenses: requestedLenses,
     })
     // console.log(optionedResource)
-    // console.log(areDifferent(optionedResource, resource))
-    // console.log(areDifferent(optionedResponseData, responseData))
+    // console.log(!util.isDeepStrictEqual(optionedResource, resource))
+    // console.log(!util.isDeepStrictEqual(optionedResponseData, responseData))
 
     // check if an option returned a modified resource or response data
     //  if they did, send the response immediately and return early
     if (
-      areDifferent(optionedResponseData, responseData)
-      || areDifferent(optionedResource, resource)
+      !util.isDeepStrictEqual(optionedResponseData, responseData)
+      || !util.isDeepStrictEqual(optionedResource, resource)
     ) {
 
       compileAndSendResponse({

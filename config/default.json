@@ -5,12 +5,12 @@
   },
   "LENSES": {
     "default": "",
-    ".md": "live",
+    ".md": "study",
     ".html": "",
-    ".txt": "notepad",
+    ".txt": "",
     "": "",
-    ".js": "live",
-    ".css": "live",
+    ".js": "study",
+    ".css": "study",
     ".json": "json-formatter",
     ".png": "",
     ".jpeg": "",
@@ -18,7 +18,7 @@
     ".gif": "",
     ".svg": "",
     ".mmd": "mermaid",
-    "directory": "directory"
+    "directory": "hyf"
   },
   "ORIGIN": {
     "build": "https://janke-learning.github.io/study-lenses",

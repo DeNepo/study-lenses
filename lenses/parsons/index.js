@@ -66,7 +66,7 @@ const parsonsLense = ({ resource, config }) => {
   <script src="${config.sharedStatic}/lib/strip-comments.js"></script>
 
   <script>
-    const code = strip(decodeURIComponent("${encodeURIComponent(code)}"))
+    const code = decodeURIComponent("${encodeURIComponent(code)}")
     const parsonsComponent = new JSParsons(code, "${ext.replace('.', '')}")
     document.getElementById('parsons-container')
       .appendChild(parsonsComponent)
