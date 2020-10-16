@@ -33,7 +33,7 @@ const helpOption = async ({ config }) => {
 
   let optionUserGuides = ''
   for (const info of optionGuideInfo) {
-    const open = `<details><summary><code>${info.queryKey}</code></summary>`
+    const open = `<details><summary><code>${info.queryKey}</code></summary><br>`
     const guide = `<section>${marked(await info.userGuide)}</section><hr>`
     const close = `</details>`
     optionUserGuides += open + guide + close
@@ -41,7 +41,7 @@ const helpOption = async ({ config }) => {
 
   let lenseUserGuides = ''
   for (const info of lenseGuideInfo) {
-    const open = `<details><summary><code>${info.queryKey}</code></summary>`
+    const open = `<details><summary><code>${info.queryKey}</code></summary><br>`
     const guide = `<section>${marked(await info.userGuide)}</section><hr>`
     const close = `</details>`
     lenseUserGuides += open + guide + close

@@ -1,3 +1,1 @@
-# --help
-
 guide guide guide

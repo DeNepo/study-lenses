@@ -11,10 +11,13 @@ How does this work?  Let me explain you
   - [`config`](#config)
 - [Lenses](#Lenses)
 - [Options](#options)
-  - [--help](#--help)
-  - [--debug](#--debug)
-  - [--recover](#--recover)
+  - [`--help`](#--help)
+  - [`--debug`](#--debug)
+  - [`--recover`](#--recover)
 - [Hooks](#hooks)
+- [Local Configurations](#local-configurations)
+  - [`--defaults`](#--defaults)
+  - [`--ignore`](#--ignore)
 - [All Together](#all-together)
 - [Next Steps](#next-steps)
 
@@ -255,7 +258,7 @@ Lense behavior can go from very simple to very complex, here's an artificial hie
 
 ---
 
-### [Options](./options)
+## [Options](./options)
 
 Inspired by [cli conventions](https://nullprogram.com/blog/2020/08/01/) (but not exactly alike), Options are params that are prefixed with `--` and operate "outside" the normal control flow to observe, modify, or stop the server's behavior.  Requested Options will be filtered out and evaluated before the resource is processed by any Lenses.  In contrast to Lenses, an Option cannot modify the `resource` without ending the request/response cycle (ie. `--help` will send a user guide).
 
@@ -362,6 +365,20 @@ another option:
 3. now try `?reverse&error&--recover&hello-world` or `?--recover&reverse&error&hello-world` ...
 
 ---
+
+## Local Configurations
+
+### `--defaults`
+
+apply for the cli only.  requests will still require manual params
+
+certain directory-view lenses may use these defaults
+
+### `--ignore`
+
+- boolean - ignore all
+- array of lenses - ignore just those
+
 
 ## All together
 
