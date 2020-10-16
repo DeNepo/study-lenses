@@ -240,7 +240,7 @@ Lense arguments and return values are copied, not passed by reference. The only 
 <summary>example Lense function</summary>
 
 ```javascript
-const aLense = async ({requestData, responseData, resource, config}) => {
+const aLense = async ({ requestData, responseData, resource, config }) => {
 
   return {
     requestData,
