@@ -58,7 +58,7 @@ app.use(handleRequest)
 
 // launch the app
 // to open browser after success
-const startServer = (cb) => {
+const serverPromise = new Promise((resolve, reject) => {
   app.listen(PORT, err => {
     if (err) {
       Logger.error(`Failed to start server on port: ${PORT}`, err)
@@ -66,11 +66,11 @@ const startServer = (cb) => {
     }
 
     Logger.info(`Server started successfully on port: ${PORT}`)
-    cb()
+    resolve()
   })
-}
+})
 
-module.exports = startServer
+module.exports = serverPromise
 
 /*
   go to ./handle-request/index.js for the next step in your journey

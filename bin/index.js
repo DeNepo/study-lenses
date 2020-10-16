@@ -49,7 +49,8 @@ console.log('studying: ', url);
 
 
 // launch the server
-require('../server/index.js')(() => require('open')(url));
+require('../server/index.js')
+  .then(_ => require('open')(url));
 
 
 
