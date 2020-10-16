@@ -10,12 +10,12 @@ const liveStudyLense = async ({ config, resource }) => {
   const type = detectType(resource)
 
 
-  let typeView = require(`./views/code.js`)
-  // try {
-  //   typeView = require(`./views/${type}.js`)
-  // } catch (o_0) {
-  //   typeView = require(`./views/code.js`)
-  // }
+  let typeView = () => { }
+  try {
+    typeView = require(`./views/${type}.js`)
+  } catch (o_0) {
+    typeView = require(`./views/code.js`)
+  }
 
   config.code = encodeURIComponent(resource.content)
   config.ext = resource.info.ext

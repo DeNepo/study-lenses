@@ -1,22 +1,4 @@
 
-//   `
-// <section id='control-panels>
-
-//   <div id='virdir-panel'</div>
-
-//   <div id='config-panel'></div>
-
-//   <div id='editor-panel'></div>
-
-//   <div id='static-study-panel'></div>
-
-//   <div id='language-panel'></div>
-
-// </section>
-// `
-
-
-
 const initLiveStudy = (
   config,
   controlPanel = document.createElement('div'),

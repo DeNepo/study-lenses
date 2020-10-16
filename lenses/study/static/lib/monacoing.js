@@ -3,8 +3,11 @@ const anEditor = ({
   config = {}
 }) => {
 
-  container.style.width = '95%';
+  container.style.width = config.editorWidth || '95%';
   container.style.overflow = 'hidden';
+
+  const readOnly = typeof config.readOnly === 'boolean'
+    ? config.readOnly : true
 
   const options = Object.assign(
     {
@@ -16,7 +19,7 @@ const anEditor = ({
       wordWrap: 'wordWrapColumn',
       wordWrapColumn: 100,
       automaticLayout: true,
-      readOnly: true,
+      readOnly,
       tabSize: 2,
       scrollBeyondLastLine: false,
       wordWrap: 'on',

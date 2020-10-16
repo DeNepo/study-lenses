@@ -933,7 +933,8 @@
       return pre.innerHTML;
     }
     `<pre><code class="language-css">p { color: red }</code></pre>`
-    return '<li id="' + codeline.id + `"><pre class="language-${this.options.language} no-line-numbers" style="font-size: 70%;"><code>` + (this.options.language === 'html' ? escapeHTML(codeline.code) : codeline.code) + '</code></pre></li>';
+    return '<li id="' + codeline.id + `"><pre class="language-${this.options.language} no-line-numbers" style="font-size: 70%;"><code>` + escapeHTML(codeline.code) + '</code></pre></li>';
+    // return '<li id="' + codeline.id + `"><pre class="language-${this.options.language} no-line-numbers" style="font-size: 70%;"><code>` + (this.options.language === 'html' ? escapeHTML(codeline.code) : codeline.code) + '</code></pre></li>';
     // return '<li id="' + codeline.id + `" class="prettyprint lang-${this.options.language}">` + (this.options.language === 'html' ? escapeHTML(codeline.code) : codeline.code) + '</li>';
   };
 
