@@ -36,8 +36,8 @@ process.on('uncaughtException', function onUncaughtException(e) {
   process.exit(99);
 });
 
-process.on('uncaughtException', function onUncaughtException(e) {
-  Logger.error('uncaughtException', e);
+process.on('unhandledRejection', function onUnhandledPromise(e) {
+  Logger.error('unhandledRejection', e);
   process.exit(99);
 });
 

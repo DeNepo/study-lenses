@@ -18,7 +18,7 @@ const configurePlugins = async (localConfigs, parsedQuery) => {
   }
 
   Object.assign(config.LENSES, localConfigs['--defaults'])
-  console.log(config.LENSES)
+  // console.log(config.LENSES)
 
   // filter selected options and assign query values
   const options = (await optionsPromise)

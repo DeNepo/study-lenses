@@ -1,6 +1,11 @@
 'use strict';
 
+const marked = require('marked')
 const defaults = require('config').LENSES
+const path = require('path')
+const fs = require('fs')
+const util = require('util')
+const readFilePromise = util.promisify(fs.readFile)
 
 
 const tableOfContents = (dirElement, first = false) => {
@@ -24,7 +29,15 @@ const tableOfContents = (dirElement, first = false) => {
   return '';
 };
 
-module.exports = function renderTocDoc(virDir) {
+module.exports = async function renderTocDoc(virDir, config) {
+
+  const readme = virDir.children
+    .find(child => child.base.toLowerCase() === 'readme.md')
+
+  const readmeSource = readme
+    ? (await readFilePromise(path.join(readme.root, readme.dir, readme.base), 'utf-8'))
+    : ''
+
   return `<!DOCTYPE html>
 <html>
   <head>
@@ -36,6 +49,8 @@ module.exports = function renderTocDoc(virDir) {
         list-style-type: none;
       }
     </style>
+    <link rel="stylesheet" href="${config.sharedStatic}/gh-styles.css">
+    <link rel="stylesheet" href="${config.sharedStatic}/prism/style.css">
   </head>
   <body>
     <ul list-style='none'>
@@ -43,10 +58,11 @@ module.exports = function renderTocDoc(virDir) {
       ${tableOfContents(virDir, true)}
     </ul>
 
-    <script>
-      console.log(${JSON.stringify(virDir)})
-    </script>
+    <hr>
+    <hr>
 
+    <main class="markdown-body">${marked(readmeSource)}</main>
+    <script src="${config.sharedStatic}/prism/script.js"></script>
   </body>
 </html>`;
 };
