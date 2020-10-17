@@ -10,6 +10,7 @@ const b = 8;
 while (a !== b) {
   // 5, 7, 9, 11: increment a
   a += b / 4;
+  console.log(a)
 }
 
 // 13: assert a
