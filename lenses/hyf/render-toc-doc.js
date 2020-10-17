@@ -20,7 +20,7 @@ const tableOfContents = ({ dirElement, first = false, defaults = {} }) => {
   if (dirElement.type === 'file') {
     const query = defaults[dirElement.ext] ? defaults[dirElement.ext] : '';
     const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
-    return `<li><a href="${relativePath}?${query}">${dirElement.base}</a></li>\n`;
+    return `<li><a href="${relativePath}?${query}" target="_blank">${dirElement.base}</a></li>\n`;
   }
 
   if (dirElement.type === 'directory') {
@@ -33,9 +33,13 @@ const tableOfContents = ({ dirElement, first = false, defaults = {} }) => {
     const query = defaults.directory ? defaults.directory : '';
     const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
     return first ? subIndex
-      : (`<li><details><summary><a href="${relativePath}?${query}">${dirElement.base}</a></summary>\n`
+      : (`<li><details><summary>${dirElement.base}</summary>\n`
         + (subIndex ? '\n<ul>' + subIndex + '</ul>' : '')
         + '</details></li>');
+    // return first ? subIndex
+    //   : (`<li><details><summary><a href="${relativePath}?${query}">${dirElement.base}</a></summary>\n`
+    //     + (subIndex ? '\n<ul>' + subIndex + '</ul>' : '')
+    //     + '</details></li>');
   }
 
   return '';
