@@ -34,7 +34,7 @@ const initLiveStudy = (
 
 
   parsonizeSelectionButton.addEventListener('click',
-    () => studySelection('parsons', editorStuff.editor, config.locals))
+    () => studySelection('parsons', editorStuff.editor, Object.assign({}, config.locals, { ext: '.js' })))
 
   diffSelectionButton.addEventListener('click',
     () => studySelection('diff-scramble', editorStuff.editor))

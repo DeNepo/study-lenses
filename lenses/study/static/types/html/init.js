@@ -10,11 +10,10 @@ const initLiveStudy = (
   // editorContainer.style.height = (config.code.split('\n').length * 1.5) + 'em';
   controlPanel.innerHTML = `
     <button>format code</button>
-    <button>reset code</button>
-    <br>
-    <br>
+    <button>reset code</button> ||
     <button>parsonize selection</button>
     <button>diff selection</button>
+    <br><br>
     <button>open in new tab</button>`;
 
   const formatCodeButton = controlPanel.children[0];
@@ -23,7 +22,7 @@ const initLiveStudy = (
   const diffSelectionButton = controlPanel.children[5];
   const newTabButton = controlPanel.children[6];
 
-  config.editorWidth = editorContainer.style.width
+  config.editorWidth = '60%'
   const editorStuff = anEditor({ config, container: editorContainer });
   editorStuff.editor.layout();
 
@@ -52,7 +51,7 @@ const initLiveStudy = (
   resetCodeButton.addEventListener('click', editorStuff.handlers.reset);
 
   parsonizeSelectionButton.addEventListener('click',
-    () => studySelection('parsons', editorStuff.editor));
+    () => studySelection('parsons', editorStuff.editor, { ext: '.html' }));
 
   diffSelectionButton.addEventListener('click',
     () => studySelection('diff-scramble', editorStuff.editor));
