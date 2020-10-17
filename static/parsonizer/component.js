@@ -14,26 +14,16 @@ class JSParsons extends HTMLElement {
 
     // process the code:
     //  - register all distractor lines
-    const distractorIndices = []
-    const codeLines = this.code.split('\n')
-    for (let i = 0; i < codeLines.length; i++) {
-      if ((codeLines[i].search(/\/\/( |\t)+distractor\s*$/) >= 0) || (codeLines[i].search(/\/\/distractor\s*$/) >= 0)) {
-        distractorIndices.push(i)
-      }
-    }
-    // - remove all comments
-    const strippedCode = strip(this.code)
-    // - replace all distractor comments
-    const finalCode = strippedCode
-      .split('\n')
-      .map((line, index) => {
-        if (distractorIndices.includes(index)) {
-          return line + ' // distractor'
-        }
-        return line
-      })
-      .join('\n')
-    this.code = finalCode
+    const distractorReplacer = '$_$_$_$_$_$_$_$_$_$_$_$'
+    const distractorReplaced = this.code
+      .replace(/\/\/( |\t)+distractor\s*$/mg, distractorReplacer)
+      .replace(/\/\/distractor\s*$/mg, distractorReplacer)
+
+    const strippedCode = strip(distractorReplaced)
+      .split(distractorReplacer)
+      .join('// distractor')
+
+    this.code = strippedCode
 
   }
 
@@ -45,8 +35,77 @@ class JSParsons extends HTMLElement {
       }
     }
 
-    const sortableId = Math.random().toString(36).substring(7);
-    const trashId = Math.random().toString(36).substring(7);
+
+    const buttonsContainer = document.createElement('div');
+    this.appendChild(buttonsContainer);
+
+    const newInstanceButton = document.createElement('button');
+    newInstanceButton.innerHTML = 'new instance';
+    newInstanceButton.onclick = (event) => {
+      event.preventDefault();
+      this.parson.shuffleLines();
+    };
+    buttonsContainer.appendChild(newInstanceButton);
+
+
+    const modalContainerId = 'modal-container';
+    const reviewGuessesA = document.createElement('a');
+    reviewGuessesA.href = '#' + modalContainerId;
+    const reviewButton = document.createElement('button');
+    reviewButton.innerHTML = 'review guesses';
+    reviewGuessesA.appendChild(reviewButton);
+    buttonsContainer.appendChild(reviewGuessesA);
+
+
+    buttonsContainer.appendChild(document.createTextNode(' || '))
+
+
+
+    const feedbackButton = document.createElement('button');
+    feedbackButton.innerHTML = 'get feedback';
+    feedbackButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      this.parson.getFeedback();
+    });
+    feedbackButton.addEventListener('click', () => this.registerGuess(sortableId, guessesId));
+    buttonsContainer.appendChild(feedbackButton);
+
+
+    const debugButton = document.createElement('button');
+    debugButton.innerHTML = 'debug solution';
+    debugButton.onclick = () => {
+      const studentCode = this.parson.getStudentCode()
+      if (!studentCode) {
+        alert('Your program has too few code fragments.')
+        return
+      }
+      const stepThrough = eval
+      const debuggered = 'debugger // added by the parsonizer\n\n' + studentCode
+      stepThrough(debuggered)
+    }
+    buttonsContainer.appendChild(debugButton);
+
+    const jsTutorButton = document.createElement('button');
+    jsTutorButton.innerHTML = 'JS Tutor';
+    jsTutorButton.onclick = () => {
+      const studentCode = this.parson.getStudentCode()
+      if (!studentCode) {
+        alert('Your program has too few code fragments.')
+        return
+      }
+      const encodedJST = encodeURIComponent(studentCode)
+      const sanitizedJST = encodedJST
+        .replace(/\(/g, '%28')
+        .replace(/\)/g, '%29')
+        .replace(/%09/g, '%20%20')
+      const jsTutorURL = "http://www.pythontutor.com/live.html#code=" + sanitizedJST + "&cumulative=false&curInstr=2&heapPrimitives=false&mode=display&origin=opt-live.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false"
+      window.open(jsTutorURL, '_blank')
+    }
+    buttonsContainer.appendChild(jsTutorButton);
+
+
+    const sortableId = 'sortable-code';
+    const trashId = 'trash-code';
 
     const trash = document.createElement('div');
     trash.id = trashId;
@@ -64,36 +123,8 @@ class JSParsons extends HTMLElement {
 
 
 
-    const buttonsContainer = document.createElement('div');
-    this.appendChild(buttonsContainer);
 
-    const newInstanceButton = document.createElement('button');
-    newInstanceButton.innerHTML = 'new instance';
-    newInstanceButton.onclick = (event) => {
-      event.preventDefault();
-      this.parson.shuffleLines();
-    };
-    buttonsContainer.appendChild(newInstanceButton);
-
-    const feedbackButton = document.createElement('button');
-    feedbackButton.innerHTML = 'get feedback';
-    feedbackButton.addEventListener('click', (event) => {
-      event.preventDefault();
-      this.parson.getFeedback();
-    });
-    feedbackButton.addEventListener('click', () => this.registerGuess(sortableId, guessesId));
-    buttonsContainer.appendChild(feedbackButton);
-
-    const modalContainerId = Math.random().toString(36).substring(7);
-    const reviewGuessesA = document.createElement('a');
-    reviewGuessesA.href = '#' + modalContainerId;
-    const reviewButton = document.createElement('button');
-    reviewButton.innerHTML = 'review guesses';
-    reviewGuessesA.appendChild(reviewButton);
-    buttonsContainer.appendChild(reviewGuessesA);
-
-
-    const guessesId = Math.random().toString(36).substring(7);
+    const guessesId = 'guesses-container';
     const modalContainer = document.createElement('div');
     modalContainer.id = modalContainerId;
     modalContainer.className = 'modal-window';

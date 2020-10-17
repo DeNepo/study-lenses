@@ -194,7 +194,7 @@ const renderStudyButtons = (container, config, editor) => {
         // using xhr so any errors aren't "in promise"
         const xhr = new XMLHttpRequest();
         const paramConfig = {
-          code: insertLoopGuards(editor.getValue(), config.loopGuard.max),
+          code: insertLoopGuards(strip(editor.getValue()), config.loopGuard.max),
           ext: config.ext
         }
         const paramSafeConfig = encodeURIComponent(JSON.stringify(paramConfig))

@@ -477,6 +477,26 @@
 
   ////Public methods
 
+
+  // hack - copied this in from variable grader for the "debug solution" button
+  ParsonsWidget.prototype.getStudentCode = function () {
+    var student_code = this.parson.getModifiedCode("#ul-" + this.parson.options.sortableId);
+    var executableCode = "";
+    $.each(student_code, function (index, item) { // dequery
+      // Array.from(student_code).forEach(function (item) {
+      // split codeblocks on br elements
+      var lines = $("#" + item.id).html().split(/<br\s*\/?>/); // dequery
+      // var lines = document.getElementById(item.id).innerHTML.split(/<br\s*\/?>/);
+      // go through all the lines
+      for (var i = 0; i < lines.length; i++) {
+        // add indents and get the text for the line (to remove the syntax highlight html elements)
+        executableCode += python_indents[item.indent] + $("<span>" + lines[i] + "</span>").text() + "\n"; // dequery
+        // not yet dequeried because won't be using variable check grader
+      }
+    });
+    return executableCode;
+  };
+
   // Parses an assignment definition given as a string and returns and
   // transforms this into an object defining the assignment with line objects.
   //

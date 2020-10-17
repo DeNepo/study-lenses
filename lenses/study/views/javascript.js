@@ -31,6 +31,7 @@ const javascriptView = ({ config, resource }) => {
 
 
   <script src='${config.sharedStatic}/lib/monaco-ext-to-language.js'></script>
+  <script src='${config.sharedStatic}/lib/strip-comments.js'></script>
 
   <script src='${config.ownStatic}/lib/monacoing.js'></script>
   <script src='${config.ownStatic}/lib/get-monaco-selection.js'></script>
