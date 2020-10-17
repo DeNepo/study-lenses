@@ -1,5 +1,7 @@
 'use strict'
 
+const commentRegex = require('comment-regex');
+
 const parsonsLense = ({ resource, config }) => {
 
   if (!resource.info && !config.queryValue.code) {
@@ -34,6 +36,9 @@ const parsonsLense = ({ resource, config }) => {
 
   code = code.split('\n').slice(start, end + 1).join('\n')
 
+  const blockComments = code.match(commentRegex.block());
+
+
   resource.content = `<!DOCTYPE html>
 <html>
 
@@ -48,6 +53,10 @@ const parsonsLense = ({ resource, config }) => {
 </head>
 
 <body>
+
+  <div>
+    ${blockComments.map(comment => `<pre>${comment}</pre><br>`).join('')}
+  </div>
 
   <main id='parsons-container'></main>
   <div id="history-modal" style="height:90vh; width:100vw;" class="modal-window">

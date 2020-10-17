@@ -16,6 +16,7 @@
   "dependencies": {
     "aran": "^3.0.9",
     "body-parser": "^1.19.0",
+    "comment-regex": "^1.0.1",
     "config": "^3.3.2",
     "cookie-parser": "^1.4.5",
     "deepmerge": "^4.2.2",
