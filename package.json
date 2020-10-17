@@ -14,6 +14,7 @@
     "study": "./bin/index.js"
   },
   "dependencies": {
+    "@gerhobbelt/gitignore-parser": "^0.2.0-8",
     "aran": "^3.0.9",
     "body-parser": "^1.19.0",
     "comment-regex": "^1.0.1",
@@ -32,6 +33,7 @@
     "morgan": "^1.10.0",
     "node-mocks-http": "^1.9.0",
     "open": "^7.2.1",
+    "parse-gitignore": "^1.0.1",
     "prettier": "^2.1.1",
     "serve-index": "^1.9.1",
     "winston": "^3.3.3"

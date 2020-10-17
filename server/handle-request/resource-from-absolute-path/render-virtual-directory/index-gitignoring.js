@@ -15,6 +15,7 @@ const path = require("path")
 const util = require('util')
 const readFilePromise = util.promisify(fs.readFile)
 
+const parseGitignore = require('parse-gitignore')
 
 const getInfo = require('../get-info.js')
 const isItAFile = require('../../lib/is-it-a-file')
@@ -72,12 +73,9 @@ const renderVirtualDirectory = async ({ absolutePath, gitignore = [], studyConfi
   virDir.children = []
 
   if (paths.includes('.gitignore')) {
-    gitignore = []
-    const toIgnore = fs.readFileSync(path.join(absolutePath, '.gitignore'), 'utf-8')
-    toIgnore.split('\n').forEach(ignorable => {
-      gitignore.push(ignorable)
-    })
+    gitignore = parseGitignore(fs.readFileSync(path.join(absolutePath, '.gitignore'), 'utf8'))
   }
+  console.log(gitignore)
 
   for (let nextSubPath of paths) {
 
@@ -85,12 +83,16 @@ const renderVirtualDirectory = async ({ absolutePath, gitignore = [], studyConfi
       continue
     }
     // quick fix to avoid node_modules, full gitignore later
-    if (nextSubPath.match('node_modules')) {
+    if (nextSubPath.search('node_modules')) {
       continue
     }
 
-
     const nextAbsolutePath = path.join(absolutePath, nextSubPath)
+
+    if (gitignore.some(toIgnore => nextAbsolutePath.search(toIgnore))) {
+      continue
+    }
+
     if (!fs.existsSync(nextAbsolutePath)) {
       continue
     }
