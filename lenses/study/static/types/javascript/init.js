@@ -79,6 +79,30 @@ const renderStudyButtons = (container, config, editor) => {
 
   }
 
+  if (config.clearScheduled) {
+
+    const clearAllScheduledFactory = () => {
+      // timeout & interval share a pool of ids
+      // clearTimeout will also clear intervals, and vice-versa
+      // https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/setTimeout#Return_value
+
+      let minId = setTimeout(() => { }, 0);
+
+      return () => {
+        const maxId = setTimeout(() => { }, 0);
+        for (let i = minId; i < maxId; i++) {
+          clearInterval(i);
+        };
+        minId = maxId + 1;
+      };
+
+    };
+    const button = document.createElement('button');
+    button.innerHTML = 'clear scheduled';
+    button.addEventListener('click', clearAllScheduledFactory());
+    container.appendChild(button)
+  }
+
   if (config.flowchart) {
 
     const flowchartButton = document.createElement('button')

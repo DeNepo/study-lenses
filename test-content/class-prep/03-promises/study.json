@@ -1,0 +1,10 @@
+{
+  "study": {
+    "openIn": "promisees",
+    "dependencies": [
+      {
+        "path": "/lib/labeled-logger.js"
+      }
+    ]
+  }
+}

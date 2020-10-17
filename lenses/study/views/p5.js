@@ -14,7 +14,7 @@ const p5View = ({ config, resource }) => {
 
   <link rel="stylesheet" data-name="vs/editor/editor.main" href="${config.sharedStatic}/monaco/min/vs/editor/editor.main.css">
 
-  ${renderDependencies(config.dependencies, resource)}
+  ${renderDependencies(config.locals.dependencies, resource)}
 
 
   <script src="${config.sharedStatic}/p5.min.js"></script>
