@@ -1,27 +1,39 @@
+/* UPDATE
+
+  using embedded study configs
+  make sure links of all depths have correct local-configured lenses
+
+*/
+
+
 'use strict';
 
 const marked = require('marked')
-const defaults = require('config').LENSES
 const path = require('path')
 const fs = require('fs')
-const util = require('util')
+const util = require('util');
 const readFilePromise = util.promisify(fs.readFile)
 
 
-const tableOfContents = (dirElement, first = false) => {
+const tableOfContents = ({ dirElement, first = false, defaults = {} }) => {
 
   if (dirElement.type === 'file') {
     const query = defaults[dirElement.ext] ? defaults[dirElement.ext] : '';
-    return `<li><a href="${dirElement.toCwd}/${dirElement.dir}/${dirElement.base}?${query}">${dirElement.base}</a></li>\n`;
+    const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
+    return `<li><a href="${relativePath}?${query}">${dirElement.base}</a></li>\n`;
   }
 
   if (dirElement.type === 'directory') {
     const subIndex = Array.isArray(dirElement.children)
-      ? dirElement.children.map(child => tableOfContents(child)).join('\n')
+      ? dirElement.children.map(child => tableOfContents({
+        dirElement: child,
+        defaults: Object.assign({}, defaults, dirElement.locals['--defaults'] || {})
+      })).join('\n')
       : '';
-    const query = defaults['directory'] ? defaults['directory'] : '';
+    const query = defaults.directory ? defaults.directory : '';
+    const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
     return first ? subIndex
-      : (`<li><details><summary><a href="${dirElement.toCwd}/${dirElement.dir}/${dirElement.base}?${query}">${dirElement.base}</a></summary>\n`
+      : (`<li><details><summary><a href="${relativePath}?${query}">${dirElement.base}</a></summary>\n`
         + (subIndex ? '\n<ul>' + subIndex + '</ul>' : '')
         + '</details></li>');
   }
@@ -29,7 +41,7 @@ const tableOfContents = (dirElement, first = false) => {
   return '';
 };
 
-module.exports = async function renderTocDoc(virDir, config) {
+module.exports = async function renderTocDoc({ virDir, config }) {
 
   const readme = virDir.children
     .find(child => child.base.toLowerCase() === 'readme.md')
@@ -54,8 +66,8 @@ module.exports = async function renderTocDoc(virDir, config) {
   </head>
   <body>
     <ul list-style='none'>
-      <li><a href='./?${defaults.directory}'>..</a></li>
-      ${tableOfContents(virDir, true)}
+      <li><a href='./?${virDir.locals['--defaults'] && virDir.locals['--defaults'].directory || ''}'>..</a></li>
+      ${tableOfContents({ dirElement: virDir, first: true, defaults: virDir.locals['--defaults'] || {} })}
     </ul>
 
     <hr>

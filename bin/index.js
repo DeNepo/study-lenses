@@ -5,10 +5,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const config = require('config');
-// used to determine the mime type of studied sub-path for setting default plugin options
-const mime = require('mime');
+process.env['NODE_CONFIG_DIR'] = path.join(__dirname, '..', "config");
 
+const config = require('config');
 
 /* The user can optionally launch a sub-path from the directory they are in
   if they do this, localhost will still serve from the root of the directory
@@ -35,16 +34,18 @@ const absPathToStudy = path.join(process.cwd(), pathToStudy);
 // };
 
 
-const defaultLenses = require('config').LENSES;
-const defaultLense = fs.lstatSync(absPathToStudy).isDirectory()
+const defaultLenses = config['--defaults'];
+const defaultLense = (fs.existsSync(absPathToStudy) && fs.lstatSync(absPathToStudy).isDirectory())
   ? defaultLenses.directory
   : defaultLenses[path.extname(pathToStudy)];
+
+const queryMarker = defaultLense ? '?' : ''
 
 // -- the following lines will need to be rewritten when config works --
 // construct a url using global configurations and the user-provided sub-path
 const pathToOpen = path.normalize(pathToStudy);
 // const url = `http://localhost:${config.get('PORT')}/${pathToOpen}?${pluginName}`;
-const url = `http://localhost:4600/${pathToOpen}?${defaultLense}`;
+const url = `http://localhost:4600/${pathToOpen}${queryMarker}${defaultLense}`;
 console.log('studying: ', url);
 
 

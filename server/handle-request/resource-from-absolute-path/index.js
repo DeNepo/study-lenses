@@ -4,6 +4,8 @@ const path = require('path')
 const fs = require('fs')
 const util = require('util')
 
+const config = require('config')
+
 const readFilePromise = util.promisify(fs.readFile)
 
 const renderVirtualDirectory = require('./render-virtual-directory/index.js')
@@ -12,7 +14,7 @@ const getInfo = require('./get-info.js')
 
 // rendered paths are inspired by path.parse, with with some (compatible?) modifications
 //  see ./example-return-values.js for some example return values
-const renderPath = async (absoluteFilePath = '', cwd = process.cwd()) => {
+const renderPath = async (absoluteFilePath = '', cwd = process.cwd(), localConfigs) => {
   let info = null
   let content = null
   let error = null
@@ -30,7 +32,10 @@ const renderPath = async (absoluteFilePath = '', cwd = process.cwd()) => {
   try {
     const requestedADirectory = fs.lstatSync(absoluteFilePath).isDirectory()
     if (requestedADirectory) {
-      content = await renderVirtualDirectory(absoluteFilePath)
+      content = await renderVirtualDirectory({
+        absolutePath: absoluteFilePath,
+        studyConfig: localConfigs
+      })
     } else if (pathExists) {
       content = await readFilePromise(absoluteFilePath, 'utf-8')
     }

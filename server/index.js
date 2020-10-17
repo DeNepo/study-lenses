@@ -7,7 +7,7 @@
 const path = require('path');
 
 process.env['NODE_CONFIG_DIR'] = path.join(__dirname, '..', "config");
-// const config = require('config');
+const config = require('config');
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');

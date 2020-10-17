@@ -19,16 +19,7 @@ const codeView = ({ config, resource }) => {
 
 <body>
 
-  <div id='buttons-panel'>
-    <input type='checkbox' checked='true' /> read-only
-    <button style="display: none;">format code</button>
-    <button style="display: none;">reset code</button>
-    <button style="display: none;">save</button>
-    <br>
-    <br>
-    <button>parsonize selection</button>
-    <button>diff selection</button>
-  </div>
+  <div id='buttons-panel'></div>
   <div id='editor-container' style='height: 90vh'></div>
 
 

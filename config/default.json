@@ -3,9 +3,9 @@
   "LOGGER": {
     "STDOUT": true
   },
-  "LENSES": {
+  "--defaults": {
     "default": "",
-    ".md": "study",
+    ".md": "render",
     ".html": "",
     ".txt": "",
     "": "",

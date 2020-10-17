@@ -4,8 +4,6 @@ const loadPlugins = require('./load-plugins.js')
 const optionsPromise = loadPlugins('options')
 const lensesPromise = loadPlugins('lenses')
 
-const config = require('config')
-
 
 const configurePlugins = async (localConfigs, parsedQuery) => {
 
@@ -17,8 +15,7 @@ const configurePlugins = async (localConfigs, parsedQuery) => {
     }
   }
 
-  Object.assign(config.LENSES, localConfigs['--defaults'])
-  // console.log(config.LENSES)
+  // console.log(config['--defaults'])
 
   // filter selected options and assign query values
   const options = (await optionsPromise)
@@ -27,6 +24,7 @@ const configurePlugins = async (localConfigs, parsedQuery) => {
       return options.find(option => option.queryKey === queryKey)
     })
     .filter(option => option !== undefined)
+
   for (const option of requestedOptions) {
     try {
       option.queryValue = JSON.parse(parsedQuery[option.queryKey])
@@ -34,14 +32,14 @@ const configurePlugins = async (localConfigs, parsedQuery) => {
       option.queryValue = parsedQuery[option.queryKey]
     }
 
-    if (option.queryKey === '--defaults') {
-      Object.assign(config.LENSES, option.queryValue)
-    }
-
     Object.assign(option, localConfigs[option.queryKey])
+
+    if (option.queryKey === '--defaults') {
+      Object.assign(localConfigs['--defaults'], option.queryValue)
+    }
   }
   // console.log(requestedOptions)
-  // console.log(config.LENSES)
+  // console.log(config['--defaults'])
 
 
   // filter selected options, assign query values, and assign lense.json configurations
@@ -69,6 +67,7 @@ const configurePlugins = async (localConfigs, parsedQuery) => {
     // console.log(JSON.stringify(localConfigs, null, '  '))
     // console.log(requestedLenses)
   }
+
 
   // ternaries :(
   return {

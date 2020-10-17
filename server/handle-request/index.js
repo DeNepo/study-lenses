@@ -5,6 +5,9 @@
 
 const util = require('util')
 
+const globalDefaults = require('config')['--defaults']
+
+
 const filePathFromRequestPath = require('./file-path-from-url')
 const configurePlugins = require('./configure-plugins')
 const subsetHttpData = require('./subset-http-data')
@@ -30,22 +33,21 @@ const handleRequest = async (req, res) => {
   const absolutePath = filePathFromRequestPath(req.path)
   // console.log(absolutePath)
 
+
+  const localConfigs = compileLocalConfigs(absolutePath, process.cwd(), { ['--defaults']: globalDefaults })
+  // console.log(JSON.stringify(localConfigs, null, '  '))
+
   // render resource from absolute path
   // render the path into a resource
   // -> see docs for the resource data type
-  const resource = await resourceFromAbsolutePath(absolutePath, process.cwd())
+  const resource = await resourceFromAbsolutePath(absolutePath, process.cwd(), localConfigs)
   // console.log(resource)
-
 
   //   subset http data
   const { requestData, responseData } = subsetHttpData(req)
   // console.log(requestData)
   // console.log(responseData)
 
-
-
-  const localConfigs = compileLocalConfigs(absolutePath, process.cwd())
-  // console.log(JSON.stringify(localConfigs, null, '  '))
 
   if (localConfigs['--ignore']) {
     //    compile and send the response

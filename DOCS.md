@@ -122,6 +122,11 @@ When a user requests a resource it will be represented as an object, see [resour
     name: 'path',
     type: 'directory',
     toCwd: '../..',
+    locals: {
+      "local configurations": "from study.jsons",
+      "lower configs": "are merged with higher configs",
+      "lower configs": "have precedence"
+    }
   },
   content: {
     root: '/Users/absolute/path/to/working/directory',
@@ -214,12 +219,6 @@ The server will also scan the request's directory and parents (up to `cwd`) sear
   ownStatic: `own_static_resource__lenses__folder-name`,
   sharedStatic: `shared_static_resource`,
   userGuide: 'markdown text from the user guide',
-  // from config, altered by the --defaults option
-  // lenses can ignore this if they like, it's just a suggestion
-  defaults: {
-    '.default': 'lenses',
-    '.per': 'resource type'
-  },
   // ... any other local configurations, lenses can have arbitrary configuration fields
 }
 ```

@@ -1,3 +1,5 @@
+// enable loop guard for integrate
+
 const initLiveStudy = (
   config,
   controlPanel = document.createElement('div'),

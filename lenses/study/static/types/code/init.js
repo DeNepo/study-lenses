@@ -9,7 +9,6 @@ const initLiveStudy = (
   controlPanel.innerHTML = `<input type='checkbox' checked='true' /> read-only
     <button style="display: none;">format code</button>
     <button style="display: none;">reset code</button>
-    <button style="display: none;">save</button>
     <br>
     <br>
     <button>parsonize selection</button>
@@ -18,9 +17,8 @@ const initLiveStudy = (
   const readOnlyInput = controlPanel.children[0];
   const formatCodeButton = controlPanel.children[1];
   const resetCodeButton = controlPanel.children[2];
-  const saveButton = controlPanel.children[3];
-  const parsonizeSelectionButton = controlPanel.children[6];
-  const diffSelectionButton = controlPanel.children[7];
+  const parsonizeSelectionButton = controlPanel.children[5];
+  const diffSelectionButton = controlPanel.children[6];
 
   const editorStuff = anEditor({ config, container: editorContainer });
   editorStuff.editor.layout();
@@ -31,9 +29,6 @@ const initLiveStudy = (
       onceToggled = true;
       formatCodeButton.style.display = "inline";
       resetCodeButton.style.display = "inline";
-      if (config.editor && config.editor.save) {
-        saveButton.style.display = "inline";
-      }
     }
     editorStuff.handlers.toggleReadOnly(event);
   });
@@ -42,7 +37,6 @@ const initLiveStudy = (
 
   resetCodeButton.addEventListener('click', editorStuff.handlers.reset);
 
-  saveButton.addEventListener('click', editorStuff.handlers.save);
 
   parsonizeSelectionButton.addEventListener('click',
     () => studySelection('parsons', editorStuff.editor));

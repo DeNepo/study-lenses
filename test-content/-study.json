@@ -1,0 +1,21 @@
+{
+  "study": {
+    "dependencies": [
+      {
+        "path": "./lib/not-module-a.js"
+      },
+      {
+        "path": "./lib/not-module-b.js",
+        "module": false
+      },
+      {
+        "path": "./lib/module-b.js",
+        "module": true
+      }
+    ],
+    "toads": "Yum"
+  },
+  "hello-world": {
+    "/": "chups"
+  }
+}

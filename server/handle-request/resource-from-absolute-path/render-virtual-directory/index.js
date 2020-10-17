@@ -1,12 +1,48 @@
+'use strict'
+
+/* refactor
+
+  include study.json's directly as a .study property on directory objects
+
+  then toc-docs can have default queries at any depth
+
+*/
+
+
+
 const fs = require("fs")
 const path = require("path")
+const util = require('util')
+const readFilePromise = util.promisify(fs.readFile)
 
 const getInfo = require('../get-info.js')
 const isItAFile = require('../../lib/is-it-a-file')
 const deepSortChildren = require('./deep-sort-children.js')
 
+const deepMerge = require('deepmerge');
+const combineMerge = (target, source, options) => {
+  const destination = target.slice()
 
-const renderVirtualDirectory = (absolutePath, gitignore = []) => {
+  source.forEach((item, index) => {
+    if (typeof destination[index] === 'undefined') {
+      destination[index] = options.cloneUnlessOtherwiseSpecified(item, options)
+    } else if (options.isMergeableObject(item)) {
+      const alreadyExists = destination.some(entry => areDeeplyEqual(entry, item))
+      if (!alreadyExists) {
+        destination.push(item)
+      } else {
+        destination[index] = deepMerge(target[index], item, options)
+      }
+    } else if (target.indexOf(item) === -1) {
+      destination.push(item)
+    }
+  })
+  return destination
+}
+
+
+/*  BREAKING: changed to destructure syntax  */
+const renderVirtualDirectory = async ({ absolutePath, gitignore = [], studyConfig = {} }) => {
 
   const toCwd = path.relative(absolutePath, process.cwd())
 
@@ -14,11 +50,25 @@ const renderVirtualDirectory = (absolutePath, gitignore = []) => {
     return getInfo(absolutePath, process.cwd())
   }
 
-  const virDir = getInfo(absolutePath, process.cwd())
-  virDir.toCwd = toCwd
-  virDir.children = []
 
   const paths = fs.readdirSync(absolutePath)
+
+
+  if (paths.includes('study.json')) {
+    // const thisConfig = fs.readFileSync(path.join(absolutePath, 'study.json'), 'utf-8')
+    try {
+      const thisConfig = await readFilePromise(path.join(absolutePath, 'study.json'), 'utf-8')
+      const parsedConfig = JSON.parse(thisConfig)
+      studyConfig = deepMerge(studyConfig, parsedConfig, { arrayMerge: combineMerge })
+    } catch (o_0) {
+      console.log(o_0)
+    }
+  }
+
+  const virDir = getInfo(absolutePath, process.cwd())
+  virDir.toCwd = toCwd
+  virDir.locals = studyConfig
+  virDir.children = []
 
   if (paths.includes('.gitignore')) {
     gitignore = []
@@ -43,11 +93,14 @@ const renderVirtualDirectory = (absolutePath, gitignore = []) => {
       continue
     }
 
-    const nextChild = renderVirtualDirectory(nextAbsolutePath, gitignore)
+    const nextChild = await renderVirtualDirectory({
+      absolutePath: nextAbsolutePath,
+      gitignore,
+      studyConfig
+    })
     virDir.children.push(nextChild)
 
   }
-
 
   deepSortChildren(virDir)
 

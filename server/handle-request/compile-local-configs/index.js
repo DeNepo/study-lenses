@@ -1,5 +1,6 @@
 'use strict'
 
+
 const path = require('path');
 const fs = require('fs');
 
@@ -34,11 +35,11 @@ const combineMerge = (target, source, options) => {
   return destination
 }
 
-const compileLocalConfigs = (absPath, cwd, config = {}) => {
+const compileLocalConfigs = (absPath, cwd, config) => {
 
   const isFile = fs.existsSync(absPath) && fs.lstatSync(absPath).isFile();
   if (isFile) {
-    return compileLocalConfigs(path.dirname(absPath), cwd);
+    return compileLocalConfigs(path.dirname(absPath), cwd, config);
   };
 
   const configPath = path.join(absPath, 'study.json');

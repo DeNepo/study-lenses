@@ -1,9 +1,6 @@
 {
   "study": {
     "readOnly": false,
-    "eval": true,
-    "openIn": [
-      "jsTutor"
-    ]
+    "eval": true
   }
 }
