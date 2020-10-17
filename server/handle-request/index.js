@@ -34,19 +34,15 @@ const handleRequest = async (req, res) => {
   // console.log(absolutePath)
 
 
-  const localConfigs = compileLocalConfigs(absolutePath, process.cwd(), { ['--defaults']: globalDefaults })
+  const localConfigs = compileLocalConfigs(absolutePath, process.cwd(), { ['--defaults']: Object.assign({}, globalDefaults) })
   // console.log(JSON.stringify(localConfigs, null, '  '))
+
 
   // render resource from absolute path
   // render the path into a resource
   // -> see docs for the resource data type
   const resource = await resourceFromAbsolutePath(absolutePath, process.cwd(), localConfigs)
   // console.log(resource)
-
-  //   subset http data
-  const { requestData, responseData } = subsetHttpData(req)
-  // console.log(requestData)
-  // console.log(responseData)
 
 
   if (localConfigs['--ignore']) {
@@ -59,6 +55,13 @@ const handleRequest = async (req, res) => {
 
     return
   }
+
+
+  //   subset http data
+  const { requestData, responseData } = subsetHttpData(req)
+  // console.log(requestData)
+  // console.log(responseData)
+
 
   //  configure plugins
   //  filter out the requested options and lenses

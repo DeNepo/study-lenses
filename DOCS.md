@@ -192,7 +192,8 @@ While Lenses and Options are represented by the same data type, they are called 
   },
   ownStatic: `own_static_resource__lenses__folder-name`,
   sharedStatic: `shared_static_resource`,
-  userGuide: 'markdown text from the user guide'
+  userGuide: 'markdown text from the user guide',
+  locals: {} // local configurations, empty by default
 }
 ```
 
@@ -219,7 +220,7 @@ The server will also scan the request's directory and parents (up to `cwd`) sear
   ownStatic: `own_static_resource__lenses__folder-name`,
   sharedStatic: `shared_static_resource`,
   userGuide: 'markdown text from the user guide',
-  // ... any other local configurations, lenses can have arbitrary configuration fields
+  locals: {} // local configurations, empty by default
 }
 ```
 

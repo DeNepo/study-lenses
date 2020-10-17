@@ -6,7 +6,6 @@ const detectType = require('./lib/detect-type.js')
 const liveStudyLense = async ({ config, resource }) => {
 
 
-
   const type = detectType(resource)
 
 
@@ -22,6 +21,7 @@ const liveStudyLense = async ({ config, resource }) => {
 
   resource.content = typeView({ resource, config, type })
   resource.info.ext = '.html'
+
 
   return {
     resource

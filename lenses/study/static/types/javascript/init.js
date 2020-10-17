@@ -25,7 +25,7 @@ const initLiveStudy = (
 
   editorStuff.editor.updateOptions({ readOnly: false })
 
-  renderStudyButtons(studyButtons, config, editorStuff.editor)
+  renderStudyButtons(studyButtons, config.locals, editorStuff.editor)
 
 
   formatCodeButton.addEventListener('click', editorStuff.handlers.format)
@@ -34,7 +34,7 @@ const initLiveStudy = (
 
 
   parsonizeSelectionButton.addEventListener('click',
-    () => studySelection('parsons', editorStuff.editor, { eval: config.eval, openIn: config.openIn, loopGuard: config.loopGuard }))
+    () => studySelection('parsons', editorStuff.editor, config.locals))
 
   diffSelectionButton.addEventListener('click',
     () => studySelection('diff-scramble', editorStuff.editor))
@@ -99,10 +99,9 @@ const renderStudyButtons = (container, config, editor) => {
 
   }
 
-  container.appendChild(document.createElement('br'))
-  container.appendChild(document.createElement('br'))
-
   if (config.eval) {
+    container.appendChild(document.createElement('br'))
+
     const consoleButton = document.createElement('button')
     consoleButton.innerHTML = 'console'
     consoleButton.onclick = () => studyWith['console']
@@ -214,7 +213,7 @@ const renderStudyButtons = (container, config, editor) => {
       console.log(`%c\n\n${padding}\n${title}\n${padding}\n`, 'font-weight:bold')
 
 
-      if (config.loopGuard.active) {
+      if (config.loopGuard && config.loopGuard.active) {
         // using xhr so any errors aren't "in promise"
         const xhr = new XMLHttpRequest();
         const paramConfig = {

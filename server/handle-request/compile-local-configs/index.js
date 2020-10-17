@@ -37,15 +37,18 @@ const combineMerge = (target, source, options) => {
 
 const compileLocalConfigs = (absPath, cwd, config) => {
 
+
   const isFile = fs.existsSync(absPath) && fs.lstatSync(absPath).isFile();
   if (isFile) {
     return compileLocalConfigs(path.dirname(absPath), cwd, config);
   };
 
+  const atOrPastTheTop = !absPath.match(cwd);
+
   const configPath = path.join(absPath, 'study.json');
   const hasConfig = fs.existsSync(configPath);
 
-  if (!absPath.match(cwd) && !hasConfig) {
+  if (atOrPastTheTop && !hasConfig) {
     return config;
   }
 
@@ -61,7 +64,6 @@ const compileLocalConfigs = (absPath, cwd, config) => {
 
   const newConfig = deepMerge(currentConfig, config, { arrayMerge: combineMerge });
 
-  const atOrPastTheTop = !absPath.match(cwd);
   if (atOrPastTheTop) {
     return newConfig;
   } else {

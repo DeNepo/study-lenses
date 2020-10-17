@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Circles</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.js"></script>
+
+  <script>
+    function setup() {
+      createCanvas(500, 500);
+      background(32);
+
+      fetchCircles();
+    }
+
+    function mousePressed() {
+      const size = random(20, 100);
+      ellipse(mouseX, mouseY, size);
+
+      postCircle(mouseX, mouseY, size);
+    }
+
+    function postCircle(x, y, size) {
+      fetch('/circles', {
+        method: "POST",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded"
+        },
+        body: 'x=' + x + '&y=' + y + '&size=' + size
+      });
+    }
+
+    function fetchCircles() {
+      fetch('/circles')
+        .then((resp) => { return resp.json() })
+        .then((circles) => {
+          for (let i = 0; i < circles.length; i++) {
+            const c = circles[i];
+            ellipse(c.x, c.y, c.size);
+          }
+        });
+    }
+  </script>
+</head>
+
+<body>
+</body>
+
+</html>

@@ -32,7 +32,7 @@ const configurePlugins = async (localConfigs, parsedQuery) => {
       option.queryValue = parsedQuery[option.queryKey]
     }
 
-    Object.assign(option, localConfigs[option.queryKey])
+    option.locals = Object.assign({}, localConfigs[option.queryKey])
 
     if (option.queryKey === '--defaults') {
       Object.assign(localConfigs['--defaults'], option.queryValue)
@@ -62,7 +62,7 @@ const configurePlugins = async (localConfigs, parsedQuery) => {
       }
 
       // assign local configurations
-      Object.assign(lense, localConfigs[lense.queryKey])
+      lense.locals = Object.assign({}, localConfigs[lense.queryKey])
     }
     // console.log(JSON.stringify(localConfigs, null, '  '))
     // console.log(requestedLenses)
