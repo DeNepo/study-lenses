@@ -1,4 +1,4 @@
-const studySelection = (queryKey, monacoThing) => {
+const studySelection = (queryKey, monacoThing, config = {}) => {
 
   const code = getMonacoSelection(monacoThing);
   if (!code) {
@@ -6,11 +6,12 @@ const studySelection = (queryKey, monacoThing) => {
     return;
   }
 
-  const lenseConfigonfig = {
+  const baseConfig = {
     code,
     ext: config.ext
   }
-  const queryValue = encodeURIComponent(JSON.stringify(lenseConfigonfig))
+  const finalConfig = Object.assign(baseConfig, config)
+  const queryValue = encodeURIComponent(JSON.stringify(finalConfig))
   const query = `?${queryKey}=${queryValue}`
   const url = window.location.origin + query
 

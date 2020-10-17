@@ -34,7 +34,7 @@ const initLiveStudy = (
 
 
   parsonizeSelectionButton.addEventListener('click',
-    () => studySelection('parsons', editorStuff.editor))
+    () => studySelection('parsons', editorStuff.editor, { eval: config.eval, openIn: config.openIn, loopGuard: config.loopGuard }))
 
   diffSelectionButton.addEventListener('click',
     () => studySelection('diff-scramble', editorStuff.editor))
@@ -47,6 +47,7 @@ const initLiveStudy = (
 }
 
 const renderStudyButtons = (container, config, editor) => {
+
 
   if (config.loopGuard) {
 
@@ -75,9 +76,31 @@ const renderStudyButtons = (container, config, editor) => {
     loopGuardForm.appendChild(loopGuardInput)
 
     container.appendChild(loopGuardForm)
-    container.appendChild(document.createElement('br'))
 
   }
+
+  if (config.flowchart) {
+
+    const flowchartButton = document.createElement('button')
+    flowchartButton.innerHTML = 'flowchart'
+    flowchartButton.onclick = () => {
+      const lenseConfig = {
+        code: editor.getValue(),
+        ext: config.ext
+      }
+      const queryValue = encodeURIComponent(JSON.stringify(lenseConfig))
+      const query = `?flowchart=${queryValue}`
+      const url = window.location.origin + query
+
+      window.open(url, '_blank')
+    }
+    container.appendChild(document.createTextNode(' || '))
+    container.appendChild(flowchartButton)
+
+  }
+
+  container.appendChild(document.createElement('br'))
+  container.appendChild(document.createElement('br'))
 
   if (config.eval) {
     const consoleButton = document.createElement('button')
@@ -119,9 +142,10 @@ const renderStudyButtons = (container, config, editor) => {
       select.appendChild(option)
     }
     openInContainer.appendChild(select)
+
+    container.appendChild(document.createTextNode(' || '))
     container.appendChild(openInContainer)
   }
-
 
 
   const insertLoopGuards = (code, maxIterations) => {

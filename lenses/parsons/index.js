@@ -33,6 +33,12 @@ const parsonsLense = ({ resource, config }) => {
     end = config.queryValue.end
   }
 
+  let frontendConfig = {
+    eval: config.queryValue.eval,
+    openIn: config.queryValue.openIn,
+    loopGuard: config.queryValue.openIn,
+  }
+
 
   code = code.split('\n').slice(start, end + 1).join('\n')
 
@@ -55,7 +61,7 @@ const parsonsLense = ({ resource, config }) => {
 <body>
 
   <div>
-    ${blockComments.map(comment => `<pre>${comment}</pre><br>`).join('')}
+    ${blockComments ? blockComments.map(comment => `<pre>${comment}</pre><br>`).join('') : ''}
   </div>
 
   <main id='parsons-container'></main>
@@ -75,6 +81,7 @@ const parsonsLense = ({ resource, config }) => {
   <script src="${config.sharedStatic}/lib/strip-comments.js"></script>
 
   <script>
+    const config = JSON.parse(decodeURIComponent("${encodeURIComponent(JSON.stringify(frontendConfig))}"))
     const code = decodeURIComponent("${encodeURIComponent(code)}")
     const parsonsComponent = new JSParsons(code, "${ext.replace('.', '')}")
     document.getElementById('parsons-container')
