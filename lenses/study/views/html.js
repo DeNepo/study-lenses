@@ -1,58 +1,44 @@
 'use strict'
 
-const renderDependencies = require('../lib/render-dependencies')
+const CodeSSR = require('./code.js')
 
-const codeView = ({ config, resource }) => {
-  return `<!DOCTYPE html>
-<html>
+class JavaScriptSSR extends CodeSSR {
 
-<head>
-  <meta charset="UTF-8">
-  <title id='title'>${resource.info.dir}/${resource.info.base}</title>
-  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  constructor({ config, resource }) {
+    super({ config, resource })
+  }
 
-  <link rel="stylesheet" data-name="vs/editor/editor.main" href="${config.sharedStatic}/monaco/min/vs/editor/editor.main.css">
+  styles() {
+    const superStyles = super.styles()
+    return superStyles
+  }
 
+  scriptsHead() {
+    const superScriptsHead = super.scriptsHead()
+    return superScriptsHead
+  }
 
-  ${renderDependencies(config.dependencies, resource)}
+  panel() {
+    let superPanel = super.panel()
+    return superPanel + `<br><br>
+    <button id='new-tab-button'>open in new tab</button>`
+  }
 
-</head>
+  code() {
+    const superCode = super.code()
+    return `<div id='resize-parent' style="display: flex; flex-direction: row;">
+      <div id='editor-container' style='height: 90vh; width: 50vw'></div>
+      <div id='output-container' style='height: 90vh; width: 50vw'> </div>
+    </div>`
+  }
 
-<body>
+  scriptsBody() {
+    const superScriptsBody = super.scriptsBody()
+    return `${superScriptsBody}
+    <script src='${this.config.sharedStatic}/lib/debounce.js'></script>`
+  }
 
-  <div id='buttons-panel'></div>
-  <div id='resize-parent' style="display: flex; flex-direction: row;">
-    <div id='editor-container' style='height: 90vh; width: 60vw'></div>
-    <div id='output-container' style='height: 90vh; width: 40vw'> </div>
-  </div>
-
-
-
-  <script>var require = { paths: { 'vs': '${config.sharedStatic}/monaco/min/vs' } };</script>
-  <script src="${config.sharedStatic}/monaco/min/vs/loader.js"></script>
-  <script src="${config.sharedStatic}/monaco/min/vs/editor/editor.main.nls.js"></script>
-  <script src="${config.sharedStatic}/monaco/min/vs/editor/editor.main.js"></script>
-
-
-  <script src='${config.sharedStatic}/lib/monaco-ext-to-language.js'></script>
-  <script src='${config.sharedStatic}/lib/debounce.js'></script>
-
-  <script src='${config.ownStatic}/lib/monacoing.js'></script>
-  <script src='${config.ownStatic}/lib/get-monaco-selection.js'></script>
-  <script src='${config.ownStatic}/lib/study-selection.js'></script>
-
-  <script src='${config.ownStatic}/types/html/init.js'></script>
-
-  <script>
-    const config = ${JSON.stringify(config, null, '  ')};
-    config.code = decodeURIComponent(config.code)
-    initLiveStudy(config, document.getElementById('buttons-panel'), document.getElementById('editor-container'))
-  </script>
-
-</body>
-
-</html>
-`
 }
 
-module.exports = codeView
+module.exports = JavaScriptSSR
+

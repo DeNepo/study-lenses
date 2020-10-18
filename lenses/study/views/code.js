@@ -1,53 +1,54 @@
 'use strict'
 
-const renderDependencies = require('../lib/render-dependencies')
 
-const codeView = ({ config, resource }) => {
-  return `<!DOCTYPE html>
-<html>
+class CodeSSR {
 
-<head>
-  <meta charset="UTF-8">
-  <title id='title'>${resource.info.dir}/${resource.info.base}</title>
-  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  constructor({ config, resource }) {
+    this.config = config
+    this.resource = resource
+  }
 
-  <link rel="stylesheet" data-name="vs/editor/editor.main" href="${config.sharedStatic}/monaco/min/vs/editor/editor.main.css">
+  styles() {
+    return `<link rel="stylesheet" data-name="vs/editor/editor.main" href="${this.config.sharedStatic}/monaco/min/vs/editor/editor.main.css">`
+  }
 
-  ${renderDependencies(config.dependencies, resource)}
+  scriptsHead() {
+    return ''
+  }
 
-</head>
+  panel() {
+    return `<input id='read-only-input' type='checkbox' checked='true' /> read-only
+    <button id='format-button'>format</button>
+    <button id='reset-button'>reset</button>
+    <button id='save-button'>save changes</button>
+    ||
+    <button id='parsonize-selection-button'>parsonize selection</button>
+    <button id='diff-selection-button'>diff selection</button><div id='buttons-panel'></div>`
+  }
 
-<body>
+  code() {
+    return `<div id='editor-container' style='height: 90vh'></div>`
+  }
 
-  <div id='buttons-panel'></div>
-  <div id='editor-container' style='height: 90vh'></div>
+  configScript() {
+    return `<script>
+    const config = JSON.parse(decodeURIComponent("${encodeURIComponent(JSON.stringify(this.config))}"))
+  </script>`
+  }
 
+  scriptsBody() {
+    return `<script>var require = { paths: { 'vs': '${this.config.sharedStatic}/monaco/min/vs' } };</script>
+  <script src="${this.config.sharedStatic}/monaco/min/vs/loader.js"></script>
+  <script src="${this.config.sharedStatic}/monaco/min/vs/editor/editor.main.nls.js"></script>
+  <script src="${this.config.sharedStatic}/monaco/min/vs/editor/editor.main.js"></script>
 
-  <script>var require = { paths: { 'vs': '${config.sharedStatic}/monaco/min/vs' } };</script>
-  <script src="${config.sharedStatic}/monaco/min/vs/loader.js"></script>
-  <script src="${config.sharedStatic}/monaco/min/vs/editor/editor.main.nls.js"></script>
-  <script src="${config.sharedStatic}/monaco/min/vs/editor/editor.main.js"></script>
+  <script src='${this.config.sharedStatic}/lib/monaco-ext-to-language.js'></script>`
 
+    // <script src='${this.config.ownStatic}/lib/monacoing.js'></script>
+    // <script src='${this.config.ownStatic}/lib/get-monaco-selection.js'></script>
+    // <script src='${this.config.ownStatic}/lib/study-selection.js'></script>`
+  }
 
-
-  <script src='${config.sharedStatic}/lib/monaco-ext-to-language.js'></script>
-
-  <script src='${config.ownStatic}/lib/monacoing.js'></script>
-  <script src='${config.ownStatic}/lib/get-monaco-selection.js'></script>
-  <script src='${config.ownStatic}/lib/study-selection.js'></script>
-
-  <script src='${config.ownStatic}/types/code/init.js'></script>
-
-  <script>
-    const config = ${JSON.stringify(config, null, '  ')};
-    config.code = decodeURIComponent(config.code)
-    initLiveStudy(config, document.getElementById('buttons-panel'), document.getElementById('editor-container'))
-  </script>
-
-</body>
-
-</html>
-`
 }
 
-module.exports = codeView
+module.exports = CodeSSR

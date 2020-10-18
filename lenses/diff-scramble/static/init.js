@@ -6,7 +6,7 @@ const init = (codeArgument) => {
   const language = monacoExtToLanguage[config.ext]
 
 
-  let commentless = strip(code).replace(new RegExp('(\n){2,}', 'gim'), '\n\n').trim();
+  let commentless = strip(code).replace(new RegExp('(\n){2,}', 'gim'), '\n\n');
   if (commentless[commentless.length - 1] === '\n') {
     commentless = commentless.slice(0, commentless.length - 1);
   }
@@ -70,12 +70,14 @@ const init = (codeArgument) => {
   }
 
 }
+console.log(config)
 
+if (config.ext === '.js') {
+  document.getElementById('randomize-variables').onchange = (event) => {
+    const input = event.target
 
-document.getElementById('randomize-variables').onchange = (event) => {
-  const input = event.target
+    const newCode = randomizeVariables(config.code, Number(input.value) / 100);
 
-  const newCode = randomizeVariables(config.code, Number(input.value) / 100);
-
-  init(newCode)
+    init(newCode)
+  }
 }

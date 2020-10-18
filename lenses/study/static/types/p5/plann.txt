@@ -1,2 +1,7 @@
-styling changes
-  make editor/drawing resizeable
+get some p5 intellisense in monaco?
+  https://stackoverflow.com/questions/43058191/how-to-use-addextralib-in-monaco-with-an-external-type-definition
+  https://stackoverflow.com/questions/52290727/adding-typescript-type-declarations-to-monaco-editor
+  https://stackoverflow.com/questions/53382797/extend-monaco-editor-hints-by-file
+  https://www.google.com/search?source=hp&ei=HryMX4zqNcHIaPfJuaAC&q=monaco+editor+type+declaration+files&oq=monaco+editor+type+declaration+files&gs_lcp=CgZwc3ktYWIQA1DGG1jGG2DXHWgAcAB4AIABY4gBY5IBATGYAQCgAQKgAQGqAQdnd3Mtd2l6&sclient=psy-ab&ved=0ahUKEwiM8fiLk7_sAhVBJBoKHfdkDiQQ4dUDCAc&uact=5
+  https://github.com/DefinitelyTyped/DefinitelyTyped/blob/master/types/p5/index.d.ts
+

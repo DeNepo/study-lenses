@@ -10,6 +10,7 @@
     ".txt": "",
     "": "",
     ".js": "study",
+    ".jsx": "study",
     ".css": "study",
     ".json": "json-explore",
     ".png": "",
@@ -18,6 +19,7 @@
     ".gif": "",
     ".svg": "",
     ".mmd": "mermaid",
+    ".ts": "study",
     "directory": "hyf"
   },
   "ORIGIN": {

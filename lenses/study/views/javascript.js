@@ -1,54 +1,89 @@
 'use strict'
 
-const renderDependencies = require('../lib/render-dependencies')
+const CodeSSR = require('./code.js')
 
-const javascriptView = ({ config, resource }) => {
-  return `<!DOCTYPE html>
-<html>
+class JavaScriptSSR extends CodeSSR {
 
-<head>
-  <meta charset="UTF-8">
-  <title id='title'>${resource.info.dir}/${resource.info.base}</title>
-  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  constructor({ config, resource }) {
+    super({ config, resource })
+  }
 
-  <link rel="stylesheet" data-name="vs/editor/editor.main" href="${config.sharedStatic}/monaco/min/vs/editor/editor.main.css">
+  styles() {
+    const superStyles = super.styles()
+    return superStyles
+  }
 
-  ${renderDependencies(config.locals.dependencies, resource)}
+  scriptsHead() {
+    const superScriptsHead = super.scriptsHead()
+    return superScriptsHead
+  }
 
-</head>
+  panel() {
+    let superPanel = super.panel()
 
-<body>
+    const locals = this.config.locals
 
-  <div id='buttons-panel'></div>
-  <div id='editor-container' style='height: 90vh'></div>
+    if (locals.loopGuard || locals.clearScheduled || locals.flowchart) {
+      superPanel += '<br><br>'
+    }
+    if (locals.loopGuard) {
 
+      if (locals.loopGuard && typeof locals.loopGuard !== 'object') {
+        locals.loopGuard = {
+          active: true,
+          max: 20
+        }
+      }
+      superPanel += `
+      <form id='loop-guard-form' style='display: inline;'>
+        <input name='active' type='checkbox' ${locals.loopGuard.active ? 'checked' : ''} />
+        loop guard:
+        <input name='max' type='number' value='${locals.loopGuard.max}' style='width: 3em;' />
+      </form>`
+    }
+    if (locals.clearScheduled) {
+      superPanel += `
+      <button id='clear-scheduled-button'>clear scheduled</button>`
+    }
+    if (locals.flowchart) {
+      superPanel += `
+      || <button id='flowchart-button'>flowchart</button>`
+    }
+    if (locals.eval || locals.openIn) {
+      superPanel += '<br><br>'
+    }
+    if (locals.eval) {
+      superPanel += `
+      <button id='console-button'>console</button>
+      <button id='debugger-button'>debugger</button>`
+    }
+    if (locals.openIn) {
+      const openable = ['jsTutor', 'loupe', 'promisees', 'esprima']
+      superPanel += ` ||
+      <form style='display: inline;'>
+        <input id='open-in-button' value='open in' type='button'/>
+        <select name='thisThing'>
+          ${openable.map(viztool => {
+        return `<option ${viztool === locals.openIn ? 'selected' : ''}>${viztool}</option>`
+      })}
+        </select>
+      </form>`
+    }
+    return superPanel
+  }
 
-  <script>var require = { paths: { 'vs': '${config.sharedStatic}/monaco/min/vs' } };</script>
-  <script src="${config.sharedStatic}/monaco/min/vs/loader.js"></script>
-  <script src="${config.sharedStatic}/monaco/min/vs/editor/editor.main.nls.js"></script>
-  <script src="${config.sharedStatic}/monaco/min/vs/editor/editor.main.js"></script>
+  code() {
+    const superCode = super.code()
+    return superCode
+  }
 
+  scriptsBody() {
+    const superScriptsBody = super.scriptsBody()
+    return `${superScriptsBody}
+    <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>`
+  }
 
-
-  <script src='${config.sharedStatic}/lib/monaco-ext-to-language.js'></script>
-  <script src='${config.sharedStatic}/lib/strip-comments.js'></script>
-
-  <script src='${config.ownStatic}/lib/monacoing.js'></script>
-  <script src='${config.ownStatic}/lib/get-monaco-selection.js'></script>
-  <script src='${config.ownStatic}/lib/study-selection.js'></script>
-
-  <script src='${config.ownStatic}/types/javascript/init.js'></script>
-
-  <script>
-    const config = ${JSON.stringify(config, null, '  ')};
-    config.code = decodeURIComponent(config.code)
-    initLiveStudy(config, document.getElementById('buttons-panel'), document.getElementById('editor-container'))
-  </script>
-
-</body>
-
-</html>
-`
 }
 
-module.exports = javascriptView
+module.exports = JavaScriptSSR
+

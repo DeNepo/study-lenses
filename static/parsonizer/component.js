@@ -72,7 +72,7 @@ class JSParsons extends HTMLElement {
 
 
     renderStudyButtons(buttonsContainer, config, {
-      getValue: () => this.parsons.getStudentCode()
+      getValue: () => this.parson.getStudentCode()
     })
 
     const sortableId = 'sortable-code';
@@ -268,7 +268,7 @@ const renderStudyButtons = (container, config, editor) => {
 
   }
 
-  if (config.flowchart) {
+  if (false && config.flowchart) {
 
     const flowchartButton = document.createElement('button')
     flowchartButton.innerHTML = 'flowchart'
@@ -402,12 +402,16 @@ const renderStudyButtons = (container, config, editor) => {
       const padding = Array.from(title).map(() => '-').join('')
       console.log(`%c\n\n${padding}\n${title}\n${padding}\n`, 'font-weight:bold')
 
+      const code = editor.getValue()
+      if (!code) {
+        alert('Your program has too few code fragments.')
+      }
 
       if (config.loopGuard.active) {
         // using xhr so any errors aren't "in promise"
         const xhr = new XMLHttpRequest();
         const paramConfig = {
-          code: insertLoopGuards(strip(editor.getValue()), config.loopGuard.max),
+          code: insertLoopGuards(strip(code), config.loopGuard.max),
           ext: config.ext
         }
         const paramSafeConfig = encodeURIComponent(JSON.stringify(paramConfig))
@@ -426,7 +430,7 @@ const renderStudyButtons = (container, config, editor) => {
           console.error(err);
         }
       } else {
-        target[keyName](editor.getValue())
+        target[keyName](code)
       }
 
     }
