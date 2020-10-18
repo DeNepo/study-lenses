@@ -50,11 +50,18 @@ export class P5FE extends CodeFE {
   setup() {
     const errMsgCntId = 'err-msg-cnt'
     try {
-      document.body.removeChild(document.getElementById(errMsgCntId))
-    } catch (o_0) { }
+      const toRemove = document.getElementById(errMsgCntId)
+      toRemove.parentElement.removeChild(toRemove)
+    } catch (o_0) {
+      console.log(o_0)
+    }
     const execute = eval
     try {
       remove()
+    } catch (o_0) {
+      console.log(o_0)
+    }
+    try {
       execute(this.editor.getValue())
       new p5()
     } catch (err) {

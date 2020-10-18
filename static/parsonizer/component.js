@@ -24,10 +24,28 @@ class JSParsons extends HTMLElement {
       .join('// distractor')
 
     this.code = strippedCode
-
   }
 
   async connectedCallback() {
+
+    if (this.language.match('js')) {
+      const paramConfig = {
+        code: this.code,
+        ext: '.' + this.language.split('.').join('')
+      }
+      const paramSafeConfig = encodeURIComponent(JSON.stringify(paramConfig))
+      try {
+        const formatUrl = window.location.origin + '?format=' + paramSafeConfig
+        const res = await fetch(formatUrl)
+        if (res.status !== 200 || !res.ok) {
+          throw res.status
+        }
+        this.code = await res.text()
+      } catch (err) {
+        console.log(err)
+      }
+    }
+
 
     function displayErrors(fb) {
       if (fb.errors.length > 0) {

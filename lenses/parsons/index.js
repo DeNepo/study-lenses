@@ -1,5 +1,7 @@
 'use strict'
 
+// const prettier = require('prettier')
+
 const commentRegex = require('comment-regex');
 
 const parsonsLense = ({ resource, config }) => {
@@ -44,6 +46,9 @@ const parsonsLense = ({ resource, config }) => {
 
   const blockComments = code.match(commentRegex.block());
 
+  // if (ext === '.js') {
+  //   code = prettier.format(code, { parser: "babel" })
+  // }
 
   resource.content = `<!DOCTYPE html>
 <html>
@@ -61,10 +66,10 @@ const parsonsLense = ({ resource, config }) => {
 <body>
 
   <div>
-    ${blockComments ? blockComments.map(comment => `<pre>${comment}</pre><br>`).join('') : ''}
+    ${blockComments ? blockComments.map(comment => `<pre>${comment}</pre>`).join('') : ''}
   </div>
 
-  <main id='parsons-container'></main>
+  <main id='parsons-container' style='height: 100vh;'></main>
   <div id="history-modal" style="height:90vh; width:100vw;" class="modal-window">
     <a href="#modal-close" title="Close" class="modal-close">close &times;</a>
   </div>
