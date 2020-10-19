@@ -19,6 +19,10 @@ const config = require('config');
 const userArgs = process.argv.slice(2);
 const pathToStudy = userArgs[0] || '';
 
+// todo
+// search process.argv for "-h"
+// log a little guide to the console
+
 // subsequent arguments can be interpreted as plugins to apply, overriding the default
 //  $ study ./path/file.js format highlight
 // futurer things might be like:

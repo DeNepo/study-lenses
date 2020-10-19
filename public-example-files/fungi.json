@@ -1,0 +1,24 @@
+{
+  "spotted": [
+    "north america",
+    "south america",
+    "middle east"
+  ],
+  "striped": [
+    "north america",
+    "europe",
+    "australia",
+    "pacific islands"
+  ],
+  "lumpy": [
+    "europe",
+    "pacific islands",
+    "australia",
+    "east asia",
+    "siberia"
+  ],
+  "wavy": [
+    "siberia",
+    "south america"
+  ]
+}

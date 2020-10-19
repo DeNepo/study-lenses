@@ -2,6 +2,7 @@
 
 const fs = require('fs')
 const mime = require('mime')
+const path = require('path')
 
 const compileResponse = ({ req, res, finalResponseData, finalResource, absolutePath }) => {
 
@@ -45,7 +46,9 @@ const compileResponse = ({ req, res, finalResponseData, finalResource, absoluteP
   //  ...
   // not sure the most robust way to do this
 
-  if (mimeType.includes('image')) {
+  // only serve a resource as an image if it's original request path matches the final extension
+  //   ie. flowchart, which renders code into an SVG
+  if (mimeType.includes('image') && finalResource.info.ext === path.extname(req.path)) {
     // https://stackoverflow.com/questions/5823722/how-to-serve-an-image-using-nodejs
     var s = fs.createReadStream(absolutePath);
     s.on('open', function () {

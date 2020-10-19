@@ -12,7 +12,7 @@ const highlightLense = async ({ resource, config }) => {
     <link rel="stylesheet" href="${config.sharedStatic}/prism/style.css">
 
     <script>
-      const code = "${encodeURIComponent(JSON.stringify(resource.content, null, '  '))}"
+      const code = "${encodeURIComponent(typeof resource.content === 'object' ? JSON.stringify(resource.content, null, '  ') : resource.content)}"
     </script>
     <script src='${config.ownStatic}/init.js'></script>
   </body>

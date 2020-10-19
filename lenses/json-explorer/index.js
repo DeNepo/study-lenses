@@ -1,6 +1,8 @@
 const jsonFormatterLense = async ({ requestData, resource, config }) => {
 
-  if (resource.info.ext !== '.json') {
+  console.log(resource)
+
+  if (resource.info && resource.info.ext !== '.json') {
     return
   }
 

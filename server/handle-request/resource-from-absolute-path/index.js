@@ -8,6 +8,7 @@ const readFilePromise = util.promisify(fs.readFile)
 
 const renderVirtualDirectory = require('./render-virtual-directory/index.js')
 const getInfo = require('./get-info.js')
+const { resourceUsage } = require('process')
 
 
 // rendered paths are inspired by path.parse, with with some (compatible?) modifications
@@ -34,11 +35,13 @@ const renderPath = async (absoluteFilePath = '', cwd = process.cwd(), localConfi
         absolutePath: absoluteFilePath,
         studyConfig: localConfigs
       })
+
+      info = getInfo(absoluteFilePath, cwd)
+      info.ext = '.json'
     } else if (pathExists) {
       content = await readFilePromise(absoluteFilePath, 'utf-8')
+      info = getInfo(absoluteFilePath, cwd)
     }
-
-    info = getInfo(absoluteFilePath, cwd)
 
   } catch (err) {
     error = err

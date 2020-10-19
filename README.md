@@ -29,7 +29,7 @@ a tool to add new perspectives and layers of interactivity on top of existing co
 
 This tool has a URL Parameter Interface, the student controls how they view and study their code by modifying the URL parameters when requesting a resource.  At it's base, this is just a static server.  requesting a path inside the folder you have `study`ed will send the raw content. however ...
 
-URL params can be used to modify the resource before it is sent.  once you have `/test-content` open in your browser using `$ study`, navigate a file and add `?hello-world` to the end of the URL and refreshing.  T can find the source code for this lens in [./src/lenses/hello-world](./src/lenses/hello-world). (This is a [Lense](#lens). There is another type of URL parameter called an [Option](#option) that will be covered in more detail later.)
+URL params can be used to modify the resource before it is sent.  once you have `/test-content` open in your browser using `$ study`, navigate a file and add `?hello-world` to the end of the URL and refreshing.  T can find the source code for this lens in [./src/lenses/hello-world](./src/lenses/hello-world). (This is a [Lens](#lens). There is another type of URL parameter called an [Option](#option) that will be covered in more detail later.)
 
 To see lenses in action, open the `/test-content` directory as indicated in __Getting Started__ and try pasting in these url extensions and refreshing:
 

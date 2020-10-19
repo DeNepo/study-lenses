@@ -108,7 +108,9 @@ const strip = (() => {
   // lib/parse.js
   const constants = {
     ESCAPED_CHAR_REGEX: /^\\./,
-    QUOTED_STRING_REGEX: /^(['"`])((?:\\.|[^\1])+?)(\1)/,
+    // updated to catch empty strings
+    QUOTED_STRING_REGEX: /^(['"`])((?:\\.|[^\1])*?)(\1)/,
+    // QUOTED_STRING_REGEX: /^(['"`])((?:\\.|[^\1])+?)(\1)/,
     NEWLINE_REGEX: /^\r*\n/
   };
 
@@ -240,9 +242,10 @@ const strip = (() => {
 
     return cst;
   };
+  const log = (thing) => (console.log(thing), thing)
   const strip = (input, options) => {
     const opts = { ...options, block: true, line: true };
-    return compile(parse(input, opts), opts);
+    return compile(log(parse(input, opts)), opts);
   };
   strip.block = (input, options) => {
     const opts = { ...options, block: true };

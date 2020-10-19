@@ -1,6 +1,12 @@
 'use strict'
 
 
+const fs = require('fs')
+const util = require('util')
+const readFilePromise = util.promisify(fs.readFile)
+
+const path = require('path')
+
 const marked = require('marked')
 
 const getGuideInfo = require('./get-guide-info')
@@ -46,17 +52,22 @@ const helpOption = async ({ config, resource }) => {
   <body class="markdown-body">
     <a href='${resource.info.toCwd}?hyf'><code>/?hyf</code>: back to main directory</a>
     <hr>
-    <h1>Help!</h1>
-    <img alt="panda smash" src="${config.ownStatic}/panda-smash.gif" />
+    ${marked(await readFilePromise(path.join(__dirname, 'main-help-text.md'), 'utf-8'))}
     <hr>
     <h1>Lenses</h1>
+    The lenses you'll use the most
     <hr>
     ${lenseUserGuides}
 
     <hr>
     <h1>Options</h1>
+    The two most helpful options
     <hr>
     ${optionUserGuides}
+
+    <hr>
+    <hr>
+    <img alt="panda smash" src="${config.ownStatic}/panda-smash.gif" />
 
   </body>
 </html>`;
