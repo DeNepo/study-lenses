@@ -4,7 +4,9 @@
     "hyf",
     "render",
     "highlight",
-    "json-explore"
+    "json-explore",
+    "parsons",
+    "format"
   ],
   "options": [
     "--debug",

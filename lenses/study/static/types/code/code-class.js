@@ -8,16 +8,16 @@ export class CodeFE {
     this.config = config
     this.initUi()
     this.initEditor()
-
   }
 
   initUi() {
 
-    document.getElementById('read-only-input')
-      .addEventListener('click', () => {
-        this.readOnly = !this.readOnly
-        this.editor.updateOptions({ readOnly: this.readOnly })
-      })
+    // // default to editable, don't expose option for read-only
+    // document.getElementById('read-only-input')
+    //   .addEventListener('click', () => {
+    //     this.readOnly = !this.readOnly
+    //     this.editor.updateOptions({ readOnly: this.readOnly })
+    //   })
 
     document.getElementById('format-button')
       .addEventListener('click', () =>
@@ -52,9 +52,20 @@ export class CodeFE {
       .addEventListener('click',
         () => this.openSelectionWith('parsons'))
 
-    document.getElementById('diff-selection-button')
-      .addEventListener('click',
-        () => this.openSelectionWith('diff-scramble'))
+    const diffSelectionButton = document.getElementById('diff-selection-button')
+    diffSelectionButton.addEventListener('click',
+      () => this.openSelectionWith('diff-scramble'))
+
+
+    document.getElementById('diff-selection-input')
+      .addEventListener('change', (event) => {
+        if (event.target.checked) {
+          diffSelectionButton.style = 'display: inline-block;'
+        } else {
+          diffSelectionButton.style = 'display: none;'
+        }
+      })
+
   }
 
   initEditor() {
@@ -63,8 +74,9 @@ export class CodeFE {
 
     container.style.overflow = 'hidden';
 
-    const readOnly = typeof this.config.readOnly === 'boolean'
-      ? this.config.readOnly : true
+    // const readOnly = typeof this.config.readOnly === 'boolean'
+    //   ? this.config.readOnly : false
+    const readOnly = false
 
     const options = Object.assign(
       {

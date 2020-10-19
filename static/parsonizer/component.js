@@ -350,7 +350,7 @@ const renderStudyButtons = (container, config, editor) => {
     }
     openInContainer.appendChild(select)
 
-    container.appendChild(document.createTextNode(' || '))
+    // container.appendChild(document.createTextNode(' || '))
     container.appendChild(openInContainer)
   }
 

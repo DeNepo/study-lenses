@@ -9,21 +9,28 @@ class CodeSSR {
   }
 
   styles() {
-    return `<link rel="stylesheet" data-name="vs/editor/editor.main" href="${this.config.sharedStatic}/monaco/min/vs/editor/editor.main.css">`
+    return `<link rel="stylesheet" data-name="vs/editor/editor.main" href="${this.config.sharedStatic}/monaco/min/vs/editor/editor.main.css">
+      <link rel='stylesheet' href='${this.config.ownStatic}/style.css' >`
   }
 
   scriptsHead() {
     return ''
   }
 
+  configOptions() {
+    return `<form>
+      <input id='diff-selection-input' type='checkbox' /> diff selection
+    </form>`
+  }
+
   panel() {
-    return `<input id='read-only-input' type='checkbox' checked='true' /> read-only
-    <button id='format-button'>format</button>
+    return `<!-- <input id='read-only-input' type='checkbox' checked='true' /> read-only -->
     <button id='reset-button'>reset</button>
+    <button id='format-button'>format</button>
     <button id='save-button'>save changes</button>
     ||
     <button id='parsonize-selection-button'>parsonize selection</button>
-    <button id='diff-selection-button'>diff selection</button><div id='buttons-panel'></div>`
+    <button id='diff-selection-button' style='display: none;'>diff selection</button><div id='buttons-panel'></div>`
   }
 
   code() {

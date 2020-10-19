@@ -48,7 +48,7 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
   config.ext = resource.info.ext
 
   if (typeof config.readOnly !== 'boolean') {
-    config.readOnly = true
+    config.readOnly = false
   }
 
   resource.info.ext = '.html'
@@ -71,6 +71,13 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
 <body>
 
   <section>
+    <div class="dropdown">
+      <code>&#187; options &#171;</code>
+      <div class='dropdown-content'>
+        <a href='?--help' target='_blank'><code>--help</code>!  what is this?</a>
+        ${typeView.configOptions()}
+      </div>
+    </div>
     ${typeView.panel()}
   </section>
   <main>

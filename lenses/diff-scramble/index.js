@@ -86,14 +86,14 @@ const diffScrambleLense = ({ config, resource }) => {
       <input name='code-replace' min='0' max='100' type='range' value='0' /> <br>
     </div> -->
     <div class='panel-element'>
-      tokens: <br>
-      <input name='tokens-shuffle' min='0' max='100' type='range' value='0' /> <br>
-      <input name='tokens-replace' min='0' max='100' type='range' value='0' /> <br>
-    </div>
-    <div class='panel-element'>
       lines: <br>
       <input name='lines-shuffle' min='0' max='100' type='range' value='0' /> <br>
       <input name='lines-replace' min='0' max='100' type='range' value='0' /> <br>
+    </div>
+    <div class='panel-element'>
+      tokens: <br>
+      <input name='tokens-shuffle' min='0' max='100' type='range' value='0' /> <br>
+      <input name='tokens-replace' min='0' max='100' type='range' value='0' /> <br>
     </div>
     <div class='panel-element'>
       characters: <br>

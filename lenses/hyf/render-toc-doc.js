@@ -69,6 +69,9 @@ module.exports = async function renderTocDoc({ virDir, config }) {
     <link rel="stylesheet" href="${config.sharedStatic}/prism/style.css">
   </head>
   <body>
+    <a href='?--help' target='_blank'><code>--help</code>!  how does this work?</a>
+    <hr>
+
     <ul list-style='none'>
       <li><a href='./?${virDir.locals['--defaults'] && virDir.locals['--defaults'].directory || ''}'>..</a></li>
       ${tableOfContents({ dirElement: virDir, first: true, defaults: virDir.locals['--defaults'] || {} })}
