@@ -1,6 +1,6 @@
-# Hello World Lense
+# Hello World lens
 
-a basic lense to showcase how to develop a lense.
+a basic lens to showcase how to develop a lens.
 
 ---
 
@@ -10,4 +10,4 @@ lenses can process the file contents however they want, but are expected to upda
 
 ---
 
-this lense is helpful for debugging the server as it shows all the data a lense should receive and tests both static paths (own & shared)
+this lens is helpful for debugging the server as it shows all the data a lens should receive and tests both static paths (own & shared)

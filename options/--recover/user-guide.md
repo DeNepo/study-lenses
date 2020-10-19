@@ -1,1 +1,1 @@
-if an error occurs while piping lenses, skip the erroring lense and continue as though it weren't in the pipeline
+if an error occurs while piping lenses, skip the erroring lens and continue as though it weren't in the pipeline

@@ -1,1 +1,1 @@
-renders .json files into a HTML, all clickable and easy to explore.  Powered by [json-formatter-js](https://github.com/mohsen1/json-formatter-js)
+Renders `.json` files into an easy-to-explore web page, powered by [json-formatter-js](https://github.com/mohsen1/json-formatter-js)

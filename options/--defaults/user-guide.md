@@ -1,1 +1,1 @@
-sets the default lense for resource types
+sets the default lens for resource types

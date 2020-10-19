@@ -10,19 +10,19 @@ const optionGuideInfo = getGuideInfo('options')
 const lenseGuideInfo = getGuideInfo('lenses')
 
 
-const helpOption = async ({ config }) => {
+const helpOption = async ({ config, resource }) => {
 
-  const resource = {
-    info: {
-      ext: '.html'
-    }
+  if (resource.info) {
+    resource.info.ext = '.html'
+  } else {
+    resource.info = { ext: '.htmls' }
   }
 
   console.log('help!')
 
   let optionUserGuides = ''
   for (const info of optionGuideInfo) {
-    const open = `<details><summary><code>${info.queryKey}</code></summary><br>`
+    const open = `<details><summary><code>?${info.queryKey}</code></summary><br>`
     const guide = `<section>${marked(await info.userGuide)}</section><hr>`
     const close = `</details>`
     optionUserGuides += open + guide + close
@@ -30,7 +30,7 @@ const helpOption = async ({ config }) => {
 
   let lenseUserGuides = ''
   for (const info of lenseGuideInfo) {
-    const open = `<details><summary><code>${info.queryKey}</code></summary><br>`
+    const open = `<details><summary><code>?${info.queryKey}</code></summary><br>`
     const guide = `<section>${marked(await info.userGuide)}</section><hr>`
     const close = `</details>`
     lenseUserGuides += open + guide + close
@@ -44,6 +44,8 @@ const helpOption = async ({ config }) => {
     <link rel="stylesheet" href="${config.sharedStatic}/gh-styles.css">
   </head>
   <body class="markdown-body">
+    <a href='${resource.info.toCwd}?hyf'><code>/?hyf</code>: back to main directory</a>
+    <hr>
     <h1>Help!</h1>
     <img alt="panda smash" src="${config.ownStatic}/panda-smash.gif" />
     <hr>

@@ -6,25 +6,25 @@ const debugOption = () => {
 
   const beforeAll = ({ lenses }) => {
     const lensesString = lenses
-      .map(lense => `"${lense.queryKey}"`)
+      .map(lens => `"${lens.queryKey}"`)
       .join(', ')
 
     console.log('--debug:  before all ', lensesString)
   }
   const afterAll = ({ lenses }) => {
     const lensesString = lenses
-      .map(lense => `"${lense.queryKey}"`)
+      .map(lens => `"${lens.queryKey}"`)
       .join(', ')
     console.log('--debug:  after all ', lensesString)
   }
-  const beforeEach = ({ lense }) => {
-    console.log(`--debug:  before lense "${lense.queryKey}"`)
+  const beforeEach = ({ lens }) => {
+    console.log(`--debug:  before lens "${lens.queryKey}"`)
   }
-  const afterEach = ({ lense }) => {
-    console.log(`--debug:  after lense "${lense.queryKey}"`)
+  const afterEach = ({ lens }) => {
+    console.log(`--debug:  after lens "${lens.queryKey}"`)
   }
-  const onError = ({ error, lense, resource, responseData, config }) => {
-    console.log(`--debug:  error in lense "${lense.queryKey}"`)
+  const onError = ({ error, lens, resource, responseData, config }) => {
+    console.log(`--debug:  error in lens "${lens.queryKey}"`)
     console.error(error)
 
     resource.content = error.stack.split(path.join(__dirname, '..', '..')).join(' ... ')

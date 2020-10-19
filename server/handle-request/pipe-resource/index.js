@@ -25,7 +25,7 @@ const pipeResource = async ({
       responseData,
       resource,
       hooks: hooks.beforeAll,
-      lense: null,
+      lens: null,
       lenses,
     })
     hookErrors.concat(beforeAllReturned.errors)
@@ -40,7 +40,7 @@ const pipeResource = async ({
   }
 
 
-  pipingResource: for (const lense of lenses) {
+  pipingResource: for (const lens of lenses) {
 
     beforeEach: {
       const beforeEachReturned = await evaluateHooks({
@@ -48,7 +48,7 @@ const pipeResource = async ({
         responseData,
         resource,
         hooks: hooks.beforeEach,
-        lense,
+        lens,
         lenses,
       })
       hookErrors.concat(beforeEachReturned.errors)
@@ -63,7 +63,7 @@ const pipeResource = async ({
     }
 
 
-    const config = Object.assign({}, lense)
+    const config = Object.assign({}, lens)
     delete config.module
 
     let onErrorReturned = {}
@@ -73,10 +73,10 @@ const pipeResource = async ({
       resource: pipedResource
     }
     try {
-      const config = Object.assign({}, lense)
+      const config = Object.assign({}, lens)
       delete config.module
 
-      returned = await lense.module({
+      returned = await lens.module({
         config,
         requestData: deepClone(pipedRequestData),
         responseData: deepClone(pipedResponseData),
@@ -94,7 +94,7 @@ const pipeResource = async ({
 
       lenseError = {
         error,
-        lense
+        lens
       }
       onError: {
         onErrorReturned = await evaluateHooks({
@@ -102,7 +102,7 @@ const pipeResource = async ({
           responseData: pipedResponseData,
           resource: pipedResource,
           hooks: hooks.onError,
-          lense,
+          lens,
           lenses,
           error,
         })
@@ -110,15 +110,15 @@ const pipeResource = async ({
       }
       // console.log(onErrorReturned)
       if (!onErrorReturned.recover) {
-        // send no matter what, do not recover from an error in a lense
-        resource.content = `an error occurred in the "${lense.queryKey}" lense.\n\nadd the --debug option to learn more\n\nor just remove it from the URL and refresh`
+        // send no matter what, do not recover from an error in a lens
+        resource.content = `an error occurred in the "${lens.queryKey}" lens.\n\nadd the --debug option to learn more\n\nor just remove it from the URL and refresh`
         if (resource.info) {
           resource.info.ext = '.txt'
         } else {
           resource.info = { ext: '.txt' }
         }
         responseData.status = 500
-        // in case of a lense error, fall back to the original resource
+        // in case of a lens error, fall back to the original resource
         pipedResponseData = onErrorReturned.responseData || responseData
         pipedResource = onErrorReturned.resource || resource
 
@@ -133,7 +133,7 @@ const pipeResource = async ({
         responseData,
         resource,
         hooks: hooks.afterEach,
-        lense,
+        lens,
         lenses,
       })
       hookErrors.concat(afterEachReturned.errors)
@@ -154,7 +154,7 @@ const pipeResource = async ({
       responseData: pipedResponseData,
       resource: pipedResource,
       hooks: hooks.afterAll,
-      lense: null,
+      lens: null,
       lenses,
     })
     hookErrors.concat(afterAllReturned.errors)

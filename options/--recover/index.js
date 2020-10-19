@@ -1,7 +1,7 @@
 const recoverOption = () => {
 
-  const onError = ({ error, lense }) => {
-    console.log(`--continue:  error in lense "${lense.queryKey}"`)
+  const onError = ({ error, lens }) => {
+    console.log(`--continue:  error in lens "${lens.queryKey}"`)
     console.error(error)
 
     return {

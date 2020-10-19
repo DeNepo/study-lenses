@@ -1,8 +1,9 @@
 'use strict'
 
+const fs = require('fs')
 const mime = require('mime')
 
-const compileResponse = ({ req, res, finalResponseData, finalResource }) => {
+const compileResponse = ({ req, res, finalResponseData, finalResource, absolutePath }) => {
 
   // detect the mime type
   //  this can use some help
@@ -38,20 +39,33 @@ const compileResponse = ({ req, res, finalResponseData, finalResource }) => {
     mimeType = 'text/plain'
   }
 
-
+  // todo
   // assign the finalResponseData values to the acutal response
   //  transfer cookies using res.cookies()
   //  ...
   // not sure the most robust way to do this
 
+  if (mimeType.includes('image')) {
+    // https://stackoverflow.com/questions/5823722/how-to-serve-an-image-using-nodejs
+    var s = fs.createReadStream(absolutePath);
+    s.on('open', function () {
+      res.set('Content-Type', mimeType);
+      s.pipe(res);
+    });
+    s.on('error', function () {
+      res.set('Content-Type', 'text/plain');
+      // res.status(404).end('Not found'); // already did 404 checks
+    });
 
-  res.set('Content-Type', mimeType)
-  // res.set('Content-Type', 'text/plain')
-  res.status(finalResponseData.status)
-  // res.status(200)
+  } else {
+    res.set('Content-Type', mimeType)
+    // res.set('Content-Type', 'text/plain')
+    res.status(finalResponseData.status)
+    // res.status(200)
 
-  res.send(finalResource.content)
-  // res.send('hello')
+    res.send(finalResource.content)
+    // res.send('hello')
+  }
 
 }
 

@@ -29,12 +29,12 @@ a tool to add new perspectives and layers of interactivity on top of existing co
 
 This tool has a URL Parameter Interface, the student controls how they view and study their code by modifying the URL parameters when requesting a resource.  At it's base, this is just a static server.  requesting a path inside the folder you have `study`ed will send the raw content. however ...
 
-URL params can be used to modify the resource before it is sent.  once you have `/test-content` open in your browser using `$ study`, navigate a file and add `?hello-world` to the end of the URL and refreshing.  T can find the source code for this lense in [./src/lenses/hello-world](./src/lenses/hello-world). (This is a [Lense](#lense). There is another type of URL parameter called an [Option](#option) that will be covered in more detail later.)
+URL params can be used to modify the resource before it is sent.  once you have `/test-content` open in your browser using `$ study`, navigate a file and add `?hello-world` to the end of the URL and refreshing.  T can find the source code for this lens in [./src/lenses/hello-world](./src/lenses/hello-world). (This is a [Lense](#lens). There is another type of URL parameter called an [Option](#option) that will be covered in more detail later.)
 
 To see lenses in action, open the `/test-content` directory as indicated in __Getting Started__ and try pasting in these url extensions and refreshing:
 
 - `/README.md`
-  - `/README.md` - no lense, the markdown source is returned as-is
+  - `/README.md` - no lens, the markdown source is returned as-is
   - `/README.md?hello-world` - the markdown will be rendered into a textarea in an HTML file
   - `/README.md?hello-world=1234` - the markdown will be rendered into a textarea in an HTML file, with the value 1234 passed as a query
   - `/README.md?render` - the markdown will be rendered to HTML using marked, it will now be a web page
@@ -61,10 +61,10 @@ To see lenses in action, open the `/test-content` directory as indicated in __Ge
 
 There are a lot of different lenses, and they sometimes will compose in unhelpful or unexpected ways.  it's also not very student-friendly to be adjusting params all the time. so ...
 
-The server comes with a default lenses `?hyf` that opens a directory as a navigable folder structure.  Each subdirectory and file is a link that opens with a sane default lense so students won't need to understand how to use params or read lense guides to get started. Here are a few of the defaults:
+The server comes with a default lenses `?hyf` that opens a directory as a navigable folder structure.  Each subdirectory and file is a link that opens with a sane default lens so students won't need to understand how to use params or read lens guides to get started. Here are a few of the defaults:
 
-- `.html` files will open without a lense, as a live website (`study` is just an augmented static server. `import`/`export`, local `fetch` calls, it all works! )
-- `.js` files (will soon) open up in a monaco editor with built-in parsonizer and diff-editor.  Students will have the option to enable an `eval` button if the file is a stand-alone exercise
+- `.html` files will open without a lens, as a live website (`study` is just an augmented static server. `import`/`export`, local `fetch` calls, it all works! )
+- `.js` files open up in a monaco editor with built-in parsonizer and diff-editor.  Students will have the option to enable an `eval` button & other study tools
 - `.json` files open as colored and collapsible data
 - ...
 
@@ -94,7 +94,7 @@ lenses are functions that process the requested resource before the final HTTP r
 - `/file.js?format` will format the code before sending it (in case the source file is messy)
 - `/file.js?format&highlight` will format the code, then render it into an HTML file using Prism (or other) for highlighted code in the browser
 
-The most basic lense could just be a function that reverses the text stored in the file.
+The most basic lens could just be a function that reverses the text stored in the file.
 
 ### Options
 
@@ -102,7 +102,7 @@ Options are inspired by [cli conventions](https://nullprogram.com/blog/2020/08/0
 
 In contrast to lenses, an option can end the request/response cycle early if indicated in their return value, ie. `--help` will send user documentation regardless of where it is placed in the URL, what other lenses were requested, or what the resource path is.
 
-Options can also return hooks that are called at different points in the lense pipeline process.  Hooks cannot modify the content or HTTP response without immediately ending the cycle.  For example, the `--debug` option return hooks that log each stage of the lense pipeline for diagnosis _without_ modifying the behavior of the pipeline (useful for lense developers and especially curious students).  More on this in the [DOCS](./DOCS.md)
+Options can also return hooks that are called at different points in the lens pipeline process.  Hooks cannot modify the content or HTTP response without immediately ending the cycle.  For example, the `--debug` option return hooks that log each stage of the lens pipeline for diagnosis _without_ modifying the behavior of the pipeline (useful for lens developers and especially curious students).  More on this in the [DOCS](./DOCS.md)
 
 ---
 
@@ -131,10 +131,10 @@ If you're a little curious, but not too curious, there's this:
 |
 |- lenses
 | |- index.js -- parses and loads the lenses
-| |- lense-name -- each lense is stored in it's own folder
-|   |- static -- (optional) for own static assets if the lense renders a web page
-|   |- index.js -- entry point to the lense
-|   |- README.md -- describe your lense, including specs for other lense authors to compose
+| |- lens-name -- each lens is stored in it's own folder
+|   |- static -- (optional) for own static assets if the lens renders a web page
+|   |- index.js -- entry point to the lens
+|   |- README.md -- describe your lens, including specs for other lens authors to compose
 |   |- user-guide.md -- a student-friendly guide, dynamically included by the `--lenses` option
 |
 |- options

@@ -1,1 +1,1 @@
-renders Markdown files into a full HTML document including GitHub Styling, code highlighting (, and rendered mermaid documents. soon)
+Add the `?render` lens to a markdown file an it will be rendered into a web page with highlighted code blocks.

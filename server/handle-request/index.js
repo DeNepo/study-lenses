@@ -50,7 +50,8 @@ const handleRequest = async (req, res) => {
     compileAndSendResponse({
       req, res,
       finalResource: resource,
-      finalResponseData: responseData
+      finalResponseData: responseData,
+      absolutePath
     })
 
     return
@@ -66,7 +67,7 @@ const handleRequest = async (req, res) => {
   //  configure plugins
   //  filter out the requested options and lenses
   //  assign query values
-  //  assign local lense.json configurations
+  //  assign local lens.json configurations
   const { requestedOptions, requestedLenses } = await configurePlugins(localConfigs, req.query)
 
 
@@ -110,6 +111,7 @@ const handleRequest = async (req, res) => {
         finalResponseData: optionedResponseData || responseData,
         req,
         res,
+        absolutePath
       })
 
       return
@@ -145,7 +147,7 @@ const handleRequest = async (req, res) => {
 
 
   //    compile and send the response
-  compileAndSendResponse({ req, res, finalResource, finalResponseData })
+  compileAndSendResponse({ req, res, finalResource, finalResponseData, absolutePath })
 
 }
 

@@ -3,7 +3,7 @@
 const deepClone = require('../lib/deep-clone')
 
 const evaluateHooks = async ({
-  requestData, responseData, resource, hooks, lense, error, lenses
+  requestData, responseData, resource, hooks, lens, error, lenses
 }) => {
 
   let hookedResponseData = null
@@ -20,7 +20,7 @@ const evaluateHooks = async ({
         requestData: deepClone(requestData),
         responseData: deepClone(responseData),
         resource: deepClone(resource),
-        lense: deepClone(lense),
+        lens: deepClone(lens),
         lenses: deepClone(lenses),
         error: deepClone(error),
       })

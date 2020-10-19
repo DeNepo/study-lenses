@@ -42,27 +42,27 @@ const configurePlugins = async (localConfigs, parsedQuery) => {
   // console.log(config['--defaults'])
 
 
-  // filter selected options, assign query values, and assign lense.json configurations
+  // filter selected options, assign query values, and assign lens.json configurations
   const lenses = (await lensesPromise)
   const requestedLenses = Object.keys(parsedQuery)
     .map(queryKey => {
-      return lenses.find(lense => lense.queryKey === queryKey)
+      return lenses.find(lens => lens.queryKey === queryKey)
     })
-    .filter(lense => lense !== undefined)
+    .filter(lens => lens !== undefined)
 
   // assign configurations to the lenses if any were requested
   if (requestedLenses.length > 0) {
-    for (const lense of requestedLenses) {
+    for (const lens of requestedLenses) {
       // assign the express-parsed query value
       //  if possible, JSON parse the string
       try {
-        lense.queryValue = JSON.parse(parsedQuery[lense.queryKey])
+        lens.queryValue = JSON.parse(parsedQuery[lens.queryKey])
       } catch (o_0) {
-        lense.queryValue = parsedQuery[lense.queryKey]
+        lens.queryValue = parsedQuery[lens.queryKey]
       }
 
       // assign local configurations
-      lense.locals = Object.assign({}, localConfigs[lense.queryKey])
+      lens.locals = Object.assign({}, localConfigs[lens.queryKey])
     }
     // console.log(JSON.stringify(localConfigs, null, '  '))
     // console.log(requestedLenses)
