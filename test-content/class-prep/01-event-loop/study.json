@@ -1,0 +1,10 @@
+{
+  "study": {
+    "clearScheduled": true,
+    "dependencies": [
+      {
+        "path": "/lib/labeled-logger.js"
+      }
+    ]
+  }
+}

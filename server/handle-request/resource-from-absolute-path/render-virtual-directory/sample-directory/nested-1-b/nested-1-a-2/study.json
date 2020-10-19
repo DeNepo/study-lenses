@@ -1,0 +1,6 @@
+{
+  "--ignore": true,
+  "--defaults": {
+    ".js": "flowchart"
+  }
+}

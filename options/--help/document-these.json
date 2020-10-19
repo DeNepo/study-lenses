@@ -1,0 +1,15 @@
+{
+  "lenses": [
+    "study",
+    "hyf",
+    "render",
+    "highlight",
+    "json-explore",
+    "parsons",
+    "format"
+  ],
+  "options": [
+    "--debug",
+    "--help"
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "loopGuard": {
+    "active": true,
+    "max": 10
+  },
+  "buttons": [
+    {
+      "console": true
+    },
+    {
+      "debugger": true
+    },
+    {
+      "flowViz": true
+    },
+    {
+      "jsTutor": true
+    }
+  ]
+}

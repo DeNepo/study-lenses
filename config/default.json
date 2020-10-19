@@ -1,0 +1,29 @@
+{
+  "PORT": 4600,
+  "LOGGER": {
+    "STDOUT": true
+  },
+  "--defaults": {
+    "default": "",
+    ".md": "render",
+    ".html": "",
+    ".txt": "",
+    "": "",
+    ".js": "study",
+    ".jsx": "study",
+    ".css": "study",
+    ".json": "json-explore",
+    ".png": "",
+    ".jpeg": "",
+    ".jpg": "",
+    ".gif": "",
+    ".svg": "",
+    ".mmd": "mermaid",
+    ".ts": "study",
+    "directory": "hyf"
+  },
+  "ORIGIN": {
+    "build": "https://janke-learning.github.io/study-lenses",
+    "local": "http://localhost:"
+  }
+}

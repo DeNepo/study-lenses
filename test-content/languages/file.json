@@ -1,0 +1,57 @@
+{
+  "static": {
+    "parsons": true,
+    "diff": false,
+    "edit": false,
+    "save": false
+  },
+  "languages": {
+    "js": {
+      "eval": false,
+      "loopGuard": [
+        false,
+        {
+          "active": true,
+          "max": 0
+        }
+      ],
+      "clearScheduled": false,
+      "openIn": [
+        "jsTutor. how to handle iframe vs. live. can they tutorize just selection?",
+        "loupe",
+        "promisees",
+        "esprima",
+        "babel"
+      ],
+      "aran": [
+        true,
+        {
+          "more": "detailed options"
+        }
+      ],
+      "flowchart": true,
+      "p5": true,
+      "tests": true,
+      "nameThis": true
+    },
+    "html": {
+      "newTab": true,
+      "iframe": true,
+      "hixie": true
+    },
+    "css": {},
+    "jsx": {},
+    "ts": {
+      "tsTutor": true
+    }
+  },
+  "dependencies": {
+    "base": "relative path from root, will be appended. optional",
+    "name": {
+      "path": "if base, relative from there, otherwise relative from root",
+      "module": false,
+      "absolute": "if true, ignore the base"
+    }
+  },
+  "sketchpad": true
+}

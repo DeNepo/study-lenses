@@ -1,0 +1,161 @@
+{
+  "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+  "dir": "",
+  "base": "sample-directory",
+  "ext": "",
+  "name": "sample-directory",
+  "type": "directory",
+  "toCwd": "..",
+  "locals": {
+    "study": {},
+    "hello-world": {
+      "/": "chups"
+    }
+  },
+  "children": [
+    {
+      "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+      "dir": "sample-directory",
+      "base": "nested-1-a",
+      "ext": "",
+      "name": "nested-1-a",
+      "type": "directory",
+      "toCwd": "../..",
+      "locals": {
+        "study": {
+          "languages": {
+            "loopGuard": true
+          }
+        },
+        "hello-world": {
+          "/": "chups",
+          "/languages": "hi"
+        }
+      },
+      "children": [
+        {
+          "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+          "dir": "sample-directory/nested-1-a",
+          "base": "file.md",
+          "ext": ".md",
+          "name": "file",
+          "type": "file",
+          "toCwd": "../../.."
+        },
+        {
+          "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+          "dir": "sample-directory/nested-1-a",
+          "base": "study.json",
+          "ext": ".json",
+          "name": "study",
+          "type": "file",
+          "toCwd": "../../.."
+        }
+      ]
+    },
+    {
+      "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+      "dir": "sample-directory",
+      "base": "nested-1-b",
+      "ext": "",
+      "name": "nested-1-b",
+      "type": "directory",
+      "toCwd": "../..",
+      "locals": {
+        "study": {},
+        "hello-world": {
+          "/": "chups"
+        },
+        "--defaults": {
+          ".js": "parsons"
+        }
+      },
+      "children": [
+        {
+          "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+          "dir": "sample-directory/nested-1-b",
+          "base": "nested-1-a-2",
+          "ext": "",
+          "name": "nested-1-a-2",
+          "type": "directory",
+          "toCwd": "../../..",
+          "locals": {
+            "study": {},
+            "hello-world": {
+              "/": "chups"
+            },
+            "--defaults": {
+              ".js": "flowchart"
+            },
+            "--ignore": true
+          },
+          "children": [
+            {
+              "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+              "dir": "sample-directory/nested-1-b/nested-1-a-2",
+              "base": "file.css",
+              "ext": ".css",
+              "name": "file",
+              "type": "file",
+              "toCwd": "../../../.."
+            },
+            {
+              "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+              "dir": "sample-directory/nested-1-b/nested-1-a-2",
+              "base": "study.json",
+              "ext": ".json",
+              "name": "study",
+              "type": "file",
+              "toCwd": "../../../.."
+            }
+          ]
+        },
+        {
+          "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+          "dir": "sample-directory/nested-1-b",
+          "base": "file.html",
+          "ext": ".html",
+          "name": "file",
+          "type": "file",
+          "toCwd": "../../.."
+        },
+        {
+          "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+          "dir": "sample-directory/nested-1-b",
+          "base": "study.json",
+          "ext": ".json",
+          "name": "study",
+          "type": "file",
+          "toCwd": "../../.."
+        }
+      ]
+    },
+    {
+      "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+      "dir": "sample-directory",
+      "base": "file.txt",
+      "ext": ".txt",
+      "name": "file",
+      "type": "file",
+      "toCwd": "../.."
+    },
+    {
+      "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+      "dir": "sample-directory",
+      "base": "file.js.md",
+      "ext": ".md",
+      "name": "file.js",
+      "type": "file",
+      "toCwd": "../.."
+    },
+    {
+      "root": "/Users/master/evan-drive/0-teach-code/h-h-y-f/0---the-big-idea/gb-curriculum/study-lenses-package/00-repo--study-lenses/server/handle-request/resource-from-absolute-path/render-virtual-directory",
+      "dir": "sample-directory",
+      "base": "study.json",
+      "ext": ".json",
+      "name": "study",
+      "type": "file",
+      "toCwd": "../.."
+    }
+  ]
+}

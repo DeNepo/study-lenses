@@ -1,0 +1,3 @@
+https://www.w3schools.com/howto/howto_css_modals.asp
+https://github.com/picitelli/js-modal
+https://github.com/drublic/css-modal
