@@ -1,6 +1,6 @@
 const detectType = (resource) => {
 
-  if (!resource.inf) {
+  if (!resource.info) {
     return 'code';
   }
 
