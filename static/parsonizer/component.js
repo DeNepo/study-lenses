@@ -28,7 +28,7 @@ class JSParsons extends HTMLElement {
 
   async connectedCallback() {
 
-    if (this.language.match('js')) {
+    if (false && this.language.match('js')) {
       const paramConfig = {
         code: this.code,
         ext: '.' + this.language.split('.').join('')
