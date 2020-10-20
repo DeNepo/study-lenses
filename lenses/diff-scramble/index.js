@@ -66,8 +66,8 @@ const diffScrambleLense = ({ config, resource }) => {
 <body>
 
 
-  ${resource.info.ext === '.js' ? `<div class='panel-element'>
-      randomize variables:<input id='randomize-variables' min='0' max='100' type='range' value='0' />
+  ${config.ext === '.js' ? `<div class='panel-element'>
+      randomize non-keywords:<input id='randomize-variables' min='0' max='100' type='range' value='0' />
     </div><br>`: ''}
   <br>
   <form id='diff-selection-form' class='panel'>

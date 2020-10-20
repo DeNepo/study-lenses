@@ -25,7 +25,10 @@ const randomizeVariables = (() => {
     return variableName
   }
 
-  const reservedWords = ['await', 'break', 'case', 'catch', 'class', 'const', 'continue', 'debugger', 'default', 'delete', 'do', 'else', 'enum', 'export', 'extends', 'false', 'finally', 'for', 'function', 'if', 'implements', 'import', 'in', 'instanceof', 'interface', 'let', 'new', 'null', 'package', 'private', 'protected', 'public', 'return', 'super', 'switch', 'static', 'this', 'throw', 'try', 'True', 'typeof', 'var', 'void', 'while', 'with', 'yield']
+  const keyWords = [
+    'await', 'break', 'case', 'catch', 'class', 'const', 'continue', 'debugger', 'default', 'delete', 'do', 'else', 'enum', 'export', 'extends', 'false', 'finally', 'for', 'function', 'if', 'implements', 'import', 'in', 'instanceof', 'interface', 'let', 'new', 'null', 'package', 'private', 'protected', 'public', 'return', 'super', 'switch', 'static', 'this', 'throw', 'try', 'True', 'typeof', 'var', 'void', 'while', 'with', 'yield',
+    'console', 'prompt', 'alert', 'confirm'
+  ]
 
   const randomizeVariables = (code, probability = 0) => {
 
@@ -38,7 +41,7 @@ const randomizeVariables = (() => {
       for (let i = 0; i < code.length; i++) {
         const entry = code[i]
         if (Array.isArray(entry)
-          && !reservedWords.includes(entry.join(''))
+          && !keyWords.includes(entry.join(''))
           && isNaN(entry.join(''))) {
           if (Math.random() > probability) {
             continue

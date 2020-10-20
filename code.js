@@ -19,7 +19,7 @@ class CodeSSR {
 
   configOptions() {
     return `<form>
-      <input id='diff-selection-input' type='checkbox' /> scramble selection
+      <input id='lens-selection-input' type='checkbox' /> scramble selection
     </form>`
   }
 
@@ -30,7 +30,7 @@ class CodeSSR {
     <button id='save-button'>save changes</button>
     ||
     <button id='parsonize-selection-button'>parsonize selection</button>
-    <button id='diff-selection-button' style='display: none;'>scramble selection</button><div id='buttons-panel'></div>`
+    <button id='lens-selection-button' style='display: none;'>scramble selection</button><div id='buttons-panel'></div>`
   }
 
   code() {
