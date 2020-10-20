@@ -43,8 +43,13 @@ const prettierLense = async ({ resource, config }) => {
             ? prettier.format(source, { parser: "markdown" })
             : source;
 
-  resource.content = prettify(code, ext);
-  resource.info.ext = ext
+  try {
+    resource.content = prettify(code, ext);
+    resource.info.ext = ext
+  } catch (err) {
+    resource.error = err
+    resource.content = null
+  }
 
   return {
     resource

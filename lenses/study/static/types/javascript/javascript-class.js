@@ -123,11 +123,9 @@ export class JavaScriptFE extends CodeFE {
     if (this.config.locals.loopGuard && this.config.locals.loopGuard.active) {
       // using xhr so any errors aren't "in promise"
       const xhr = new XMLHttpRequest();
+      const loopGuarded = JavaScriptFE.insertLoopGuards(this.editor.getValue(), this.config.locals.loopGuard.max)
       const paramConfig = {
-        // code: JavaScriptFE.insertLoopGuards(strip(this.editor.getValue()), this.config.locals.loopGuard.max),
-        // it's more often helpful to have comments than not
-        // and the parsonizer strips it's own comments
-        code: JavaScriptFE.insertLoopGuards(this.editor.getValue(), this.config.locals.loopGuard.max),
+        code: loopGuarded,
         ext: config.ext
       }
       const paramSafeConfig = encodeURIComponent(JSON.stringify(paramConfig))
@@ -136,7 +134,12 @@ export class JavaScriptFE extends CodeFE {
       xhr.send();
       xhr.onload = () => {
         if (xhr.status != 200) {
-          console.error(`${xhr.status}: ${xhr.statusText}`);
+          // if there was an error in the format lense,
+          //  then there is a syntax error in their code
+          // eval their code for a proper error in the console
+          //  and for VM code in the debugger
+          const evalSyntaxError = eval
+          evalSyntaxError(this.editor.getValue())
         } else {
           const formattedCode = xhr.response;
           studyWith[environment](formattedCode)
