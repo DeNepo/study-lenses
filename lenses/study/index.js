@@ -11,7 +11,7 @@ const detectType = require('./lib/detect-type.js')
 const renderDependencies = require('./lib/render-dependencies.js')
 
 const liveStudyLense = async ({ config, resource, responseData, requestData }) => {
-  console.log(config)
+
   if (requestData.method === 'POST') {
     console.log('-- POST')
     try {

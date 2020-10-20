@@ -58,7 +58,7 @@ module.exports = async function renderTocDoc({ virDir, config, top }) {
 <html>
   <head>
     <meta charset="utf-8">
-    <title>${virDir.path}</title>
+    <title>${virDir.base}</title>
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <style>
       ul {
