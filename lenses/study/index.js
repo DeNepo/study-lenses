@@ -34,9 +34,9 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
     }
   }
 
-  // if (resource.content === null || resource.info === null || resource.error) {
-  //   return
-  // }
+  if (resource.content === null || resource.info === null || resource.error) {
+    return
+  }
 
   const type = detectType(resource)
 
