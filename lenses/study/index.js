@@ -52,6 +52,7 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
   }
 
   Object.assign(config.locals, config.queryValue)
+  console.log(config)
 
   resource.info.ext = '.html'
   resource.content = `<!DOCTYPE html>
@@ -67,6 +68,10 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
   ${typeView.scriptsHead()}
 
   ${renderDependencies(config.dependencies, resource)}
+  ${config.locals.tests ? `
+    <script src='${config.ownStatic}/dependencies/describe-it.js'></script>
+    <script src='${config.ownStatic}/dependencies/chai-and-chai-dom.js'></script>
+    ` : ''}
 
 </head>
 
