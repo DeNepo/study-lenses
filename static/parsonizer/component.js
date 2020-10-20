@@ -257,7 +257,7 @@ customElements.define('js-parsons', JSParsons);
 const renderStudyButtons = (container, config, editor) => {
 
 
-  if (false && config.loopGuard) {
+  if (config.loopGuard) {
 
     if (typeof config.loopGuard !== 'object') {
       config.loopGuard = {
@@ -426,7 +426,7 @@ const renderStudyButtons = (container, config, editor) => {
         alert('Your program has too few code fragments.')
       }
 
-      if (config.loopGuard.active) {
+      if (config.loopGuard && config.loopGuard.active) {
         // using xhr so any errors aren't "in promise"
         const xhr = new XMLHttpRequest();
         const paramConfig = {

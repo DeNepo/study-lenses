@@ -34,7 +34,7 @@ const tableOfContents = ({ dirElement, top = false, defaults = {} }) => {
     const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
     return top ? subIndex
       : (`<li><details><summary>${dirElement.base}</summary>\n`
-        + (subIndex ? '\n<ul>' + subIndex + '</ul>' : '')
+        + (subIndex ? '\n<ul style="list-style-type: none;">' + subIndex + '</ul>' : '')
         + '</details></li>');
     // return top ? subIndex
     //   : (`<li><details><summary><a href="${relativePath}?${query}">${dirElement.base}</a></summary>\n`
