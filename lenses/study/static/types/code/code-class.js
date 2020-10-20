@@ -94,7 +94,7 @@ export class CodeFE {
         wordWrap: 'on',
         wrappingStrategy: 'advanced',
         minimap: {
-          enabled: true
+          enabled: false
         },
         overviewRulerLanes: 0
       },
