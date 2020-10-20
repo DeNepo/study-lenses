@@ -34,6 +34,10 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
     }
   }
 
+  if (!resource.content || !resource.info || resource.error) {
+    return
+  }
+
   const type = detectType(resource)
 
 
@@ -52,7 +56,6 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
   }
 
   Object.assign(config.locals, config.queryValue)
-  console.log(config)
 
   resource.info.ext = '.html'
   resource.content = `<!DOCTYPE html>
