@@ -28,6 +28,7 @@ class JSParsons extends HTMLElement {
 
   async connectedCallback() {
 
+    // formatting the code before parsonization can be deceiving
     if (false && this.language.match('js')) {
       const paramConfig = {
         code: this.code,
