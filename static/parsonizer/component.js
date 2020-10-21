@@ -28,25 +28,6 @@ class JSParsons extends HTMLElement {
 
   async connectedCallback() {
 
-    // formatting the code before parsonization can be deceiving
-    if (false && this.language.match('js')) {
-      const paramConfig = {
-        code: this.code,
-        ext: '.' + this.language.split('.').join('')
-      }
-      const paramSafeConfig = encodeURIComponent(JSON.stringify(paramConfig))
-      try {
-        const formatUrl = window.location.origin + '?format=' + paramSafeConfig
-        const res = await fetch(formatUrl)
-        if (res.status !== 200 || !res.ok) {
-          throw res.status
-        }
-        this.code = await res.text()
-      } catch (err) {
-        console.log(err)
-      }
-    }
-
 
     function displayErrors(fb) {
       if (fb.errors.length > 0) {
@@ -266,6 +247,7 @@ const renderStudyButtons = (container, config, editor) => {
       }
     }
 
+
     const withLoopGuard = document.createElement('input')
     withLoopGuard.setAttribute('type', 'checkbox')
     withLoopGuard.checked = config.loopGuard.active
@@ -283,27 +265,9 @@ const renderStudyButtons = (container, config, editor) => {
     loopGuardForm.appendChild(document.createTextNode('loop guard: '))
     loopGuardForm.appendChild(loopGuardInput)
 
+    container.appendChild(document.createElement('br'))
+    container.appendChild(document.createElement('br'))
     container.appendChild(loopGuardForm)
-
-  }
-
-  if (false && config.flowchart) {
-
-    const flowchartButton = document.createElement('button')
-    flowchartButton.innerHTML = 'flowchart'
-    flowchartButton.onclick = () => {
-      const lenseConfig = {
-        code: editor.getValue(),
-        ext: config.ext
-      }
-      const queryValue = encodeURIComponent(JSON.stringify(lenseConfig))
-      const query = `?flowchart=${queryValue}`
-      const url = window.location.origin + query
-
-      window.open(url, '_blank')
-    }
-    container.appendChild(document.createTextNode(' || '))
-    container.appendChild(flowchartButton)
 
   }
 
@@ -353,15 +317,6 @@ const renderStudyButtons = (container, config, editor) => {
 
     // container.appendChild(document.createTextNode(' || '))
     container.appendChild(openInContainer)
-  }
-
-
-  const insertLoopGuards = (code, maxIterations) => {
-    let loopNum = 0
-    return code.replace(/for *\(.*\{|while *\(.*\{|do *\{/g, loopHead => {
-      const id = ++loopNum
-      return `let loopGuard_${id} = 0\n${loopHead}\nif (++loopGuard_${id} > ${maxIterations}) { throw new Error('Loop ${id} exceeded ${maxIterations} iterations') }\n`
-    })
   }
 
 
@@ -427,27 +382,7 @@ const renderStudyButtons = (container, config, editor) => {
       }
 
       if (config.loopGuard && config.loopGuard.active) {
-        // using xhr so any errors aren't "in promise"
-        const xhr = new XMLHttpRequest();
-        const paramConfig = {
-          code: insertLoopGuards(strip(code), config.loopGuard.max),
-          ext: config.ext
-        }
-        const paramSafeConfig = encodeURIComponent(JSON.stringify(paramConfig))
-        xhr.open('GET', window.location.origin + '?format=' + paramSafeConfig);
-        xhr.responseType = 'text';
-        xhr.send();
-        xhr.onload = () => {
-          if (xhr.status != 200) {
-            console.error(`${xhr.status}: ${xhr.statusText}`);
-          } else {
-            const formattedCode = xhr.response;
-            target[keyName](formattedCode)
-          }
-        }
-        xhr.onerror = function (err) {
-          console.error(err);
-        }
+        evalWithLoopGuard(code, config.loopGuard.max, target[keyName].bind(target))
       } else {
         target[keyName](code)
       }

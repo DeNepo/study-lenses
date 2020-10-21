@@ -39,6 +39,7 @@ const parsonsLense = ({ resource, config }) => {
     eval: config.queryValue.eval,
     openIn: config.queryValue.openIn,
     loopGuard: config.queryValue.openIn,
+    ext,
   }
 
 
@@ -84,6 +85,7 @@ const parsonsLense = ({ resource, config }) => {
   <script src="${config.sharedStatic}/parsonizer/parsons.js"></script>
 
   <script src="${config.sharedStatic}/lib/strip-comments.js"></script>
+  <script src="${config.sharedStatic}/lib/eval-with-loop-guard.js"></script>
 
   <script>
     const config = JSON.parse(decodeURIComponent("${encodeURIComponent(JSON.stringify(frontendConfig))}"))

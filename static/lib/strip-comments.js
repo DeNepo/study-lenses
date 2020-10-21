@@ -242,10 +242,9 @@ const strip = (() => {
 
     return cst;
   };
-  const log = (thing) => (console.log(thing), thing)
   const strip = (input, options) => {
     const opts = { ...options, block: true, line: true };
-    return compile(log(parse(input, opts)), opts);
+    return compile(parse(input, opts), opts);
   };
   strip.block = (input, options) => {
     const opts = { ...options, block: true };

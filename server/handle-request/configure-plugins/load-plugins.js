@@ -51,8 +51,8 @@ const loadPlugins = async (type) => {
       queryKey: nextPluginDirName,
       queryValue: '',
       // these paths could be centrally configured
-      ownStatic: `/own_static_resource__${type}__${nextPluginDirName}__`,
-      sharedStatic: `/shared_static_resource`,
+      ownStatic: `/own_static_resources__${type}__${nextPluginDirName}__`,
+      sharedStatic: `/shared_static_resources`,
       userGuide
     }
 

@@ -6,26 +6,26 @@ const path = require('path')
 
 const compileResponse = ({ req, res, finalResponseData, finalResource, absolutePath }) => {
 
+
   // detect the mime type
   //  this can use some help
   let mimeType = ''
-  if (finalResource.content && typeof finalResource.content === 'object') {
+  if (finalResource.error) {
     // console.log(1)
-    // if the content is an object, send it as json
-    mimeType = 'application/json'
-  }
-  else if (typeof finalResource.content === 'string') {
-    // console.log(2)
-    // if there is a file name and content is a string
-    //  deduce mime type from the file name
-    mimeType = mime.getType(finalResource.info.ext)
-  }
-  else if (finalResource.error) {
-    // console.log(3)
-    console.log(finalResource.error)
     finalResource.content = `${finalResource.error.name}: ${finalResource.error.message}`
     mimeType = 'text/plain'
     finalResponseData.status = 500
+  }
+  else if (finalResource.content && typeof finalResource.content === 'object') {
+    // console.log(2)
+    // if the content is an object, send it as json
+    mimeType = 'application/json'
+  }
+  else if (typeof finalResource.content === 'string' && finalResource.info.ext) {
+    // console.log(3)
+    // if there is a file name and content is a string
+    //  deduce mime type from the file name
+    mimeType = mime.getType(finalResource.info.ext)
   }
   else if (finalResource.content === null) {
     // console.log(4)

@@ -49,6 +49,7 @@ const prettierLense = async ({ resource, config }) => {
   } catch (err) {
     resource.error = err
     resource.content = null
+    resource.info = null
   }
 
   return {

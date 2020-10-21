@@ -8,13 +8,6 @@ export class JavaScriptFE extends CodeFE {
     this.initJsUi()
   }
 
-  static insertLoopGuards(code, maxIterations) {
-    let loopNum = 0
-    return code.replace(/for *\(.*\{|while *\(.*\{|do *\{/g, loopHead => {
-      const id = ++loopNum
-      return `let loopGuard_${id} = 0\n${loopHead}\nif (++loopGuard_${id} > ${maxIterations}) { throw new RangeError('loopGuard_${id} is greater than ${maxIterations}') }\n`
-    })
-  }
 
   initJsUi() {
     // if (this.config.locals.loopGuard) {
@@ -121,33 +114,7 @@ export class JavaScriptFE extends CodeFE {
   studyWith(environment) {
 
     if (this.config.locals.loopGuard && this.config.locals.loopGuard.active) {
-      // using xhr so any errors aren't "in promise"
-      const xhr = new XMLHttpRequest();
-      const loopGuarded = JavaScriptFE.insertLoopGuards(this.editor.getValue(), this.config.locals.loopGuard.max)
-      const paramConfig = {
-        code: loopGuarded,
-        ext: config.ext
-      }
-      const paramSafeConfig = encodeURIComponent(JSON.stringify(paramConfig))
-      xhr.open('GET', window.location.origin + '?format=' + paramSafeConfig);
-      xhr.responseType = 'text';
-      xhr.send();
-      xhr.onload = () => {
-        if (xhr.status != 200) {
-          // if there was an error in the format lense,
-          //  then there is a syntax error in their code
-          // eval their code for a proper error in the console
-          //  and for VM code in the debugger
-          const evalSyntaxError = eval
-          evalSyntaxError(this.editor.getValue())
-        } else {
-          const formattedCode = xhr.response;
-          studyWith[environment](formattedCode)
-        }
-      }
-      xhr.onerror = function (err) {
-        console.error(err);
-      }
+      evalWithLoopGuard(this.editor.getValue(), this.config.locals.loopGuard.max, studyWith[environment].bind(studyWith))
     } else {
       studyWith[environment](this.editor.getValue())
     }

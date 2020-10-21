@@ -7,11 +7,11 @@ const path = require('path');
 const filePathFromRequestPath = (requestPath) => {
 
   let absolutePath = '';
-  if (requestPath.includes('shared_static_resource')) {
-    const subPath = requestPath.split('shared_static_resource').pop()
+  if (requestPath.includes('shared_static_resources')) {
+    const subPath = requestPath.split('shared_static_resources').pop()
     absolutePath = path.join(__dirname, '..', '..', '..', 'static', subPath)
 
-  } else if (requestPath.includes('own_static_resource')) {
+  } else if (requestPath.includes('own_static_resources')) {
     const type = requestPath.split('__')[1]
     const name = requestPath.split('__')[2]
     const subPath = requestPath.split('__')[3]
