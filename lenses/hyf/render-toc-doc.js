@@ -18,7 +18,12 @@ const readFilePromise = util.promisify(fs.readFile)
 const tableOfContents = ({ dirElement, top = false, defaults = {} }) => {
 
   if (dirElement.type === 'file') {
-    const query = defaults[dirElement.ext] ? '?' + defaults[dirElement.ext] : '';
+    let query = ''
+    if (dirElement.base.toLowerCase().includes('.re.js')) {
+      query = defaults[dirElement.ext] ? '?min&' + defaults[dirElement.ext] : ''
+    } else {
+      query = defaults[dirElement.ext] ? '?' + defaults[dirElement.ext] : ''
+    }
     const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
     return `<li><a href="${relativePath}${query}" target="_blank">${dirElement.base}</a></li>\n`;
   }
