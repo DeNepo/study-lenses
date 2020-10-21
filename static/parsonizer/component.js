@@ -268,11 +268,13 @@ const renderStudyButtons = (container, config, editor) => {
     container.appendChild(document.createElement('br'))
     container.appendChild(document.createElement('br'))
     container.appendChild(loopGuardForm)
+    container.appendChild(document.createElement('br'))
 
+  } else {
+
+    container.appendChild(document.createElement('br'))
+    container.appendChild(document.createElement('br'))
   }
-
-  container.appendChild(document.createElement('br'))
-  container.appendChild(document.createElement('br'))
 
   if (config.eval) {
     const consoleButton = document.createElement('button')
