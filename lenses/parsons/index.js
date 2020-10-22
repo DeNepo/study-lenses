@@ -62,6 +62,9 @@ const parsonsLense = ({ resource, config }) => {
   <link rel="stylesheet" href="${config.sharedStatic}/parsonizer/parsons.css">
   <link rel="stylesheet" href="${config.sharedStatic}/prism/style.css">
 
+  <script src='${config.sharedStatic}/prettier/standalone.js'></script>
+  <script src='${config.sharedStatic}/prettier/parser-babel.js'></script>
+
 </head>
 
 <body>
@@ -85,7 +88,6 @@ const parsonsLense = ({ resource, config }) => {
   <script src="${config.sharedStatic}/parsonizer/parsons.js"></script>
 
   <script src="${config.sharedStatic}/lib/strip-comments.js"></script>
-  <script src="${config.sharedStatic}/lib/eval-with-loop-guard.js"></script>
 
   <script>
     const config = JSON.parse(decodeURIComponent("${encodeURIComponent(JSON.stringify(frontendConfig))}"))

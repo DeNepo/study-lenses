@@ -72,7 +72,7 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
     config.readOnly = false
   }
 
-  Object.assign(config.locals, config.queryValue)
+  config.locals = Object.assign({}, config.locals, config.queryValue)
 
   resource.info.ext = '.html'
   resource.content = `<!DOCTYPE html>

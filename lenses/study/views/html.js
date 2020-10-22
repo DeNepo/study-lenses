@@ -1,8 +1,8 @@
 'use strict'
 
-const CodeSSR = require('./code.js')
+const CodeSSr = require('./code.js')
 
-class JavaScriptSSR extends CodeSSR {
+class HtmlSSR extends CodeSSr {
 
   constructor({ config, resource }) {
     super({ config, resource })
@@ -40,5 +40,5 @@ class JavaScriptSSR extends CodeSSR {
 
 }
 
-module.exports = JavaScriptSSR
+module.exports = HtmlSSR
 

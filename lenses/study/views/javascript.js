@@ -15,7 +15,9 @@ class JavaScriptSSR extends CodeSSR {
 
   scriptsHead() {
     const superScriptsHead = super.scriptsHead()
-    return superScriptsHead
+    return superScriptsHead + `
+      <script src='${this.config.sharedStatic}/prettier/standalone.js'></script>
+      <script src='${this.config.sharedStatic}/prettier/parser-babel.js'></script>`
   }
 
   configOptions() {
@@ -54,8 +56,8 @@ class JavaScriptSSR extends CodeSSR {
       locals.loopGuard = {}
     }
     locals.loopGuard = {
-      active: typeof locals.loopGuard.active === 'boolean' ? locals.loopGuard.active : false,
-      max: typeof locals.loopGuard.max === 'number' ? locals.loopGuard.max : 20,
+      active: typeof locals.loopGuard.active === 'boolean' ? locals.loopGuard.active : true,
+      max: typeof locals.loopGuard.max === 'number' ? locals.loopGuard.max : 100,
     }
     superPanel += `
       <form id='loop-guard-form' style='display: ${loopGuardDisplay};'>
@@ -117,8 +119,7 @@ class JavaScriptSSR extends CodeSSR {
   scriptsBody() {
     const superScriptsBody = super.scriptsBody()
     return `${superScriptsBody}
-    <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>
-    <script src='${this.config.sharedStatic}/lib/eval-with-loop-guard.js'></script>`
+    <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>`
   }
 
 }

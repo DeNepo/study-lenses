@@ -1,3 +1,5 @@
+// deprecated, now using prettier directly in the browser
+
 const evalWithLoopGuard = (code = '', max = 20, evalGuardedAndFormattedCode = eval) => {
 
   // using xhr so eval errors don't appear as "in promise"

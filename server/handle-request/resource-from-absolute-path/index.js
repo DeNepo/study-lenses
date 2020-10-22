@@ -8,7 +8,6 @@ const readFilePromise = util.promisify(fs.readFile)
 
 const renderVirtualDirectory = require('./render-virtual-directory/index.js')
 const getInfo = require('./get-info.js')
-const { resourceUsage } = require('process')
 
 
 // rendered paths are inspired by path.parse, with with some (compatible?) modifications

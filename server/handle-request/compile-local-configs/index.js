@@ -35,10 +35,16 @@ const combineMerge = (target, source, options) => {
   return destination
 }
 
+
 const compileLocalConfigs = (absPath, cwd, config) => {
 
 
-  const isFile = fs.existsSync(absPath) && fs.lstatSync(absPath).isFile();
+  let isFile = false
+  try {
+    isFile = fs.lstatSync(absPath).isFile();
+  } catch (err) {
+    console.error(err)
+  }
   if (isFile) {
     return compileLocalConfigs(path.dirname(absPath), cwd, config);
   };

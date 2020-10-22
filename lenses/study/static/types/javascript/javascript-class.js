@@ -110,11 +110,39 @@ export class JavaScriptFE extends CodeFE {
 
   }
 
+  static insertLoopGuards = (evalCode, maxIterations) => {
+    let loopNum = 0
+    return evalCode.replace(/for *\(.*\{|while *\(.*\{|do *\{/g, loopHead => {
+      const id = ++loopNum
+      return `let loopGuard_${id} = 0\n${loopHead}\nif (++loopGuard_${id} > ${maxIterations}) { throw new RangeError('loopGuard_${id} is greater than ${maxIterations}') }\n`
+    })
+  }
 
   studyWith(environment) {
 
     if (this.config.locals.loopGuard && this.config.locals.loopGuard.active) {
-      evalWithLoopGuard(this.editor.getValue(), this.config.locals.loopGuard.max, studyWith[environment].bind(studyWith))
+      const code = this.editor.getValue()
+
+      const loopGuarded = JavaScriptFE.insertLoopGuards(code, this.config.locals.loopGuard.max || 20);
+
+      let formattedCode = ''
+      let formatSuccessful = false
+      try {
+        formattedCode = prettier.format(
+          loopGuarded,
+          {
+            parser: "babel",
+            plugins: prettierPlugins,
+          })
+        formatSuccessful = true
+      } catch (err) {
+        eval(code)
+      }
+
+      if (formatSuccessful) {
+        studyWith[environment](formattedCode)
+      }
+
     } else {
       studyWith[environment](this.editor.getValue())
     }

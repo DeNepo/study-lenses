@@ -384,7 +384,35 @@ const renderStudyButtons = (container, config, editor) => {
       }
 
       if (config.loopGuard && config.loopGuard.active) {
-        evalWithLoopGuard(code, config.loopGuard.max, target[keyName].bind(target))
+
+        const insertLoopGuards = (evalCode, maxIterations) => {
+          let loopNum = 0
+          return evalCode.replace(/for *\(.*\{|while *\(.*\{|do *\{/g, loopHead => {
+            const id = ++loopNum
+            return `let loopGuard_${id} = 0\n${loopHead}\nif (++loopGuard_${id} > ${maxIterations}) { throw new RangeError('loopGuard_${id} is greater than ${maxIterations}') }\n`
+          })
+        }
+
+        const loopGuarded = insertLoopGuards(code, config.loopGuard.max || 20);
+
+        let formattedCode = ''
+        let formatSuccessful = false
+        try {
+          formattedCode = prettier.format(
+            loopGuarded,
+            {
+              parser: "babel",
+              plugins: prettierPlugins,
+            })
+          formatSuccessful = true
+        } catch (err) {
+          eval(code)
+        }
+
+        if (formatSuccessful) {
+          target[keyName](formattedCode)
+        }
+
       } else {
         target[keyName](code)
       }

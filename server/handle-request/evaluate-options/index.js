@@ -1,5 +1,8 @@
 'use strict'
 
+// labeled blocks are used just as a convenience in the editor
+//  you can collapse them and still read what that block does
+
 
 const deepClone = require('../lib/deep-clone.js')
 
