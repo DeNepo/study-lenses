@@ -13,21 +13,42 @@ class JSParsons extends HTMLElement {
     // console.dir(this)
 
     // process the code:
+
+    // extract all block comments, including leading or trailing white space
+    //  so the lines of code maintain the correct indentation
+    //  and so the block comments maintain their indentation in the UI
+    this.blockComments = this.code
+      .match(/[^\S\r\n]*\/\*([\S\s]*?)\*\/[^\S\r\n]*/gm);
+
+    // remove the captured block comments from the code
+    for (const blockComment of this.blockComments) {
+      this.code = this.code.replace(blockComment, '')
+    }
+
     //  - register all distractor lines
     const distractorReplacer = '$_$_$_$_$_$_$_$_$_$_$_$'
     const distractorReplaced = this.code
-      .replace(/\/\/( |\t)+distractor\s*$/mg, distractorReplacer)
+      .replace(/\/\/[^\S\r\n]+distractor\s*$/mg, distractorReplacer)
       .replace(/\/\/distractor\s*$/mg, distractorReplacer)
 
     const strippedCode = strip(distractorReplaced)
       .split(distractorReplacer)
-      .join('// distractor')
+      .join('// distractor');
 
     this.code = strippedCode
   }
 
   async connectedCallback() {
 
+    const blockCommentContainer = document.getElementById('block-comments')
+    for (const blockComment of this.blockComments) {
+      if (!blockComment) {
+        continue
+      }
+      const commentPre = document.createElement('pre')
+      commentPre.innerHTML = blockComment
+      blockCommentContainer.appendChild(commentPre)
+    }
 
     function displayErrors(fb) {
       if (fb.errors.length > 0) {

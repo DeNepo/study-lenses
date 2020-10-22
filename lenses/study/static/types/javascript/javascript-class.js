@@ -126,7 +126,7 @@ export class JavaScriptFE extends CodeFE {
       const loopGuarded = JavaScriptFE.insertLoopGuards(code, this.config.locals.loopGuard.max || 20);
 
       let formattedCode = ''
-      let formatSuccessful = false
+      let noSyntaxErrors = false
       try {
         formattedCode = prettier.format(
           loopGuarded,
@@ -134,12 +134,12 @@ export class JavaScriptFE extends CodeFE {
             parser: "babel",
             plugins: prettierPlugins,
           })
-        formatSuccessful = true
+        noSyntaxErrors = true
       } catch (err) {
         eval(code)
       }
 
-      if (formatSuccessful) {
+      if (noSyntaxErrors) {
         studyWith[environment](formattedCode)
       }
 

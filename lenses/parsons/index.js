@@ -45,7 +45,8 @@ const parsonsLense = ({ resource, config }) => {
 
   code = code.split('\n').slice(start, end + 1).join('\n')
 
-  const blockComments = code.match(commentRegex.block());
+  // // /\/\*([\S\s]*?)\*\//gm
+  // const blockComments = code.match(commentRegex.block());
 
   // if (ext === '.js') {
   //   code = prettier.format(code, { parser: "babel" })
@@ -69,9 +70,7 @@ const parsonsLense = ({ resource, config }) => {
 
 <body>
 
-  <div>
-    ${blockComments ? blockComments.map(comment => `<pre>${comment}</pre>`).join('') : ''}
-  </div>
+  <div id='block-comments'></div>
 
   <main id='parsons-container' style='height: 100vh;'></main>
   <div id="history-modal" style="height:90vh; width:100vw;" class="modal-window">
