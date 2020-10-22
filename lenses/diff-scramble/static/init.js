@@ -1,20 +1,48 @@
-
+let onceRendered = false
 const init = (codeArgument) => {
 
-  const code = codeArgument || config.code
+  const rawCode = codeArgument || config.code
 
   const language = monacoExtToLanguage[config.ext]
 
 
-  let commentless = strip(code).replace(new RegExp('(\n){2,}', 'gim'), '\n\n');
-  if (commentless[commentless.length - 1] === '\n') {
-    commentless = commentless.slice(0, commentless.length - 1);
+  // extract all block comments, including leading or trailing white space
+  //  so the lines of code maintain the correct indentation
+  //  and so the block comments maintain their indentation in the UI
+  const blockComments = rawCode
+    .match(/[^\S\r\n]*\/\*([\S\s]*?)\*\/[^\S\r\n]*/gm);
+
+  let codeWithoutBlockComments = rawCode;
+  // remove the captured block comments from the code and render to UI
+  const blockCommentContainer = document.getElementById('block-comments')
+  if (blockComments && !onceRendered) {
+    onceRendered = true
+    for (const blockComment of blockComments) {
+      if (!blockComment) {
+        continue
+      }
+      const commentPre = document.createElement('pre')
+      commentPre.innerHTML = blockComment
+      blockCommentContainer.appendChild(commentPre)
+    }
   }
 
-  const toScramble = monaco.editor.createModel(commentless, language);
+
+  //  - register all distractor lines
+  const distractorReplacer = '$_$_$_$_$_$_$_$_$_$_$_$'
+  const distractorReplaced = codeWithoutBlockComments
+    .replace(/\/\/[^\S\r\n]+distractor\s*$/mg, distractorReplacer)
+    .replace(/\/\/distractor\s*$/mg, distractorReplacer)
+
+  const finalCode = strip(distractorReplaced)
+    .split(distractorReplacer)
+    .join('// distractor');
+
+
+  const toScramble = monaco.editor.createModel(finalCode, language);
   // const toScramble = monaco.editor.createModel(recompose(decompose(code)), language);
   toScramble.updateOptions({ tabSize: 2 });
-  const source = monaco.editor.createModel(commentless, language);
+  const source = monaco.editor.createModel(finalCode, language);
   // const source = monaco.editor.createModel(code, language);
   source.updateOptions({ tabSize: 2 });
 
@@ -65,7 +93,7 @@ const init = (codeArgument) => {
 
     // const log = (thing) => (console.log(thing), thing);
     const log = (thing) => thing;
-    toScramble.setValue(recompose(log(pipe(log(decompose(commentless)), transformations))));
+    toScramble.setValue(recompose(log(pipe(log(decompose(finalCode)), transformations))));
 
   }
 

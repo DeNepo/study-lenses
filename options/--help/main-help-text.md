@@ -14,7 +14,7 @@ You can study different files in different ways.  Here are some examples you can
 <summary><strong>JavaScript</strong></summary>
 
   - <a href="./_public__example__files_/smiley.js" target="_blank">/smiley.js</a> - get the source code for a .js file
-  - <a href="./_public__example__files_/smiley.js?study=%7B%22eval%22%3Atrue%2C%22loopGuard%22%3Atrue%7D" target="_blank">/smiley.js?study</a> - study it as a live exercise in the debugger
+  - <a href="./_public__example__files_/smiley.js?study" target="_blank">/smiley.js?study</a> - study it as a live exercise in the debugger
   - <a href="./_public__example__files_/smiley.js?parsons" target="_blank">/smiley.js?parsons</a> - or a parsons problem
   - <a href="./_public__example__files_/smiley.js?flowchart" target="_blank">/smiley.js?flowchart</a> - or a flowchart
   - <a href="./_public__example__files_/smiley.js?highlight" target="_blank">/smiley.js?highlight</a> - or highlighted source

@@ -21,8 +21,10 @@ class JSParsons extends HTMLElement {
       .match(/[^\S\r\n]*\/\*([\S\s]*?)\*\/[^\S\r\n]*/gm);
 
     // remove the captured block comments from the code
-    for (const blockComment of this.blockComments) {
-      this.code = this.code.replace(blockComment, '')
+    if (this.blockComments) {
+      for (const blockComment of this.blockComments) {
+        this.code = this.code.replace(blockComment, '')
+      }
     }
 
     //  - register all distractor lines
