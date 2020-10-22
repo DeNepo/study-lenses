@@ -120,7 +120,10 @@ export class JavaScriptFE extends CodeFE {
 
   studyWith(environment) {
 
-    if (this.config.locals.loopGuard && this.config.locals.loopGuard.active) {
+    if (
+      this.config.locals.loopGuard && this.config.locals.loopGuard.active
+      && !(environment === 'parsons' || environment === 'flowchart')) {
+
       const code = this.editor.getValue()
 
       const loopGuarded = JavaScriptFE.insertLoopGuards(code, this.config.locals.loopGuard.max || 20);
