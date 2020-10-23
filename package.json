@@ -15,7 +15,9 @@
   },
   "dependencies": {
     "@gerhobbelt/gitignore-parser": "^0.2.0-8",
+    "acorn": "^8.0.4",
     "aran": "^3.0.9",
+    "astring": "^1.4.3",
     "body-parser": "^1.19.0",
     "comment-regex": "^1.0.1",
     "config": "^3.3.2",

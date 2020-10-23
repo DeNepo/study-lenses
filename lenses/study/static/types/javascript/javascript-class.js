@@ -108,6 +108,35 @@ export class JavaScriptFE extends CodeFE {
       })
     // }
 
+    if (this.config.locals.traceLog) {
+      console.log(3)
+      const instrumentButton = document.createElement('button')
+      instrumentButton.innerHTML = 'traceLog'
+      instrumentButton.addEventListener('click', () => {
+        // using XHR to avoid "in promise" error messages
+        const xhr = new XMLHttpRequest();
+        const paramConfig = {
+          content: this.editor.getValue()
+        }
+        const paramSafeConfig = encodeURIComponent(JSON.stringify(paramConfig))
+        xhr.open('GET', window.location.origin + '?trace-log=' + paramSafeConfig);
+        xhr.responseType = 'text';
+        xhr.send();
+        xhr.onload = () => {
+          if (xhr.status != 200) {
+            console.log('error instrumenting code', xhr)
+          } else {
+            console.log(xhr.response)
+          }
+        }
+        xhr.onerror = function (err) {
+          console.error(err);
+        }
+      })
+      const buttonsPanel = openInContainer.parentElement
+      buttonsPanel.appendChild(instrumentButton)
+    }
+
   }
 
   static insertLoopGuards = (evalCode, maxIterations) => {
