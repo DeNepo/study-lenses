@@ -19,7 +19,7 @@ const tableOfContents = ({ dirElement, top = false, defaults = {} }) => {
 
   if (dirElement.type === 'file') {
     let query = ''
-    if (dirElement.base.toLowerCase().includes('.re.js')) {
+    if (dirElement.base.toLowerCase().includes('.re.')) {
       query = defaults[dirElement.ext] ? '?min&' + defaults[dirElement.ext] : ''
     } else {
       query = defaults[dirElement.ext] ? '?' + defaults[dirElement.ext] : ''

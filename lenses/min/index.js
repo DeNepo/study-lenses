@@ -16,13 +16,14 @@ const minLense = async ({ resource }) => {
         compress: true
       })).code
     }
-    // else if (resource.info.ext === '.html') {
-    //   resource.content = htmlMinifierTerser.minify(resource.content, {
-    //     minifyCSS: true,
-    //     minifyJs: true,
-    //     removeComments: true,
-    //   })
-    // }
+    else if (resource.info.base.toLowerCase().includes('.html')) {
+      resource.content = htmlMinifierTerser.minify(resource.content, {
+        minifyCSS: true,
+        minifyJS: true,
+        removeComments: true,
+        collapseWhitespace: true,
+      })
+    }
     // else if (resource.info.ext === '.css') {
     //   resource.content = csso.minify(resource.content).css
     // }

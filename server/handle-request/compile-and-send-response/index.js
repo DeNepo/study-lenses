@@ -49,6 +49,42 @@ const compileResponse = ({ req, res, finalResponseData, finalResource, absoluteP
   //  ...
   // not sure the most robust way to do this
 
+  if (mimeType.includes('image') && finalResource.info.ext === path.extname(req.path)) {
+
+    // only serve a resource as an image if it's original request path matches the final extension
+    //   ie. flowchart, which renders code into an SVG. don't look for that file
+
+    // https://stackoverflow.com/questions/5823722/how-to-serve-an-image-using-nodejs
+    var s = fs.createReadStream(absolutePath);
+    s.on('open', function () {
+      res.set('Content-Type', mimeType);
+      s.pipe(res);
+    });
+    // s.on('end', function () {
+    //   res.set('Content-Type', mimeType);
+    //   res.status(200)
+    // });
+    s.on('error', function () {
+      res.set('Content-Type', 'text/plain');
+      res.status(404).end('Not found'); // already did 404 checks
+    });
+
+  } else {
+    res.set('Content-Type', mimeType)
+    res.status(finalResponseData.status)
+    res.send(finalResource.content)
+  }
+
+}
+
+module.exports = compileResponse
+
+
+
+
+
+// favicon start
+
   // if (finalResponseData.status === 404 && req.path.includes('favicon.ico')) {
   //   // if the user requested a favicon that was not in their repository
   //   //  default to this one
@@ -71,32 +107,3 @@ const compileResponse = ({ req, res, finalResponseData, finalResource, absoluteP
   //   });
 
   // } else
-  if (mimeType.includes('image') && finalResource.info.ext === path.extname(req.path)) {
-
-    // only serve a resource as an image if it's original request path matches the final extension
-    //   ie. flowchart, which renders code into an SVG
-
-    // https://stackoverflow.com/questions/5823722/how-to-serve-an-image-using-nodejs
-    var s = fs.createReadStream(absolutePath);
-    s.on('open', function () {
-      res.set('Content-Type', mimeType);
-      s.pipe(res);
-    });
-    s.on('error', function () {
-      res.set('Content-Type', 'text/plain');
-      // res.status(404).end('Not found'); // already did 404 checks
-    });
-
-  } {
-    res.set('Content-Type', mimeType)
-    // res.set('Content-Type', 'text/plain')
-    res.status(finalResponseData.status)
-    // res.status(200)
-
-    res.send(finalResource.content)
-    // res.send('hello')
-  }
-
-}
-
-module.exports = compileResponse
