@@ -3,6 +3,9 @@
 const fs = require('fs')
 const mime = require('mime')
 const path = require('path')
+// const favicon = require('serve-favicon')
+
+// const serveFavicon = favicon(path.join(__dirname, '..', '..', '..', 'static', 'favicon.ico'))
 
 const compileResponse = ({ req, res, finalResponseData, finalResource, absolutePath }) => {
 
@@ -46,9 +49,33 @@ const compileResponse = ({ req, res, finalResponseData, finalResource, absoluteP
   //  ...
   // not sure the most robust way to do this
 
-  // only serve a resource as an image if it's original request path matches the final extension
-  //   ie. flowchart, which renders code into an SVG
+  // if (finalResponseData.status === 404 && req.path.includes('favicon.ico')) {
+  //   // if the user requested a favicon that was not in their repository
+  //   //  default to this one
+
+
+  //   // // https://github.com/expressjs/serve-favicon
+  //   // serveFavicon(req, res, function onNext(err) {
+  //   //   if (err) return done(err)
+  //   // })
+
+  //   // https://stackoverflow.com/questions/5823722/how-to-serve-an-image-using-nodejs
+  //   var s = fs.createReadStream(path.join(__dirname, '..', '..', '..', 'static', 'favicon.ico'));
+  //   s.on('open', function () {
+  //     res.set('Content-Type', 'image/x-icon');
+  //     s.pipe(res);
+  //   });
+  //   s.on('error', function () {
+  //     res.set('Content-Type', 'text/plain');
+  //     // res.status(404).end('Not found'); // already did 404 checks
+  //   });
+
+  // } else
   if (mimeType.includes('image') && finalResource.info.ext === path.extname(req.path)) {
+
+    // only serve a resource as an image if it's original request path matches the final extension
+    //   ie. flowchart, which renders code into an SVG
+
     // https://stackoverflow.com/questions/5823722/how-to-serve-an-image-using-nodejs
     var s = fs.createReadStream(absolutePath);
     s.on('open', function () {
@@ -60,7 +87,7 @@ const compileResponse = ({ req, res, finalResponseData, finalResource, absoluteP
       // res.status(404).end('Not found'); // already did 404 checks
     });
 
-  } else {
+  } {
     res.set('Content-Type', mimeType)
     // res.set('Content-Type', 'text/plain')
     res.status(finalResponseData.status)
