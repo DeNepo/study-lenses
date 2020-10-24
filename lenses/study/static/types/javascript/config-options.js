@@ -4,18 +4,18 @@ const config = {
   "loopGuard": false, // present / not present
   "loopGuard": { // more precise configuration
     "active": true,
-    "max": 0
+    "max": 100
   },
   "clearScheduled": false, // for setTimeout & setInterval
   "openIn": [
     "jsTutor",
     "loupe",
     "promisees",
-    "esprima",
-    "babel"
   ],
   "flowchart": false,
+  "traceLog": false, // instrument and run code
   "tests": false, // loads describe-it & chai
+  "ast": false, // editor/json-explore realtime ast the code
   "dependencies": [],
   // "aran": false,
 };

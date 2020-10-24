@@ -41,15 +41,16 @@ class JSParsons extends HTMLElement {
   }
 
   async connectedCallback() {
-
-    const blockCommentContainer = document.getElementById('block-comments')
-    for (const blockComment of this.blockComments) {
-      if (!blockComment) {
-        continue
+    if (this.blockComments) {
+      const blockCommentContainer = document.getElementById('block-comments')
+      for (const blockComment of this.blockComments) {
+        if (!blockComment) {
+          continue
+        }
+        const commentPre = document.createElement('pre')
+        commentPre.innerHTML = blockComment
+        blockCommentContainer.appendChild(commentPre)
       }
-      const commentPre = document.createElement('pre')
-      commentPre.innerHTML = blockComment
-      blockCommentContainer.appendChild(commentPre)
     }
 
     function displayErrors(fb) {

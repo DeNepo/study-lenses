@@ -6,6 +6,10 @@ class HtmlSSR extends CodeSSr {
 
   constructor({ config, resource }) {
     super({ config, resource })
+    this.config.loopGuard = {
+      active: true,
+      max: 20
+    }
   }
 
   styles() {
@@ -15,12 +19,22 @@ class HtmlSSR extends CodeSSr {
 
   scriptsHead() {
     const superScriptsHead = super.scriptsHead()
-    return superScriptsHead
+    return superScriptsHead + `
+      <script src='${this.config.sharedStatic}/prettier/standalone.js'></script>
+      <script src='${this.config.sharedStatic}/prettier/parser-html.js'></script>
+      <script src='${this.config.sharedStatic}/prettier/parser-babel.js'></script>
+      <script src='${this.config.sharedStatic}/prettier/parser-postcss.js'></script>`
   }
 
   panel() {
-    let superPanel = super.panel()
+    const superPanel = super.panel()
+
     return superPanel + `<br><br>
+    <form id='loop-guard-form' style='display: inline;'>
+      <input name='active' type='checkbox' ${this.config.loopGuard.active ? 'checked' : ''} />
+      loop guards:
+      <input name='max' type='number' value='${this.config.loopGuard.max}' style='width: 3em;' />
+    </form>
     <button id='new-tab-button'>open in new tab</button>`
   }
 
