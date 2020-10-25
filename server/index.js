@@ -6,7 +6,7 @@
 // dependencies & config ...
 const path = require('path');
 
-const deepClone = require('../lib/deep-clone.js')
+const deepClone = require('./lib/deep-clone.js')
 
 process.env['NODE_CONFIG_DIR'] = path.join(__dirname, '..', "config");
 
@@ -17,10 +17,13 @@ const cookieParser = require('cookie-parser');
 
 // const defaultLocalsConfig = require('config').locals;
 
+const changePerspective = require('./change-perspective')
+
+const mime = require('mime')
+
 // const Logger = require('../plugins/lenses/directory/node_modules/local-modules').logger;
 const Logger = console
-const handleRequest = require('./handle-request/index.js');
-const e = require('express');
+// const handleRequest = require('./handle-request/index.js');
 
 // const PORT = config.get('PORT');
 const PORT = 4600;
@@ -62,28 +65,52 @@ app.use(/[\s\S]*own_static_options_resources/, express.static(path.join(__dirnam
 app.use(/[\s\S]*shared_static_resources/, express.static(path.join(__dirname, '..', 'static')))
 app.use(/[\s\S]*public_example_files/, express.static(path.join(__dirname, '..', 'public-example-files')))
 
+
+const absolutePath = path.join(process.cwd(), requestPath);
+
 app.use((req, res, next) => {
   if (Object.keys(req.query).length !== 0) {
-    const initialRequestData = {
+
+    const requestData = {
       path: req.path,
       method: req.method,
       body: deepClone(req.body),
       headers: deepClone(req.headers),
       cookies: deepClone(req.cookies),
     }
-    const initialResponseData = {
+    const responseData = {
       status: 200,
       headers: {},
       cookies: {},
+      // body is not included
+      //  it will be constructed from the finalResource
     }
+
     const {
       finalResponseData,
       finalResource
     } = changePerspective({
-      initialRequestData,
-      initialResponseData
+      requestData,
+      responseData
     })
-    res.send('hello')
+
+    const mimeType = mime.getType(finalResource.info.ext)
+    res.set('Content-Type', mimeType)
+    res.status(finalResponseData.status)
+
+    if (finalResponseData.headers) {
+      for (const key of finalResponseData.headers) {
+        res.set(key, finalResponseData.headers[key])
+      }
+    }
+
+    if (finalResponseData.cookies) {
+      for (const key of finalResponseData.cookies) {
+        res.set(key, finalResponseData.cookies[key])
+      }
+    }
+
+    res.send(finalResource.content)
 
   } else {
     next()
