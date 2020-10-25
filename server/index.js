@@ -7,11 +7,13 @@
 const path = require('path');
 
 process.env['NODE_CONFIG_DIR'] = path.join(__dirname, '..', "config");
-const config = require('config');
+
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+
+const defaultLocalsConfig = require('config').locals;
 
 // const Logger = require('../plugins/lenses/directory/node_modules/local-modules').logger;
 const Logger = console
@@ -51,6 +53,15 @@ app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cookieParser())
+
+// // regex filter lens static
+// app.use()
+
+// // regex filter option static
+// app.use()
+
+// // regex filter lens static
+// app.use()
 
 // this is where it all happens
 app.use(handleRequest)

@@ -3,24 +3,26 @@
   "LOGGER": {
     "STDOUT": true
   },
-  "--defaults": {
-    "default": "",
-    ".md": "render",
-    ".html": "",
-    ".txt": "",
-    "": "",
-    ".js": "study",
-    ".jsx": "study",
-    ".css": "study",
-    ".json": "json-explorer",
-    ".png": "",
-    ".jpeg": "",
-    ".jpg": "",
-    ".gif": "",
-    ".svg": "",
-    ".mmd": "mermaid",
-    ".ts": "study",
-    "directory": "hyf"
+  "locals": {
+    "--defaults": {
+      "default": "",
+      ".md": "render",
+      ".html": "",
+      ".txt": "",
+      "": "",
+      ".js": "study",
+      ".jsx": "study",
+      ".css": "study",
+      ".json": "json-explorer",
+      ".png": "",
+      ".jpeg": "",
+      ".jpg": "",
+      ".gif": "",
+      ".svg": "",
+      ".mmd": "mermaid",
+      ".ts": "study",
+      "directory": "hyf"
+    }
   },
   "ORIGIN": {
     "build": "https://janke-learning.github.io/study-lenses",
