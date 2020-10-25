@@ -24,19 +24,19 @@ class JavaScriptSSR extends CodeSSR {
     const superConfigOptions = super.configOptions()
     return superConfigOptions + `
     <form>
-      <input id='loop-guard-input' type='checkbox' ${this.config.locals.loopGuard ? 'checked' : ''} /> loop guards
+      <input id='loop-guard-input' type='checkbox' ${this.config.locals.loopGuard ? 'checked' : ''} /> <label for='loop-guard-input'>loop guards</label>
     </form>
     <form>
-      <input id='clear-scheduled-input' type='checkbox' ${this.config.locals.clearScheduled ? 'checked' : ''} /> clear scheduled
+      <input id='clear-scheduled-input' type='checkbox' ${this.config.locals.clearScheduled ? 'checked' : ''} /> <label for='clear-scheduled-input'>clear scheduled</label>
     </form>
     <form>
-      <input id='flowchart-input' type='checkbox' ${this.config.locals.flowchart ? 'checked' : ''} /> flowchart
+      <input id='flowchart-input' type='checkbox' ${this.config.locals.flowchart ? 'checked' : ''} /> <label for='flowchart-input'>flowchart</label>
     </form>
     <form>
-      <input id='eval-input' type='checkbox' ${this.config.locals.eval ? 'checked' : ''} /> eval
+      <input id='eval-input' type='checkbox' ${this.config.locals.eval ? 'checked' : ''} /> <label for='eval-input'>eval</label>
     </form>
     <form>
-      <input id='open-in-input' type='checkbox' ${this.config.locals.openIn ? 'checked' : ''} /> open in ...
+      <input id='open-in-input' type='checkbox' ${this.config.locals.openIn ? 'checked' : ''} /> <label for='open-in-input'>open in ...</label>
     </form>`
   }
 
