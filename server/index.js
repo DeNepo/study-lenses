@@ -6,6 +6,8 @@
 // dependencies & config ...
 const path = require('path');
 
+const deepClone = require('../lib/deep-clone.js')
+
 process.env['NODE_CONFIG_DIR'] = path.join(__dirname, '..', "config");
 
 const express = require('express');
@@ -13,11 +15,12 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-const defaultLocalsConfig = require('config').locals;
+// const defaultLocalsConfig = require('config').locals;
 
 // const Logger = require('../plugins/lenses/directory/node_modules/local-modules').logger;
 const Logger = console
 const handleRequest = require('./handle-request/index.js');
+const e = require('express');
 
 // const PORT = config.get('PORT');
 const PORT = 4600;
@@ -54,17 +57,49 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cookieParser())
 
-// // regex filter lens static
-// app.use()
+app.use(/[\s\S]*own_static_lenses_resources/, express.static(path.join(__dirname, '..', 'lenses')))
+app.use(/[\s\S]*own_static_options_resources/, express.static(path.join(__dirname, '..', 'options')))
+app.use(/[\s\S]*shared_static_resources/, express.static(path.join(__dirname, '..', 'static')))
+app.use(/[\s\S]*public_example_files/, express.static(path.join(__dirname, '..', 'public-example-files')))
 
-// // regex filter option static
-// app.use()
+app.use((req, res, next) => {
+  if (Object.keys(req.query).length !== 0) {
+    const initialRequestData = {
+      path: req.path,
+      method: req.method,
+      body: deepClone(req.body),
+      headers: deepClone(req.headers),
+      cookies: deepClone(req.cookies),
+    }
+    const initialResponseData = {
+      status: 200,
+      headers: {},
+      cookies: {},
+    }
+    const {
+      finalResponseData,
+      finalResource
+    } = changePerspective({
+      initialRequestData,
+      initialResponseData
+    })
+    res.send('hello')
 
-// // regex filter lens static
-// app.use()
+  } else {
+    next()
+  }
+})
 
-// this is where it all happens
-app.use(handleRequest)
+/*
+  if getting "/", serve
+    index.html,
+    or rendered README
+  else
+    next() - be a normal static server
+
+*/
+
+app.use('/', express.static(process.cwd()))
 
 
 // launch the app

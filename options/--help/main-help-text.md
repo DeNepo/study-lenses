@@ -13,47 +13,47 @@ You can study different files in different ways.  Here are some examples you can
 <details>
 <summary><strong>JavaScript</strong></summary>
 
-  - <a href="./_public__example__files_/smiley.js" target="_blank">/smiley.js</a> - get the source code for a .js file
-  - <a href="./_public__example__files_/smiley.js?study" target="_blank">/smiley.js?study</a> - study it as a live exercise in the debugger
-  - <a href="./_public__example__files_/smiley.js?parsons" target="_blank">/smiley.js?parsons</a> - or a parsons problem
-  - <a href="./_public__example__files_/smiley.js?flowchart" target="_blank">/smiley.js?flowchart</a> - or a flowchart
-  - <a href="./_public__example__files_/smiley.js?highlight" target="_blank">/smiley.js?highlight</a> - or highlighted source
-  - <a href="./_public__example__files_/smiley.js?reverse&highlight" target="_blank">/smiley.js?reverse&highlight</a> - because, why not?
+  - <a href="./public_example_files/smiley.js" target="_blank">/smiley.js</a> - get the source code for a .js file
+  - <a href="./public_example_files/smiley.js?study" target="_blank">/smiley.js?study</a> - study it as a live exercise in the debugger
+  - <a href="./public_example_files/smiley.js?parsons" target="_blank">/smiley.js?parsons</a> - or a parsons problem
+  - <a href="./public_example_files/smiley.js?flowchart" target="_blank">/smiley.js?flowchart</a> - or a flowchart
+  - <a href="./public_example_files/smiley.js?highlight" target="_blank">/smiley.js?highlight</a> - or highlighted source
+  - <a href="./public_example_files/smiley.js?reverse&highlight" target="_blank">/smiley.js?reverse&highlight</a> - because, why not?
 
 </details>
 
 <details>
 <summary><strong>HTML</strong></summary>
 
-  - <a href="./_public__example__files_/index.html" target="_blank"><code>/index.html</code></a> - open an HTML file without parameters ... and it's a website
-  - <a href="./_public__example__files_/index.html?highlight" target="_blank"><code>/index.html?highlight</code></a> - highlight the source code
-  - <a href="./_public__example__files_/index.html?study" target="_blank"><code>/index.html?study</code></a> - try out some changes in real-time
+  - <a href="./public_example_files/index.html" target="_blank"><code>/index.html</code></a> - open an HTML file without parameters ... and it's a website
+  - <a href="./public_example_files/index.html?highlight" target="_blank"><code>/index.html?highlight</code></a> - highlight the source code
+  - <a href="./public_example_files/index.html?study" target="_blank"><code>/index.html?study</code></a> - try out some changes in real-time
 
 </details>
 
 <details>
 <summary><strong>Markdown</strong></summary>
 
-  - <a href="./_public__example__files_/README.md" target="_blank"><code>/README.md</code></a> - get the source code for a markdown file
-  - <a href="./_public__example__files_/README.md?render" target="_blank"><code>/README.md?render</code></a> - or render it into a web page
-  - <a href="./_public__example__files_/README.md?highlight" target="_blank"><code>/README.md?highlight</code></a> - or highlight it
+  - <a href="./public_example_files/README.md" target="_blank"><code>/README.md</code></a> - get the source code for a markdown file
+  - <a href="./public_example_files/README.md?render" target="_blank"><code>/README.md?render</code></a> - or render it into a web page
+  - <a href="./public_example_files/README.md?highlight" target="_blank"><code>/README.md?highlight</code></a> - or highlight it
 
 </details>
 
 <details>
 <summary><strong>CSS</strong></summary>
-  - <a href="./_public__example__files_/style.css" target="_blank">/style.css</a>
-  - <a href="./_public__example__files_/style.css?study" target="_blank">/style.css?study</a>
-  - <a href="./_public__example__files_/style.css?highlight" target="_blank">/style.css?highlight</a>
+  - <a href="./public_example_files/style.css" target="_blank">/style.css</a>
+  - <a href="./public_example_files/style.css?study" target="_blank">/style.css?study</a>
+  - <a href="./public_example_files/style.css?highlight" target="_blank">/style.css?highlight</a>
 
 </details>
 
 <details>
 <summary><strong>JSON</strong></summary>
 
-  - <a href="./_public__example__files_/fungi.json" target="_blank">/fungi.json</a>
-  - <a href="./_public__example__files_/fungi.json?json-explorer" target="_blank">/fungi.json?json-explorer</a>
-  - <a href="./_public__example__files_/fungi.json?highlight" target="_blank">/fungi.json?highlight</a>
+  - <a href="./public_example_files/fungi.json" target="_blank">/fungi.json</a>
+  - <a href="./public_example_files/fungi.json?json-explorer" target="_blank">/fungi.json?json-explorer</a>
+  - <a href="./public_example_files/fungi.json?highlight" target="_blank">/fungi.json?highlight</a>
 
 </details>
 

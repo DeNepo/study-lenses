@@ -38,7 +38,7 @@ const absPathToStudy = path.join(process.cwd(), pathToStudy);
 // };
 
 
-const defaultLenses = config['--defaults'];
+const defaultLenses = config.locals['--defaults'];
 const defaultLense = (fs.existsSync(absPathToStudy) && fs.lstatSync(absPathToStudy).isDirectory())
   ? defaultLenses.directory
   : defaultLenses[path.extname(pathToStudy)];

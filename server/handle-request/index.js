@@ -5,7 +5,7 @@
 
 const util = require('util')
 
-const globalDefaults = require('config')['--defaults']
+const globalDefaults = require('config').locals['--defaults']
 
 
 const filePathFromRequestPath = require('./file-path-from-url')
