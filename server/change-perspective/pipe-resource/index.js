@@ -3,7 +3,7 @@
 // labeled blocks are there for readability
 //  this file is long and busy, so you can collapse them and see the label
 
-const deepClone = require('../lib/deep-clone');
+const deepClone = require('../../lib/deep-clone');
 const evaluateHooks = require('./evaluate-hooks');
 
 const pipeResource = async ({
@@ -42,6 +42,7 @@ const pipeResource = async ({
 
   pipingResource: for (const lens of lenses) {
 
+
     beforeEach: {
       const beforeEachReturned = await evaluateHooks({
         requestData,
@@ -73,6 +74,7 @@ const pipeResource = async ({
       resource: pipedResource
     }
     try {
+
       const config = Object.assign({}, lens)
       delete config.module
 
@@ -91,7 +93,6 @@ const pipeResource = async ({
         pipedResource = deepClone(returned.resource || pipedResource)
       }
     } catch (error) {
-
       lenseError = {
         error,
         lens
@@ -126,6 +127,7 @@ const pipeResource = async ({
       }
 
     }
+
 
     afterEach: {
       const afterEachReturned = await evaluateHooks({

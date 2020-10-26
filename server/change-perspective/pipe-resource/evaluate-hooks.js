@@ -1,6 +1,6 @@
 'use strict'
 
-const deepClone = require('../lib/deep-clone')
+const deepClone = require('../../lib/deep-clone')
 
 const evaluateHooks = async ({
   requestData, responseData, resource, hooks, lens, error, lenses

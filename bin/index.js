@@ -38,7 +38,7 @@ const absPathToStudy = path.join(process.cwd(), pathToStudy);
 // };
 
 
-const defaultLenses = config['--defaults'];
+const defaultLenses = config.locals['--defaults'];
 const defaultLense = (fs.existsSync(absPathToStudy) && fs.lstatSync(absPathToStudy).isDirectory())
   ? defaultLenses.directory
   : defaultLenses[path.extname(pathToStudy)];
@@ -48,7 +48,6 @@ const queryMarker = defaultLense ? '?' : ''
 // -- the following lines will need to be rewritten when config works --
 // construct a url using global configurations and the user-provided sub-path
 const pathToOpen = path.normalize(pathToStudy);
-// const url = `http://localhost:${config.get('PORT')}/${pathToOpen}?${pluginName}`;
 const url = `http://localhost:4600/${pathToOpen}${queryMarker}${defaultLense}`;
 console.log('studying: ', url);
 

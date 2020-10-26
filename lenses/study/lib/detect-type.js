@@ -4,7 +4,8 @@ const detectType = (resource) => {
     return 'code';
   }
 
-  if (resource.info.base.includes('.p5.js')) {
+  // to support  .re.p5.js and .p5.re.js
+  if (resource.info.base.includes('.p5.') && resource.info.ext === '.js') {
     return 'p5';
   }
   else

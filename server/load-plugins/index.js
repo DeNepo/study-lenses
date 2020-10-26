@@ -9,9 +9,7 @@ const readFilePromise = util.promisify(fs.readFile)
 const isItADirectory = require('../lib/is-it-a-directory.js')
 
 
-const loadPlugins = async (type) => {
-
-  const pluginsPath = path.join(__dirname, '..', '..', '..', type)
+const loadPlugins = async (type, pluginsPath) => {
 
   // array of absolute paths to each plugin folder
   const pluginPaths = fs.readdirSync(pluginsPath)
@@ -51,7 +49,7 @@ const loadPlugins = async (type) => {
       queryKey: nextPluginDirName,
       queryValue: '',
       // these paths could be centrally configured
-      ownStatic: `/own_static_resources__${type}__${nextPluginDirName}__`,
+      ownStatic: `/own_static_${type}_resources/${nextPluginDirName}/static`,
       sharedStatic: `/shared_static_resources`,
       userGuide
     }
