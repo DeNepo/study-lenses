@@ -206,7 +206,7 @@ app.use(async (req, res, next) => {
       </html>`
     res.set('Content-Type', 'text/html')
     res.status(200)
-    res.send(renderedMarkdown)
+    res.end(renderedMarkdown)
     return
   }
 
