@@ -4,7 +4,7 @@ const fs = require('fs')
 const util = require('util')
 const readFilePromise = util.promisify(fs.readFile)
 
-const isItADirectory = require('../../server/handle-request/lib/is-it-a-directory')
+const isItADirectory = require('../../server/lib/is-it-a-directory')
 
 const documentThese = require('./document-these.json')
 

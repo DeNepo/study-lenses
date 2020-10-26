@@ -12,12 +12,12 @@ const getInfo = require('./get-info.js')
 
 // rendered paths are inspired by path.parse, with with some (compatible?) modifications
 //  see ./example-return-values.js for some example return values
-const renderPath = async (absoluteFilePath = '', cwd = process.cwd(), localConfigs) => {
+const renderPath = async ({ absolutePath = '', cwd = process.cwd(), localConfigs = {} }) => {
   let info = null
   let content = null
   let error = null
 
-  const pathExists = fs.existsSync(absoluteFilePath)
+  const pathExists = fs.existsSync(absolutePath)
   if (!pathExists) {
     return {
       info,
@@ -26,20 +26,19 @@ const renderPath = async (absoluteFilePath = '', cwd = process.cwd(), localConfi
     }
   }
 
-
   try {
-    const requestedADirectory = fs.lstatSync(absoluteFilePath).isDirectory()
+    const requestedADirectory = fs.lstatSync(absolutePath).isDirectory()
     if (requestedADirectory) {
       content = await renderVirtualDirectory({
-        absolutePath: absoluteFilePath,
+        absolutePath: absolutePath,
         studyConfig: localConfigs
       })
 
-      info = getInfo(absoluteFilePath, cwd)
+      info = getInfo(absolutePath, cwd)
       info.ext = '.json'
     } else if (pathExists) {
-      content = await readFilePromise(absoluteFilePath, 'utf-8')
-      info = getInfo(absoluteFilePath, cwd)
+      content = await readFilePromise(absolutePath, 'utf-8')
+      info = getInfo(absolutePath, cwd)
     }
 
   } catch (err) {

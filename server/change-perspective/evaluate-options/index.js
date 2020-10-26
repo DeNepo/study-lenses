@@ -4,7 +4,7 @@
 //  you can collapse them and still read what that block does
 
 
-const deepClone = require('../lib/deep-clone.js')
+const deepClone = require('../../lib/deep-clone.js')
 
 const evaluateOptions = async ({ requestData, responseData, resource, options, lenses }) => {
   console.log(': evaluating options')
@@ -28,14 +28,15 @@ const evaluateOptions = async ({ requestData, responseData, resource, options, l
 
     let returned = {}
     try {
-      returned = await nextOption.module({
+
+      returned = (await nextOption.module({
         config,
         requestData: deepClone(requestData),
         responseData: deepClone(responseData),
         resource: deepClone(resource),
         options: deepClone(options),
         lenses: deepClone(lenses)
-      })
+      }))
         || {}
 
       // todo: validate objects before continuing

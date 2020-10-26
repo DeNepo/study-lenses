@@ -4,15 +4,8 @@
 const path = require('path');
 const fs = require('fs');
 
-const assert = require('assert')
-const areDeeplyEqual = (actual, expected) => {
-  try {
-    assert.deepStrictEqual(actual, expected)
-    return true
-  } catch (o_0) {
-    return false
-  }
-}
+const util = require('util')
+
 
 const deepMerge = require('deepmerge');
 const combineMerge = (target, source, options) => {
@@ -22,7 +15,7 @@ const combineMerge = (target, source, options) => {
     if (typeof destination[index] === 'undefined') {
       destination[index] = options.cloneUnlessOtherwiseSpecified(item, options)
     } else if (options.isMergeableObject(item)) {
-      const alreadyExists = destination.some(entry => areDeeplyEqual(entry, item))
+      const alreadyExists = destination.some(entry => util.isDeepStrictEqual(entry, item))
       if (!alreadyExists) {
         destination.push(item)
       } else {

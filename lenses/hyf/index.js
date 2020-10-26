@@ -9,11 +9,11 @@ const hyfLense = async ({ resource, config }) => {
     return
   }
 
-
   resource.content = await renderTocDoc({
     virDir: resource.content,
     config,
   });
+
   resource.info.ext = '.html';
 
   return {
