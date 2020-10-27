@@ -63,7 +63,7 @@ const renderVirtualDirectory = async ({ absolutePath, gitignore = [], studyConfi
       const parsedConfig = JSON.parse(thisConfig)
       studyConfig = deepMerge(studyConfig, parsedConfig, { arrayMerge: combineMerge })
     } catch (o_0) {
-      console.log(o_0)
+      console.error(o_0)
     }
   }
 
@@ -75,7 +75,6 @@ const renderVirtualDirectory = async ({ absolutePath, gitignore = [], studyConfi
   if (paths.includes('.gitignore')) {
     gitignore = parseGitignore(fs.readFileSync(path.join(absolutePath, '.gitignore'), 'utf8'))
   }
-  console.log(gitignore)
 
   for (let nextSubPath of paths) {
 

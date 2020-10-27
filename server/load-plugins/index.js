@@ -31,7 +31,7 @@ const loadPlugins = async (type, pluginsPath) => {
         throw new Error(path.basename(absolutePluginPath) + ': module is not a function')
       }
     } catch (err) {
-      console.log(err)
+      console.error(err)
       // if there is an error loading the function, there's no point loading the plugin
       continue
     }
@@ -40,7 +40,7 @@ const loadPlugins = async (type, pluginsPath) => {
     try {
       userGuide = await readFilePromise(path.join(absolutePluginPath, 'user-guide.md'), 'utf-8')
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
 
     const nextPluginDirName = path.basename(absolutePluginPath)

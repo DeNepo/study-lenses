@@ -55,10 +55,9 @@ module.exports = async function renderTocDoc({ virDir, config, top }) {
   const readme = virDir.children
     .find(child => child.base.toLowerCase() === 'readme.md')
 
-  const readmePath = path.join(readme.root, readme.dir, readme.base)
   const readmeSource = readme
-    // ? (await readFilePromise(readmePath, 'utf-8'))
-    ? fs.readFileSync(readmePath, 'utf-8')
+    ? (await readFilePromise(path.join(readme.root, readme.dir, readme.base), 'utf-8'))
+    // ? fs.readFileSync(readmePath, 'utf-8')
     : ''
 
 

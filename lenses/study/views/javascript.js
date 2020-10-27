@@ -119,7 +119,8 @@ class JavaScriptSSR extends CodeSSR {
   scriptsBody() {
     const superScriptsBody = super.scriptsBody()
     return `${superScriptsBody}
-    <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>`
+    <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>
+    <script src='${this.config.ownStatic}/types/javascript/static/aran-build.js'></script>`
   }
 
 }

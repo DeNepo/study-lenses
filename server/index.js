@@ -117,8 +117,27 @@ app.use(async (req, res, next) => {
   const options = configurePlugins((await optionsPromise), localConfigs, req.query)
   const lenses = configurePlugins((await lensesPromise), localConfigs, req.query)
 
+  // if the parameters were not valid options or lenses
+  //  fallback to static serving
+  if (!options && !lenses) {
+    next();
+    return;
+  }
 
   const resource = await resourceFromAbsolutePath({ absolutePath, localConfigs });
+
+  // if there was an error fetching the resource
+  //  fallback to static serving
+  // there's probably a better way of doing this
+  //  send the error?
+  if (resource.error) {
+    next();
+    return;
+    // res.set('Content-Type', 'text/plain')
+    // res.status(500)
+    // res.send(finalResource.error.toString())
+    // return
+  }
 
   const requestData = {
     path: req.path,
@@ -137,7 +156,8 @@ app.use(async (req, res, next) => {
 
   const {
     finalResponseData,
-    finalResource
+    finalResource,
+    error, // not yet supported
   } = await changePerspective({
     lenses,
     options,
@@ -145,6 +165,13 @@ app.use(async (req, res, next) => {
     requestData,
     responseData,
   })
+
+  // handle the error
+  if (error) {
+    // send?
+    // fallback to static?
+    return
+  }
 
   const mimeType = mime.getType(finalResource.info.ext)
   res.set('Content-Type', mimeType)
@@ -170,7 +197,7 @@ app.use(async (req, res, next) => {
 // if they requested a directory, send index.html or rendered README
 // otherwise fallback to static serving (so 404)
 app.use(async (req, res, next) => {
-  // continue if it's not a directory
+  // continue to static serving if it's not a directory
   const absolutePath = path.join(process.cwd(), req.path);
   const isDirectory = fs.existsSync(absolutePath) && fs.lstatSync(absolutePath).isDirectory()
   if (!isDirectory) {
@@ -210,6 +237,10 @@ app.use(async (req, res, next) => {
     return
   }
 
+  // // render something like a gitbook if there's a summary.md
+  // todo
+
+  // if there wasn't an index.html or a README, go on to static serving
   next()
 })
 

@@ -50,7 +50,7 @@ const evaluateOptions = async ({ requestData, responseData, resource, options, l
     } catch (error) {
       // how to handle this?
       optionError = error
-      console.log(error)
+      console.error(error)
     }
 
     if (!returned || typeof returned.hooks !== 'object') {
