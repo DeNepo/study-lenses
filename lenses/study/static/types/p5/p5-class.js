@@ -19,12 +19,16 @@ export class P5FE extends CodeFE {
 
   initP5Ui() {
 
+    const loopingCheckBox = document.getElementById('loop-checkbox');
+
     document.getElementById('refresh-button')
       .addEventListener('click', () => {
         this.setup()
+        this.looping = true
+        loopingCheckBox.checked = true
       })
 
-    document.getElementById('loop-checkbox')
+    loopingCheckBox
       .addEventListener('click', () => {
         if (this.looping) {
           noLoop()
