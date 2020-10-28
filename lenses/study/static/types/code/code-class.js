@@ -47,6 +47,55 @@ export class CodeFE {
           })
       })
 
+    document.getElementById('permalink-button')
+      .addEventListener('click', () => {
+
+        const permalinkParamObject = {
+          permalink: {
+            content: this.editor.getValue(),
+            ext: this.config.ext,
+            locals: this.config.locals,
+            queryValue: this.config.queryValue
+          }
+        }
+
+        const permalinkParamEncoded = encodeURIComponent(JSON.stringify(permalinkParamObject))
+
+        const permalink = window.location.origin + '?study=' + permalinkParamEncoded
+
+        if (!navigator.clipboard) {
+          fallbackCopyTextToClipboard(permalink);
+          return;
+        }
+        navigator.clipboard.writeText(permalink).then(function () {
+          // console.log('Async: Copying to clipboard was successful!');
+        }, function (err) {
+          // console.error('Async: Could not copy text: ', err);
+          fallbackCopyTextToClipboard(permalink);
+        });
+
+        function fallbackCopyTextToClipboard(text) {
+          var textArea = document.createElement("textarea");
+          textArea.value = text;
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          try {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            // console.log('Fallback: Copying text command was ' + msg);
+          } catch (err) {
+            console.error('Fallback: Oops, unable to copy', err);
+          }
+
+          document.body.removeChild(textArea);
+          window.scrollTo(0, 0);
+        };
+
+        alert("copied permalink");
+
+      })
+
 
     document.getElementById('parsonize-selection-button')
       .addEventListener('click',
@@ -100,6 +149,7 @@ export class CodeFE {
       },
       config
     );
+
 
     this.editor = monaco.editor.create(container, options);
     this.editor.setValue(this.config.content || '');

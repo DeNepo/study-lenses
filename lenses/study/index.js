@@ -5,7 +5,6 @@ const fs = require('fs')
 const util = require('util')
 const writeFilePromise = util.promisify(fs.writeFile)
 
-const terser = require('terser')
 
 const detectType = require('./lib/detect-type.js')
 
@@ -35,6 +34,12 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
     }
   }
 
+  if (config.queryValue && typeof config.queryValue.permalink === 'object') {
+    Object.assign(config, config.queryValue.permalink)
+    resource.content = config.content
+    resource.info.ext = config.ext
+  }
+
   if (resource.content === null || resource.info === null || resource.error) {
     return
   }
@@ -49,23 +54,8 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
     typeView = new (require(`./views/code.js`))({ resource, config })
   }
 
-  // // doing this in the ?hyf by adding the ?min lense before study
-  // //   a more lensy way to do it
-  // //   and then students can still study the solution normally
-  // if (resource.info && resource.info.ext === '.js'
-  //   && resource.info && typeof resource.info.base == 'string'
-  //   && resource.info.base.toLowerCase().match('.re.')) {
-  //   try {
-  //     config.content = (await terser.minify(resource.content, {
-  //       compress: true
-  //     })).code
-  //   } catch (err) {
-  //     console.log(err)
-  //     config.content = resource.content
-  //   }
-  // } else {
+
   config.content = resource.content
-  // }
   config.ext = resource.info.ext
 
   if (typeof config.readOnly !== 'boolean') {

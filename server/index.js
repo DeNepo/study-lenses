@@ -73,8 +73,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 app.use(cookieParser())
 
-app.use(/[\s\S]*own_static_lenses_resources/, express.static(path.join(__dirname, '..', 'lenses')))
-app.use(/[\s\S]*own_static_options_resources/, express.static(path.join(__dirname, '..', 'options')))
+app.use(/[\s\S]*own_static_resources_lenses/, express.static(path.join(__dirname, '..', 'lenses')))
+app.use(/[\s\S]*own_static_resources_options/, express.static(path.join(__dirname, '..', 'options')))
 app.use(/[\s\S]*shared_static_resources/, express.static(path.join(__dirname, '..', 'static')))
 app.use(/[\s\S]*public_example_files/, express.static(path.join(__dirname, '..', 'public-example-files')))
 

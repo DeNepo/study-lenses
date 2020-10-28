@@ -23,6 +23,7 @@ export class JavaScriptFE extends CodeFE {
           this.config.locals.loopGuard.active = false
           loopGuardForm.style = 'display: none;'
         }
+        event.preventDefault()
       })
     loopGuardForm.addEventListener('change', (event) => {
       this.config.locals.loopGuard.active = event.target.form.active.checked
@@ -105,6 +106,7 @@ export class JavaScriptFE extends CodeFE {
       .addEventListener('click', (event) => {
         const thisThing = event.target.form.thisThing.value
         this.studyWith(thisThing)
+        event.preventDefault()
       })
     // }
 

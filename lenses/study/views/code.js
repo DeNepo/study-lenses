@@ -28,6 +28,7 @@ class CodeSSR {
     <button id='reset-button'>reset</button>
     <button id='format-button'>format</button>
     <button id='save-button'>save changes</button>
+    <button id='permalink-button'>permalink</button>
     ||
     <button id='parsonize-selection-button'>parsonize selection</button>
     <button id='diff-selection-button' style='display: none;'>scramble selection</button><div id='buttons-panel'></div>`

@@ -275,13 +275,19 @@ const renderStudyButtons = (container, config, editor) => {
     const withLoopGuard = document.createElement('input')
     withLoopGuard.setAttribute('type', 'checkbox')
     withLoopGuard.checked = config.loopGuard.active
-    withLoopGuard.onchange = () => config.loopGuard.active = !config.loopGuard.active
+    withLoopGuard.onchange = (event) => {
+      config.loopGuard.active = !config.loopGuard.active
+      event.preventDefault()
+    }
 
     const loopGuardInput = document.createElement('input')
     loopGuardInput.value = config.loopGuard.max
     loopGuardInput.name = 'max'
     loopGuardInput.style = 'width:3em'
-    loopGuardInput.onchange = () => config.loopGuard.max = Number(loopGuardInput.value)
+    loopGuardInput.onchange = (event) => {
+      config.loopGuard.max = Number(loopGuardInput.value)
+      event.preventDefault()
+    }
 
     const loopGuardForm = document.createElement('form')
     loopGuardForm.style = 'display:inline-block'

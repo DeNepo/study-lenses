@@ -1,0 +1,13 @@
+keep
+  content: editor.getValue()
+  ext: ".js"
+  locals: {loopGuard: {…}, eval: true, flowchart: true}
+  queryValue: ""
+
+
+
+clear
+  readOnly: false
+  ownStatic: "/own_static_resources_lenses/study/static"
+  sharedStatic: "/shared_static_resources"
+  userGuide: "This lens is for study
