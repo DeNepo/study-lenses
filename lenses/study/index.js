@@ -38,6 +38,7 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
     Object.assign(config, config.queryValue.permalink)
     resource.content = config.content
     resource.info.ext = config.ext
+    resource.info.base = config.base
   }
 
   if (resource.content === null || resource.info === null || resource.error) {
@@ -57,6 +58,7 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
 
   config.content = resource.content
   config.ext = resource.info.ext
+  config.base = resource.info.base
 
   if (typeof config.readOnly !== 'boolean') {
     config.readOnly = false

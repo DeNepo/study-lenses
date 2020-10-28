@@ -7,5 +7,7 @@ function setup() {
 }
 
 function draw() {
-  rect(a++ % width, 10, 2, 80);
+  const nextA = a++;
+  const nextWidth = nextA % width;
+  rect(nextWidth, 10, 2, 80);
 }

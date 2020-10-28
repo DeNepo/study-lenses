@@ -55,7 +55,8 @@ export class CodeFE {
             content: this.editor.getValue(),
             ext: this.config.ext,
             locals: this.config.locals,
-            queryValue: this.config.queryValue
+            queryValue: this.config.queryValue,
+            base: this.config.base,
           }
         }
 
