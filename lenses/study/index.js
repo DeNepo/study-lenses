@@ -36,14 +36,15 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
 
   if (config.queryValue && typeof config.queryValue.permalink === 'object') {
     Object.assign(config, config.queryValue.permalink)
-    resource.content = config.content
-    resource.info.ext = config.ext
-    resource.info.base = config.base
+    resource.content = config.content || ''
+    resource.info.ext = config.ext || resource.info.ext
+    resource.info.base = config.base || resource.info.base
   }
 
   if (resource.content === null || resource.info === null || resource.error) {
     return
   }
+
 
   const type = detectType(resource)
 

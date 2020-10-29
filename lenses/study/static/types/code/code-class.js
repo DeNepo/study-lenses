@@ -56,7 +56,7 @@ export class CodeFE {
             ext: this.config.ext,
             locals: this.config.locals,
             queryValue: this.config.queryValue,
-            base: this.config.base,
+            base: this.config.base || '',
           }
         }
 
