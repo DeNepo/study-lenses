@@ -35,12 +35,26 @@ const parsonsLense = ({ resource, config }) => {
     end = config.queryValue.end
   }
 
-  let frontendConfig = {
-    eval: config.queryValue.eval,
-    openIn: config.queryValue.openIn,
-    loopGuard: config.queryValue.openIn,
-    ext,
+  let frontendConfig = { ext }
+
+  if (config.queryValue.hasOwnProperty('eval')) {
+    frontendConfig.eval = config.queryValue.eval
+  } else {
+    frontendConfig.eval = config.locals.eval
   }
+
+  if (config.queryValue.hasOwnProperty('openIn')) {
+    frontendConfig.openIn = config.queryValue.openIn
+  } else {
+    frontendConfig.openIn = config.locals.openIn
+  }
+
+  if (config.queryValue.hasOwnProperty('loopGuard')) {
+    frontendConfig.loopGuard = config.queryValue.loopGuard
+  } else {
+    frontendConfig.loopGuard = config.locals.loopGuard
+  }
+
 
 
   code = code.split('\n').slice(start, end + 1).join('\n')

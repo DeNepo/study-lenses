@@ -59,9 +59,20 @@ class JSParsons extends HTMLElement {
       }
     }
 
-
     const buttonsContainer = document.createElement('div');
+    buttonsContainer.style = 'display: flex; flex-direction: row; justify-content: space-evenly;';
     this.appendChild(buttonsContainer);
+
+
+
+    const parsonsButtons = document.createElement('div');
+    buttonsContainer.appendChild(parsonsButtons)
+
+
+    parsonsButtons.appendChild(document.createElement('br'))
+    parsonsButtons.appendChild(document.createElement('br'))
+
+
 
     const newInstanceButton = document.createElement('button');
     newInstanceButton.innerHTML = 'new instance';
@@ -69,7 +80,11 @@ class JSParsons extends HTMLElement {
       event.preventDefault();
       this.parson.shuffleLines();
     };
-    buttonsContainer.appendChild(newInstanceButton);
+    parsonsButtons.appendChild(newInstanceButton);
+
+
+
+    parsonsButtons.appendChild(document.createTextNode(' || '))
 
 
     const modalContainerId = 'modal-container';
@@ -78,10 +93,7 @@ class JSParsons extends HTMLElement {
     const reviewButton = document.createElement('button');
     reviewButton.innerHTML = 'review guesses';
     reviewGuessesA.appendChild(reviewButton);
-    buttonsContainer.appendChild(reviewGuessesA);
-
-
-    buttonsContainer.appendChild(document.createTextNode(' || '))
+    parsonsButtons.appendChild(reviewGuessesA);
 
 
 
@@ -92,12 +104,16 @@ class JSParsons extends HTMLElement {
       this.parson.getFeedback();
     });
     feedbackButton.addEventListener('click', () => this.registerGuess(sortableId, guessesId));
-    buttonsContainer.appendChild(feedbackButton);
+    parsonsButtons.appendChild(feedbackButton);
 
 
-    renderStudyButtons(buttonsContainer, config, {
+
+    const studyButtons = document.createElement('div')
+    buttonsContainer.appendChild(studyButtons)
+    renderStudyButtons(studyButtons, config, {
       getValue: () => this.parson.getStudentCode()
     })
+
 
     const sortableId = 'sortable-code';
     const trashId = 'trash-code';
@@ -262,49 +278,8 @@ customElements.define('js-parsons', JSParsons);
 const renderStudyButtons = (container, config, editor) => {
 
 
-  if (config.loopGuard) {
-
-    if (typeof config.loopGuard !== 'object') {
-      config.loopGuard = {
-        active: true,
-        max: 20
-      }
-    }
-
-
-    const withLoopGuard = document.createElement('input')
-    withLoopGuard.setAttribute('type', 'checkbox')
-    withLoopGuard.checked = config.loopGuard.active
-    withLoopGuard.onchange = (event) => {
-      config.loopGuard.active = !config.loopGuard.active
-      event.preventDefault()
-    }
-
-    const loopGuardInput = document.createElement('input')
-    loopGuardInput.value = config.loopGuard.max
-    loopGuardInput.name = 'max'
-    loopGuardInput.style = 'width:3em'
-    loopGuardInput.onchange = (event) => {
-      config.loopGuard.max = Number(loopGuardInput.value)
-      event.preventDefault()
-    }
-
-    const loopGuardForm = document.createElement('form')
-    loopGuardForm.style = 'display:inline-block'
-    loopGuardForm.appendChild(withLoopGuard)
-    loopGuardForm.appendChild(document.createTextNode('loop guard: '))
-    loopGuardForm.appendChild(loopGuardInput)
-
-    container.appendChild(document.createElement('br'))
-    container.appendChild(document.createElement('br'))
-    container.appendChild(loopGuardForm)
-    container.appendChild(document.createElement('br'))
-
-  } else {
-
-    container.appendChild(document.createElement('br'))
-    container.appendChild(document.createElement('br'))
-  }
+  container.appendChild(document.createElement('br'))
+  container.appendChild(document.createElement('br'))
 
   if (config.eval) {
     const consoleButton = document.createElement('button')
@@ -349,6 +324,53 @@ const renderStudyButtons = (container, config, editor) => {
 
     // container.appendChild(document.createTextNode(' || '))
     container.appendChild(openInContainer)
+
+
+    if (config.loopGuard) {
+
+      console.log(config.loopGuard)
+      if (typeof config.loopGuard !== 'object') {
+        config.loopGuard = {
+          active: true,
+          max: 20
+        }
+      }
+
+      container.appendChild(document.createTextNode(' || '))
+
+      const withLoopGuard = document.createElement('input')
+      withLoopGuard.setAttribute('type', 'checkbox')
+      withLoopGuard.checked = config.loopGuard.active
+      withLoopGuard.onchange = (event) => {
+        config.loopGuard.active = !config.loopGuard.active
+        event.preventDefault()
+      }
+
+      const loopGuardInput = document.createElement('input')
+      loopGuardInput.value = config.loopGuard.max
+      loopGuardInput.name = 'max'
+      loopGuardInput.style = 'width:3em'
+      loopGuardInput.onchange = (event) => {
+        config.loopGuard.max = Number(loopGuardInput.value)
+        event.preventDefault()
+      }
+
+      const loopGuardForm = document.createElement('form')
+      loopGuardForm.style = 'display:inline-block'
+      loopGuardForm.appendChild(withLoopGuard)
+      loopGuardForm.appendChild(document.createTextNode('loop guard: '))
+      loopGuardForm.appendChild(loopGuardInput)
+
+      // container.appendChild(document.createElement('br'))
+      // container.appendChild(document.createElement('br'))
+      container.appendChild(loopGuardForm)
+      // container.appendChild(document.createElement('br'))
+
+    } else {
+
+      container.appendChild(document.createElement('br'))
+      container.appendChild(document.createElement('br'))
+    }
   }
 
 
@@ -360,7 +382,7 @@ const renderStudyButtons = (container, config, editor) => {
     },
     debugger: function (code) {
       const stepThrough = eval
-      const debuggered = "debugger // injected by LiveStudy\n\n" + code
+      const debuggered = "debugger;\n\n" + code
       stepThrough(debuggered)
     },
     jsTutor: function (code) {

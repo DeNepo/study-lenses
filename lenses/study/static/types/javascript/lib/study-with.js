@@ -5,7 +5,7 @@ export const studyWith = {
   },
   debugger: function (code) {
     const stepThrough = eval
-    const debuggered = "debugger // injected by LiveStudy\n\n" + code
+    const debuggered = "debugger;\n\n" + code
     stepThrough(debuggered)
   },
   jsTutor: function (code) {
