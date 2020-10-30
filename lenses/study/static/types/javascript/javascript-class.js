@@ -10,6 +10,21 @@ export class JavaScriptFE extends CodeFE {
 
 
   initJsUi() {
+
+    const formatButton = document.getElementById('format-button')
+    const formatParent = formatButton.parentElement
+    const newFormatButton = document.createElement('button')
+    newFormatButton.innerHTML = 'format'
+    newFormatButton.onclick = () => {
+      // https://github.com/react-monaco-editor/react-monaco-editor/pull/212
+      this.editor.executeEdits('', [{
+        range: this.editor.getModel().getFullModelRange(),
+        text: this.prettierFormat(this.editor.getValue()),
+        // forceMoveMarkers: true
+      }]);
+    }
+    formatParent.replaceChild(newFormatButton, formatButton)
+
     // if (this.config.locals.loopGuard) {
     const loopGuardForm = document.getElementById('loop-guard-form')
     let lastActiveValue = this.config.locals.loopGuard.active
@@ -146,8 +161,30 @@ export class JavaScriptFE extends CodeFE {
     const loopHeadRegex = /(for|while)([\s]*)\(([^\{]*)\{|do([\s]*)\{/gm;
     return evalCode.replace(loopHeadRegex, loopHead => {
       const id = ++loopNum
-      return `let loopGuard_${id} = 0\n${loopHead}\nif (++loopGuard_${id} > ${maxIterations}) { throw new RangeError('loopGuard_${id} is greater than ${maxIterations}') }\n`
+      const newLine = `let loopGuard_${id} = 0\n${loopHead}\nif (++loopGuard_${id} > ${maxIterations}) { throw new RangeError('loopGuard_${id} is greater than ${maxIterations}') }\n`;
+      return newLine;
     })
+  }
+
+  prettierFormat(code = this.editor.getValue()) {
+
+    let formattedCode = ''
+    let noSyntaxErrors = false
+    try {
+      formattedCode = prettier.format(
+        code,
+        {
+          parser: "babel",
+          plugins: prettierPlugins,
+        })
+      noSyntaxErrors = true
+    } catch (err) {
+      return code;
+    }
+
+    if (noSyntaxErrors) {
+      return formattedCode;
+    }
   }
 
   studyWith(environment) {
@@ -156,27 +193,9 @@ export class JavaScriptFE extends CodeFE {
       this.config.locals.loopGuard && this.config.locals.loopGuard.active
       && !(environment === 'parsons' || environment === 'flowchart')) {
 
-      const code = this.editor.getValue()
-
-      const loopGuarded = JavaScriptFE.insertLoopGuards(code, this.config.locals.loopGuard.max || 20);
-
-      let formattedCode = ''
-      let noSyntaxErrors = false
-      try {
-        formattedCode = prettier.format(
-          loopGuarded,
-          {
-            parser: "babel",
-            plugins: prettierPlugins,
-          })
-        noSyntaxErrors = true
-      } catch (err) {
-        eval(code)
-      }
-
-      if (noSyntaxErrors) {
-        studyWith[environment](formattedCode)
-      }
+      const loopGuarded = JavaScriptFE.insertLoopGuards(this.editor.getValue(), this.config.locals.loopGuard.max || 20);
+      const formatted = this.prettierFormat(loopGuarded);
+      studyWith[environment](formatted)
 
     } else {
       studyWith[environment](this.editor.getValue())

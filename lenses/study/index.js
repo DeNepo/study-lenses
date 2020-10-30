@@ -5,10 +5,10 @@ const fs = require('fs')
 const util = require('util')
 const writeFilePromise = util.promisify(fs.writeFile)
 
-
 const detectType = require('./lib/detect-type.js')
 
 const renderDependencies = require('./lib/render-dependencies.js')
+const renderAppendices = require('./lib/render-appendices.js')
 
 const liveStudyLense = async ({ config, resource, responseData, requestData }) => {
 
@@ -58,6 +58,10 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
 
 
   config.content = resource.content
+  console.log(config.locals.append)
+  if (Array.isArray(config.locals.append)) {
+    config.content += await renderAppendices(config.locals.append, resource.info.toCwd);
+  }
   config.ext = resource.info.ext
   config.base = resource.info.base
 

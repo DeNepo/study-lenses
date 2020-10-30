@@ -19,6 +19,7 @@ const renderDependencies = (dependencies, resource) => {
         const dotDots = resource.info.type === 'file'
           ? resource.info.toCwd.split('/').slice(2).join('/')
           : resource.info.toCwd.split('/').slice(1).join('/')
+        // const normalizedPath = path.normalize(path.join(dotDots, dependency.path))
         const normalizedPath = path.normalize(path.join(dotDots, dependency.path))
         tagString += `src="${normalizedPath}"></script>`
       }
