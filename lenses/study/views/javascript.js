@@ -95,7 +95,7 @@ class JavaScriptSSR extends CodeSSR {
     // }
     // if (locals.openIn) {
     const openInDisplay = locals.openIn ? 'inline-block' : 'none'
-    const openable = ['jsTutor', 'promisees', 'loupe', 'esprima']
+    const openable = ['jsTutorLive', 'jsTutor', 'promisees', 'loupe', 'esprima']
     superPanel += `<form id='open-in-container' style='display: ${openInDisplay};'>
         <input id='open-in-button' value='open in' type='button'/>
         <select name='thisThing'>

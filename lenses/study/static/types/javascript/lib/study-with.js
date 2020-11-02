@@ -8,10 +8,16 @@ export const studyWith = {
     const debuggered = "debugger;\n\n" + code
     stepThrough(debuggered)
   },
-  jsTutor: function (code) {
+  jsTutorLive: function (code) {
     const encodedJST = encodeURIComponent(code)
     const sanitizedJST = this.utils.sanitize(encodedJST)
     const jsTutorURL = "http://www.pythontutor.com/live.html#code=" + sanitizedJST + "&cumulative=false&curInstr=2&heapPrimitives=false&mode=display&origin=opt-live.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false"
+    window.open(jsTutorURL, '_blank')
+  },
+  jsTutor: function (code) {
+    const encodedJST = encodeURIComponent(code)
+    const sanitizedJST = this.utils.sanitize(encodedJST)
+    const jsTutorURL = "http://www.pythontutor.com/visualize.html#code=" + sanitizedJST + "&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false"
     window.open(jsTutorURL, '_blank')
   },
   loupe: function (code) {
