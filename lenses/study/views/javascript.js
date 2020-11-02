@@ -24,7 +24,7 @@ class JavaScriptSSR extends CodeSSR {
     const superConfigOptions = super.configOptions()
     return superConfigOptions + `
     <form>
-      <input id='loop-guard-input' type='checkbox' ${this.config.locals.loopGuard ? 'checked' : ''} /> <label for='loop-guard-input'>loop guards</label>
+      <input id='loop-guard-input' type='checkbox' ${this.config.locals.loopGuard ? 'checked' : ''} /> <label for='loop-guard-input'>loop guard</label>
     </form>
     <form>
       <input id='clear-scheduled-input' type='checkbox' ${this.config.locals.clearScheduled ? 'checked' : ''} /> <label for='clear-scheduled-input'>clear scheduled</label>
@@ -56,13 +56,13 @@ class JavaScriptSSR extends CodeSSR {
       locals.loopGuard = {}
     }
     locals.loopGuard = {
-      active: typeof locals.loopGuard.active === 'boolean' ? locals.loopGuard.active : true,
+      active: typeof locals.loopGuard.active === 'boolean' ? locals.loopGuard.active : false,
       max: typeof locals.loopGuard.max === 'number' ? locals.loopGuard.max : 100,
     }
     superPanel += `
       <form id='loop-guard-form' style='display: ${loopGuardDisplay};'>
         <input name='active' type='checkbox' ${locals.loopGuard.active ? 'checked' : ''} />
-        loop guards:
+        loop guard:
         <input name='max' type='number' value='${locals.loopGuard.max}' style='width: 3em;' />
       </form>`
     // }
