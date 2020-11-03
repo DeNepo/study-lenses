@@ -2,8 +2,6 @@
 
 // const prettier = require('prettier')
 
-const commentRegex = require('comment-regex');
-
 const parsonsLense = ({ resource, config }) => {
 
   if (!resource.info && !config.queryValue.code) {

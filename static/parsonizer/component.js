@@ -378,11 +378,12 @@ const renderStudyButtons = (container, config, editor) => {
   const studyWith = new Proxy({
     console: function (code) {
       const execute = eval
+      execute("'use strict'; // in case you forgot ;) \n\n" + code)
       execute(code)
     },
     debugger: function (code) {
       const stepThrough = eval
-      const debuggered = "debugger;\n\n" + code
+      const debuggered = "debugger;\n\n'use strict'; // in case you forgot ;) \n\n" + code
       stepThrough(debuggered)
     },
     jsTutor: function (code) {
