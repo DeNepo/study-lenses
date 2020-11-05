@@ -11,6 +11,15 @@ const readFilePromise = util.promisify(fs.readFile)
 
 process.env['NODE_CONFIG_DIR'] = path.join(__dirname, '..', "config");
 const config = require('config')
+const localTopLevelConfigPath = path.join(process.cwd(), 'study.json')
+if (fs.existsSync(localTopLevelConfigPath) && fs.lstatSync(localTopLevelConfigPath).isFile()) {
+  try {
+    const localTopLevelConfig = require(localTopLevelConfigPath)
+    Object.assign(config.locals, localTopLevelConfig)
+  } catch (err) {
+    console.log(err)
+  }
+}
 
 const express = require('express');
 const morgan = require('morgan');
@@ -31,6 +40,24 @@ const optionsPromise = loadPlugins('options', optionsPath)
 
 const lensesPath = path.join(__dirname, '..', 'lenses')
 const lensesPromise = loadPlugins('lenses', lensesPath)
+
+let localLensesPromise = null;
+let localLensesPath = '';
+let localLensesPathIsValid = false;
+// console.log(config.locals)
+if (typeof config.locals['--local-lenses'] === 'string') {
+  // console.log(config.locals['--local-lenses'])
+  localLensesPath = path.join(process.cwd(), config.locals['--local-lenses'])
+  // console.log(localLensesPath)
+  if (!fs.existsSync(localLensesPath) || !fs.lstatSync(localLensesPath).isFile()) {
+    localLensesPathIsValid = true
+    localLensesPromise = loadPlugins('local_lenses', localLensesPath)
+    // localLensesPromise.then(console.log)
+  } else {
+    localLensesPath = ''
+  }
+}
+
 
 const configurePlugins = require('./configure-plugins')
 
@@ -77,6 +104,9 @@ app.use(/[\s\S]*own_static_resources_lenses/, express.static(path.join(__dirname
 app.use(/[\s\S]*own_static_resources_options/, express.static(path.join(__dirname, '..', 'options')))
 app.use(/[\s\S]*shared_static_resources/, express.static(path.join(__dirname, '..', 'static')))
 app.use(/[\s\S]*public_example_files/, express.static(path.join(__dirname, '..', 'public-example-files')))
+if (localLensesPathIsValid) {
+  app.use(/[\s\S]*own_static_resources_local_lenses/, express.static(localLensesPath))
+}
 
 
 app.use(async (req, res, next) => {
@@ -87,6 +117,7 @@ app.use(async (req, res, next) => {
     next();
     return;
   }
+
   // if the 'ignore' option was send, fall back to static serving
   if (queryKeys.includes('--ignore')) {
     next();
@@ -115,7 +146,17 @@ app.use(async (req, res, next) => {
   // filter for the requested plugins (url params)
   //  configure them with local & param configurations
   const options = configurePlugins((await optionsPromise), localConfigs, req.query)
-  const lenses = configurePlugins((await lensesPromise), localConfigs, req.query)
+  const lenses = []
+  const builtinLenses = configurePlugins((await lensesPromise), localConfigs, req.query)
+  if (builtinLenses) {
+    lenses.push(...builtinLenses)
+  }
+  const localLenses = configurePlugins((await localLensesPromise), localConfigs, req.query)
+  if (localLenses) {
+    console.log(localLenses)
+    lenses.push(...localLenses)
+  }
+
 
   // if the parameters were not valid options or lenses
   //  fallback to static serving
@@ -128,15 +169,10 @@ app.use(async (req, res, next) => {
 
   // if there was an error fetching the resource
   //  fallback to static serving
-  // there's probably a better way of doing this
-  //  send the error?
+  // express.static can handle the error
   if (resource.error) {
     next();
     return;
-    // res.set('Content-Type', 'text/plain')
-    // res.status(500)
-    // res.send(finalResource.error.toString())
-    // return
   }
 
   const requestData = {

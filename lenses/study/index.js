@@ -13,11 +13,11 @@ const renderAppendices = require('./lib/render-appendices.js')
 const liveStudyLense = async ({ config, resource, responseData, requestData }) => {
 
   if (requestData.method === 'POST') {
-    console.log('-- POST')
     try {
       const absolutePath = path.join(resource.info.root, resource.info.dir, resource.info.base)
       await writeFilePromise(absolutePath, requestData.body.text, 'utf-8');
-      resource.content = 'changes were saved'
+      resource.content = ': changes were saved'
+      console.log(resource.content);
       resource.info.ext = '.txt'
       return {
         resource
@@ -58,7 +58,7 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
 
 
   config.content = resource.content
-  console.log(config.locals.append)
+
   if (Array.isArray(config.locals.append)) {
     config.content += await renderAppendices(config.locals.append, resource.info.toCwd);
   }
