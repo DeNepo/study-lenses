@@ -103,7 +103,6 @@ app.use(cookieParser())
 app.use(/[\s\S]*own_static_resources_lenses/, express.static(path.join(__dirname, '..', 'lenses')))
 app.use(/[\s\S]*own_static_resources_options/, express.static(path.join(__dirname, '..', 'options')))
 app.use(/[\s\S]*shared_static_resources/, express.static(path.join(__dirname, '..', 'static')))
-app.use(/[\s\S]*public_example_files/, express.static(path.join(__dirname, '..', 'public-example-files')))
 if (localLensesPathIsValid) {
   app.use(/[\s\S]*own_static_resources_local_lenses/, express.static(localLensesPath))
 }
@@ -125,7 +124,10 @@ app.use(async (req, res, next) => {
   }
 
   // if the requested resource does not exist, fall back to static serving
-  const absolutePath = path.join(process.cwd(), req.path);
+  const isPublicExample = /[\s\S]*public_example_files/.test(req.path);
+  const absolutePath = isPublicExample
+    ? path.join(__dirname, '..', 'public-example-files', req.path.replace(/[\s\S]*public_example_files/, ''))
+    : path.join(process.cwd(), req.path);
   if (!fs.existsSync(absolutePath)) {
     next();
     return;
@@ -227,6 +229,9 @@ app.use(async (req, res, next) => {
   res.send(finalResource.content)
 
 })
+
+
+app.use(/[\s\S]*public_example_files/, express.static(path.join(__dirname, '..', 'public-example-files')))
 
 
 // if they requested a directory, send index.html or rendered README
