@@ -153,7 +153,6 @@ app.use(async (req, res, next) => {
   }
   const localLenses = configurePlugins((await localLensesPromise), localConfigs, req.query)
   if (localLenses) {
-    console.log(localLenses)
     lenses.push(...localLenses)
   }
 

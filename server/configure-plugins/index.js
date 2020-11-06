@@ -1,5 +1,7 @@
 const configurePlugins = (plugins, localConfigs, parsedQuery) => {
-
+  if (!plugins) {
+    return [];
+  }
 
   const requestedPlugins = Object.keys(parsedQuery)
     .map(queryKey => {
