@@ -12,6 +12,7 @@ const hyfLense = async ({ resource, config }) => {
   resource.content = await renderTocDoc({
     virDir: resource.content,
     config,
+    top: true
   });
 
   resource.info.ext = '.html';

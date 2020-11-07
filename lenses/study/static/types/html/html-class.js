@@ -80,7 +80,7 @@ export class HtmlFE extends CodeFE {
 
   static insertLoopGuards = (evalCode, maxIterations) => {
     let loopNum = 0
-    return evalCode.replace(/for *\(.*\{|while *\(.*\{|do *\{/g, loopHead => {
+    return evalCode.replace(/(for|while)([\s]*)\(([^\{]*)\)([\s]*)\{|do([\s]*)\{/gm, loopHead => {
       const id = ++loopNum
       return `let loopGuard_${id} = 0\n${loopHead}\nif (++loopGuard_${id} > ${maxIterations}) { throw new RangeError('loopGuard_${id} is greater than ${maxIterations}') }\n`
     })

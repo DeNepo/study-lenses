@@ -1,14 +1,22 @@
+const runWithEval = (debug) => (code) => {
+  const execute = eval
+  const trimmedFirstLine = code.trim().split('\n')[0]
+    ? code.trim().split('\n')[0].trim()
+    : '';
+  const strictIsFirstLine = /^['|"]use strict['|"]/.test(trimmedFirstLine)
+  console.log(strictIsFirstLine)
+  const stricted = !strictIsFirstLine
+    ? "'use strict'; // you forgot ;) \n\n" + code
+    : code;
+  const finalCode = debug
+    ? 'debugger;\n\n' + stricted
+    : stricted;
+  execute(finalCode)
+}
+
 export const studyWith = {
-  console: function (code) {
-    const execute = eval
-    const stricted = "'use strict'; // in case you forgot ;) \n\n" + code;
-    execute(stricted)
-  },
-  debugger: function (code) {
-    const stepThrough = eval
-    const debuggered = "debugger;\n\n'use strict'; // in case you forgot ;) \n\n" + code
-    stepThrough(debuggered)
-  },
+  console: runWithEval(false),
+  debugger: runWithEval(true),
   jsTutorLive: function (code) {
     const encodedJST = encodeURIComponent(code)
     const sanitizedJST = this.utils.sanitize(encodedJST)

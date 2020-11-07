@@ -75,15 +75,15 @@ module.exports = async function renderTocDoc({ virDir, config, top }) {
     <hr>
 
     <ul style="list-style-type: none;">
-      ${top ? '' : `<li><a href='./${virDir.locals['--defaults'] && '?' + virDir.locals['--defaults'].directory || ''}'>..</a></li>`}
+      <li><a href='./${virDir.locals['--defaults'] && '?' + virDir.locals['--defaults'].directory || ''}'>..</a></li>
       ${tableOfContents({ dirElement: virDir, top: true, defaults: virDir.locals['--defaults'] || {} })}
-    </ul>
+    </ul >
 
     <hr>
-    <hr>
+      <hr>
 
-    <main class="markdown-body">${marked(readmeSource)}</main>
-    <script src="${config.sharedStatic}/prism/script.js"></script>
+        <main class="markdown-body">${marked(readmeSource)}</main>
+        <script src="${config.sharedStatic}/prism/script.js"></script>
   </body>
 </html>`;
 };
