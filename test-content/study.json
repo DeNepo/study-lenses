@@ -1,5 +1,7 @@
 {
-  "study": {},
+  "study": {
+    "hello": "benjamin"
+  },
   "hello-world": {
     "/": "chups"
   },

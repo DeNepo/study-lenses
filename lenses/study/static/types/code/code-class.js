@@ -26,26 +26,28 @@ export class CodeFE {
     document.getElementById('reset-button')
       .addEventListener('click', () => this.editor.setValue(this.config.content || ''))
 
-    document.getElementById('save-button')
-      .addEventListener('click', () => {
-        fetch(window.location.origin + window.location.pathname + '?study&--debug', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ text: this.editor.getValue() }),
+    if (this.config.locals.save === true) {
+      document.getElementById('save-button')
+        .addEventListener('click', () => {
+          fetch(window.location.origin + window.location.pathname + '?study&--debug', {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ text: this.editor.getValue() }),
+          })
+            .then(response => response.text())
+            .then(message => {
+              alert(message);
+              console.log(message);
+            })
+            .catch((err) => {
+              alert(err.name + ': ' + err.message);
+              console.error('Error:', err);
+            })
         })
-          .then(response => response.text())
-          .then(message => {
-            alert(message);
-            console.log(message);
-          })
-          .catch((err) => {
-            alert(err.name + ': ' + err.message);
-            console.error('Error:', err);
-          })
-      })
+    }
 
     document.getElementById('permalink-button')
       .addEventListener('click', () => {

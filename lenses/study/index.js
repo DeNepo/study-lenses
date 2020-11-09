@@ -12,7 +12,7 @@ const renderAppendices = require('./lib/render-appendices.js')
 
 const liveStudyLense = async ({ config, resource, responseData, requestData }) => {
 
-  if (requestData.method === 'POST') {
+  if (config.locals.save === true && requestData.method === 'POST') {
     try {
       const absolutePath = path.join(resource.info.root, resource.info.dir, resource.info.base)
       await writeFilePromise(absolutePath, requestData.body.text, 'utf-8');

@@ -46,15 +46,18 @@ const randomizeVariables = (() => {
 
     for (const line of decomposed) {
       const code = line.code
-      for (let i = 0; i < code.length; i++) {
-        const entry = code[i]
-        if (Array.isArray(entry)
+      for (const entry of code) {
+        if (
+          Array.isArray(entry)
           && !keyWords.includes(entry.join(''))
-          && isNaN(entry.join(''))) {
+          && isNaN(entry.join(''))
+        ) {
           randomizeable.add(entry.join(''))
         }
       }
     }
+
+    console.log(randomizeable)
 
     return Array.from(randomizeable)
   }
@@ -108,7 +111,7 @@ const randomizeVariables = (() => {
     let randomizedCode = code
     for (const key in randomizationMapping) {
       randomizedCode = randomizedCode
-        .split(key)
+        .split(new RegExp(`(?<![\\w\\d_$])${key}(?![\\w\\d_$])`, 'gm'))
         .join(randomizationMapping[key])
     }
 

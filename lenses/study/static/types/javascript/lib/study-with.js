@@ -1,22 +1,24 @@
-const runWithEval = (debug) => (code) => {
-  const execute = eval
-  const trimmedFirstLine = code.trim().split('\n')[0]
-    ? code.trim().split('\n')[0].trim()
-    : '';
-  const strictIsFirstLine = /^['|"]use strict['|"]/.test(trimmedFirstLine)
-  console.log(strictIsFirstLine)
-  const stricted = !strictIsFirstLine
+const studyWithEval = (debug) => (code) => {
+  if (typeof code !== 'string') {
+    // this should never happen, but just in case ....
+    throw new TypeError('code is not a string');
+  }
+  const trimmedFirstLine = code.trim().split('\n')[0].trim();
+  const firstLineIsUseStrict = /^['|"]use strict['|"]/.test(trimmedFirstLine);
+  const stricted = !firstLineIsUseStrict
     ? "'use strict'; // you forgot ;) \n\n" + code
     : code;
   const finalCode = debug
     ? 'debugger;\n\n' + stricted
     : stricted;
+  // for cleaner scoping in the debugger
+  const execute = eval
   execute(finalCode)
 }
 
 export const studyWith = {
-  console: runWithEval(false),
-  debugger: runWithEval(true),
+  console: studyWithEval(false),
+  debugger: studyWithEval(true),
   jsTutorLive: function (code) {
     const encodedJST = encodeURIComponent(code)
     const sanitizedJST = this.utils.sanitize(encodedJST)

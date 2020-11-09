@@ -27,7 +27,7 @@ class CodeSSR {
     return `<!-- <input id='read-only-input' type='checkbox' checked='true' /> read-only -->
     <button id='reset-button'>reset</button>
     <button id='format-button'>format</button>
-    <button id='save-button'>save changes</button>
+    ${this.config.locals.save == true ? `<button id='save-button'>save changes</button>` : ''}
     <button id='permalink-button'>permalink</button>
     ||
     <button id='parsonize-selection-button'>parsonize selection</button>

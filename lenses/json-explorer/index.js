@@ -14,7 +14,7 @@ const jsonFormatterLense = async ({ requestData, resource, config }) => {
   </head>
   <body>
     <script>
-      const json = JSON.parse(decodeURIComponent("${encodeURIComponent(resource.content)}"))
+      const json = JSON.parse(decodeURIComponent("${encodeURIComponent(typeof resource.content === 'object' && resource.content ? JSON.stringify(resource.content) : resource.content)}"))
       const renderedJson = new JSONFormatter(json, 1, {
           hoverPreviewEnabled: true,
           hoverPreviewArrayCount: 5,
