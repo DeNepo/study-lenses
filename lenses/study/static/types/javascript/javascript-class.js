@@ -11,19 +11,19 @@ export class JavaScriptFE extends CodeFE {
 
   initJsUi() {
 
-    const formatButton = document.getElementById('format-button')
-    const formatParent = formatButton.parentElement
-    const newFormatButton = document.createElement('button')
-    newFormatButton.innerHTML = 'format'
-    newFormatButton.onclick = () => {
-      // https://github.com/react-monaco-editor/react-monaco-editor/pull/212
-      this.editor.executeEdits('', [{
-        range: this.editor.getModel().getFullModelRange(),
-        text: this.prettierFormat(this.editor.getValue()),
-        // forceMoveMarkers: true
-      }]);
-    }
-    formatParent.replaceChild(newFormatButton, formatButton)
+    // const formatButton = document.getElementById('format-button')
+    // const formatParent = formatButton.parentElement
+    // const newFormatButton = document.createElement('button')
+    // newFormatButton.innerHTML = 'format'
+    // newFormatButton.onclick = () => {
+    //   // https://github.com/react-monaco-editor/react-monaco-editor/pull/212
+    //   this.editor.executeEdits('', [{
+    //     range: this.editor.getModel().getFullModelRange(),
+    //     text: this.prettierFormat(this.editor.getValue()),
+    //     // forceMoveMarkers: true
+    //   }]);
+    // }
+    // formatParent.replaceChild(newFormatButton, formatButton)
 
     // if (this.config.locals.loopGuard) {
     const loopGuardForm = document.getElementById('loop-guard-form')
