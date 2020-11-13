@@ -29,45 +29,52 @@ const combineMerge = (target, source, options) => {
 }
 
 
-const compileLocalConfigs = (absPath, cwd, config) => {
+const compileLocalConfigs = (absPath, config) => {
+
+  const pastTheTop = absPath.search(process.cwd()) === -1;
+  if (pastTheTop) {
+    console.log('past the top')
+    return config;
+  }
 
   const pathExists = fs.existsSync(absPath);
   if (!pathExists) {
+    console.log('path does not exist')
     return config;
   }
 
   const isFile = fs.lstatSync(absPath).isFile();
   if (isFile) {
-    return compileLocalConfigs(path.dirname(absPath), cwd, config);
+    console.log('path is a file')
+    return compileLocalConfigs(path.dirname(absPath), config);
   };
-
-  const atOrPastTheTop = !absPath.match(cwd);
 
   const configPath = path.join(absPath, 'study.json');
   const hasConfig = fs.existsSync(configPath);
 
-  if (atOrPastTheTop && !hasConfig) {
-    return config;
+  if (!hasConfig) {
+    console.log('no config here')
+    return compileLocalConfigs(path.dirname(absPath), config);
   }
 
 
   let currentConfig = {};
-  if (hasConfig) {
-    try {
-      currentConfig = require(configPath);
-    } catch (err) {
-      console.error(err);
-    };
+  try {
+    currentConfig = require(configPath);
+  } catch (err) {
+    console.error(err);
   };
 
+  console.log('--- ', absPath)
+  console.log('currentConfig:', currentConfig)
+  console.log('config:', config)
   const newConfig = deepMerge(currentConfig, config, { arrayMerge: combineMerge });
+  console.log('newConfig:', newConfig)
 
-  if (atOrPastTheTop) {
-    return newConfig;
-  } else {
-    const oneUp = path.dirname(absPath);
-    return compileLocalConfigs(oneUp, cwd, newConfig);
-  }
+
+  const oneUp = path.dirname(absPath);
+  return compileLocalConfigs(oneUp, newConfig);
+
 
 
 };

@@ -59,6 +59,28 @@ if (typeof config.locals['--local-lenses'] === 'string') {
 }
 
 
+const deepMerge = require('deepmerge');
+const combineMerge = (target, source, options) => {
+  const destination = target.slice()
+
+  source.forEach((item, index) => {
+    if (typeof destination[index] === 'undefined') {
+      destination[index] = options.cloneUnlessOtherwiseSpecified(item, options)
+    } else if (options.isMergeableObject(item)) {
+      const alreadyExists = destination.some(entry => util.isDeepStrictEqual(entry, item))
+      if (!alreadyExists) {
+        destination.push(item)
+      } else {
+        destination[index] = deepMerge(target[index], item, options)
+      }
+    } else if (target.indexOf(item) === -1) {
+      destination.push(item)
+    }
+  })
+  return destination
+}
+
+
 const configurePlugins = require('./configure-plugins')
 
 
@@ -136,8 +158,8 @@ app.use(async (req, res, next) => {
   // build the local configuration for this request path
   //  all study.json combined from the request path
   //  up to the cwd, then the module's defaults
-  const topLevelConfig = Object.assign({}, config.locals)
-  const localConfigs = compileLocalConfigs(absolutePath, process.cwd(), topLevelConfig)
+  const preDefaults = compileLocalConfigs(absolutePath, {})
+  const localConfigs = deepMerge(config.locals, preDefaults, { arrayMerge: combineMerge });
 
   // the there is a local --ignore option, fall back to static serving
   if (localConfigs['--ignore']) {
