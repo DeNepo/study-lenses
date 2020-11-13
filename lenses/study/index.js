@@ -60,7 +60,7 @@ const liveStudyLense = async ({ config, resource, responseData, requestData }) =
   config.content = resource.content
 
   if (Array.isArray(config.locals.append)) {
-    config.content += await renderAppendices(config.locals.append, resource.info.toCwd);
+    config.content += await renderAppendices(config.locals.append, requestData.path);
   }
   config.ext = resource.info.ext
   config.base = resource.info.base

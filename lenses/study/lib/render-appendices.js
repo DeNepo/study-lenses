@@ -5,25 +5,30 @@ const fs = require('fs');
 const util = require('util');
 const readFilePromise = util.promisify(fs.readFile);
 
-const renderAppendices = async (appendices) => {
-  console.log(appendices)
+const renderAppendices = async (appendices, requestPath) => {
+
   if (!Array.isArray(appendices)) {
     return ''
   }
 
   let renderedAppendices = '';
   for (const appendicy of appendices) {
+    const appendicyPath = appendicy.relative === true
+      ? path.join(path.dirname(path.join(process.cwd(), requestPath)), appendicy.path)
+      : typeof appendicy.path === 'string'
+        ? path.join(process.cwd(), appendicy.path)
+        : path.join(process.cwd(), appendicy);
 
-    const normalizedPath = path.normalize(path.join(process.cwd(), appendicy))
     try {
-      renderedAppendices += await readFilePromise(normalizedPath);
+      const nextAppendicy = (await readFilePromise(appendicyPath));
+      renderedAppendices += `\n\n\n// ${path.basename(appendicyPath)}\n\n${nextAppendicy}`;
     } catch (err) {
       console.error(err);
     }
 
   }
 
-  return '\n\n// appended appendices \n\n' + renderedAppendices;
+  return renderedAppendices;
 };
 
 module.exports = renderAppendices;
