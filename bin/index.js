@@ -45,12 +45,25 @@ const defaultLense = (fs.existsSync(absPathToStudy) && fs.lstatSync(absPathToStu
   ? defaultLenses.directory
   : defaultLenses[path.extname(pathToStudy)];
 
+const cliPort = process.argv.find(entry => {
+  const key = entry.toLowerCase().split('=')[0]
+  const value = entry.toLowerCase().split('=')[0]
+  if (key === 'port') {
+    const portNumber = numNumber(value);
+    if (!Number.isNaN(portNumber) && portNumber >= 3000 && portNumber < 9000) {
+      return portNumber
+    }
+  }
+  return false;
+})
+const port = process.env.PORT || cliPort || (typeof config.locals.port === 'number' ? config.locals.port : false) || 4600;
+
 const queryMarker = defaultLense ? '?' : ''
 
 // -- the following lines will need to be rewritten when config works --
 // construct a url using global configurations and the user-provided sub-path
 const pathToOpen = path.normalize(pathToStudy);
-const url = `http://localhost:4600/${pathToOpen}${queryMarker}${defaultLense}`;
+const url = `http://localhost:${port}/${pathToOpen}${queryMarker}${defaultLense}`;
 console.log('studying: ', url);
 
 
