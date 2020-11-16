@@ -1,4 +1,4 @@
-- sub-folder
+- [sub-folder](./sub-folder)
   - [file.css](./sub-folder/file.css)
   - [file.html](./sub-folder/file.html)
   - [file.js](./sub-folder/file.js)

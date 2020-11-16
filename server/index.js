@@ -169,7 +169,8 @@ app.use(async (req, res, next) => {
 
 
   if (queryKeys.includes('--defaults')) {
-    const localTypeConfig = localConfigs['--defaults'][path.extname(req.path)];
+    const pathExt = path.extname(req.path);
+    const localTypeConfig = pathExt ? localConfigs['--defaults'][pathExt] : localConfigs['--defaults'].directory;
     if (typeof localTypeConfig === 'string') {
       const splitLocalTypeConfig = localTypeConfig.split('&');
       const parsedLocalTypeConfigs = splitLocalTypeConfig.map(param => {
