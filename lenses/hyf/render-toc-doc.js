@@ -1,8 +1,5 @@
 /* UPDATE
 
-  using embedded study configs
-  make sure links of all depths have correct local-configured lenses
-
 */
 
 
@@ -18,29 +15,29 @@ const readFilePromise = util.promisify(fs.readFile)
 const tableOfContents = ({ dirElement, top = false, defaults = {} }) => {
 
   if (dirElement.type === 'file') {
-    let query = ''
-    if (dirElement.base.toLowerCase().includes('.re.')) {
-      query = defaults[dirElement.ext] ? '?min&' + defaults[dirElement.ext] : ''
-    } else {
-      query = defaults[dirElement.ext] ? '?' + defaults[dirElement.ext] : ''
-    }
     const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
-    return `<li><a href="${relativePath}${query}" target="_blank">${dirElement.base}</a></li>\n`;
+    return `<li><a href="${relativePath}?--defaults" target="_blank">${dirElement.base}</a></li>\n`;
   }
 
   if (dirElement.type === 'directory') {
+    const hasSummary = dirElement.children.find(child => child.base.toLowerCase() === 'summary.md')
+    const nameElement = hasSummary
+      ? `<a href='${dirElement.base}' target='_blank'>${dirElement.base}</a>`
+      : dirElement.base;
     const subIndex = Array.isArray(dirElement.children)
       ? dirElement.children.map(child => tableOfContents({
         dirElement: child,
         defaults: Object.assign({}, defaults, dirElement.locals['--defaults'] || {})
       })).join('\n')
       : '';
-    const query = defaults.directory ? defaults.directory : '';
-    const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
+
     return top ? subIndex
-      : (`<li><details><summary>${dirElement.base}</summary>\n`
+      : (`<li><details><summary>${nameElement}</summary>\n`
         + (subIndex ? '\n<ul style="list-style-type: none;">' + subIndex + '</ul>' : '')
         + '</details></li>');
+
+    // const query = defaults.directory ? defaults.directory : '';
+    // const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
     // return top ? subIndex
     //   : (`<li><details><summary><a href="${relativePath}?${query}">${dirElement.base}</a></summary>\n`
     //     + (subIndex ? '\n<ul>' + subIndex + '</ul>' : '')

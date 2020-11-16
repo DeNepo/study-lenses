@@ -41,7 +41,7 @@ const evaluateOptions = async ({ requestData, responseData, resource, options, l
 
       if (returned && returned.abort === true) {
         return {
-          abort: true
+          abort: nextOption.queryKey
         }
       }
 

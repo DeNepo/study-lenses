@@ -40,9 +40,9 @@ const changePerspective = async ({
       lenses,
     })
 
-    if (abort === true) {
+    if (abort) {
       return {
-        abort: true
+        abort
       }
     }
 
@@ -79,9 +79,9 @@ const changePerspective = async ({
       hooks: configuredHooks
     })
 
-    if (abort === true) {
+    if (abort) {
       return {
-        abort: true
+        abort
       }
     }
     // console.log(pipedResource)

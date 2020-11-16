@@ -251,7 +251,8 @@ app.use(async (req, res, next) => {
     responseData,
   })
 
-  if (abort === true) {
+  if (abort) {
+    console.log(': aborting at ' + abort);
     next();
     return;
   }

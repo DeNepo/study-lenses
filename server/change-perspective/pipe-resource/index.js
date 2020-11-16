@@ -87,7 +87,7 @@ const pipeResource = async ({
 
       if (returned && returned.abort === true) {
         return {
-          abort: true
+          abort: lens.queryKey
         }
       }
       // todo: validate objects before cloning
@@ -98,6 +98,7 @@ const pipeResource = async ({
         pipedResource = deepClone(returned.resource || pipedResource)
       }
     } catch (error) {
+      console.log(': error in ' + lens.queryKey)
       lenseError = {
         error,
         lens
