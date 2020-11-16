@@ -303,8 +303,11 @@ app.use(async (req, res, next) => {
   // render like a gitbook if there is a Summary.md
   const summaryMdPath = path.join(absolutePath, 'summary.md')
   if (fs.existsSync(summaryMdPath)) {
+
+    const readmeMdPath = path.join(absolutePath, 'readme.md')
+    const readmeExists = fs.existsSync(readmeMdPath)
     const rawMarkdown = await readFilePromise(summaryMdPath, 'utf-8')
-    const renderedMarkdown = gitbookfiy(rawMarkdown)
+    const renderedMarkdown = gitbookfiy(rawMarkdown, readmeExists)
     res.set('Content-Type', 'text/html')
     res.status(200)
     res.end(renderedMarkdown)

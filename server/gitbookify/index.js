@@ -14,7 +14,7 @@ marked.setOptions({
 const target = 'currentStudy';
 
 
-const gitbookfiy = (summaryText) => {
+const gitbookfiy = (summaryText, readmeExists) => {
 
   renderer.link = function (href, title, text) {
     // return `<a target="${target}" href="${href}" ${title ? `title="${title}"` : ''}>${text}</a>`;
@@ -42,6 +42,12 @@ const gitbookfiy = (summaryText) => {
             <iframe id='i-frame' style='height: 100%; width: 100%; margin-left: 1%;' name="${target}"></iframe>
           <div>
           <script src="shared_static_resources/prism/script.js"></script>
+
+          <script>
+            if (${readmeExists}) {
+              document.getElementById("i-frame").src = window.location.origin + window.location.pathname + '/README.md?--defaults';
+            }
+          </script>
         </body>
       </html>`
 };
