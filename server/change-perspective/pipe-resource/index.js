@@ -85,6 +85,11 @@ const pipeResource = async ({
         resource: deepClone(pipedResource),
       })
 
+      if (returned && returned.abort === true) {
+        return {
+          abort: true
+        }
+      }
       // todo: validate objects before cloning
       //  if they fail validation, use the previous
       if (returned) {

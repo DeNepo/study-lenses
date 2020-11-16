@@ -30,7 +30,7 @@ const changePerspective = async ({
       optionedResource,
       optionedResponseData,
       hooks,
-      send, // maybe do this instead of comparing to send?
+      abort, // fallback to static serving
       optionError, // not sure what to do about this
     } = await evaluateOptions({
       resource,
@@ -40,8 +40,11 @@ const changePerspective = async ({
       lenses,
     })
 
-    // // or this?
-    // if (send) {
+    if (abort === true) {
+      return {
+        abort: true
+      }
+    }
 
     // check if an option
     //  if they did, send the response immediately and return early
@@ -65,6 +68,7 @@ const changePerspective = async ({
     const {
       pipedResource,
       pipedResponseData,
+      abort,
       lenseError, // not sure what to do about these
       hookErrors
     } = await pipeResource({
@@ -75,6 +79,11 @@ const changePerspective = async ({
       hooks: configuredHooks
     })
 
+    if (abort === true) {
+      return {
+        abort: true
+      }
+    }
     // console.log(pipedResource)
     // console.log(pipedResponseData)
 

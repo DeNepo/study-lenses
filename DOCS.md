@@ -3,6 +3,8 @@
 How does this work?  Let me explain you
 
 - [The Server](#the-server)
+  - [Default Behavior](#default-behavior)
+  - [Changing Perspective](#changing-perspective)
 - [Data Types](#data-types)
   - [`resource`](#resource)
   - [`requestData`](#requestData)
@@ -25,15 +27,24 @@ How does this work?  Let me explain you
 
 ## Server
 
-This server is relatively simple: [./server/index.js](./server/index.js) launches a basic express server with one handler ([handle-request](./server/handle-request/index.js)).  All requests to any path and with any method are handled by this function.
+This server is relatively simple: [./server/index.js](./server/index.js) launches an augmented static server.
 
-## `handle-request`
+### Default Behavior
 
-By default (without any options or lenses), this is a basic static server. All requests are handled as a GET request for the resource stored at the requested url (relative path from working directory).
+`study`'s default behavior is an augmented static server with special behavior for `index.html`, `readme.md` and `summary.md` files.  Assuming there are no parameters in the request: 
 
-Lenses and Options can be written to treat POST request differently from GET requests, can make arbitrary network calls, and have access to the file system. More on this later.
+- A requested will be served with `express.static`
+- A requested directory will pass through these checks:
+  - `summary.md`: if this file exists in relative root, the directory is rendered like a gitbook
+  - `index.html`: if this file exists in relative root, it is served
+  - `readme.md`: inf this file exists in relative root, it is rendered to HTML and served
+  - otherwise, the server falls back to `express.static` behavior for directories
 
-If a user has requested any plugins with URL parameters (ie. `/file.js?format&highlight`) then the `resource`, `requestData`, and `responseData` will be processed consecutively by the `format` and the `highlight` Lenses before being appended to the request body and sent.
+### Changing Perspective
+
+If a user has included any URL parameters (ie. `/file.js?format&highlight`) then the indicated options and lenses will be used in order to process the requested resource (directory or file).  Non-existent options or lenses are ignored.
+
+This takes place in `/server/changing-perspective`.
 
 [TOP](#study-lens-docs)
 
@@ -253,7 +264,8 @@ const aLense = async ({ requestData, responseData, resource, config }) => {
   return {
     requestData,
     responseData,
-    resource
+    resource,
+    abort // if true, the request/response cycle will fall back to default serving 
   }
 }
 ```
@@ -306,6 +318,7 @@ const anOption = async ({
     },
     // ignored
     requestData,
+    abort // if true, the request/response cycle will fall back to default serving 
   }
 }
 ```

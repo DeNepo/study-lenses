@@ -240,7 +240,8 @@ app.use(async (req, res, next) => {
   const {
     finalResponseData,
     finalResource,
-    error, // not yet supported
+    abort,
+    error,
   } = await changePerspective({
     lenses,
     options,
@@ -248,6 +249,11 @@ app.use(async (req, res, next) => {
     requestData,
     responseData,
   })
+
+  if (abort === true) {
+    next();
+    return;
+  }
 
   // handle the error
   if (error) {
@@ -293,6 +299,17 @@ app.use(async (req, res, next) => {
     return
   }
 
+  // render like a gitbook if there is a Summary.md
+  const summaryMdPath = path.join(absolutePath, 'summary.md')
+  if (fs.existsSync(summaryMdPath)) {
+    const rawMarkdown = await readFilePromise(summaryMdPath, 'utf-8')
+    const renderedMarkdown = gitbookfiy(rawMarkdown)
+    res.set('Content-Type', 'text/html')
+    res.status(200)
+    res.end(renderedMarkdown)
+    return
+  }
+
   // send index.html if there is one
   const indexHtmlPath = path.join(absolutePath, 'index.html')
   if (fs.existsSync(indexHtmlPath)) {
@@ -325,15 +342,6 @@ app.use(async (req, res, next) => {
     return
   }
 
-  const summaryMdPath = path.join(absolutePath, 'summary.md')
-  if (fs.existsSync(summaryMdPath)) {
-    const rawMarkdown = await readFilePromise(summaryMdPath, 'utf-8')
-    const renderedMarkdown = gitbookfiy(rawMarkdown)
-    res.set('Content-Type', 'text/html')
-    res.status(200)
-    res.end(renderedMarkdown)
-    return
-  }
 
   // if there wasn't an index.html, SUMMARY.md, or README, go on to static serving
   next()

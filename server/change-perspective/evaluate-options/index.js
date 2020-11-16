@@ -39,6 +39,12 @@ const evaluateOptions = async ({ requestData, responseData, resource, options, l
       }))
         || {}
 
+      if (returned && returned.abort === true) {
+        return {
+          abort: true
+        }
+      }
+
       // todo: validate objects before continuing
       //  if they fail validation, use the previous
       if (!overWritten && returned.responseData || returned.resource) {

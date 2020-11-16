@@ -9,6 +9,19 @@ const hyfLense = async ({ resource, config }) => {
     return
   }
 
+  // see the directory resource schema from DOCS.md
+  if (Array.isArray(resource.content.children)) {
+    console.log(1)
+    for (const child of resource.content.children) {
+      console.log(2)
+      if (child.base.toLowerCase() === 'summary.md') {
+        return {
+          abort: true
+        }
+      }
+    }
+  }
+
   resource.content = await renderTocDoc({
     virDir: resource.content,
     config,
