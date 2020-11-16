@@ -19,7 +19,7 @@ const gitbookfiy = (summaryText) => {
   renderer.link = function (href, title, text) {
     // return `<a target="${target}" href="${href}" ${title ? `title="${title}"` : ''}>${text}</a>`;
     const isRe = href.toLowerCase().includes('.re.')
-    return `<button onclick='document.getElementById("i-frame").src = window.location.href + "/${href}?${isRe ? 'min&' : ''}--defaults"' ${title ? `title="${title}"` : ''}>${text}</button>`;
+    return `<button onclick='document.getElementById("i-frame").src = window.location.origin + window.location.pathname + "/${href}?${isRe ? 'min&' : ''}--defaults"' ${title ? `title="${title}"` : ''}>${text}</button>`;
   }
   return `
       <!DOCTYPE html>
