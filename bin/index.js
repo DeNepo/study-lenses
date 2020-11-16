@@ -17,7 +17,8 @@ const config = require('config');
     -> localhost:xxxx/user/defined/path?default-plugins-for-mime-type
 */
 const userArgs = process.argv.slice(2);
-const pathToStudy = userArgs[0] || '';
+// use the first arg that doesn't match a port config
+const pathToStudy = userArgs.find(entry => !(/port=[\d]*/i.test(entry))) || '';
 
 
 // todo
@@ -45,30 +46,40 @@ const defaultLense = (fs.existsSync(absPathToStudy) && fs.lstatSync(absPathToStu
   ? defaultLenses.directory
   : defaultLenses[path.extname(pathToStudy)];
 
-const cliPort = process.argv.find(entry => {
-  const key = entry.toLowerCase().split('=')[0]
-  const value = entry.toLowerCase().split('=')[0]
-  if (key === 'port') {
-    const portNumber = numNumber(value);
+let rootStudyConfig = {};
+try {
+  rootStudyConfig = require(path.join(process.cwd(), 'study.json'));
+} catch (o_0) { }
+
+// user can define a port number to study
+const cliPortSearch = process.argv.find(entry => {
+  if (/port=[\d]*/i.test(entry)) {
+    const portString = entry.split('=')[1];
+    const portNumber = Number(portString);
     if (!Number.isNaN(portNumber) && portNumber >= 3000 && portNumber < 9000) {
-      return portNumber
+      return true
     }
+    process.argv
   }
   return false;
-})
-const port = process.env.PORT || cliPort || (typeof config.locals.port === 'number' ? config.locals.port : false) || 4600;
+});
+const cliPort = cliPortSearch !== undefined
+  ? cliPortSearch.split('=')[1]
+  : undefined;
+const port = process.env.PORT || cliPort || (typeof rootStudyConfig.port === 'number' ? rootStudyConfig.port : false) || config.PORT;
 
 const queryMarker = defaultLense ? '?' : ''
 
 // -- the following lines will need to be rewritten when config works --
 // construct a url using global configurations and the user-provided sub-path
+// should this not normalize? might it make url paths in windows backslashes?
 const pathToOpen = path.normalize(pathToStudy);
 const url = `http://localhost:${port}/${pathToOpen}${queryMarker}${defaultLense}`;
 console.log('studying: ', url);
 
 
 // launch the server
-require('../server/index.js')
+require('../server/index.js')(port)
   .then(_ => require('open')(url));
 
 

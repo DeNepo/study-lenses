@@ -87,8 +87,6 @@ const configurePlugins = require('./configure-plugins')
 const Logger = require('./lib/logger.js');
 // const Logger = console
 
-// const PORT = config.get('PORT');
-const PORT = 4600;
 
 
 // error and exit handling ...
@@ -312,7 +310,7 @@ app.use(express.static(process.cwd()))
 
 // launch the app
 // to open browser after success
-const serverPromise = new Promise((resolve, reject) => {
+const serverPromiseCloser = (PORT) => new Promise((resolve, reject) => {
   app.listen(PORT, err => {
     if (err) {
       Logger.error(`Failed to start server on port: ${PORT}`, err)
@@ -324,7 +322,7 @@ const serverPromise = new Promise((resolve, reject) => {
   })
 })
 
-module.exports = serverPromise
+module.exports = serverPromiseCloser
 
 /*
   go to ./handle-request/index.js for the next step in your journey
