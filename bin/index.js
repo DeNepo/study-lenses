@@ -58,16 +58,15 @@ const cliPortSearch = process.argv.find(entry => {
   }
   return false;
 });
+
 const cliPort = cliPortSearch !== undefined
   ? cliPortSearch.split('=')[1]
   : undefined;
-
 
 let rootStudyConfig = {};
 try {
   rootStudyConfig = require(path.join(process.cwd(), 'study.json'));
 } catch (o_0) { }
-
 /**
 * @param {Object} object
 * @param {string} key
@@ -82,6 +81,8 @@ const getParameterCaseInsensitive = (object, key) => {
 const rootStudyConfigPort = getParameterCaseInsensitive(rootStudyConfig, 'port');
 const rootStudyConfigPortValidated = (!Number.isNaN(rootStudyConfigPort) && rootStudyConfigPort >= 3000 && rootStudyConfigPort < 9000)
   ? rootStudyConfigPort : undefined;
+
+
 const port = process.env.PORT || cliPort || rootStudyConfigPortValidated || config.PORT;
 
 const queryMarker = defaultLense ? '?' : ''

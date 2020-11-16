@@ -18,6 +18,7 @@ const readFilePromise = util.promisify(fs.readFile)
 
 const getInfo = require('../get-info.js')
 const isItAFile = require('../../lib/is-it-a-file')
+const isItADirectory = require('../../lib/is-it-a-directory')
 const deepSortChildren = require('./deep-sort-children.js')
 
 const deepMerge = require('deepmerge');
@@ -51,8 +52,13 @@ const renderVirtualDirectory = async ({ absolutePath, gitignore = [], studyConfi
     return getInfo(absolutePath, process.cwd())
   }
 
+  if (!isItADirectory(absolutePath)) {
+    return getInfo(absolutePath, process.cwd())
+  }
+
 
   const paths = fs.readdirSync(absolutePath)
+
 
 
   if (paths.includes('study.json')) {

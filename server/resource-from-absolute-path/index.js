@@ -29,6 +29,7 @@ const renderPath = async ({ absolutePath = '', cwd = process.cwd(), localConfigs
   try {
     const requestedADirectory = fs.lstatSync(absolutePath).isDirectory()
     if (requestedADirectory) {
+
       content = await renderVirtualDirectory({
         absolutePath: absolutePath,
         studyConfig: localConfigs

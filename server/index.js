@@ -80,11 +80,13 @@ const combineMerge = (target, source, options) => {
   return destination
 }
 
-
 const configurePlugins = require('./configure-plugins')
+
+const gitbookify = require('./gitbookify/index.js');
 
 
 const Logger = require('./lib/logger.js');
+const gitbookfiy = require('./gitbookify/index.js');
 // const Logger = console
 
 
@@ -165,6 +167,30 @@ app.use(async (req, res, next) => {
     return;
   }
 
+
+  if (queryKeys.includes('--defaults')) {
+    const localTypeConfig = localConfigs['--defaults'][path.extname(req.path)];
+    if (typeof localTypeConfig === 'string') {
+      const splitLocalTypeConfig = localTypeConfig.split('&');
+      const parsedLocalTypeConfigs = splitLocalTypeConfig.map(param => {
+        const key = param.split('=')[0];
+        const value = param.split('=')[1];
+        if (value) {
+          let parsedValue = value
+          try {
+            parsedValue = JSON.parse(value);
+          } catch (o_0) { }
+          return [key, parsedValue]
+        } else {
+          return [key, '']
+        }
+      });
+      for (const paramConfig of parsedLocalTypeConfigs) {
+        req.query[paramConfig[0]] = paramConfig[1];
+      }
+    }
+  }
+
   // filter for the requested plugins (url params)
   //  configure them with local & param configurations
   const options = configurePlugins((await optionsPromise), localConfigs, req.query)
@@ -187,7 +213,6 @@ app.use(async (req, res, next) => {
   }
 
   const resource = await resourceFromAbsolutePath({ absolutePath, localConfigs });
-
   // if there was an error fetching the resource
   //  fallback to static serving
   // express.static can handle the error
@@ -195,6 +220,7 @@ app.use(async (req, res, next) => {
     next();
     return;
   }
+
 
   const requestData = {
     path: req.path,
@@ -227,7 +253,9 @@ app.use(async (req, res, next) => {
   if (error) {
     // send?
     // fallback to static?
-    return
+    console.error(error)
+    next()
+    return;
   }
 
   const mimeType = mime.getType(finalResource.info.ext)
@@ -297,10 +325,17 @@ app.use(async (req, res, next) => {
     return
   }
 
-  // // render something like a gitbook if there's a summary.md
-  // todo
+  const summaryMdPath = path.join(absolutePath, 'summary.md')
+  if (fs.existsSync(summaryMdPath)) {
+    const rawMarkdown = await readFilePromise(summaryMdPath, 'utf-8')
+    const renderedMarkdown = gitbookfiy(rawMarkdown)
+    res.set('Content-Type', 'text/html')
+    res.status(200)
+    res.end(renderedMarkdown)
+    return
+  }
 
-  // if there wasn't an index.html or a README, go on to static serving
+  // if there wasn't an index.html, SUMMARY.md, or README, go on to static serving
   next()
 })
 

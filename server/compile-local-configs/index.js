@@ -30,7 +30,6 @@ const combineMerge = (target, source, options) => {
 
 
 const compileLocalConfigs = (absPath, config) => {
-
   const pastTheTop = absPath.search(process.cwd()) === -1;
   if (pastTheTop) {
     // console.log('past the top')
@@ -47,7 +46,7 @@ const compileLocalConfigs = (absPath, config) => {
   if (isFile) {
     // console.log('path is a file')
     return compileLocalConfigs(path.dirname(absPath), config);
-  };
+  }
 
   const configPath = path.join(absPath, 'study.json');
   const hasConfig = fs.existsSync(configPath);
@@ -56,7 +55,6 @@ const compileLocalConfigs = (absPath, config) => {
     // console.log('no config here')
     return compileLocalConfigs(path.dirname(absPath), config);
   }
-
 
   let currentConfig = {};
   try {
@@ -70,7 +68,6 @@ const compileLocalConfigs = (absPath, config) => {
   // console.log('config:', config)
   const newConfig = deepMerge(currentConfig, config, { arrayMerge: combineMerge });
   // console.log('newConfig:', newConfig)
-
 
   const oneUp = path.dirname(absPath);
   return compileLocalConfigs(oneUp, newConfig);

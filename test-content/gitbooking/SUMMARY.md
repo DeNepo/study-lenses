@@ -1,0 +1,13 @@
+- sub-folder
+  - [file.css](./sub-folder/file.css)
+  - [file.html](./sub-folder/file.html)
+  - [file.js](./sub-folder/file.js)
+  - [file.re.js](./sub-folder/file.re.js)
+  - [file.json](./sub-folder/file.json)
+- [file.jsx](./file.jsx)
+- [file.re.js](./file.re.js)
+- [file.md](./file.md)
+- [file.mmd](./file.mmd)
+- [file.p5.js](./file.p5.js)
+- [file.ts](./file.ts)
+

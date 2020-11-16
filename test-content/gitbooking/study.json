@@ -1,0 +1,10 @@
+{
+  "study": {
+    "languages": {
+      "loopGuard": true
+    }
+  },
+  "hello-world": {
+    "/languages": "hi"
+  }
+}
