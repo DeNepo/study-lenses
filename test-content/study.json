@@ -6,5 +6,5 @@
     "/": "chups"
   },
   "--local-lenses": "./lenses",
-  "port": 8080
+  "Port": 8080
 }

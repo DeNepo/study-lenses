@@ -46,11 +46,6 @@ const defaultLense = (fs.existsSync(absPathToStudy) && fs.lstatSync(absPathToStu
   ? defaultLenses.directory
   : defaultLenses[path.extname(pathToStudy)];
 
-let rootStudyConfig = {};
-try {
-  rootStudyConfig = require(path.join(process.cwd(), 'study.json'));
-} catch (o_0) { }
-
 // user can define a port number to study
 const cliPortSearch = process.argv.find(entry => {
   if (/port=[\d]*/i.test(entry)) {
@@ -66,7 +61,28 @@ const cliPortSearch = process.argv.find(entry => {
 const cliPort = cliPortSearch !== undefined
   ? cliPortSearch.split('=')[1]
   : undefined;
-const port = process.env.PORT || cliPort || (typeof rootStudyConfig.port === 'number' ? rootStudyConfig.port : false) || config.PORT;
+
+
+let rootStudyConfig = {};
+try {
+  rootStudyConfig = require(path.join(process.cwd(), 'study.json'));
+} catch (o_0) { }
+
+/**
+* @param {Object} object
+* @param {string} key
+* @return {any} value
+* https://stackoverflow.com/a/47538066
+*/
+const getParameterCaseInsensitive = (object, key) => {
+  return object[Object.keys(object)
+    .find(k => k.toLowerCase() === key.toLowerCase())
+  ];
+}
+const rootStudyConfigPort = getParameterCaseInsensitive(rootStudyConfig, 'port');
+const rootStudyConfigPortValidated = (!Number.isNaN(rootStudyConfigPort) && rootStudyConfigPort >= 3000 && rootStudyConfigPort < 9000)
+  ? rootStudyConfigPort : undefined;
+const port = process.env.PORT || cliPort || rootStudyConfigPortValidated || config.PORT;
 
 const queryMarker = defaultLense ? '?' : ''
 
@@ -81,7 +97,6 @@ console.log('studying: ', url);
 // launch the server
 require('../server/index.js')(port)
   .then(_ => require('open')(url));
-
 
 
 
