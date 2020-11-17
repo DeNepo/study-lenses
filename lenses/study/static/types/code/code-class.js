@@ -29,7 +29,7 @@ export class CodeFE {
     if (this.config.locals.save === true) {
       document.getElementById('save-button')
         .addEventListener('click', () => {
-          fetch(window.location.origin + window.location.pathname + '?study&--debug', {
+          fetch(window.location.origin + window.location.pathname + '?study', {
             method: 'POST',
             headers: {
               'Accept': 'application/json',

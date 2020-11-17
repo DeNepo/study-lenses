@@ -117,10 +117,24 @@ class JavaScriptSSR extends CodeSSR {
   }
 
   scriptsBody() {
-    const superScriptsBody = super.scriptsBody()
-    return `${superScriptsBody}
-    <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>
+    let superScriptsBody = super.scriptsBody()
+    superScriptsBody += `<script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>
     <script src='${this.config.ownStatic}/types/javascript/static/aran-build.js'></script>`
+
+    const base = this.resource.info.base.toLowerCase();
+    if (base.includes('.test.') || base.includes('.spec.')) {
+      superScriptsBody += `<script src='${this.config.ownStatic}/dependencies/describe-it.js'></script>
+      <script>
+        define('chai',
+          ["${this.config.ownStatic}/dependencies/chai-and-chai-dom.js"],
+          function (require, exports, beta) {
+            return require;
+          }
+        );
+      </script>`
+    }
+
+    return superScriptsBody
   }
 
 }

@@ -3,6 +3,7 @@
 /* Red, Green, Refactor
   this is an idea from Test Driven Development
   when you write code with tests you should follow this process:
+
   1. run the tests and see what fails (red)
   2. write some code to pass SOME of the failing tests (green)
   3. rewrite the passing code so it's better code but still passes (refactor)

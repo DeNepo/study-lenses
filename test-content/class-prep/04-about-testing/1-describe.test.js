@@ -1,7 +1,5 @@
 'use strict';
 
-const assert = chai.assert;
-
 
 // describe helps to group test cases, it doesn't do much more than that
 describe('repeatString should repeat strings', () => {

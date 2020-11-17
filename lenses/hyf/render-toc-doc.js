@@ -15,8 +15,9 @@ const readFilePromise = util.promisify(fs.readFile)
 const tableOfContents = ({ dirElement, top = false, defaults = {} }) => {
 
   if (dirElement.type === 'file') {
+    const isRe = dirElement.base.toLowerCase().includes('.re.');
     const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
-    return `<li><a href="${relativePath}?--defaults" target="_blank">${dirElement.base}</a></li>\n`;
+    return `<li><a href="${relativePath}?${isRe ? 'min&' : ''}--defaults" target="_blank">${dirElement.base}</a></li>\n`;
   }
 
   if (dirElement.type === 'directory') {
