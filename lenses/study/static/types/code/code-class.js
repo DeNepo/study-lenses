@@ -3,6 +3,7 @@ export class CodeFE {
 
   config = {}
   editor = null
+  theme = 'vs-dark'
 
   constructor(config) {
     this.config = config
@@ -18,6 +19,20 @@ export class CodeFE {
     //     this.readOnly = !this.readOnly
     //     this.editor.updateOptions({ readOnly: this.readOnly })
     //   })
+
+    // default to editable, don't expose option for read-only
+    const themeButton = document.getElementById('theme-button');
+    themeButton.addEventListener('click', () => {
+      if (this.theme === 'vs-dark') {
+        this.editor.updateOptions({ theme: 'vs-light' })
+        this.theme = 'vs-light';
+      } else {
+        this.editor.updateOptions({ theme: 'vs-dark' })
+        this.theme = 'vs-dark';
+      }
+
+    })
+
 
     document.getElementById('format-button')
       .addEventListener('click', () =>
@@ -135,7 +150,7 @@ export class CodeFE {
         language: monacoExtToLanguage[config.ext] || '',
         roundedSelection: true,
         scrollBeyondLastLine: false,
-        theme: "vs-dark",
+        theme: this.theme,
         wrappingIndent: "indent",
         wordWrap: 'wordWrapColumn',
         wordWrapColumn: 100,

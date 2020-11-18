@@ -30,6 +30,8 @@ class CodeSSR {
     ${this.config.locals.save == true ? `<button id='save-button'>save changes</button>` : ''}
     <button id='permalink-button'>permalink</button>
     ||
+    <button id='theme-button'>change theme</button>
+    ||
     <button id='parsonize-selection-button'>parsonize selection</button>
     <button id='diff-selection-button' style='display: none;'>scramble selection</button><div id='buttons-panel'></div>`
   }
