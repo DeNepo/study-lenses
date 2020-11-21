@@ -42,6 +42,8 @@ const pipeResource = async ({
 
   pipingResource: for (const lens of lenses) {
 
+    // console.log(':  ' + lens.queryKey);
+
 
     beforeEach: {
       const beforeEachReturned = await evaluateHooks({

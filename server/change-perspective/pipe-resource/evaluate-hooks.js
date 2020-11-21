@@ -13,8 +13,8 @@ const evaluateHooks = async ({
   const errors = []
   try {
     for (const hook of hooks) {
+      // console.log(':   ' + hook.queryKey + ' hook');
 
-      // console.log(hook.queryKey)
 
       const returned = await hook({
         requestData: deepClone(requestData),

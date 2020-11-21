@@ -23,6 +23,8 @@ const evaluateOptions = async ({ requestData, responseData, resource, options, l
 
   pipeOptions: for (const nextOption of options) {
 
+    console.log(':  ' + nextOption.queryKey);
+
     const config = Object.assign({}, nextOption)
     delete config.module
 

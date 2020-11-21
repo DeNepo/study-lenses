@@ -12,7 +12,7 @@ const fooy = '123';
 
 asdf
 
-```js
+```javascript
 for (let i = 0; i < foo; i++) {
   console.log(i);
 }
