@@ -1,40 +1,43 @@
 class CodeAlongComponent extends HTMLElement {
-
-  sourceCode = '';
+  sourceCode = "";
   editor = null;
   editorContainer = null;
   loopGuard = { active: false, max: 50 };
   jsTutor = false;
 
-  constructor(code = '', config = {}) {
+  constructor(code = "", config = {}) {
     super();
     this.sourceCode = code;
     if (!config) {
       return;
     }
-    if (config.loopGuard) {
-      this.loopGuard = config.loopGuard
+    if (config.loopGuard && typeof config.loopGuard === "object") {
+      this.loopGuard = config.loopGuard;
+    } else if (config.loopGuard === true) {
+      this.loopGuard = {
+        active: false,
+        max: 50,
+      };
     }
-    if (config.openIn === 'jsTutor' || config.openIn === 'jsTutorLive') {
-      this.jsTutor = true
+    if (config.openIn === "jsTutor" || config.openIn === "jsTutorLive") {
+      this.jsTutor = true;
     }
   }
 
   async connectedCallback() {
-
-    if (this.hasAttribute('js-tutor')) {
+    if (this.hasAttribute("js-tutor")) {
       this.jsTutor = true;
     }
 
-    if (this.hasAttribute('loop-guard')) {
+    if (this.hasAttribute("loop-guard")) {
       this.loopGuard = {
         active: false,
-        max: 20
+        max: 20,
       };
     }
 
     if (!this.sourceCode) {
-      if (this.getAttribute('src')) {
+      if (this.getAttribute("src")) {
         try {
           const res = await fetch(srcPath);
           this.sourceCode = await res.text();
@@ -43,101 +46,101 @@ class CodeAlongComponent extends HTMLElement {
           return;
         }
       } else {
-        const firstPre = this.getElementsByTagName('pre')[0];
+        const firstPre = this.getElementsByTagName("pre")[0];
         if (firstPre) {
           this.sourceCode = firstPre.innerText;
         }
       }
     }
 
-
-    const buttonsContainer = document.createElement('div');
-    buttonsContainer.style.height = 'inherit';
-    buttonsContainer.style.width = 'inherit';
-    buttonsContainer.style.paddingTop = '1em';
+    const buttonsContainer = document.createElement("div");
+    buttonsContainer.style.height = "inherit";
+    buttonsContainer.style.width = "inherit";
+    buttonsContainer.style.paddingTop = "1em";
     this.appendChild(buttonsContainer);
 
-    const consoleButton = document.createElement('button');
-    consoleButton.innerHTML = 'console';
+    const consoleButton = document.createElement("button");
+    consoleButton.innerHTML = "console";
     consoleButton.onclick = () => {
       eval(this.code);
     };
     buttonsContainer.appendChild(consoleButton);
 
-
-    const debuggerButton = document.createElement('button');
-    debuggerButton.innerHTML = 'debugger';
-    debuggerButton.onclick = () => eval('debugger;\n\n' + this.code);
+    const debuggerButton = document.createElement("button");
+    debuggerButton.innerHTML = "debugger";
+    debuggerButton.onclick = () => eval("debugger;\n\n" + this.code);
     buttonsContainer.appendChild(debuggerButton);
 
     if (this.jsTutor) {
-      const jsTutorButton = document.createElement('button');
-      jsTutorButton.innerHTML = 'JS Tutor';
+      const jsTutorButton = document.createElement("button");
+      jsTutorButton.innerHTML = "JS Tutor";
       jsTutorButton.onclick = () => {
         const encodedJST = encodeURIComponent(this.code);
         const sanitizedJST = encodedJST
-          .replace(/\(/g, '%28')
-          .replace(/\)/g, '%29')
-          .replace(/%09/g, '%20%20');
-        const jsTutorURL = "http://www.pythontutor.com/live.html#code=" + sanitizedJST + "&cumulative=false&curInstr=2&heapPrimitives=false&mode=display&origin=opt-live.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false"
-        window.open(jsTutorURL, '_blank')
+          .replace(/\(/g, "%28")
+          .replace(/\)/g, "%29")
+          .replace(/%09/g, "%20%20");
+        const jsTutorURL =
+          "http://www.pythontutor.com/live.html#code=" +
+          sanitizedJST +
+          "&cumulative=false&curInstr=2&heapPrimitives=false&mode=display&origin=opt-live.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false";
+        window.open(jsTutorURL, "_blank");
       };
       buttonsContainer.appendChild(jsTutorButton);
     }
 
-
-    buttonsContainer.appendChild(document.createTextNode(' || '));
-
-
+    buttonsContainer.appendChild(document.createTextNode(" || "));
 
     if (this.loopGuard) {
-      const loopGuardForm = document.createElement('form');
-      loopGuardForm.style = 'display: inline;';
+      const loopGuardForm = document.createElement("form");
+      loopGuardForm.style = "display: inline;";
       const idIdentifier = Math.random().toString(36).substring(7);
       loopGuardForm.innerHTML = `
-      <input id='active-${idIdentifier}' name='active' name='active' type='checkbox' ${this.loopGuard.active ? 'checked' : ''}/>
+      <input id='active-${idIdentifier}' name='active' name='active' type='checkbox' ${
+        this.loopGuard.active ? "checked" : ""
+      }/>
       <label for='active-${idIdentifier}'>loop guard</label>
-      <input name='max' type='number' value='${this.loopGuard.max}' style='width: 3em;' />
+      <input name='max' type='number' value='${
+        this.loopGuard.max
+      }' style='width: 3em;' />
     `;
-      loopGuardForm.addEventListener('change', (event) => {
-        this.loopGuard.active = event.target.form.active.checked
-        this.loopGuard.max = Number(event.target.form.max.value)
+      loopGuardForm.addEventListener("change", (event) => {
+        this.loopGuard.active = event.target.form.active.checked;
+        this.loopGuard.max = Number(event.target.form.max.value);
       });
       buttonsContainer.appendChild(loopGuardForm);
     }
 
-
-
-    const formatButton = document.createElement('button');
-    formatButton.innerHTML = 'format';
-    formatButton.addEventListener('click', () => {
+    const formatButton = document.createElement("button");
+    formatButton.innerHTML = "format";
+    formatButton.addEventListener("click", () => {
       // https://github.com/react-monaco-editor/react-monaco-editor/pull/212
-      this.editor.executeEdits('', [{
-        range: this.editor.getModel().getFullModelRange(),
-        text: this.prettierFormat(this.editor.getValue()),
-        forceMoveMarkers: true
-      }]);
+      this.editor.executeEdits("", [
+        {
+          range: this.editor.getModel().getFullModelRange(),
+          text: this.prettierFormat(this.editor.getValue()),
+          forceMoveMarkers: true,
+        },
+      ]);
     });
     buttonsContainer.appendChild(formatButton);
-
 
     this.createEditor();
     this.editor.setValue(this.sourceCode);
 
-    this.appendChild(document.createElement('br'));
+    this.appendChild(document.createElement("br"));
     this.appendChild(this.editorContainer);
 
     try {
       Prism.highlightAllUnder;
 
-      const highlightButton = document.createElement('button');
-      highlightButton.innerText = 'highlight';
-      highlightButton.addEventListener('click', () => {
-
+      const highlightButton = document.createElement("button");
+      highlightButton.innerText = "highlight";
+      highlightButton.addEventListener("click", () => {
         // Prism.manual = true;
-        const pre = document.createElement('pre');
-        const code = document.createElement('code');
-        code.className = 'language-js line-numbers';
+        const pre = document.createElement("pre");
+        const code = document.createElement("code");
+        code.className = "language-js line-numbers";
         code.innerHTML = this.editor.getValue();
         pre.appendChild(code);
         this.parentElement.replaceChild(pre, this);
@@ -145,22 +148,19 @@ class CodeAlongComponent extends HTMLElement {
         Prism.highlightAllUnder(pre);
       });
       buttonsContainer.appendChild(highlightButton);
-    } catch (o_0) { }
-
+    } catch (o_0) {}
   }
-
 
   get code() {
     const editorCode = this.editor.getValue();
-    if (this.loopGuard &&
-      !this.loopGuard.active) {
+    if (this.loopGuard && !this.loopGuard.active) {
       return editorCode;
     }
 
-    let loopNum = 0
+    let loopNum = 0;
     const loopHeadRegex = /(for|while)([\s]*)\(([^\{]*)\{|do([\s]*)\{/gm;
-    const loopGuarded = editorCode.replace(loopHeadRegex, loopHead => {
-      const id = ++loopNum
+    const loopGuarded = editorCode.replace(loopHeadRegex, (loopHead) => {
+      const id = ++loopNum;
       const newLine = `let loopGuard_${id} = 0\n${loopHead}\nif (++loopGuard_${id} > ${this.loopGuard.max}) { throw new RangeError('loopGuard_${id} is greater than ${this.loopGuard.max}') }\n`;
       return newLine;
     });
@@ -169,17 +169,14 @@ class CodeAlongComponent extends HTMLElement {
   }
 
   formatPrettier(code = this.editor.getValue()) {
-
-    let formattedCode = ''
-    let noSyntaxErrors = false
+    let formattedCode = "";
+    let noSyntaxErrors = false;
     try {
-      formattedCode = prettier.format(
-        code,
-        {
-          parser: "babel",
-          plugins: prettierPlugins,
-        })
-      noSyntaxErrors = true
+      formattedCode = prettier.format(code, {
+        parser: "babel",
+        plugins: prettierPlugins,
+      });
+      noSyntaxErrors = true;
     } catch (err) {
       return code;
     }
@@ -187,81 +184,80 @@ class CodeAlongComponent extends HTMLElement {
     if (noSyntaxErrors) {
       return formattedCode;
     }
-
   }
 
   createEditor() {
-    this.editorContainer = document.createElement('div');
+    this.editorContainer = document.createElement("div");
 
-    this.editorContainer.style.overflow = 'hidden';
-    this.editorContainer.style.height = 'inherit';
-    this.editorContainer.style.width = 'inherit';
-
+    this.editorContainer.style.overflow = "hidden";
+    this.editorContainer.style.height = "inherit";
+    this.editorContainer.style.width = "inherit";
 
     this.editor = monaco.editor.create(this.editorContainer, {
-      language: 'javascript',
+      language: "javascript",
       roundedSelection: true,
       scrollBeyondLastLine: false,
       theme: "vs-dark",
       wrappingIndent: "indent",
-      wordWrap: 'wordWrapColumn',
+      wordWrap: "wordWrapColumn",
       wordWrapColumn: 100,
       automaticLayout: true,
       tabSize: 2,
       scrollBeyondLastLine: false,
-      wordWrap: 'on',
-      wrappingStrategy: 'advanced',
+      wordWrap: "on",
+      wrappingStrategy: "advanced",
       minimap: {
-        enabled: false
+        enabled: false,
       },
       overviewRulerLanes: 0,
-      fontSize: 12
+      fontSize: 12,
     });
 
     // https://github.com/microsoft/monaco-editor/issues/794#issuecomment-688959283
     this.editor.onDidChangeModelDecorations(() => {
-      updateEditorHeight() // typing
-      requestAnimationFrame(updateEditorHeight) // folding
-    })
+      updateEditorHeight(); // typing
+      requestAnimationFrame(updateEditorHeight); // folding
+    });
 
-    const lineHeight = this.editor.getOption(monaco.editor.EditorOption.lineHeight)
-    const lineCount = this.editor.getModel()?.getLineCount() || 1
-    let prevHeight = this.editor.getTopForLineNumber(lineCount + 1) + lineHeight
-
+    const lineHeight = this.editor.getOption(
+      monaco.editor.EditorOption.lineHeight
+    );
+    const lineCount = this.editor.getModel()?.getLineCount() || 1;
+    let prevHeight =
+      this.editor.getTopForLineNumber(lineCount + 1) + lineHeight;
 
     const updateEditorHeight = () => {
-      const editorElement = this.editor.getDomNode()
+      const editorElement = this.editor.getDomNode();
 
       if (!editorElement) {
-        return
+        return;
       }
 
-      const lineHeight = this.editor.getOption(monaco.editor.EditorOption.lineHeight) + 1
-      const lineCount = this.editor.getModel() && this.editor.getModel().getLineCount() || 2
-      const height = this.editor.getTopForLineNumber(lineCount + 1) + lineHeight
+      const lineHeight =
+        this.editor.getOption(monaco.editor.EditorOption.lineHeight) + 1;
+      const lineCount =
+        (this.editor.getModel() && this.editor.getModel().getLineCount()) || 2;
+      const height =
+        this.editor.getTopForLineNumber(lineCount + 1) + lineHeight;
 
       if (prevHeight !== height) {
-        prevHeight = height
-        editorElement.style.height = `${height}px`
-        this.editor.layout()
+        prevHeight = height;
+        editorElement.style.height = `${height}px`;
+        this.editor.layout();
       }
-    }
+    };
     setTimeout(() => updateEditorHeight(), 100);
-
   }
 
   prettierFormat(code = this.editor.getValue()) {
-
-    let formattedCode = ''
-    let noSyntaxErrors = false
+    let formattedCode = "";
+    let noSyntaxErrors = false;
     try {
-      formattedCode = prettier.format(
-        code,
-        {
-          parser: "babel",
-          plugins: prettierPlugins,
-        })
-      noSyntaxErrors = true
+      formattedCode = prettier.format(code, {
+        parser: "babel",
+        plugins: prettierPlugins,
+      });
+      noSyntaxErrors = true;
     } catch (err) {
       return code;
     }
@@ -270,8 +266,6 @@ class CodeAlongComponent extends HTMLElement {
       return formattedCode;
     }
   }
-
 }
 
-customElements.define('code-along', CodeAlongComponent);
-
+customElements.define("code-along", CodeAlongComponent);
