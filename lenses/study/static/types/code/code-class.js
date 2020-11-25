@@ -5,10 +5,16 @@ export class CodeFE {
   editor = null
   theme = 'vs-dark'
 
-  constructor(config) {
-    this.config = config
-    this.initUi()
-    this.initEditor()
+  constructor(config, editor = true) {
+    this.config = config;
+    try {
+      this.initUi()
+    } catch (err) {
+      // console.error(err);
+    }
+    if (editor) {
+      this.initEditor()
+    }
   }
 
   initUi() {

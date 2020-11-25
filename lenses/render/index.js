@@ -1,5 +1,9 @@
 const marked = require('marked');
 
+marked.setOptions({
+  langPrefix: 'line-numbers language-'
+})
+
 const renderLense = async ({ resource, config }) => {
 
   if (resource.info.ext !== '.md') {
@@ -17,6 +21,7 @@ const renderLense = async ({ resource, config }) => {
   <body>
     <main class="markdown-body">${marked(resource.content)}</main>
     <script src="${config.sharedStatic}/prism/script.js"></script>
+    <script src="${config.sharedStatic}/prism/toolbar.js"></script>
   </body>
 </html>`;
     resource.info.ext = '.html';
