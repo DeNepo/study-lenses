@@ -1,5 +1,3 @@
+const defaultsOption = () => {};
 
-const defaultsOption = () => { }
-
-
-module.exports = defaultsOption
+module.exports = defaultsOption;

@@ -1,47 +1,46 @@
-'use strict'
+"use strict";
 
-const path = require('path');
+const path = require("path");
 
-const prettier = require('prettier');
+const prettier = require("prettier");
 
 // map from file extensions to possible md fence names
 // this is used in the regex to extract all language code blocks
 // regex is case insensitive
 const extensionMap = {
-  '.md': {
+  ".md": {
     comment: (text) => `<!-- ${text} -->`,
-    fenceNames: ['markdown', 'md'],
+    fenceNames: ["markdown", "md"],
   },
-  '.js': {
+  ".js": {
     comment: (text) => `/* ${text} */`,
-    fenceNames: ['javascript', 'js'],
+    fenceNames: ["javascript", "js"],
   },
-  '.ts': {
+  ".ts": {
     comment: (text) => `/* ${text} */`,
-    fenceNames: ['typescript', 'ts'],
+    fenceNames: ["typescript", "ts"],
   },
-  '.py': {
+  ".py": {
     comment: (text) => `''' ${text} '''`,
-    fenceNames: ['python', 'py'],
+    fenceNames: ["python", "py"],
   },
-  '.css': {
+  ".css": {
     comment: (text) => `/* ${text} */`,
-    fenceNames: ['css'],
+    fenceNames: ["css"],
   },
-  '.html': {
+  ".html": {
     comment: (text) => `<!-- ${text} -->`,
-    fenceNames: ['html'],
+    fenceNames: ["html"],
   },
-  '.json': {
+  ".json": {
     comment: (_) => ``,
-    fenceNames: ['json'],
+    fenceNames: ["json"],
   },
-  '.jsx': {
+  ".jsx": {
     comment: (text) => `{/* ${text} */}`,
-    fenceNames: ['jsx'],
+    fenceNames: ["jsx"],
   },
-}
-
+};
 
 /**
  * extracts the code blocks from a literate markdown file
@@ -53,30 +52,31 @@ const extensionMap = {
  *  content: '', // the new file content, unchanged if not literate, or with code extracted
  * }
  */
-const simplit = (fileName = '', content = '', commentSections = true) => {
-
-  const isMarkdownFile = path.extname(fileName) === '.md';
+const simplit = (fileName = "", content = "", commentSections = true) => {
+  const isMarkdownFile = path.extname(fileName) === ".md";
   if (!isMarkdownFile) {
-    return { fileName, content }
+    return { fileName, content };
   }
 
   const numberOfDotsInFileName = fileName.replace(/[^.]/g, "").length;
   const isLiterateFileName = numberOfDotsInFileName > 1;
   if (!isLiterateFileName) {
-    return { fileName, content }
+    return { fileName, content };
   }
 
-  fileName = path.basename(fileName.replace(path.extname(fileName), ''));
+  fileName = path.basename(fileName.replace(path.extname(fileName), ""));
   const extName = path.extname(fileName);
 
-
   const chunkSeparator = !commentSections
-    ? (_) => '\n\n'
+    ? (_) => "\n\n"
     : (text) => `\n\n\n${extensionMap[extName].comment(text)}\n\n`;
 
   const fenceNames = extensionMap[extName].fenceNames;
-  const regex = new RegExp('```(?:' + fenceNames.join('|') + ')(?<code>[\\s\\S]*?)(?:```)', 'gim');
-
+  // refactor: https://github.com/regexhq/gfm-code-block-regex/blob/master/index.js
+  const regex = new RegExp(
+    "```(?:" + fenceNames.join("|") + ")(?<code>[\\s\\S]*?)(?:```)",
+    "gim"
+  );
   const matches = content.matchAll(regex);
 
   const codeFences = [];
@@ -86,35 +86,33 @@ const simplit = (fileName = '', content = '', commentSections = true) => {
     }
   }
 
-  let extractedCode = '';
+  let extractedCode = "";
   for (let i = 0; i < codeFences.length; i++) {
     const fenceCode = codeFences[i];
-    const separator = chunkSeparator('chunk ' + (i + 1));
+    const separator = chunkSeparator("chunk " + (i + 1));
     extractedCode += separator + fenceCode;
   }
 
-
   let formatted = extractedCode;
   try {
-    formatted = (extName === '.js' || extName === '.ts')
-      ? prettier.format(extractedCode, { parser: "babel-ts" })
-      : extName === '.html'
+    formatted =
+      extName === ".js" || extName === ".ts"
+        ? prettier.format(extractedCode, { parser: "babel-ts" })
+        : extName === ".html"
         ? prettier.format(extractedCode, { parser: "html" })
-        : extName === '.css'
-          ? prettier.format(extractedCode, { parser: "css" })
-          : extName === '.json'
-            ? prettier.format(extractedCode, { parser: "json" })
-            : extractedCode;
+        : extName === ".css"
+        ? prettier.format(extractedCode, { parser: "css" })
+        : extName === ".json"
+        ? prettier.format(extractedCode, { parser: "json" })
+        : extractedCode;
   } catch (er) {
-    console.log(err)
+    console.log(err);
   }
-
 
   return {
     fileName,
-    content: formatted
-  }
+    content: formatted,
+  };
 };
-
 
 module.exports = simplit;

@@ -1,12 +1,11 @@
-const marked = require('marked');
+const marked = require("marked");
 
 marked.setOptions({
-  langPrefix: 'line-numbers language-'
-})
+  langPrefix: "line-numbers language-",
+});
 
 const renderLense = async ({ resource, config }) => {
-
-  if (resource.info.ext !== '.md') {
+  if (resource.info.ext !== ".md") {
     return resource;
   }
 
@@ -24,13 +23,13 @@ const renderLense = async ({ resource, config }) => {
     <script src="${config.sharedStatic}/prism/toolbar.js"></script>
   </body>
 </html>`;
-    resource.info.ext = '.html';
+    resource.info.ext = ".html";
   } catch (err) {
     console.log(err);
   }
 
   return {
-    resource
+    resource,
   };
 };
 

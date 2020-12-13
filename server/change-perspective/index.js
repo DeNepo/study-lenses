@@ -1,26 +1,24 @@
-'use strict';
+"use strict";
 
-const util = require('util')
+const util = require("util");
 
-const evaluateOptions = require('./evaluate-options')
-const pipeResource = require('./pipe-resource')
+const evaluateOptions = require("./evaluate-options");
+const pipeResource = require("./pipe-resource");
 
 const changePerspective = async ({
   requestData,
   responseData,
   lenses,
   options,
-  resource
+  resource,
 }) => {
-
-
   let configuredHooks = {
     beforeAll: [],
     afterAll: [],
     beforeEach: [],
     afterEach: [],
-    onError: []
-  }
+    onError: [],
+  };
   if (options) {
     // evaluate options
     // if the options modify the resource or response data, send immediately
@@ -28,9 +26,11 @@ const changePerspective = async ({
     //  only to intercept it
     const {
       optionedResource,
+      optionedRequestData,
       optionedResponseData,
       hooks,
       abort, // fallback to static serving
+      overWritten, // the resource was overwritten by a non-modifying option
       optionError, // not sure what to do about this
     } = await evaluateOptions({
       resource,
@@ -38,64 +38,67 @@ const changePerspective = async ({
       responseData,
       options,
       lenses,
-    })
+    });
 
     if (abort) {
       return {
-        abort
-      }
+        abort,
+      };
     }
 
-    // check if an option
+    // check if an option modified the response
     //  if they did, send the response immediately and return early
-    if (
-      !util.isDeepStrictEqual(optionedResponseData, responseData)
-      || !util.isDeepStrictEqual(optionedResource, resource)
-    ) {
+    if (overWritten) {
+      // if (
+      //   !util.isDeepStrictEqual(optionedResponseData, responseData) ||
+      //   !util.isDeepStrictEqual(optionedResource, resource)
+      // ) {
       return {
         finalResource: optionedResource,
-        finalResponseData: optionedResponseData
-      }
+        finalResponseData: optionedResponseData,
+      };
+    } else {
+      resource = optionedResource || resource;
+      requestData = optionedRequestData || requestData;
+      responseData = optionedResponseData || responseData;
     }
 
-    configuredHooks = hooks
+    configuredHooks = hooks;
   }
 
-  let finalResource = resource
-  let finalResponseData = responseData
+  let finalResource = resource;
+  let finalResponseData = responseData;
   if (lenses) {
-
     const {
       pipedResource,
       pipedResponseData,
       abort,
       lenseError, // not sure what to do about these
-      hookErrors
+      hookErrors,
     } = await pipeResource({
       resource,
       requestData,
       responseData,
       lenses,
-      hooks: configuredHooks
-    })
+      hooks: configuredHooks,
+    });
 
     if (abort) {
       return {
-        abort
-      }
+        abort,
+      };
     }
     // console.log(pipedResource)
     // console.log(pipedResponseData)
 
-    finalResponseData = pipedResponseData || finalResponseData
-    finalResource = pipedResource || finalResource
+    finalResponseData = pipedResponseData || finalResponseData;
+    finalResource = pipedResource || finalResource;
   }
-
 
   return {
     finalResponseData,
     finalResource,
-  }
-}
+  };
+};
 
-module.exports = changePerspective
+module.exports = changePerspective;

@@ -1,137 +1,148 @@
-'use strict';
+"use strict";
 
 // start an express server, pretty standard stuff
 
-
 // dependencies & config ...
-const path = require('path');
-const fs = require('fs');
-const util = require('util')
-const readFilePromise = util.promisify(fs.readFile)
+const path = require("path");
+const fs = require("fs");
+const util = require("util");
+const readFilePromise = util.promisify(fs.readFile);
 
-process.env['NODE_CONFIG_DIR'] = path.join(__dirname, '..', "config");
-const config = require('config')
-const localTopLevelConfigPath = path.join(process.cwd(), 'study.json')
-if (fs.existsSync(localTopLevelConfigPath) && fs.lstatSync(localTopLevelConfigPath).isFile()) {
+process.env["NODE_CONFIG_DIR"] = path.join(__dirname, "..", "config");
+const config = require("config");
+const localTopLevelConfigPath = path.join(process.cwd(), "study.json");
+if (
+  fs.existsSync(localTopLevelConfigPath) &&
+  fs.lstatSync(localTopLevelConfigPath).isFile()
+) {
   try {
-    const localTopLevelConfig = require(localTopLevelConfigPath)
-    Object.assign(config.locals, localTopLevelConfig)
+    const localTopLevelConfig = require(localTopLevelConfigPath);
+    Object.assign(config.locals, localTopLevelConfig);
   } catch (err) {
-    console.log(err)
+    console.log(err);
   }
 }
 
-const express = require('express');
-const morgan = require('morgan');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const mime = require('mime');
-const marked = require('marked')
+const express = require("express");
+const morgan = require("morgan");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const mime = require("mime");
+const marked = require("marked");
 
-const deepClone = require('./lib/deep-clone.js')
+const deepClone = require("./lib/deep-clone.js");
 
-const compileLocalConfigs = require('./compile-local-configs')
-const resourceFromAbsolutePath = require('./resource-from-absolute-path')
-const changePerspective = require('./change-perspective')
-const loadPlugins = require('./load-plugins')
+const compileLocalConfigs = require("./compile-local-configs");
+const resourceFromAbsolutePath = require("./resource-from-absolute-path");
+const changePerspective = require("./change-perspective");
+const loadPlugins = require("./load-plugins");
 
-const optionsPath = path.join(__dirname, '..', 'options')
-const optionsPromise = loadPlugins('options', optionsPath)
+const optionsPath = path.join(__dirname, "..", "options");
+const optionsPromise = loadPlugins("options", optionsPath);
 
-const lensesPath = path.join(__dirname, '..', 'lenses')
-const lensesPromise = loadPlugins('lenses', lensesPath)
+const lensesPath = path.join(__dirname, "..", "lenses");
+const lensesPromise = loadPlugins("lenses", lensesPath);
 
 let localLensesPromise = null;
-let localLensesPath = '';
+let localLensesPath = "";
 let localLensesPathIsValid = false;
 // console.log(config.locals)
-if (typeof config.locals['--local-lenses'] === 'string') {
+if (typeof config.locals["--local-lenses"] === "string") {
   // console.log(config.locals['--local-lenses'])
-  localLensesPath = path.join(process.cwd(), config.locals['--local-lenses'])
+  localLensesPath = path.join(process.cwd(), config.locals["--local-lenses"]);
   // console.log(localLensesPath)
-  if (!fs.existsSync(localLensesPath) || !fs.lstatSync(localLensesPath).isFile()) {
-    localLensesPathIsValid = true
-    localLensesPromise = loadPlugins('local_lenses', localLensesPath)
+  if (
+    !fs.existsSync(localLensesPath) ||
+    !fs.lstatSync(localLensesPath).isFile()
+  ) {
+    localLensesPathIsValid = true;
+    localLensesPromise = loadPlugins("local_lenses", localLensesPath);
     // localLensesPromise.then(console.log)
   } else {
-    localLensesPath = ''
+    localLensesPath = "";
   }
 }
 
-
-const deepMerge = require('deepmerge');
+const deepMerge = require("deepmerge");
 const combineMerge = (target, source, options) => {
-  const destination = target.slice()
+  const destination = target.slice();
 
   source.forEach((item, index) => {
-    if (typeof destination[index] === 'undefined') {
-      destination[index] = options.cloneUnlessOtherwiseSpecified(item, options)
+    if (typeof destination[index] === "undefined") {
+      destination[index] = options.cloneUnlessOtherwiseSpecified(item, options);
     } else if (options.isMergeableObject(item)) {
-      const alreadyExists = destination.some(entry => util.isDeepStrictEqual(entry, item))
+      const alreadyExists = destination.some((entry) =>
+        util.isDeepStrictEqual(entry, item)
+      );
       if (!alreadyExists) {
-        destination.push(item)
+        destination.push(item);
       } else {
-        destination[index] = deepMerge(target[index], item, options)
+        destination[index] = deepMerge(target[index], item, options);
       }
     } else if (target.indexOf(item) === -1) {
-      destination.push(item)
+      destination.push(item);
     }
-  })
-  return destination
-}
+  });
+  return destination;
+};
 
-const configurePlugins = require('./configure-plugins')
+const configurePlugins = require("./configure-plugins");
 
-const gitbookify = require('./gitbookify/index.js');
+const gitbookify = require("./gitbookify/index.js");
 
-
-const Logger = require('./lib/logger.js');
-const gitbookfiy = require('./gitbookify/index.js');
+const Logger = require("./lib/logger.js");
+const gitbookfiy = require("./gitbookify/index.js");
 // const Logger = console
 
-
-
 // error and exit handling ...
-process.on('exit', function onExit(code) {
+process.on("exit", function onExit(code) {
   Logger.info(`process.exit with code ${code}`);
 });
 
-process.on('SIGINT', function onSIGINT() {
-  Logger.info('SIGINT received, stopping server');
+process.on("SIGINT", function onSIGINT() {
+  Logger.info("SIGINT received, stopping server");
   process.exit(0);
 });
 
-process.on('uncaughtException', function onUncaughtException(e) {
-  Logger.error('uncaughtException', e);
+process.on("uncaughtException", function onUncaughtException(e) {
+  Logger.error("uncaughtException", e);
   process.exit(99);
 });
 
-process.on('unhandledRejection', function onUnhandledPromise(e) {
-  Logger.error('unhandledRejection', e);
+process.on("unhandledRejection", function onUnhandledPromise(e) {
+  Logger.error("unhandledRejection", e);
   process.exit(99);
 });
-
 
 // initialize express ...
-const app = express()
+const app = express();
 
-app.use(morgan('dev'))
+app.use(morgan("dev"));
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser());
 
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
-app.use(cookieParser())
-
-app.use(/[\s\S]*own_static_resources_lenses/, express.static(path.join(__dirname, '..', 'lenses')))
-app.use(/[\s\S]*own_static_resources_options/, express.static(path.join(__dirname, '..', 'options')))
-app.use(/[\s\S]*shared_static_resources/, express.static(path.join(__dirname, '..', 'static')))
+app.use(
+  /[\s\S]*own_static_resources_lenses/,
+  express.static(path.join(__dirname, "..", "lenses"))
+);
+app.use(
+  /[\s\S]*own_static_resources_options/,
+  express.static(path.join(__dirname, "..", "options"))
+);
+app.use(
+  /[\s\S]*shared_static_resources/,
+  express.static(path.join(__dirname, "..", "static"))
+);
 if (localLensesPathIsValid) {
-  app.use(/[\s\S]*own_static_resources_local_lenses/, express.static(localLensesPath))
+  app.use(
+    /[\s\S]*own_static_resources_local_lenses/,
+    express.static(localLensesPath)
+  );
 }
 
-
 app.use(async (req, res, next) => {
-
   // if there are no parameters, fall back to static serving
   const queryKeys = Object.keys(req.query);
   if (queryKeys.length === 0) {
@@ -140,7 +151,7 @@ app.use(async (req, res, next) => {
   }
 
   // if the 'ignore' option was send, fall back to static serving
-  if (queryKeys.includes('--ignore')) {
+  if (queryKeys.includes("--ignore")) {
     next();
     return;
   }
@@ -148,7 +159,12 @@ app.use(async (req, res, next) => {
   // if the requested resource does not exist, fall back to static serving
   const isPublicExample = /[\s\S]*public_example_files/.test(req.path);
   const absolutePath = isPublicExample
-    ? path.join(__dirname, '..', 'public-example-files', req.path.replace(/[\s\S]*public_example_files/, ''))
+    ? path.join(
+        __dirname,
+        "..",
+        "public-example-files",
+        req.path.replace(/[\s\S]*public_example_files/, "")
+      )
     : path.join(process.cwd(), req.path);
   if (!fs.existsSync(absolutePath)) {
     next();
@@ -158,32 +174,35 @@ app.use(async (req, res, next) => {
   // build the local configuration for this request path
   //  all study.json combined from the request path
   //  up to the cwd, then the module's defaults
-  const preDefaults = compileLocalConfigs(absolutePath, {})
-  const localConfigs = deepMerge(config.locals, preDefaults, { arrayMerge: combineMerge });
+  const preDefaults = compileLocalConfigs(absolutePath, {});
+  const localConfigs = deepMerge(config.locals, preDefaults, {
+    arrayMerge: combineMerge,
+  });
 
   // the there is a local --ignore option, fall back to static serving
-  if (localConfigs['--ignore']) {
+  if (localConfigs["--ignore"]) {
     next();
     return;
   }
 
-
-  if (queryKeys.includes('--defaults')) {
+  if (queryKeys.includes("--defaults")) {
     const pathExt = path.extname(req.path);
-    const localTypeConfig = pathExt ? localConfigs['--defaults'][pathExt] : localConfigs['--defaults'].directory;
-    if (typeof localTypeConfig === 'string') {
-      const splitLocalTypeConfig = localTypeConfig.split('&');
-      const parsedLocalTypeConfigs = splitLocalTypeConfig.map(param => {
-        const key = param.split('=')[0];
-        const value = param.split('=')[1];
+    const localTypeConfig = pathExt
+      ? localConfigs["--defaults"][pathExt]
+      : localConfigs["--defaults"].directory;
+    if (typeof localTypeConfig === "string") {
+      const splitLocalTypeConfig = localTypeConfig.split("&");
+      const parsedLocalTypeConfigs = splitLocalTypeConfig.map((param) => {
+        const key = param.split("=")[0];
+        const value = param.split("=")[1];
         if (value) {
-          let parsedValue = value
+          let parsedValue = value;
           try {
             parsedValue = JSON.parse(value);
-          } catch (o_0) { }
-          return [key, parsedValue]
+          } catch (o_0) {}
+          return [key, parsedValue];
         } else {
-          return [key, '']
+          return [key, ""];
         }
       });
       for (const paramConfig of parsedLocalTypeConfigs) {
@@ -194,17 +213,30 @@ app.use(async (req, res, next) => {
 
   // filter for the requested plugins (url params)
   //  configure them with local & param configurations
-  const options = configurePlugins((await optionsPromise), localConfigs, req.query)
-  const lenses = []
-  const builtinLenses = configurePlugins((await lensesPromise), localConfigs, req.query)
+  const unconfiguredOptions = await optionsPromise;
+  const unconfiguredLenses = await lensesPromise;
+  const options = configurePlugins(
+    unconfiguredOptions,
+    localConfigs,
+    req.query
+  );
+  const lenses = [];
+  const builtinLenses = configurePlugins(
+    unconfiguredLenses,
+    localConfigs,
+    req.query
+  );
   if (builtinLenses) {
-    lenses.push(...builtinLenses)
+    lenses.push(...builtinLenses);
   }
-  const localLenses = configurePlugins((await localLensesPromise), localConfigs, req.query)
+  const localLenses = configurePlugins(
+    await localLensesPromise,
+    localConfigs,
+    req.query
+  );
   if (localLenses) {
-    lenses.push(...localLenses)
+    lenses.push(...localLenses);
   }
-
 
   // if the parameters were not valid options or lenses
   //  fallback to static serving
@@ -213,7 +245,10 @@ app.use(async (req, res, next) => {
     return;
   }
 
-  const resource = await resourceFromAbsolutePath({ absolutePath, localConfigs });
+  const resource = await resourceFromAbsolutePath({
+    absolutePath,
+    localConfigs,
+  });
   // if there was an error fetching the resource
   //  fallback to static serving
   // express.static can handle the error
@@ -222,21 +257,20 @@ app.use(async (req, res, next) => {
     return;
   }
 
-
   const requestData = {
     path: req.path,
     method: req.method,
     body: deepClone(req.body),
     headers: deepClone(req.headers),
     cookies: deepClone(req.cookies),
-  }
+  };
   const responseData = {
     status: 200,
     headers: {},
     cookies: {},
     // body is not included
     //  it will be constructed from the finalResource
-  }
+  };
 
   const {
     finalResponseData,
@@ -249,10 +283,10 @@ app.use(async (req, res, next) => {
     resource,
     requestData,
     responseData,
-  })
+  });
 
   if (abort) {
-    console.log(': aborting at ' + abort);
+    console.log(": aborting at " + abort);
     next();
     return;
   }
@@ -261,74 +295,74 @@ app.use(async (req, res, next) => {
   if (error) {
     // send?
     // fallback to static?
-    console.error(error)
-    next()
+    console.error(error);
+    next();
     return;
   }
 
-  const mimeType = mime.getType(finalResource.info.ext)
-  res.set('Content-Type', mimeType)
-  res.status(finalResponseData.status)
+  const mimeType = mime.getType(finalResource.info.ext);
+  res.set("Content-Type", mimeType);
+  res.status(finalResponseData.status);
 
   if (finalResponseData.headers) {
     for (const key in finalResponseData.headers) {
-      res.set(key, finalResponseData.headers[key])
+      res.set(key, finalResponseData.headers[key]);
     }
   }
 
   if (finalResponseData.cookies) {
     for (const key in finalResponseData.cookies) {
-      res.set(key, finalResponseData.cookies[key])
+      res.set(key, finalResponseData.cookies[key]);
     }
   }
 
-  res.send(finalResource.content)
+  res.send(finalResource.content);
+});
 
-})
-
-
-app.use(/[\s\S]*public_example_files/, express.static(path.join(__dirname, '..', 'public-example-files')))
-
+app.use(
+  /[\s\S]*public_example_files/,
+  express.static(path.join(__dirname, "..", "public-example-files"))
+);
 
 // if they requested a directory, send index.html or rendered README
 // otherwise fallback to static serving (so 404)
 app.use(async (req, res, next) => {
   // continue to static serving if it's not a directory
   const absolutePath = path.join(process.cwd(), req.path);
-  const isDirectory = fs.existsSync(absolutePath) && fs.lstatSync(absolutePath).isDirectory()
+  const isDirectory =
+    fs.existsSync(absolutePath) && fs.lstatSync(absolutePath).isDirectory();
   if (!isDirectory) {
-    next()
-    return
+    next();
+    return;
   }
 
   // render like a gitbook if there is a Summary.md
-  const summaryMdPath = path.join(absolutePath, 'summary.md')
+  const summaryMdPath = path.join(absolutePath, "summary.md");
   if (fs.existsSync(summaryMdPath)) {
-
-    const readmeMdPath = path.join(absolutePath, 'readme.md')
-    const readmeExists = fs.existsSync(readmeMdPath)
-    const rawMarkdown = await readFilePromise(summaryMdPath, 'utf-8')
-    const renderedMarkdown = gitbookfiy(rawMarkdown, readmeExists)
-    res.set('Content-Type', 'text/html')
-    res.status(200)
-    res.end(renderedMarkdown)
-    return
+    const readmeMdPath = path.join(absolutePath, "readme.md");
+    const readmeExists = fs.existsSync(readmeMdPath);
+    const rawMarkdown = await readFilePromise(summaryMdPath, "utf-8");
+    const renderedMarkdown = gitbookfiy(rawMarkdown, readmeExists);
+    res.set("Content-Type", "text/html");
+    res.status(200);
+    res.end(renderedMarkdown);
+    return;
   }
 
   // send index.html if there is one
-  const indexHtmlPath = path.join(absolutePath, 'index.html')
+  const indexHtmlPath = path.join(absolutePath, "index.html");
   if (fs.existsSync(indexHtmlPath)) {
-    const indexHtml = await readFilePromise(indexHtmlPath, 'utf-8')
-    res.set('Content-Type', 'text/html')
-    res.status(200)
-    res.send(indexHtml)
-    return
+    const indexHtml = await readFilePromise(indexHtmlPath, "utf-8");
+    res.set("Content-Type", "text/html");
+    res.status(200);
+    res.send(indexHtml);
+    return;
   }
 
   // render readme if there is one
-  const readmeMdPath = path.join(absolutePath, 'readme.md')
+  const readmeMdPath = path.join(absolutePath, "readme.md");
   if (fs.existsSync(readmeMdPath)) {
-    const rawMarkdown = await readFilePromise(readmeMdPath, 'utf-8')
+    const rawMarkdown = await readFilePromise(readmeMdPath, "utf-8");
     const renderedMarkdown = `
       <!DOCTYPE html>
         <html>
@@ -340,37 +374,36 @@ app.use(async (req, res, next) => {
           <main class="markdown-body">${marked(rawMarkdown)}</main>
           <script src="shared_static_resources/prism/script.js"></script>
         </body>
-      </html>`
-    res.set('Content-Type', 'text/html')
-    res.status(200)
-    res.end(renderedMarkdown)
-    return
+      </html>`;
+    res.set("Content-Type", "text/html");
+    res.status(200);
+    res.end(renderedMarkdown);
+    return;
   }
 
-
   // if there wasn't an index.html, SUMMARY.md, or README, go on to static serving
-  next()
-})
+  next();
+});
 
 // all-time fallback - be a static server from cwd
-app.use(express.static(process.cwd()))
-
+app.use(express.static(process.cwd()));
 
 // launch the app
 // to open browser after success
-const serverPromiseCloser = (PORT) => new Promise((resolve, reject) => {
-  app.listen(PORT, err => {
-    if (err) {
-      Logger.error(`Failed to start server on port: ${PORT}`, err)
-      process.exit(1)
-    }
+const serverPromiseCloser = (PORT) =>
+  new Promise((resolve, reject) => {
+    app.listen(PORT, (err) => {
+      if (err) {
+        Logger.error(`Failed to start server on port: ${PORT}`, err);
+        process.exit(1);
+      }
 
-    Logger.info(`Server started successfully on port: ${PORT}`)
-    resolve()
-  })
-})
+      Logger.info(`Server started successfully on port: ${PORT}`);
+      resolve();
+    });
+  });
 
-module.exports = serverPromiseCloser
+module.exports = serverPromiseCloser;
 
 /*
   go to ./handle-request/index.js for the next step in your journey

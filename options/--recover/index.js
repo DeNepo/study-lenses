@@ -1,20 +1,18 @@
 const recoverOption = () => {
-
   const onError = ({ error, lens }) => {
-    console.log(`--continue:  error in lens "${lens.queryKey}"`)
-    console.error(error)
+    console.log(`-continue:  error in lens "${lens.queryKey}"`);
+    console.error(error);
 
     return {
-      recover: true
-    }
-
-  }
+      recover: true,
+    };
+  };
 
   return {
     hooks: {
-      onError
-    }
-  }
-}
+      onError,
+    },
+  };
+};
 
-module.exports = recoverOption
+module.exports = recoverOption;

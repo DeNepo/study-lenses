@@ -1,4 +1,7 @@
 {
+  "--defaults": {
+    ".md": "study"
+  },
   "study": {
     "clearScheduled": true,
     "dependencies": [

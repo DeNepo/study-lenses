@@ -1,26 +1,29 @@
-'use strict';
+"use strict";
 
 /* proof of concept only
   changes are lost when switching between pages unless explicitly saved
+  if a summary links to just a folder
+    render all the folder's contents as a details
+    so you can say /isolate and let it be dynamic to changes
 */
 
-const marked = require('marked');
+const marked = require("marked");
 const renderer = new marked.Renderer();
 
 marked.setOptions({
-  baseUrl: 'toad'
-})
+  baseUrl: "toad",
+});
 
-const target = 'currentStudy';
-
+const target = "currentStudy";
 
 const gitbookfiy = (summaryText, readmeExists) => {
-
   renderer.link = function (href, title, text) {
     // return `<a target="${target}" href="${href}" ${title ? `title="${title}"` : ''}>${text}</a>`;
-    const isRe = href.toLowerCase().includes('.re.')
-    return `<button onclick='document.getElementById("i-frame").src = window.location.origin + window.location.pathname + "/${href}?${isRe ? 'min&' : ''}--defaults"' ${title ? `title="${title}"` : ''}>${text}</button>`;
-  }
+    const isRe = href.toLowerCase().includes(".re.");
+    return `<button onclick='document.getElementById("i-frame").src = window.location.origin + window.location.pathname + "/${href}?${
+      isRe ? "min&" : ""
+    }--defaults"' ${title ? `title="${title}"` : ""}>${text}</button>`;
+  };
   return `
       <!DOCTYPE html>
         <html>
@@ -38,18 +41,21 @@ const gitbookfiy = (summaryText, readmeExists) => {
         </head>
         <body>
           <div class="gitbook">
-            <main class="markdown-body">${marked(summaryText, { renderer: renderer, baseUrl: 'toad' })}</main>
+            <main class="markdown-body">${marked(summaryText, {
+              renderer: renderer,
+              baseUrl: "toad",
+            })}</main>
             <iframe id='i-frame' style='height: 100%; width: 100%; margin-left: 1%;' name="${target}"></iframe>
           <div>
           <script src="shared_static_resources/prism/script.js"></script>
 
           <script>
             if (${readmeExists}) {
-              document.getElementById("i-frame").src = window.location.origin + window.location.pathname + '/README.md?--defaults';
+              document.getElementById("i-frame").src = window.location.origin + window.location.pathname + '';
             }
           </script>
         </body>
-      </html>`
+      </html>`;
 };
 
 module.exports = gitbookfiy;

@@ -1,128 +1,165 @@
-'use strict'
+"use strict";
 
-const CodeSSR = require('./code.js')
+const CodeSSR = require("./code.js");
 
 class JavaScriptSSR extends CodeSSR {
-
   constructor({ config, resource }) {
-    super({ config, resource })
+    super({ config, resource });
+    console.log(this.resource.info.base);
   }
 
   styles() {
-    const superStyles = super.styles()
-    return superStyles
+    const superStyles = super.styles();
+    return superStyles;
   }
 
   scriptsHead() {
-    const superScriptsHead = super.scriptsHead()
-    return superScriptsHead + `
+    const superScriptsHead = super.scriptsHead();
+    return (
+      superScriptsHead +
+      `
       <script src='${this.config.sharedStatic}/prettier/standalone.js'></script>
       <script src='${this.config.sharedStatic}/prettier/parser-babel.js'></script>`
+    );
   }
 
   configOptions() {
-    const superConfigOptions = super.configOptions()
-    return superConfigOptions + `
+    const superConfigOptions = super.configOptions();
+    return (
+      superConfigOptions +
+      `
     <form>
-      <input id='loop-guard-input' type='checkbox' ${this.config.locals.loopGuard ? 'checked' : ''} /> <label for='loop-guard-input'>loop guard</label>
+      <input id='loop-guard-input' type='checkbox' ${
+        this.config.locals.loopGuard ? "checked" : ""
+      } /> <label for='loop-guard-input'>loop guard</label>
     </form>
     <form>
-      <input id='clear-scheduled-input' type='checkbox' ${this.config.locals.clearScheduled ? 'checked' : ''} /> <label for='clear-scheduled-input'>clear scheduled</label>
+      <input id='clear-scheduled-input' type='checkbox' ${
+        this.config.locals.clearScheduled ? "checked" : ""
+      } /> <label for='clear-scheduled-input'>clear scheduled</label>
     </form>
     <form>
-      <input id='flowchart-input' type='checkbox' ${this.config.locals.flowchart ? 'checked' : ''} /> <label for='flowchart-input'>flowchart</label>
+      <input id='flowchart-input' type='checkbox' ${
+        this.config.locals.flowchart ? "checked" : ""
+      } /> <label for='flowchart-input'>flowchart</label>
     </form>
     <form>
-      <input id='eval-input' type='checkbox' ${this.config.locals.eval ? 'checked' : ''} /> <label for='eval-input'>eval</label>
+      <input id='eval-input' type='checkbox' ${
+        this.config.locals.eval ? "checked" : ""
+      } /> <label for='eval-input'>eval</label>
     </form>
     <form>
-      <input id='open-in-input' type='checkbox' ${this.config.locals.openIn ? 'checked' : ''} /> <label for='open-in-input'>open in ...</label>
+      <input id='open-in-input' type='checkbox' ${
+        this.config.locals.openIn ? "checked" : ""
+      } /> <label for='open-in-input'>open in ...</label>
     </form>`
+    );
   }
 
   panel() {
-    let superPanel = super.panel()
+    let superPanel = super.panel();
 
-    const locals = this.config.locals
+    const locals = this.config.locals;
 
     // if (locals.loopGuard || locals.clearScheduled || locals.flowchart) {
-    superPanel += '<br><div>'
+    superPanel += "<br><div>";
     // }
 
     // if (locals.loopGuard) {
 
-    const loopGuardDisplay = locals.loopGuard ? 'inline-block' : 'none'
-    if (!locals.loopGuard || typeof locals.loopGuard !== 'object') {
-      locals.loopGuard = {}
+    const loopGuardDisplay = locals.loopGuard ? "inline-block" : "none";
+    if (!locals.loopGuard || typeof locals.loopGuard !== "object") {
+      locals.loopGuard = {};
     }
     locals.loopGuard = {
-      active: typeof locals.loopGuard.active === 'boolean' ? locals.loopGuard.active : false,
-      max: typeof locals.loopGuard.max === 'number' ? locals.loopGuard.max : 100,
-    }
+      active:
+        typeof locals.loopGuard.active === "boolean"
+          ? locals.loopGuard.active
+          : false,
+      max:
+        typeof locals.loopGuard.max === "number" ? locals.loopGuard.max : 100,
+    };
     superPanel += `
       <form id='loop-guard-form' style='display: ${loopGuardDisplay};'>
-        <input name='active' type='checkbox' ${locals.loopGuard.active ? 'checked' : ''} />
+        <input name='active' type='checkbox' ${
+          locals.loopGuard.active ? "checked" : ""
+        } />
         loop guard:
-        <input name='max' type='number' value='${locals.loopGuard.max}' style='width: 3em;' />
-      </form>`
+        <input name='max' type='number' value='${
+          locals.loopGuard.max
+        }' style='width: 3em;' />
+      </form>`;
     // }
 
     // if (locals.clearScheduled) {
-    const clearScheduledDisplay = locals.clearScheduledDisplay ? 'inline-block' : 'none'
+    const clearScheduledDisplay = locals.clearScheduledDisplay
+      ? "inline-block"
+      : "none";
     superPanel += `
-      <button id='clear-scheduled-button' style='display: ${clearScheduledDisplay};'>clear scheduled</button>`
+      <button id='clear-scheduled-button' style='display: ${clearScheduledDisplay};'>clear scheduled</button>`;
     // }
 
     // if (locals.flowchart) {
-    const flowchartDisplay = locals.flowchart ? 'inline-block' : 'none'
+    const flowchartDisplay = locals.flowchart ? "inline-block" : "none";
     superPanel += `
-      <button id='flowchart-button' style='display: ${flowchartDisplay};'>flowchart</button>`
+      <button id='flowchart-button' style='display: ${flowchartDisplay};'>flowchart</button>`;
     // }
 
-    superPanel += '</div>'
+    superPanel += "</div>";
 
     // if (locals.eval || locals.openIn) {
-    superPanel += '<div>'
+    superPanel += "<div>";
     // }
 
     // if (locals.eval) {
-    const evalDisplay = locals.eval ? 'inline-block' : 'none'
+    const evalDisplay = locals.eval ? "inline-block" : "none";
     superPanel += `
     <div id='eval-container' style='display: ${evalDisplay};'>
       <button id='console-button'>console</button>
       <button id='debugger-button'>debugger</button>
-    </div>`
+    </div>`;
     // }
     // if (locals.openIn) {
-    const openInDisplay = locals.openIn ? 'inline-block' : 'none'
-    const openable = ['jsTutorLive', 'jsTutor', 'promisees', 'loupe', 'esprima']
+    const openInDisplay =
+      locals.openIn && !/.test./i.test(this.resource.info.base)
+        ? "inline-block"
+        : "none";
+    const openable = [
+      "jsTutorLive",
+      "jsTutor",
+      "promisees",
+      "loupe",
+      "esprima",
+    ];
     superPanel += `<form id='open-in-container' style='display: ${openInDisplay};'>
         <input id='open-in-button' value='open in' type='button'/>
         <select name='thisThing'>
-          ${openable.map(viztool => {
-      return `<option ${viztool === locals.openIn ? 'selected' : ''}>${viztool}</option>`
-    })}
+          ${openable.map((viztool) => {
+            return `<option ${
+              viztool === locals.openIn ? "selected" : ""
+            }>${viztool}</option>`;
+          })}
         </select>
-      </form>`
+      </form>`;
     // }
 
-    superPanel += '</div>'
+    superPanel += "</div>";
 
-    return superPanel
+    return superPanel;
   }
 
   code() {
-    const superCode = super.code()
-    return superCode
+    const superCode = super.code();
+    return superCode;
   }
 
   scriptsBody() {
-    let superScriptsBody = super.scriptsBody()
+    let superScriptsBody = super.scriptsBody();
     superScriptsBody += `<script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>
-    <script src='${this.config.ownStatic}/types/javascript/static/aran-build.js'></script>`
+    <script src='${this.config.ownStatic}/types/javascript/static/aran-build.js'></script>`;
 
     const base = this.resource.info.base.toLowerCase();
-    if (base.includes('.test.') || base.includes('.spec.')) {
+    if (base.includes(".test.") || base.includes(".spec.")) {
       superScriptsBody += `<script src='${this.config.ownStatic}/dependencies/describe-it.js'></script>
       <script>
         define('chai',
@@ -131,13 +168,11 @@ class JavaScriptSSR extends CodeSSR {
             return require;
           }
         );
-      </script>`
+      </script>`;
     }
 
-    return superScriptsBody
+    return superScriptsBody;
   }
-
 }
 
-module.exports = JavaScriptSSR
-
+module.exports = JavaScriptSSR;

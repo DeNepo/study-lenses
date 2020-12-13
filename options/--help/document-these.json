@@ -8,8 +8,5 @@
     "parsons",
     "format"
   ],
-  "options": [
-    "--debug",
-    "--help"
-  ]
+  "options": ["--debug", "--help"]
 }

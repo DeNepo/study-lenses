@@ -1,1 +1,1 @@
-Adding the `--debug` option anywhere in your URL Parameters will provide more information when something goes wrong, both in the browser and in your terminal.  Besides that, it does not change how the program behaves
+Adding the `--debug` option anywhere in your URL Parameters will provide more information when something goes wrong, both in the browser and in your terminal. Besides that, it does not change how the program behaves

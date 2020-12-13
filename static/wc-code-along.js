@@ -89,8 +89,6 @@ class CodeAlongComponent extends HTMLElement {
       buttonsContainer.appendChild(jsTutorButton);
     }
 
-    buttonsContainer.appendChild(document.createTextNode(" || "));
-
     if (this.loopGuard) {
       const loopGuardForm = document.createElement("form");
       loopGuardForm.style = "display: inline;";
@@ -111,6 +109,8 @@ class CodeAlongComponent extends HTMLElement {
       buttonsContainer.appendChild(loopGuardForm);
     }
 
+    buttonsContainer.appendChild(document.createTextNode(" || "));
+
     const formatButton = document.createElement("button");
     formatButton.innerHTML = "format";
     formatButton.addEventListener("click", () => {
@@ -124,6 +124,46 @@ class CodeAlongComponent extends HTMLElement {
       ]);
     });
     buttonsContainer.appendChild(formatButton);
+
+    const parsonsButton = document.createElement("button");
+    parsonsButton.innerHTML = "parsonize selection";
+    parsonsButton.onclick = () => {
+      const code = this.getSelection();
+      if (!code) {
+        alert("no code selected");
+        return;
+      }
+
+      const baseConfig = {
+        code,
+        ext: ".js",
+      };
+      const finalConfig = Object.assign(baseConfig, config.locals);
+      const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
+      const query = `?parsons=${queryValue}`;
+      const url = window.location.origin + query;
+
+      window.open(url, "_blank");
+    };
+    buttonsContainer.appendChild(parsonsButton);
+
+    if (config.locals.flowchart) {
+      const parsonsButton = document.createElement("button");
+      parsonsButton.innerHTML = "flowchart";
+      parsonsButton.onclick = () => {
+        const baseConfig = {
+          code: this.editor.getValue(),
+          ext: ".js",
+        };
+        const finalConfig = Object.assign(baseConfig, config.locals);
+        const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
+        const query = `?flowchart=${queryValue}`;
+        const url = window.location.origin + query;
+
+        window.open(url, "_blank");
+      };
+      buttonsContainer.appendChild(parsonsButton);
+    }
 
     this.createEditor();
     this.editor.setValue(this.sourceCode);
@@ -147,6 +187,7 @@ class CodeAlongComponent extends HTMLElement {
 
         Prism.highlightAllUnder(pre);
       });
+      buttonsContainer.appendChild(document.createTextNode(" || "));
       buttonsContainer.appendChild(highlightButton);
     } catch (o_0) {}
   }
@@ -210,7 +251,7 @@ class CodeAlongComponent extends HTMLElement {
         enabled: false,
       },
       overviewRulerLanes: 0,
-      fontSize: 12,
+      fontSize: 14,
     });
 
     // https://github.com/microsoft/monaco-editor/issues/794#issuecomment-688959283
@@ -238,7 +279,7 @@ class CodeAlongComponent extends HTMLElement {
       const lineCount =
         (this.editor.getModel() && this.editor.getModel().getLineCount()) || 2;
       const height =
-        this.editor.getTopForLineNumber(lineCount + 1) + lineHeight;
+        this.editor.getTopForLineNumber(lineCount + 1) + lineHeight + 10;
 
       if (prevHeight !== height) {
         prevHeight = height;
@@ -265,6 +306,41 @@ class CodeAlongComponent extends HTMLElement {
     if (noSyntaxErrors) {
       return formattedCode;
     }
+  }
+  getSelection(monacoThing) {
+    const editorSelection = this.editor.getSelection();
+    const editorSelectionEntries = Object.entries(editorSelection);
+    const columnEntries = [];
+    const lineEntries = [];
+    for (const entry of editorSelectionEntries) {
+      if (entry[0].includes("Column")) {
+        columnEntries.push(entry);
+      } else {
+        lineEntries.push(entry);
+      }
+    }
+    const firstLine = lineEntries[0][1];
+    const firstColum = columnEntries[0][1];
+    const noSelection =
+      columnEntries.every((entry) => entry[1] === firstColum) &&
+      lineEntries.every((entry) => entry[1] === firstLine);
+
+    if (noSelection) {
+      return "";
+    }
+
+    let selection = "";
+    const start = editorSelection.startLineNumber;
+    const end = editorSelection.endLineNumber;
+    const getFromThis =
+      typeof this.editor.getModel === "function"
+        ? this.editor.getModel()
+        : this.editor;
+    for (let i = start; i <= end; i++) {
+      selection += getFromThis.getLineContent(i) + "\n";
+    }
+
+    return selection;
   }
 }
 

@@ -2,40 +2,56 @@
 
 */
 
+"use strict";
 
-'use strict';
-
-const marked = require('marked')
-const path = require('path')
-const fs = require('fs')
-const util = require('util');
-const readFilePromise = util.promisify(fs.readFile)
-
+const marked = require("marked");
+const path = require("path");
+const fs = require("fs");
+const util = require("util");
+const readFilePromise = util.promisify(fs.readFile);
 
 const tableOfContents = ({ dirElement, top = false, defaults = {} }) => {
-
-  if (dirElement.type === 'file') {
-    const isRe = dirElement.base.toLowerCase().includes('.re.');
-    const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
-    return `<li><a href="${relativePath}?${isRe ? 'min&' : ''}--defaults" target="_blank">${dirElement.base}</a></li>\n`;
+  if (dirElement.type === "file") {
+    const isRe = dirElement.base.toLowerCase().includes(".re.");
+    const relativePath = path.join(
+      dirElement.toCwd,
+      dirElement.dir,
+      dirElement.base
+    );
+    return `<li><a href="${relativePath}?${
+      isRe && /.js$/i.test(dirElement.base) ? "obf&min&" : isRe ? "min&" : ""
+    }--defaults" target="_blank">${dirElement.base}</a></li>\n`;
   }
 
-  if (dirElement.type === 'directory') {
-    const hasSummary = dirElement.children.find(child => child.base.toLowerCase() === 'summary.md')
+  if (dirElement.type === "directory") {
+    const hasSummary = dirElement.children.find(
+      (child) => child.base.toLowerCase() === "summary.md"
+    );
     const nameElement = hasSummary
       ? `<a href='${dirElement.base}' target='_blank'>${dirElement.base}</a>`
       : dirElement.base;
     const subIndex = Array.isArray(dirElement.children)
-      ? dirElement.children.map(child => tableOfContents({
-        dirElement: child,
-        defaults: Object.assign({}, defaults, dirElement.locals['--defaults'] || {})
-      })).join('\n')
-      : '';
+      ? dirElement.children
+          .map((child) =>
+            tableOfContents({
+              dirElement: child,
+              defaults: Object.assign(
+                {},
+                defaults,
+                dirElement.locals["--defaults"] || {}
+              ),
+            })
+          )
+          .join("\n")
+      : "";
 
-    return top ? subIndex
-      : (`<li><details><summary>${nameElement}</summary>\n`
-        + (subIndex ? '\n<ul style="list-style-type: none;">' + subIndex + '</ul>' : '')
-        + '</details></li>');
+    return top
+      ? subIndex
+      : `<li><details><summary>${nameElement}</summary>\n` +
+          (subIndex
+            ? '\n<ul style="list-style-type: none;">' + subIndex + "</ul>"
+            : "") +
+          "</details></li>";
 
     // const query = defaults.directory ? defaults.directory : '';
     // const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
@@ -45,19 +61,21 @@ const tableOfContents = ({ dirElement, top = false, defaults = {} }) => {
     //     + '</details></li>');
   }
 
-  return '';
+  return "";
 };
 
 module.exports = async function renderTocDoc({ virDir, config, top }) {
-
-  const readme = virDir.children
-    .find(child => child.base.toLowerCase() === 'readme.md')
+  const readme = virDir.children.find(
+    (child) => child.base.toLowerCase() === "readme.md"
+  );
 
   const readmeSource = readme
-    ? (await readFilePromise(path.join(readme.root, readme.dir, readme.base), 'utf-8'))
-    // ? fs.readFileSync(readmePath, 'utf-8')
-    : ''
-
+    ? await readFilePromise(
+        path.join(readme.root, readme.dir, readme.base),
+        "utf-8"
+      )
+    : // ? fs.readFileSync(readmePath, 'utf-8')
+      "";
 
   return `<!DOCTYPE html>
 <html>
@@ -73,8 +91,16 @@ module.exports = async function renderTocDoc({ virDir, config, top }) {
     <hr>
 
     <ul style="list-style-type: none;">
-      <li><a href='./${virDir.locals['--defaults'] && '?' + virDir.locals['--defaults'].directory || ''}'>..</a></li>
-      ${tableOfContents({ dirElement: virDir, top: true, defaults: virDir.locals['--defaults'] || {} })}
+      <li><a href='./${
+        (virDir.locals["--defaults"] &&
+          "?" + virDir.locals["--defaults"].directory) ||
+        ""
+      }'>..</a></li>
+      ${tableOfContents({
+        dirElement: virDir,
+        top: true,
+        defaults: virDir.locals["--defaults"] || {},
+      })}
     </ul >
 
     <hr>
@@ -85,4 +111,3 @@ module.exports = async function renderTocDoc({ virDir, config, top }) {
   </body>
 </html>`;
 };
-

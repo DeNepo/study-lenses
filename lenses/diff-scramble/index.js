@@ -1,46 +1,44 @@
-'use strict'
+"use strict";
 
 const diffScrambleLense = ({ config, resource }) => {
-
   if (!resource.info && !config.queryValue.code) {
-    return
+    return;
   }
 
-  let code = resource.content
-  let ext = resource.info.ext
+  let code = resource.content;
+  let ext = resource.info.ext;
 
-  if (typeof config.queryValue.code === 'string') {
-    code = config.queryValue.code
-    ext = config.queryValue.ext || ''
-  } else if (typeof resource.content !== 'string') {
-    return
+  if (typeof config.queryValue.code === "string") {
+    code = config.queryValue.code;
+    ext = config.queryValue.ext || "";
+  } else if (typeof resource.content !== "string") {
+    return;
   }
 
   if (!code) {
-    return
+    return;
   }
 
-  let start = 0
-  let end = code.split('\n').length
+  let start = 0;
+  let end = code.split("\n").length;
 
-  if (typeof config.queryValue.start === 'number') {
-    start = config.queryValue.start
+  if (typeof config.queryValue.start === "number") {
+    start = config.queryValue.start;
   }
 
-  if (typeof config.queryValue.end === 'number') {
-    end = config.queryValue.end
+  if (typeof config.queryValue.end === "number") {
+    end = config.queryValue.end;
   }
 
+  code = code
+    .split("\n")
+    .slice(start, end + 1)
+    .join("\n");
 
-  code = code.split('\n').slice(start, end + 1).join('\n')
+  config.code = code;
+  config.ext = ext;
 
-
-  config.code = code
-  config.ext = ext
-
-  console.log(config)
-
-  resource.info.ext = '.html'
+  resource.info.ext = ".html";
   resource.content = `<!DOCTYPE html>
 <html>
 
@@ -49,7 +47,9 @@ const diffScrambleLense = ({ config, resource }) => {
   <title id='title'>${resource.info.dir}/${resource.info.base}</title>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
-  <link rel="stylesheet" data-name="vs/editor/editor.main" href="${config.sharedStatic}/monaco/min/vs/editor/editor.main.css">
+  <link rel="stylesheet" data-name="vs/editor/editor.main" href="${
+    config.sharedStatic
+  }/monaco/min/vs/editor/editor.main.css">
 
   <style>
     .panel-element {
@@ -68,9 +68,13 @@ const diffScrambleLense = ({ config, resource }) => {
 
     <div id='block-comments'></div>
 
-  ${config.ext === '.js' ? `<div class='panel-element'>
+  ${
+    config.ext === ".js"
+      ? `<div class='panel-element'>
       randomize non-keywords:<input id='randomize-variables' min='0' max='100' type='range' value='0' />
-    </div><br>`: ''}
+    </div><br>`
+      : ""
+  }
   <br>
   <form id='diff-selection-form' class='panel'>
     <p class='panel-element' style='padding-right: 1em'>
@@ -106,16 +110,22 @@ const diffScrambleLense = ({ config, resource }) => {
   <div id='editor-container' style='height: 90vh'></div>
 
 
-  <script>var require = { paths: { 'vs': '${config.sharedStatic}/monaco/min/vs' } };</script>
+  <script>var require = { paths: { 'vs': '${
+    config.sharedStatic
+  }/monaco/min/vs' } };</script>
   <script src="${config.sharedStatic}/monaco/min/vs/loader.js"></script>
-  <script src="${config.sharedStatic}/monaco/min/vs/editor/editor.main.nls.js"></script>
-  <script src="${config.sharedStatic}/monaco/min/vs/editor/editor.main.js"></script>
+  <script src="${
+    config.sharedStatic
+  }/monaco/min/vs/editor/editor.main.nls.js"></script>
+  <script src="${
+    config.sharedStatic
+  }/monaco/min/vs/editor/editor.main.js"></script>
 
 
 
   <script>
 
-    const config = ${JSON.stringify(config, null, '  ')};
+    const config = ${JSON.stringify(config, null, "  ")};
 
   </script>
 
@@ -133,11 +143,11 @@ const diffScrambleLense = ({ config, resource }) => {
 </body>
 
 </html>
-`
+`;
 
   return {
-    resource
-  }
-}
+    resource,
+  };
+};
 
-module.exports = diffScrambleLense
+module.exports = diffScrambleLense;

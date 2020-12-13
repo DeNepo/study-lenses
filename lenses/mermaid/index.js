@@ -1,7 +1,6 @@
 const mermaidLense = async ({ resource, config }) => {
-
-  if (resource.info.ext !== '.mmd') {
-    return
+  if (resource.info.ext !== ".mmd") {
+    return;
   }
 
   resource.content = `<!DOCTYPE html>
@@ -16,11 +15,11 @@ const mermaidLense = async ({ resource, config }) => {
     <script src='${config.sharedStatic}/mermaid/index.js'></script>
   </body>
 </html>`;
-  resource.info.ext = '.html';
+  resource.info.ext = ".html";
 
   return {
-    resource
-  }
+    resource,
+  };
 };
 
 module.exports = mermaidLense;

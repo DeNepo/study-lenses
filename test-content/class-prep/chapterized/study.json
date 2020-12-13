@@ -1,0 +1,10 @@
+{
+  "--defaults": {
+    ".md": "study"
+  },
+  "study": {
+    "openIn": "jsTutorLive",
+    "eval": true,
+    "flowchart": true
+  }
+}

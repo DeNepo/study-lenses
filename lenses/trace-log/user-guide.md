@@ -9,3 +9,5 @@ configuration options (ideas, all include line numbers)
 - variables: log when declared, assigned, or read
 - conditionals: when evaluated & which path
 - objects/arrays: when values are changed
+
+> editor on left, tracelog in console, updates in realtime?

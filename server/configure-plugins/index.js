@@ -4,13 +4,13 @@ const configurePlugins = (plugins, localConfigs, parsedQuery) => {
   }
 
   const requestedPlugins = Object.keys(parsedQuery)
-    .map(queryKey => {
-      return plugins.find(plugin => plugin.queryKey === queryKey)
+    .map((queryKey) => {
+      return plugins.find((plugin) => plugin.queryKey === queryKey);
     })
-    .filter(plugin => plugin !== undefined)
+    .filter((plugin) => plugin !== undefined);
 
   if (requestedPlugins.length === 0) {
-    return null
+    return null;
   }
 
   // assign configurations to the plugins if any were requested
@@ -20,19 +20,20 @@ const configurePlugins = (plugins, localConfigs, parsedQuery) => {
     // assign the express-parsed query value
     //  if possible, JSON parse the string
     try {
-      plugin.queryValue = JSON.parse(parsedQuery[plugin.queryKey])
+      plugin.queryValue = JSON.parse(
+        decodeURIComponent(parsedQuery[plugin.queryKey])
+      );
     } catch (o_0) {
-      plugin.queryValue = parsedQuery[plugin.queryKey]
+      plugin.queryValue = parsedQuery[plugin.queryKey];
     }
 
     // assign local configurations
-    plugin.locals = Object.assign({}, localConfigs[plugin.queryKey])
+    plugin.locals = Object.assign({}, localConfigs[plugin.queryKey]);
   }
   // console.log(JSON.stringify(localConfigs, null, '  '))
   // console.log(requestedPlugins)
 
-  return requestedPlugins
+  return requestedPlugins;
+};
 
-}
-
-module.exports = configurePlugins
+module.exports = configurePlugins;
