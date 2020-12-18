@@ -277,6 +277,7 @@ export class CodeFE {
     const stringifiedResource = encodeURIComponent(
       JSON.stringify(pseudoResource)
     );
+
     const resourceQuery = `--resource=${stringifiedResource}`;
 
     const lenseQueryValue = encodeURIComponent(

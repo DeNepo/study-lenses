@@ -4,6 +4,7 @@
 
 // dependencies & config ...
 const path = require("path");
+const querystring = require("querystring");
 const fs = require("fs");
 const util = require("util");
 const readFilePromise = util.promisify(fs.readFile);
@@ -80,6 +81,7 @@ const gitbookify = require("./gitbookify/index.js");
 
 const Logger = require("./lib/logger.js");
 const gitbookfiy = require("./gitbookify/index.js");
+const { query } = require("./lib/logger.js");
 // const Logger = console
 
 // error and exit handling ...

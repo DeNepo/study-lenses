@@ -11,6 +11,7 @@ a tool to add new perspectives and layers of interactivity on top of existing co
 - [Deploying](#deploying)
 - [Source Walk-Through](#source-walk-through)
 - [Docs](./DOCS.md)
+- [known bugs](#known-bugs)
 
 ---
 
@@ -22,27 +23,27 @@ a tool to add new perspectives and layers of interactivity on top of existing co
 2. `cd` into any directory of code you would like to study
 3. `$ study path/to/content` - study a resource in an existing directory
 4. Or clone [Debugging](https://github.com/HackYourFutureBelgium/debugging/) and `study` this repo
-    - Debugging is an HYF Be module written for use with `study`
+   - Debugging is an HYF Be module written for use with `study`
 
 ### For Local Development
 
 1. `git clone` the repo
 2. `cd study-lenses` into repo
 3. `npm install -g .`
-    - installing this repository as a global dependency will let you test your changes in realtime
+   - installing this repository as a global dependency will let you test your changes in realtime
 4. study any directory or file
-    - `study test-content`: opens the directory of test files
-    - `study`: opens this whole directory. explore the source code using the source code.  wowow
+   - `study test-content`: opens the directory of test files
+   - `study`: opens this whole directory. explore the source code using the source code. wowow
 
 ---
 
 ## UPI
 
-This tool has a URL Parameter Interface, the student controls how they view and study their code by modifying the URL parameters when requesting a resource.  At it's base, this is just a static server.  requesting a path inside the folder you have `study`ed will send the raw content. however ...
+This tool has a URL Parameter Interface, the student controls how they view and study their code by modifying the URL parameters when requesting a resource. At it's base, this is just a static server. requesting a path inside the folder you have `study`ed will send the raw content. however ...
 
-URL params can be used to modify the resource before it is sent.  once you have `/test-content` open in your browser using `$ study`, navigate a file and add `?hello-world` to the end of the URL and refreshing.  T can find the source code for this lens in [./src/lenses/hello-world](./src/lenses/hello-world). (This is a [Lens](#lens). There is another type of URL parameter called an [Option](#option) that will be covered in more detail later.)
+URL params can be used to modify the resource before it is sent. once you have `/test-content` open in your browser using `$ study`, navigate a file and add `?hello-world` to the end of the URL and refreshing. T can find the source code for this lens in [./src/lenses/hello-world](./src/lenses/hello-world). (This is a [Lens](#lens). There is another type of URL parameter called an [Option](#option) that will be covered in more detail later.)
 
-To see lenses in action, open the `/test-content` directory as indicated in __Getting Started__ and try pasting in these url extensions and refreshing:
+To see lenses in action, open the `/test-content` directory as indicated in **Getting Started** and try pasting in these url extensions and refreshing:
 
 - `/README.md`
   - `/README.md` - no lens, the markdown source is returned as-is
@@ -69,13 +70,12 @@ To see lenses in action, open the `/test-content` directory as indicated in __Ge
   - `/simplit/file.js.md?simplit&format`
   - `/simplit/file.js.md?simplit&format&highlight`
 
+There are a lot of different lenses, and they sometimes will compose in unhelpful or unexpected ways. it's also not very student-friendly to be adjusting params all the time. so ...
 
-There are a lot of different lenses, and they sometimes will compose in unhelpful or unexpected ways.  it's also not very student-friendly to be adjusting params all the time. so ...
-
-The server comes with a default lenses `?hyf` that opens a directory as a navigable folder structure.  Each subdirectory and file is a link that opens with a sane default lens so students won't need to understand how to use params or read lens guides to get started. Here are a few of the defaults:
+The server comes with a default lenses `?hyf` that opens a directory as a navigable folder structure. Each subdirectory and file is a link that opens with a sane default lens so students won't need to understand how to use params or read lens guides to get started. Here are a few of the defaults:
 
 - `.html` files will open without a lens, as a live website (`study` is just an augmented static server. `import`/`export`, local `fetch` calls, it all works! )
-- `.js` files open up in a monaco editor with built-in parsonizer and diff-editor.  Students will have the option to enable an `eval` button & other study tools
+- `.js` files open up in a monaco editor with built-in parsonizer and diff-editor. Students will have the option to enable an `eval` button & other study tools
 - `.json` files open as colored and collapsible data
 - ...
 
@@ -91,11 +91,9 @@ Adding `--help` anywhere in your query (ie. `/path/file.js?hyf&--help`) will sen
 
 ---
 
-
 ## Plugins
 
-There are two types of plugins, head over to [DOCS](./DOCS.md) for full details.  here's a quick summary:
-
+There are two types of plugins, head over to [DOCS](./DOCS.md) for full details. here's a quick summary:
 
 ### Lenses
 
@@ -109,17 +107,17 @@ The most basic lens could just be a function that reverses the text stored in th
 
 ### Options
 
-Options are inspired by [cli conventions](https://nullprogram.com/blog/2020/08/01/).  Option arguments are passed the same way as lenses: as a URL parameter.  They are similar to lenses but fall "outside" the normal control flow, they are filtered out of the params and evaluated before the resource is processed by lenses.
+Options are inspired by [cli conventions](https://nullprogram.com/blog/2020/08/01/). Option arguments are passed the same way as lenses: as a URL parameter. They are similar to lenses but fall "outside" the normal control flow, they are filtered out of the params and evaluated before the resource is processed by lenses.
 
 In contrast to lenses, an option can end the request/response cycle early if indicated in their return value, ie. `--help` will send user documentation regardless of where it is placed in the URL, what other lenses were requested, or what the resource path is.
 
-Options can also return hooks that are called at different points in the lens pipeline process.  Hooks cannot modify the content or HTTP response without immediately ending the cycle.  For example, the `--debug` option return hooks that log each stage of the lens pipeline for diagnosis _without_ modifying the behavior of the pipeline (useful for lens developers and especially curious students).  More on this in the [DOCS](./DOCS.md)
+Options can also return hooks that are called at different points in the lens pipeline process. Hooks cannot modify the content or HTTP response without immediately ending the cycle. For example, the `--debug` option return hooks that log each stage of the lens pipeline for diagnosis _without_ modifying the behavior of the pipeline (useful for lens developers and especially curious students). More on this in the [DOCS](./DOCS.md)
 
 ---
 
 ## Deploying
 
-besides local studying, this module should be equipped for deployment.  it should probably support at least these ways:
+besides local studying, this module should be equipped for deployment. it should probably support at least these ways:
 
 - normal deployment on a server. (not a problem, should work as-is)
 - deployment on a service like netlify functions or aws lambdas, configurable with github actions and npm scripts (i think this is possible because the server is stateless and just reads/modifies files from directory)
@@ -130,7 +128,7 @@ besides local studying, this module should be equipped for deployment.  it shoul
 
 > also, [the docs](./DOCS.md)
 
-Head over to [./bin/index.js](./bin/index.js) and follow the comments for a guided walk-through of the code base.  Some files will contain a comment at the bottom indicating which files to read next.  If nothing is mentioned, you can take abstractions at face value unless you're the curious type.
+Head over to [./bin/index.js](./bin/index.js) and follow the comments for a guided walk-through of the code base. Some files will contain a comment at the bottom indicating which files to read next. If nothing is mentioned, you can take abstractions at face value unless you're the curious type.
 
 If you're a little curious, but not too curious, there's this:
 
@@ -167,3 +165,7 @@ If you're a little curious, but not too curious, there's this:
 |
 |- test-content -- a whole bunch of code and markdown for testing out lenses
 ```
+
+---
+
+## Known Bugs

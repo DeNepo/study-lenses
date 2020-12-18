@@ -117,7 +117,7 @@ try {
     flowchartButton.addEventListener("click", () => {
       const pseudoResource = {
         resource: {
-          content: env.code,
+          content: encodeURIComponent(env.code),
           info: { ext: ".js", base: "resource.js" },
         },
       };
@@ -158,33 +158,6 @@ try {
       window.open(url, "_blank");
     });
     return parsonsButton;
-  });
-
-  Prism.plugins.toolbar.registerButton("flowchart", function (env) {
-    if (!(config.locals.eval || config.queryValue.eval)) {
-      return null;
-    }
-
-    if (env.language !== "js" && env.language !== "javascript") {
-      return null;
-    }
-
-    const consoleButton = document.createElement("button");
-    consoleButton.textContent = "flowchart";
-    consoleButton.setAttribute("type", "button");
-    consoleButton.addEventListener("click", () => {
-      const baseConfig = {
-        code: env.code,
-        ext: ".js",
-      };
-      const finalConfig = Object.assign(baseConfig, config.locals);
-      const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
-      const query = `?flowchart=${queryValue}`;
-      const url = window.location.origin + query;
-
-      window.open(url, "_blank");
-    });
-    return consoleButton;
   });
 
   Prism.plugins.toolbar.registerButton("diff", function (env) {

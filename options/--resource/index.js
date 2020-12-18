@@ -31,7 +31,6 @@ const resourceOption = ({ resource, config }) => {
   } else {
     resource = config.queryValue.resource;
   }
-
   return {
     resource,
   };

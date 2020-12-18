@@ -76,7 +76,7 @@ const highlightLense = async ({ resource, config }) => {
 
 
       const codeGoesHere = document.getElementById('code-goes-here')
-      codeGoesHere.innerHTML = escapeHTML(decodeURIComponent(code))
+      codeGoesHere.innerHTML = escapeHTML(code)
       Prism.highlightAllUnder(codeGoesHere.parentElement);
 
     </script>
