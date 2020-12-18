@@ -28,8 +28,6 @@ const resourceOption = ({ resource, config }) => {
     resource = deepMerge(resource, config.queryValue.resource, {
       arrayMerge: combineMerge,
     });
-  } else {
-    resource = config.queryValue.resource;
   }
   return {
     resource,

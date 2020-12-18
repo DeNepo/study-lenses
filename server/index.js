@@ -20,6 +20,7 @@ const mime = require("mime");
 const marked = require("marked");
 
 const deepClone = require("./lib/deep-clone.js");
+const deepParseQuery = require("./lib/deep-parse-query.js");
 
 const compileLocalConfigs = require("./compile-local-configs");
 const resourceFromAbsolutePath = require("./resource-from-absolute-path");
@@ -184,6 +185,9 @@ app.use(async (req, res, next) => {
     return;
   }
 
+  // deeply parse any parameter configurations
+  req.query = deepParseQuery(req.query);
+  // set defaults if requested
   if (queryKeys.includes("--defaults")) {
     const pathExt = path.extname(req.path);
     let localTypeConfig = "";
@@ -249,10 +253,34 @@ app.use(async (req, res, next) => {
     return;
   }
 
-  const resource = await resourceFromAbsolutePath({
-    absolutePath,
-    localConfigs,
-  });
+  // did the URL contain a resource?
+  const resourceProvided =
+    req.query["--resource"] &&
+    req.query["--resource"].resource &&
+    typeof req.query["--resource"].resource === "object";
+  // should it be merged with the local resource?
+  const mergeWithLocalResource =
+    req.query["--resource"] && req.query["--resource"].merge;
+
+  // build the requested resource
+  let resource = {};
+  if (resourceProvided && mergeWithLocalResource) {
+    const localResource = await resourceFromAbsolutePath({
+      absolutePath,
+      localConfigs,
+    });
+    resource = deepMerge(localResource, req.query["--resource"].resource, {
+      arrayMerge: combineMerge,
+    });
+  } else if (resourceProvided && !mergeWithLocalResource) {
+    resource = req.query["--resource"].resource;
+  } else {
+    resource = await resourceFromAbsolutePath({
+      absolutePath,
+      localConfigs,
+    });
+  }
+
   // if there was an error fetching the resource
   //  fallback to static serving
   // express.static can handle the error
