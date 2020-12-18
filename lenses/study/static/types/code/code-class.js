@@ -139,6 +139,15 @@ export class CodeFE {
     diffSelectionButton.addEventListener("click", () =>
       this.openSelectionWith("diff")
     );
+    document
+      .getElementById("diff-input")
+      .addEventListener("change", (event) => {
+        if (event.target.checked) {
+          diffSelectionButton.style = "display: inline-block;";
+        } else {
+          diffSelectionButton.style = "display: none;";
+        }
+      });
 
     document
       .getElementById("diff-selection-input")

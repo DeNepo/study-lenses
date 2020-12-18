@@ -17,12 +17,12 @@ class CodeSSR {
   }
 
   configOptions() {
-    return "";
-    // return this.config.locals.diff
-    //   ? `<form>
-    //   <input id='diff-selection-input' type='checkbox' /> diff selection
-    // </form>`
-    //   : "";
+    return `
+      <form>
+        <input id='diff-input' type='checkbox' ${
+          this.config.locals.diff ? "checked" : ""
+        } /> <label for='diff-input'>diff</label>
+      </form>`;
   }
 
   panel() {
