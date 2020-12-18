@@ -1,27 +1,96 @@
 const highlightLense = async ({ resource, config }) => {
-  console.log(resource);
-
   resource.content = `
 <!DOCTYPE html>
   <html>
-  <head></head>
-  <body>
-    <pre><code id='code-goes-here' class="line-numbers language-${
-      typeof resource.content === "object"
-        ? "json"
-        : resource.info.ext.split(".").join("")
-    }"></code></pre>
-    <script src="${config.sharedStatic}/prism/script.js"></script>
+  <head>
     <link rel="stylesheet" href="${config.sharedStatic}/prism/style.css">
+  </head>
+  <body>
+
+    ${
+      config.locals.annotate === false
+        ? ""
+        : `<link rel="stylesheet" href="${config.ownStatic}/sketch-style.css">
+        <button id="clear">Clear canvas</button>
+        <button id="undo">Undo</button>
+        <button id="redo">Redo</button>
+        <br />
+        <button id="white" class="color">White</button>
+        <button id="red" class="color">Red</button>
+        <button id="green" class="color">Green</button>
+        <button id="blue" class="color">Blue</button>
+        <button id="black" class="color">Black</button>`
+    }
+    ${
+      config.locals.flowchart && resource.info.ext === ".js"
+        ? `
+    <button style="float: right;" onclick="openWith(\`${encodeURIComponent(
+      resource.content
+    )}\`, 'flowchart')">flowchart</button>`
+        : ""
+    }
+    ${
+      config.locals.diff && resource.info.ext === ".js"
+        ? `
+    <button style="float: right;" onclick="openWith(\`${encodeURIComponent(
+      resource.content
+    )}\`, 'diff')">diff</button>`
+        : ""
+    }
+
+    <div id="container">
+      <div id="code-container" class="stacked">
+        <pre><code id='code-goes-here' class="line-numbers language-${
+          typeof resource.content === "object"
+            ? "json"
+            : resource.info.ext.split(".").join("")
+        }"></code></pre>
+      </div>
+      <div id="canvas-container" class="stacked"><canvas id="cfd"></canvas></div>
+    </div>
 
     <script>
-      const code = "${encodeURIComponent(
+      var code = decodeURIComponent("${encodeURIComponent(
         typeof resource.content === "object"
           ? JSON.stringify(resource.content, null, "  ")
           : resource.content
-      )}"
+      )}");
+      var config = JSON.parse(decodeURIComponent("${encodeURIComponent(
+        JSON.stringify(config)
+      )}"));
+
+
     </script>
-    <script src='${config.ownStatic}/init.js'></script>
+    <!-- <script src='${config.ownStatic}/init.js'></script> -->
+
+    <script src="${config.sharedStatic}/prism/script.js"></script>
+    <script src="${config.sharedStatic}/prism/toolbar.js"></script>
+    <script>
+      // https://stackoverflow.com/a/24631113
+      function escapeHTML(string) {
+        var pre = document.createElement('pre');
+        var text = document.createTextNode(string);
+        pre.appendChild(text);
+        return pre.innerHTML;
+      }
+
+
+      const codeGoesHere = document.getElementById('code-goes-here')
+      codeGoesHere.innerHTML = escapeHTML(decodeURIComponent(code))
+      Prism.highlightAllUnder(codeGoesHere.parentElement);
+
+    </script>
+
+
+    ${
+      config.locals.annotate === false
+        ? ""
+        : `<script src="${config.ownStatic}/cfd.js"></script>
+    <script src="${config.ownStatic}/sketch-script.js"></script>`
+    }
+
+    <script src="${config.ownStatic}/open-with.js"></script>
+
   </body>
 </html>`;
   resource.info.ext = ".html";

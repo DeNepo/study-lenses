@@ -42,6 +42,16 @@ const parsonsLense = ({ resource, config }) => {
   } else {
     frontendConfig.eval = config.locals.eval;
   }
+  if (config.queryValue.hasOwnProperty("run")) {
+    frontendConfig.run = config.queryValue.run;
+  } else {
+    frontendConfig.run = config.locals.run;
+  }
+  if (config.queryValue.hasOwnProperty("debug")) {
+    frontendConfig.debug = config.queryValue.debug;
+  } else {
+    frontendConfig.debug = config.locals.debug;
+  }
 
   if (config.queryValue.hasOwnProperty("openIn")) {
     frontendConfig.openIn = config.queryValue.openIn;

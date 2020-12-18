@@ -269,14 +269,15 @@ const renderStudyButtons = (container, config, editor) => {
   container.appendChild(document.createElement("br"));
   container.appendChild(document.createElement("br"));
 
-  if (config.eval) {
+  if (config.eval || config.run) {
     const consoleButton = document.createElement("button");
-    consoleButton.innerHTML = "console";
+    consoleButton.innerHTML = "run";
     consoleButton.onclick = () => studyWith["console"];
     container.appendChild(consoleButton);
-
+  }
+  if (config.eval || config.debug) {
     const debuggerButton = document.createElement("button");
-    debuggerButton.innerHTML = "debugger";
+    debuggerButton.innerHTML = "debug";
     debuggerButton.onclick = () => studyWith["debugger"];
     container.appendChild(debuggerButton);
   }

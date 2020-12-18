@@ -10,18 +10,6 @@ const readFilePromise = util.promisify(fs.readFile);
 
 process.env["NODE_CONFIG_DIR"] = path.join(__dirname, "..", "config");
 const config = require("config");
-const localTopLevelConfigPath = path.join(process.cwd(), "study.json");
-if (
-  fs.existsSync(localTopLevelConfigPath) &&
-  fs.lstatSync(localTopLevelConfigPath).isFile()
-) {
-  try {
-    const localTopLevelConfig = require(localTopLevelConfigPath);
-    Object.assign(config.locals, localTopLevelConfig);
-  } catch (err) {
-    console.log(err);
-  }
-}
 
 const express = require("express");
 const morgan = require("morgan");
@@ -142,6 +130,16 @@ if (localLensesPathIsValid) {
   );
 }
 
+if (config.locals.static && typeof config.locals.static === "object") {
+  for (const staticPath in config.locals.static) {
+    const actualPath = config.locals.static[staticPath];
+    app.use(
+      new RegExp(`[\s\S]*${staticPath}`),
+      express.static(path.join(process.cwd(), actualPath))
+    );
+  }
+}
+
 app.use(async (req, res, next) => {
   // if there are no parameters, fall back to static serving
   const queryKeys = Object.keys(req.query);
@@ -178,7 +176,6 @@ app.use(async (req, res, next) => {
   const localConfigs = deepMerge(config.locals, preDefaults, {
     arrayMerge: combineMerge,
   });
-
   // the there is a local --ignore option, fall back to static serving
   if (localConfigs["--ignore"]) {
     next();
@@ -187,27 +184,32 @@ app.use(async (req, res, next) => {
 
   if (queryKeys.includes("--defaults")) {
     const pathExt = path.extname(req.path);
-    const localTypeConfig = pathExt
-      ? localConfigs["--defaults"][pathExt]
-      : localConfigs["--defaults"].directory;
-    if (typeof localTypeConfig === "string") {
-      const splitLocalTypeConfig = localTypeConfig.split("&");
-      const parsedLocalTypeConfigs = splitLocalTypeConfig.map((param) => {
-        const key = param.split("=")[0];
-        const value = param.split("=")[1];
-        if (value) {
-          let parsedValue = value;
-          try {
-            parsedValue = JSON.parse(value);
-          } catch (o_0) {}
-          return [key, parsedValue];
-        } else {
-          return [key, ""];
-        }
-      });
-      for (const paramConfig of parsedLocalTypeConfigs) {
-        req.query[paramConfig[0]] = paramConfig[1];
+    let localTypeConfig = "";
+    if (fs.lstatSync(absolutePath).isDirectory()) {
+      localTypeConfig = localConfigs["--defaults"].directory;
+    } else {
+      localTypeConfig = localConfigs["--defaults"][pathExt] || "";
+    }
+    if (!localTypeConfig) {
+      next();
+      return;
+    }
+    const splitLocalTypeConfig = localTypeConfig.split("&");
+    const parsedLocalTypeConfigs = splitLocalTypeConfig.map((param) => {
+      const key = param.split("=")[0];
+      const value = param.split("=")[1];
+      if (value) {
+        let parsedValue = value;
+        try {
+          parsedValue = JSON.parse(value);
+        } catch (o_0) {}
+        return [key, parsedValue];
+      } else {
+        return [key, ""];
       }
+    });
+    for (const paramConfig of parsedLocalTypeConfigs) {
+      req.query[paramConfig[0]] = paramConfig[1];
     }
   }
 

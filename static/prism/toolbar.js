@@ -45,8 +45,15 @@ try {
     return jsTutorButton;
   });
 
-  Prism.plugins.toolbar.registerButton("debugger", function (env) {
-    if (!(config.locals.eval || config.queryValue.eval)) {
+  Prism.plugins.toolbar.registerButton("debug", function (env) {
+    if (
+      !(
+        config.locals.eval ||
+        config.locals.debug ||
+        config.queryValue.eval ||
+        config.queryValue.debug
+      )
+    ) {
       return null;
     }
 
@@ -60,7 +67,7 @@ try {
     // }
 
     const debuggerButton = document.createElement("button");
-    debuggerButton.textContent = "debugger";
+    debuggerButton.textContent = "debug";
     debuggerButton.setAttribute("type", "button");
     debuggerButton.addEventListener("click", () =>
       eval("debugger;\n\n" + env.code)
@@ -68,8 +75,15 @@ try {
     return debuggerButton;
   });
 
-  Prism.plugins.toolbar.registerButton("console", function (env) {
-    if (!(config.locals.eval || config.queryValue.eval)) {
+  Prism.plugins.toolbar.registerButton("run", function (env) {
+    if (
+      !(
+        config.locals.eval ||
+        config.locals.run ||
+        config.queryValue.eval ||
+        config.queryValue.run
+      )
+    ) {
       return null;
     }
 
@@ -82,10 +96,68 @@ try {
     // }
 
     const consoleButton = document.createElement("button");
-    consoleButton.textContent = "console";
+    consoleButton.textContent = "run";
     consoleButton.setAttribute("type", "button");
     consoleButton.addEventListener("click", () => eval(env.code));
     return consoleButton;
+  });
+
+  Prism.plugins.toolbar.registerButton("flowchart", function (env) {
+    if (!(config.locals.flowchart || config.queryValue.flowchart)) {
+      return null;
+    }
+
+    if (env.language !== "js" && env.language !== "javascript") {
+      return null;
+    }
+
+    const flowchartButton = document.createElement("button");
+    flowchartButton.textContent = "flowchart";
+    flowchartButton.setAttribute("type", "button");
+    flowchartButton.addEventListener("click", () => {
+      const pseudoResource = {
+        resource: {
+          content: env.code,
+          info: { ext: ".js", base: "resource.js" },
+        },
+      };
+
+      const stringifiedResource = encodeURIComponent(
+        JSON.stringify(pseudoResource)
+      );
+
+      const query = "flowchart&--resource=" + stringifiedResource;
+      const url = window.location.origin + "?" + query;
+      window.open(url, "_blank");
+    });
+    return flowchartButton;
+  });
+
+  Prism.plugins.toolbar.registerButton("parsonize", function (env) {
+    if (!(config.locals.parsons || config.queryValue.parsons)) {
+      return null;
+    }
+
+    if (env.language !== "js" && env.language !== "javascript") {
+      return null;
+    }
+
+    const parsonsButton = document.createElement("button");
+    parsonsButton.textContent = "parsonize";
+    parsonsButton.setAttribute("type", "button");
+    parsonsButton.addEventListener("click", () => {
+      const baseConfig = {
+        code: env.code,
+        ext: ".js",
+      };
+      const finalConfig = Object.assign(baseConfig, config.locals);
+      const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
+      const query = `?parsons=${queryValue}`;
+      const url = window.location.origin + query;
+
+      window.open(url, "_blank");
+    });
+    return parsonsButton;
   });
 
   Prism.plugins.toolbar.registerButton("flowchart", function (env) {
@@ -96,10 +168,6 @@ try {
     if (env.language !== "js" && env.language !== "javascript") {
       return null;
     }
-    // const rootElement = env.element.parentElement;
-    // if (!rootElement.hasAttribute('eval')) {
-    //   return null;
-    // }
 
     const consoleButton = document.createElement("button");
     consoleButton.textContent = "flowchart";
@@ -117,6 +185,29 @@ try {
       window.open(url, "_blank");
     });
     return consoleButton;
+  });
+
+  Prism.plugins.toolbar.registerButton("diff", function (env) {
+    if (env.language !== "js" && env.language !== "javascript") {
+      return null;
+    }
+
+    const parsonsButton = document.createElement("button");
+    parsonsButton.textContent = "diff";
+    parsonsButton.setAttribute("type", "button");
+    parsonsButton.addEventListener("click", () => {
+      const baseConfig = {
+        code: env.code,
+        ext: ".js",
+      };
+      const finalConfig = Object.assign(baseConfig, config.locals);
+      const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
+      const query = `?diff=${queryValue}`;
+      const url = window.location.origin + query;
+
+      window.open(url, "_blank");
+    });
+    return parsonsButton;
   });
 
   {

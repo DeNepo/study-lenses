@@ -1,43 +1,42 @@
-let onceRendered = false
+let onceRendered = false;
+let codeLength = 0;
 const init = (codeArgument) => {
+  const rawCode = codeArgument || config.code;
+  codeLength = rawCode.split("\n").length;
 
-  const rawCode = codeArgument || config.code
-
-  const language = monacoExtToLanguage[config.ext]
-
+  const language = monacoExtToLanguage[config.ext];
 
   // extract all block comments, including leading or trailing white space
   //  so the lines of code maintain the correct indentation
   //  and so the block comments maintain their indentation in the UI
-  const blockComments = rawCode
-    .match(/[^\S\r\n]*\/\*([\S\s]*?)\*\/[^\S\r\n]*/gm);
+  const blockComments = rawCode.match(
+    /[^\S\r\n]*\/\*([\S\s]*?)\*\/[^\S\r\n]*/gm
+  );
 
   let codeWithoutBlockComments = rawCode;
   // remove the captured block comments from the code and render to UI
-  const blockCommentContainer = document.getElementById('block-comments')
+  const blockCommentContainer = document.getElementById("block-comments");
   if (blockComments && !onceRendered) {
-    onceRendered = true
+    onceRendered = true;
     for (const blockComment of blockComments) {
       if (!blockComment) {
-        continue
+        continue;
       }
-      const commentPre = document.createElement('pre')
-      commentPre.innerHTML = blockComment
-      blockCommentContainer.appendChild(commentPre)
+      const commentPre = document.createElement("pre");
+      commentPre.innerHTML = blockComment;
+      blockCommentContainer.appendChild(commentPre);
     }
   }
 
-
   //  - register all distractor lines
-  const distractorReplacer = '$_$_$_$_$_$_$_$_$_$_$_$'
+  const distractorReplacer = "$_$_$_$_$_$_$_$_$_$_$_$";
   const distractorReplaced = codeWithoutBlockComments
-    .replace(/\/\/[^\S\r\n]+distractor\s*$/mg, distractorReplacer)
-    .replace(/\/\/distractor\s*$/mg, distractorReplacer)
+    .replace(/\/\/[^\S\r\n]+distractor\s*$/gm, distractorReplacer)
+    .replace(/\/\/distractor\s*$/gm, distractorReplacer);
 
   const finalCode = strip(distractorReplaced)
     .split(distractorReplacer)
-    .join('// distractor');
-
+    .join("// distractor");
 
   const toScramble = monaco.editor.createModel(finalCode, language);
   // const toScramble = monaco.editor.createModel(recompose(decompose(code)), language);
@@ -46,14 +45,14 @@ const init = (codeArgument) => {
   // const source = monaco.editor.createModel(code, language);
   source.updateOptions({ tabSize: 2 });
 
-  const diffContainer = document.getElementById('editor-container')
-  diffContainer.innerHTML = ''
+  const diffContainer = document.getElementById("editor-container");
+  diffContainer.innerHTML = "";
   const diffEditor = monaco.editor.createDiffEditor(diffContainer, {
     roundedSelection: true,
     scrollBeyondLastLine: false,
     theme: "vs-dark",
     wrappingIndent: "indent",
-    wordWrap: 'wordWrapColumn',
+    wordWrap: "wordWrapColumn",
     wordWrapColumn: 100,
     automaticLayout: true,
     originalEditable: true, // for left pane
@@ -63,28 +62,29 @@ const init = (codeArgument) => {
   });
   diffEditor.setModel({
     original: toScramble,
-    modified: source
+    modified: source,
   });
 
-  diffEditor.style = 'height:90vh; width:100vw;';
+  diffEditor.style = "height:90vh; width:100vw;";
 
+  document.getElementById("diff-selection-form").onchange = (event) => {
+    const inputs = Array.from(
+      event.currentTarget.getElementsByTagName("input")
+    );
 
+    const nonZeroInputs = inputs.filter((input) => input.value !== "0");
 
-  document.getElementById('diff-selection-form').onchange = (event) => {
-    const inputs = Array.from(event.currentTarget.getElementsByTagName('input'));
-
-    const nonZeroInputs = inputs.filter(input => input.value !== '0');
-
-    const scale = (value) => Math.pow(100, (value / 200)) / 10;
+    // scales the probabilities based on snippet length
+    const scale = (value) => Math.pow(100, value / 200) / (codeLength * 2);
     // subset, mixer, percentage
-    const mixupParameters = nonZeroInputs.map(input => {
-      const splitName = input.name.split('-');
+    const mixupParameters = nonZeroInputs.map((input) => {
+      const splitName = input.name.split("-");
       return [splitName[0], splitName[1], scale(Number(input.value))];
     });
 
-    const transformations = mixupParameters.map(parameter => {
+    const transformations = mixupParameters.map((parameter) => {
       const mixitup = mangler[parameter[0]];
-      if (parameter[1] === 'shuffle') {
+      if (parameter[1] === "shuffle") {
         return mixitup(shuffle, parameter[2]);
       } else {
         return mixitup(replace, parameter[2]);
@@ -93,19 +93,19 @@ const init = (codeArgument) => {
 
     // const log = (thing) => (console.log(thing), thing);
     const log = (thing) => thing;
-    toScramble.setValue(recompose(log(pipe(log(decompose(finalCode)), transformations))));
+    toScramble.setValue(
+      recompose(log(pipe(log(decompose(finalCode)), transformations)))
+    );
+  };
+};
+console.log(config);
 
-  }
-
-}
-console.log(config)
-
-if (config.ext === '.js') {
-  document.getElementById('randomize-variables').onchange = (event) => {
-    const input = event.target
+if (config.ext === ".js") {
+  document.getElementById("randomize-variables").onchange = (event) => {
+    const input = event.target;
 
     const newCode = randomizeVariables(config.code, Number(input.value) / 100);
 
-    init(newCode)
-  }
+    init(newCode);
+  };
 }

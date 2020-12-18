@@ -93,23 +93,33 @@ export class JavaScriptFE extends CodeFE {
 
     // if (this.config.locals.eval) {
 
-    const evalContainer = document.getElementById("eval-container");
+    const runContainer = document.getElementById("run-container");
+    document.getElementById("run-input").addEventListener("change", (event) => {
+      this.config.locals.run = !this.config.locals.run;
+      if (event.target.checked) {
+        runContainer.style = "display: inline-block;";
+      } else {
+        runContainer.style = "display: none;";
+      }
+    });
+
+    const debugContainer = document.getElementById("debug-container");
     document
-      .getElementById("eval-input")
+      .getElementById("debug-input")
       .addEventListener("change", (event) => {
-        this.config.locals.eval = !this.config.locals.eval;
+        this.config.locals.debug = !this.config.locals.debug;
         if (event.target.checked) {
-          evalContainer.style = "display: inline-block;";
+          runContainer.style = "display: inline-block;";
         } else {
-          evalContainer.style = "display: none;";
+          runContainer.style = "display: none;";
         }
       });
 
     document
-      .getElementById("console-button")
+      .getElementById("run-button")
       .addEventListener("click", () => this.studyWith("console"));
     document
-      .getElementById("debugger-button")
+      .getElementById("debug-button")
       .addEventListener("click", () => this.studyWith("debugger"));
     // }
 
@@ -135,37 +145,24 @@ export class JavaScriptFE extends CodeFE {
       });
     // }
 
-    if (this.config.locals.traceLog) {
-      console.log(3);
-      const instrumentButton = document.createElement("button");
-      instrumentButton.innerHTML = "traceLog";
-      instrumentButton.addEventListener("click", () => {
-        // using XHR to avoid "in promise" error messages
-        const xhr = new XMLHttpRequest();
-        const paramConfig = {
-          content: this.editor.getValue(),
-        };
-        const paramSafeConfig = encodeURIComponent(JSON.stringify(paramConfig));
-        xhr.open(
-          "GET",
-          window.location.origin + "?trace-log=" + paramSafeConfig
-        );
-        xhr.responseType = "text";
-        xhr.send();
-        xhr.onload = () => {
-          if (xhr.status != 200) {
-            console.log("error instrumenting code", xhr);
-          } else {
-            console.log(xhr.response);
-          }
-        };
-        xhr.onerror = function (err) {
-          console.error(err);
-        };
+    const traceContainer = document.getElementById("trace-container");
+    document
+      .getElementById("trace-input")
+      .addEventListener("change", (event) => {
+        this.config.locals.trace = !this.config.locals.trace;
+        if (event.target.checked) {
+          traceContainer.style = "display: inline-block;";
+        } else {
+          traceContainer.style = "display: none;";
+        }
       });
-      const buttonsPanel = openInContainer.parentElement;
-      buttonsPanel.appendChild(instrumentButton);
-    }
+
+    document
+      .getElementById("trace-button")
+      .addEventListener("click", (event) => {
+        trace(this.editor.getValue());
+        event.preventDefault();
+      });
   }
 
   static insertLoopGuards = (evalCode, maxIterations) => {

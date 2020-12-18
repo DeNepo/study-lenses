@@ -6,6 +6,10 @@ class JavaScriptSSR extends CodeSSR {
   constructor({ config, resource }) {
     super({ config, resource });
     console.log(this.resource.info.base);
+    this.config.locals.run =
+      this.config.locals.run || this.config.locals.eval || false;
+    this.config.locals.debug =
+      this.config.locals.debug || this.config.locals.eval || false;
   }
 
   styles() {
@@ -26,8 +30,27 @@ class JavaScriptSSR extends CodeSSR {
   configOptions() {
     const superConfigOptions = super.configOptions();
     return (
-      superConfigOptions +
       `
+    <form>
+      <input id='run-input' type='checkbox' ${
+        this.config.locals.run || this.config.locals.eval ? "checked" : ""
+      } /> <label for='run-input'>run</label>
+    </form>
+    <form>
+      <input id='trace-input' type='checkbox' ${
+        this.config.locals.trace ? "checked" : ""
+      } /> <label for='trace-input'>trace</label>
+    </form>
+    <form>
+      <input id='debug-input' type='checkbox' ${
+        this.config.locals.debug || this.config.locals.eval ? "checked" : ""
+      } /> <label for='debug-input'>debug</label>
+    </form>
+    <form>
+      <input id='open-in-input' type='checkbox' ${
+        this.config.locals.openIn ? "checked" : ""
+      } /> <label for='open-in-input'>open in ...</label>
+    </form>
     <form>
       <input id='loop-guard-input' type='checkbox' ${
         this.config.locals.loopGuard ? "checked" : ""
@@ -43,16 +66,7 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.flowchart ? "checked" : ""
       } /> <label for='flowchart-input'>flowchart</label>
     </form>
-    <form>
-      <input id='eval-input' type='checkbox' ${
-        this.config.locals.eval ? "checked" : ""
-      } /> <label for='eval-input'>eval</label>
-    </form>
-    <form>
-      <input id='open-in-input' type='checkbox' ${
-        this.config.locals.openIn ? "checked" : ""
-      } /> <label for='open-in-input'>open in ...</label>
-    </form>`
+    ` + superConfigOptions
     );
   }
 
@@ -112,11 +126,22 @@ class JavaScriptSSR extends CodeSSR {
     // }
 
     // if (locals.eval) {
-    const evalDisplay = locals.eval ? "inline-block" : "none";
+    const runDisplay = locals.eval || locals.run ? "inline-block" : "none";
     superPanel += `
-    <div id='eval-container' style='display: ${evalDisplay};'>
-      <button id='console-button'>console</button>
-      <button id='debugger-button'>debugger</button>
+    <div id='run-container' style='display: ${runDisplay};'>
+      <button id='run-button'>run</button>
+    </div>`;
+
+    const traceDisplay = locals.trace ? "inline-block" : "none";
+    superPanel += `
+    <div id='trace-container' style='display: ${traceDisplay};'>
+      <button id='trace-button'>trace</button>
+    </div>`;
+
+    const debugDisplay = locals.eval || locals.debug ? "inline-block" : "none";
+    superPanel += `
+    <div id='debug-container' style='display: ${debugDisplay};'>
+      <button id='debug-button'>debug</button>
     </div>`;
     // }
     // if (locals.openIn) {
@@ -155,9 +180,13 @@ class JavaScriptSSR extends CodeSSR {
 
   scriptsBody() {
     let superScriptsBody = super.scriptsBody();
-    superScriptsBody += `<script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>
-    <script src='${this.config.ownStatic}/types/javascript/static/aran-build.js'></script>`;
+    superScriptsBody += `<script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>`;
 
+    if (this.config.locals.trace) {
+      superScriptsBody += `
+        <script src='${this.config.ownStatic}/types/javascript/static/aran-build.js'></script>
+        <script src='${this.config.ownStatic}/types/javascript/static/aran-script.js'></script>`;
+    }
     const base = this.resource.info.base.toLowerCase();
     if (base.includes(".test.") || base.includes(".spec.")) {
       superScriptsBody += `<script src='${this.config.ownStatic}/dependencies/describe-it.js'></script>
