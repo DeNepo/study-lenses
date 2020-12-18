@@ -190,18 +190,18 @@ app.use(async (req, res, next) => {
   // set defaults if requested
   if (queryKeys.includes("--defaults")) {
     const pathExt = path.extname(req.path);
-    let localTypeConfig = "";
+    let localDefaultsConfig = "";
     if (fs.lstatSync(absolutePath).isDirectory()) {
-      localTypeConfig = localConfigs["--defaults"].directory;
+      localDefaultsConfig = localConfigs["--defaults"].directory;
     } else {
-      localTypeConfig = localConfigs["--defaults"][pathExt] || "";
+      localDefaultsConfig = localConfigs["--defaults"][pathExt] || "";
     }
-    if (!localTypeConfig) {
+    if (!localDefaultsConfig) {
       next();
       return;
     }
-    const splitLocalTypeConfig = localTypeConfig.split("&");
-    const parsedLocalTypeConfigs = splitLocalTypeConfig.map((param) => {
+    const splitLocalDefaultsConfig = localDefaultsConfig.split("&");
+    const parsedLocalDefaultsConfigs = splitLocalDefaultsConfig.map((param) => {
       const key = param.split("=")[0];
       const value = param.split("=")[1];
       if (value) {
@@ -214,7 +214,7 @@ app.use(async (req, res, next) => {
         return [key, ""];
       }
     });
-    for (const paramConfig of parsedLocalTypeConfigs) {
+    for (const paramConfig of parsedLocalDefaultsConfigs) {
       req.query[paramConfig[0]] = paramConfig[1];
     }
   }
