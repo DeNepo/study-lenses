@@ -36,11 +36,16 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.run || this.config.locals.eval ? "checked" : ""
       } /> <label for='run-input'>run</label>
     </form>
-    <form>
+
+    ${
+      this.config.locals.trace
+        ? `<form>
       <input id='trace-input' type='checkbox' ${
         this.config.locals.trace ? "checked" : ""
       } /> <label for='trace-input'>trace</label>
-    </form>
+    </form>`
+        : ""
+    }
     <form>
       <input id='debug-input' type='checkbox' ${
         this.config.locals.debug || this.config.locals.eval ? "checked" : ""

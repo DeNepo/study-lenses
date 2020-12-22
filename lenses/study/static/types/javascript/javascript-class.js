@@ -109,9 +109,9 @@ export class JavaScriptFE extends CodeFE {
       .addEventListener("change", (event) => {
         this.config.locals.debug = !this.config.locals.debug;
         if (event.target.checked) {
-          runContainer.style = "display: inline-block;";
+          debugContainer.style = "display: inline-block;";
         } else {
-          runContainer.style = "display: none;";
+          debugContainer.style = "display: none;";
         }
       });
 
@@ -145,24 +145,28 @@ export class JavaScriptFE extends CodeFE {
       });
     // }
 
-    const traceContainer = document.getElementById("trace-container");
-    document
-      .getElementById("trace-input")
-      .addEventListener("change", (event) => {
-        this.config.locals.trace = !this.config.locals.trace;
-        if (event.target.checked) {
-          traceContainer.style = "display: inline-block;";
-        } else {
-          traceContainer.style = "display: none;";
-        }
-      });
+    if (this.config.locals.trace) {
+      const traceContainer = document.getElementById("trace-container");
+      document
+        .getElementById("trace-input")
+        .addEventListener("change", (event) => {
+          this.config.locals.trace = !this.config.locals.trace;
+          if (event.target.checked) {
+            traceContainer.style = "display: inline-block;";
+          } else {
+            traceContainer.style = "display: none;";
+          }
+        });
 
-    document
-      .getElementById("trace-button")
-      .addEventListener("click", (event) => {
-        trace(this.editor.getValue());
-        event.preventDefault();
-      });
+      document
+        .getElementById("trace-button")
+        .addEventListener("click", (event) => {
+          // trace is a global function loaded if config.locals.trace === true
+          // not a permenant solution
+          trace(this.editor.getValue());
+          event.preventDefault();
+        });
+    }
   }
 
   static insertLoopGuards = (evalCode, maxIterations) => {
