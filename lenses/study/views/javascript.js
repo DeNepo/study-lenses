@@ -148,7 +148,8 @@ class JavaScriptSSR extends CodeSSR {
           <form  id='trace-config'>
             <input id='variables' type='checkbox' checked /> <label for='variables'>variables</label> <br>
             <input id='blocks' type='checkbox'  /> <label for='blocks'>blocks</label> <br>
-            <input id='functions' type='checkbox'  /> <label for='functions'>functions</label> <br>
+            <input id='functions' type='checkbox'  /> <label for='functions'>function calls</label> <br>
+            <input id='this' type='checkbox'  /> <label for='this'>this</label> <br>
           </form>
         </div>
       </div>

@@ -87,12 +87,7 @@ export default {
       // } else if (node.kind === "const") {
       print({
         prefix: line,
-        logs: [
-          "declare (" + node.kind + "):",
-          typeof value === "function"
-            ? "a function named " + value.name
-            : value,
-        ],
+        logs: ["declare (" + node.kind + "):", variable],
       });
       // }
     }

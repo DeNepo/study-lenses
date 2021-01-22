@@ -20,6 +20,9 @@ export const print = ({ logs = [], prefix, out = console.log }) => {
     out(linePrefix(prefix), ...logs);
   } else if (typeof prefix === "string") {
     out(prefix, ...logs);
+  } else if (typeof prefix === "function") {
+    const finalPrefix = prefix(linePrefix);
+    out(finalPrefix, ...logs);
   } else {
     out(...logs);
   }

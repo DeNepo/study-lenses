@@ -13,27 +13,35 @@ export default {
     const line = node.loc.start.line;
 
     if (config.functions) {
-      const printableArgsArray = [];
-      for (const arg of xs) {
-        printableArgsArray.push(arg, ",");
-      }
-      printableArgsArray.pop();
       print({
         prefix: line,
-        logs: [f.name + "(", ...printableArgsArray, ")"],
+        logs: ["calling the function named ", f.name],
       });
-    }
-    if (config.this) {
       print({
-        prefix: Array(prefix.length).join(" "),
-        logs: [" this: ", t],
+        prefix: (prefy) => " " + Array(prefy(line).length).join(" "),
+        logs: ["args:", xs],
       });
+      if (config.this) {
+        print({
+          prefix: (prefy) => " " + Array(prefy(line).length).join(" "),
+          logs: [
+            "this:",
+            typeof t === "function" ? "a function named " + t.name : t,
+          ],
+        });
+      }
     }
     state.scopeDepth += 1;
     const x = Reflect.apply(f, t, xs);
     state.scopeDepth -= 1;
     if (config.functions) {
-      print({ prefix: line, logs: [x + "\n"] });
+      print({
+        prefix: line,
+        logs: [
+          f.name + " returning:",
+          typeof x === "function" ? "a function named " + x.name : x,
+        ],
+      });
     }
     return x;
   },
