@@ -2,12 +2,12 @@
 
 /* this file is the entry point when launching `study` from the CLI */
 
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-process.env['NODE_CONFIG_DIR'] = path.join(__dirname, '..', "config");
+process.env["NODE_CONFIG_DIR"] = path.join(__dirname, "..", "config");
 
-const config = require('config');
+const config = require("config");
 
 /* The user can optionally launch a sub-path from the directory they are in
   if they do this, localhost will still serve from the root of the directory
@@ -18,8 +18,8 @@ const config = require('config');
 */
 const userArgs = process.argv.slice(2);
 // use the first arg that doesn't match a port config
-const pathToStudy = userArgs.find(entry => !(/port=[\d]*/i.test(entry))) || '';
-
+const pathToStudy =
+  userArgs.find((entry) => !/--port=[\d]*/i.test(entry)) || "";
 
 // todo
 //   search process.argv for "-h"
@@ -40,66 +40,68 @@ const absPathToStudy = path.join(process.cwd(), pathToStudy);
 //   throw new Error(pathToStudy + ': is not a valid path');
 // };
 
-
-const defaultLenses = config.locals['--defaults'];
-const defaultLense = (fs.existsSync(absPathToStudy) && fs.lstatSync(absPathToStudy).isDirectory())
-  ? defaultLenses.directory
-  : defaultLenses[path.extname(pathToStudy)];
+const defaultLenses = config.locals["--defaults"];
+const defaultLense =
+  fs.existsSync(absPathToStudy) && fs.lstatSync(absPathToStudy).isDirectory()
+    ? defaultLenses.directory
+    : defaultLenses[path.extname(pathToStudy)];
 
 // user can define a port number to study
-const cliPortSearch = process.argv.find(entry => {
-  if (/port=[\d]*/i.test(entry)) {
-    const portString = entry.split('=')[1];
+const cliPortSearch = process.argv.find((entry) => {
+  if (/--port=[\d]*/i.test(entry)) {
+    const portString = entry.split("=")[1];
     const portNumber = Number(portString);
     if (!Number.isNaN(portNumber) && portNumber >= 3000 && portNumber < 9000) {
-      return true
+      return true;
     }
-    process.argv
+    process.argv;
   }
   return false;
 });
 
-const cliPort = cliPortSearch !== undefined
-  ? cliPortSearch.split('=')[1]
-  : undefined;
+const cliPort =
+  cliPortSearch !== undefined ? cliPortSearch.split("=")[1] : undefined;
 
 let rootStudyConfig = {};
 try {
-  rootStudyConfig = require(path.join(process.cwd(), 'study.json'));
-} catch (o_0) { }
+  rootStudyConfig = require(path.join(process.cwd(), "study.json"));
+} catch (o_0) {}
 /**
-* @param {Object} object
-* @param {string} key
-* @return {any} value
-* https://stackoverflow.com/a/47538066
-*/
+ * @param {Object} object
+ * @param {string} key
+ * @return {any} value
+ * https://stackoverflow.com/a/47538066
+ */
 const getParameterCaseInsensitive = (object, key) => {
-  return object[Object.keys(object)
-    .find(k => k.toLowerCase() === key.toLowerCase())
+  return object[
+    Object.keys(object).find((k) => k.toLowerCase() === key.toLowerCase())
   ];
-}
-const rootStudyConfigPort = getParameterCaseInsensitive(rootStudyConfig, 'port');
-const rootStudyConfigPortValidated = (!Number.isNaN(rootStudyConfigPort) && rootStudyConfigPort >= 3000 && rootStudyConfigPort < 9000)
-  ? rootStudyConfigPort : undefined;
+};
+const rootStudyConfigPort = getParameterCaseInsensitive(
+  rootStudyConfig,
+  "port"
+);
+const rootStudyConfigPortValidated =
+  !Number.isNaN(rootStudyConfigPort) &&
+  rootStudyConfigPort >= 3000 &&
+  rootStudyConfigPort < 9000
+    ? rootStudyConfigPort
+    : undefined;
 
+const port =
+  process.env.PORT || cliPort || rootStudyConfigPortValidated || config.PORT;
 
-const port = process.env.PORT || cliPort || rootStudyConfigPortValidated || config.PORT;
-
-const queryMarker = defaultLense ? '?' : ''
+const queryMarker = defaultLense ? "?" : "";
 
 // -- the following lines will need to be rewritten when config works --
 // construct a url using global configurations and the user-provided sub-path
 // should this not normalize? might it make url paths in windows backslashes?
 const pathToOpen = path.normalize(pathToStudy);
 const url = `http://localhost:${port}/${pathToOpen}${queryMarker}${defaultLense}`;
-console.log('studying: ', url);
-
+console.log("studying: ", url);
 
 // launch the server
-require('../server/index.js')(port)
-  .then(_ => require('open')(url));
-
-
+require("../server/index.js")(port).then((_) => require("open")(url));
 
 /*
   go to ../server/index.js for the next step in your journey

@@ -144,19 +144,6 @@ if (config.locals.static && typeof config.locals.static === "object") {
 }
 
 app.use(async (req, res, next) => {
-  // if there are no parameters, fall back to static serving
-  const queryKeys = Object.keys(req.query);
-  if (queryKeys.length === 0) {
-    next();
-    return;
-  }
-
-  // if the 'ignore' option was send, fall back to static serving
-  if (queryKeys.includes("--ignore")) {
-    next();
-    return;
-  }
-
   // if the requested resource does not exist, fall back to static serving
   const isPublicExample = /[\s\S]*public_example_files/.test(req.path);
   const absolutePath = isPublicExample
@@ -171,6 +158,7 @@ app.use(async (req, res, next) => {
     next();
     return;
   }
+  // console.log(1);
 
   // build the local configuration for this request path
   //  all study.json combined from the request path
@@ -184,9 +172,32 @@ app.use(async (req, res, next) => {
     next();
     return;
   }
+  // console.log(2);
+
+  // if there are no parameters and localc configs don't include --force
+  //  fall back to static serving
+  if (Object.keys(req.query).length === 0 && localConfigs["--force"] !== true) {
+    next();
+    return;
+  } else if (
+    localConfigs["--force"] === true &&
+    Object.keys(req.query).length === 0
+  ) {
+    req.query["--defaults"] = "";
+  }
+  // console.log(3);
+
+  const queryKeys = Object.keys(req.query);
+  // if the 'ignore' option is set for this request, fall back to static serving
+  if (queryKeys.includes("--ignore")) {
+    next();
+    return;
+  }
+  // console.log(4);
 
   // deeply parse any parameter configurations
   req.query = deepParseQuery(req.query);
+
   // set defaults if requested
   if (queryKeys.includes("--defaults")) {
     const pathExt = path.extname(req.path);

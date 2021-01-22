@@ -166,6 +166,16 @@ export class JavaScriptFE extends CodeFE {
           trace(this.editor.getValue());
           event.preventDefault();
         });
+
+      document
+        .getElementById("trace-config")
+        .addEventListener("change", (event) => {
+          const option = event.target.id;
+          if (typeof trace.config[option] === "boolean") {
+            trace.config[option] = !trace.config[option];
+          }
+          event.preventDefault();
+        });
     }
   }
 

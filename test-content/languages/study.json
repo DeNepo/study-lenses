@@ -1,4 +1,5 @@
 {
+  "--force": true,
   "study": {
     "languages": {
       "loopGuard": true

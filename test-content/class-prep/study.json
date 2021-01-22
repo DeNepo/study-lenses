@@ -1,6 +1,7 @@
 {
   "study": {
     "readOnly": false,
-    "eval": true
+    "eval": true,
+    "save": true
   }
 }

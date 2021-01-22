@@ -6,7 +6,7 @@
   "locals": {
     "--defaults": {
       "default": "",
-      ".md": "render",
+      ".md": "study",
       ".html": "",
       ".txt": "",
       "": "",

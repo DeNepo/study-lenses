@@ -45,20 +45,18 @@ const tableOfContents = ({ dirElement, top = false, defaults = {} }) => {
           .join("\n")
       : "";
 
+    const relativePath = path.join(
+      dirElement.toCwd,
+      dirElement.dir,
+      dirElement.base
+    );
     return top
       ? subIndex
-      : `<li><details><summary>${nameElement}</summary>\n` +
+      : `<li><details><summary><a href="${relativePath}?--defaults">${nameElement}</a></summary>\n` +
           (subIndex
             ? '\n<ul style="list-style-type: none;">' + subIndex + "</ul>"
             : "") +
           "</details></li>";
-
-    // const query = defaults.directory ? defaults.directory : '';
-    // const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
-    // return top ? subIndex
-    //   : (`<li><details><summary><a href="${relativePath}?${query}">${dirElement.base}</a></summary>\n`
-    //     + (subIndex ? '\n<ul>' + subIndex + '</ul>' : '')
-    //     + '</details></li>');
   }
 
   return "";
@@ -85,6 +83,7 @@ module.exports = async function renderTocDoc({ virDir, config, top }) {
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="stylesheet" href="${config.sharedStatic}/gh-styles.css">
     <link rel="stylesheet" href="${config.sharedStatic}/prism/style.css">
+    <base target="_blank">
   </head>
   <body>
     <a href='?--help' target='_blank'><code>--help</code>!  how does this work?</a>

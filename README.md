@@ -17,23 +17,22 @@ a tool to add new perspectives and layers of interactivity on top of existing co
 
 ## Getting Started
 
-### For Normal Use
+### To Explore the Test Content
 
-1. `$ npm install -g study-lenses` - install the global dependency
-2. `cd` into any directory of code you would like to study
-3. `$ study path/to/content` - study a resource in an existing directory
-4. Or clone [Debugging](https://github.com/HackYourFutureBelgium/debugging/) and `study` this repo
-   - Debugging is an HYF Be module written for use with `study`
+1. `$ npm install`
+2. `$ npm run test-content`
 
-### For Local Development
+### To Explore Anything on your Computer
+
+If you would like to this server with files from your computer that are not in `/test-content` you will need to install it as a global dependency.
 
 1. `git clone` the repo
 2. `cd study-lenses` into repo
 3. `npm install -g .`
    - installing this repository as a global dependency will let you test your changes in realtime
 4. study any directory or file
-   - `study test-content`: opens the directory of test files
-   - `study`: opens this whole directory. explore the source code using the source code. wowow
+   - `cd anywhere`: opens the directory of test files
+   - `study`: opens the selected directory in your browser, ready for study
 
 ---
 

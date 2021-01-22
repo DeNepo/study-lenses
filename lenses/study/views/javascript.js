@@ -141,6 +141,17 @@ class JavaScriptSSR extends CodeSSR {
     superPanel += `
     <div id='trace-container' style='display: ${traceDisplay};'>
       <button id='trace-button'>trace</button>
+
+      <div class="dropdown">
+        <code>options</code>
+        <div  class='dropdown-content'>
+          <form  id='trace-config'>
+            <input id='variables' type='checkbox' checked /> <label for='variables'>variables</label> <br>
+            <input id='blocks' type='checkbox'  /> <label for='blocks'>blocks</label> <br>
+            <input id='functions' type='checkbox'  /> <label for='functions'>functions</label> <br>
+          </form>
+        </div>
+      </div>
     </div>`;
 
     const debugDisplay = locals.eval || locals.debug ? "inline-block" : "none";
@@ -150,10 +161,7 @@ class JavaScriptSSR extends CodeSSR {
     </div>`;
     // }
     // if (locals.openIn) {
-    const openInDisplay =
-      locals.openIn && !/.test./i.test(this.resource.info.base)
-        ? "inline-block"
-        : "none";
+    const openInDisplay = locals.openIn ? "inline-block" : "none";
     const openable = [
       "jsTutorLive",
       "jsTutor",
@@ -189,11 +197,16 @@ class JavaScriptSSR extends CodeSSR {
 
     if (this.config.locals.trace) {
       superScriptsBody += `
-        <script src='${this.config.ownStatic}/types/javascript/static/aran-build.js'></script>
-        <script src='${this.config.ownStatic}/types/javascript/static/aran-script.js'></script>`;
+        <script src='${this.config.ownStatic}/types/javascript/static/trace/aran-build.js'></script>
+        <script src='${this.config.ownStatic}/types/javascript/static/trace/index.js' type='module'></script>`;
     }
-    const base = this.resource.info.base.toLowerCase();
-    if (base.includes(".test.") || base.includes(".spec.")) {
+    const base = this.resource.info.base;
+    const isTestedFile =
+      this.config.locals.tested &&
+      this.config.locals.tested.some((extension) =>
+        base.includes(`.${extension}.`)
+      );
+    if (isTestedFile) {
       superScriptsBody += `<script src='${this.config.ownStatic}/dependencies/describe-it.js'></script>
       <script>
         define('chai',
