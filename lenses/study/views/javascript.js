@@ -5,7 +5,6 @@ const CodeSSR = require("./code.js");
 class JavaScriptSSR extends CodeSSR {
   constructor({ config, resource }) {
     super({ config, resource });
-    console.log(this.resource.info.base);
     this.config.locals.run =
       this.config.locals.run || this.config.locals.eval || false;
     this.config.locals.debug =
@@ -111,7 +110,7 @@ class JavaScriptSSR extends CodeSSR {
     // }
 
     // if (locals.clearScheduled) {
-    const clearScheduledDisplay = locals.clearScheduledDisplay
+    const clearScheduledDisplay = locals.clearScheduled
       ? "inline-block"
       : "none";
     superPanel += `
@@ -138,6 +137,8 @@ class JavaScriptSSR extends CodeSSR {
     </div>`;
 
     const traceDisplay = locals.trace ? "inline-block" : "none";
+
+    // TODO: refactor the check-boxes to render from trace's config
     superPanel += `
     <div id='trace-container' style='display: ${traceDisplay};'>
       <button id='trace-button'>trace</button>
@@ -147,9 +148,12 @@ class JavaScriptSSR extends CodeSSR {
         <div  class='dropdown-content'>
           <form  id='trace-config'>
             <input id='variables' type='checkbox' checked /> <label for='variables'>variables</label> <br>
-            <input id='blocks' type='checkbox'  /> <label for='blocks'>blocks</label> <br>
+            <input id='blocks' type='checkbox' checked /> <label for='blocks'>blocks</label> <br>
             <input id='functions' type='checkbox'  /> <label for='functions'>function calls</label> <br>
-            <input id='this' type='checkbox'  /> <label for='this'>this</label> <br>
+            <input id='this' type='checkbox'  /> <label for='this'>this</label>
+            <hr>
+            <input id='lines' type='checkbox' checked /> <label for='lines'>lines</label> <br>
+            <input id='steps' type='checkbox' checked /> <label for='steps'>steps</label> <br>
           </form>
         </div>
       </div>
@@ -194,7 +198,9 @@ class JavaScriptSSR extends CodeSSR {
 
   scriptsBody() {
     let superScriptsBody = super.scriptsBody();
-    superScriptsBody += `<script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>`;
+    superScriptsBody += `
+      <script src='${this.config.ownStatic}/types/javascript/static/clear-scheduled.js'></script>
+      <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>`;
 
     if (this.config.locals.trace) {
       superScriptsBody += `
@@ -203,10 +209,12 @@ class JavaScriptSSR extends CodeSSR {
     }
     const base = this.resource.info.base;
     const isTestedFile =
-      this.config.locals.tested &&
-      this.config.locals.tested.some((extension) =>
+      Array.isArray(this.config.locals.testExtensions) &&
+      this.config.locals.testExtensions.some((extension) =>
         base.includes(`.${extension}.`)
       );
+    console.log(this.config.locals.testExtensions);
+    console.log("---", isTestedFile);
     if (isTestedFile) {
       superScriptsBody += `<script src='${this.config.ownStatic}/dependencies/describe-it.js'></script>
       <script>

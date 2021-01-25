@@ -1,0 +1,6 @@
+use color, but how exactly?
+  for scopes and variables
+  anything else?
+
+log line of code
+  and everything that happened under it

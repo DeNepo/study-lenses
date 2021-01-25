@@ -15,12 +15,15 @@ export default {
     if (config.functions) {
       print({
         prefix: line,
-        logs: ["calling the function named ", f.name],
+        logs: ["CALL FUNCTION ", f.name, ":", xs],
+        out: console.groupCollapsed,
       });
-      print({
-        prefix: (prefy) => " " + Array(prefy(line).length).join(" "),
-        logs: ["args:", xs],
-      });
+      // if (xs.length > 0) {
+      //   print({
+      //     prefix: (prefy) => " " + Array(prefy(line).length).join(" "),
+      //     logs: ["               args:", xs],
+      //   });
+      // }
       if (config.this) {
         print({
           prefix: (prefy) => " " + Array(prefy(line).length).join(" "),
@@ -31,14 +34,27 @@ export default {
         });
       }
     }
-    state.scopeDepth += 1;
+
+    state.scopes.push({
+      type: "lexical",
+      name: f.name,
+    });
     const x = Reflect.apply(f, t, xs);
-    state.scopeDepth -= 1;
+    state.scopes.pop();
+    console.groupEnd();
+
     if (config.functions) {
+      // print({
+      //   prefix: line,
+      //   logs: ["END FUNCTION CALL: " + f.name],
+      // });
       print({
+        // prefix: (prefy) => " " + Array(prefy(line).length).join(" "),
         prefix: line,
         logs: [
-          f.name + " returning:",
+          "RETURN VALUE ",
+          f.name,
+          ":",
           typeof x === "function" ? "a function named " + x.name : x,
         ],
       });

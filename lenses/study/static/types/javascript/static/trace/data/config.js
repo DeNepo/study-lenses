@@ -22,7 +22,7 @@ export const config = {
   console: false, // enable/disable tracing calls to the console. for less clutter mostly
 
   // core language features
-  blocks: false, // say if a new scope is block or lexical. if block label, log it
+  blocks: true, // say if a new scope is block or lexical. if block label, log it
   conditions: false, // how to handle switch/case vs. if/else?
   loops: false, // how to handle different loop types
   breakContinue: false, // add an extra line to the trace for break/continue
@@ -35,4 +35,8 @@ export const config = {
   this: false, // logs the this value at the top of each function call
   closure: false, // logs a frame's closure values
   throw: false,
+
+  // --- display settings ---
+  lines: true,
+  steps: true,
 };

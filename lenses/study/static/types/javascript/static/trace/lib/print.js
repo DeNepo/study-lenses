@@ -1,18 +1,28 @@
 "use strict";
 
 import { state } from "../data/state.js";
+import { config } from "../data/config.js";
 
 const linePrefix = (line) => {
   state.loggedSteps += 1;
 
-  const stepNumberString =
-    state.loggedSteps < 10 ? " " + state.loggedSteps : "" + state.loggedSteps;
+  let prefix = "";
 
-  const scopeDepth = Array(state.scopeDepth).join("  ");
+  // const scopeDepth = Array(state.scopes.length + 1).join("  ");
+  // prefix = scopeDepth + prefix;
 
-  const lineNumberString = line < 10 ? " " + line : "" + line;
+  if (config.lines) {
+    const lineNumberString = line < 10 ? " " + line : "" + line;
+    prefix = `line ${lineNumberString}. ` + prefix;
+  }
 
-  return `step ${stepNumberString}, line ${lineNumberString}: ${scopeDepth}`;
+  if (config.steps) {
+    const stepNumberString =
+      state.loggedSteps < 10 ? " " + state.loggedSteps : "" + state.loggedSteps;
+    prefix = `step ${stepNumberString}. ` + prefix;
+  }
+
+  return prefix;
 };
 
 export const print = ({ logs = [], prefix, out = console.log }) => {
