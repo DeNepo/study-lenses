@@ -35,6 +35,9 @@
       toThrowError: function () {
         if (internals.not) {
           chai.assert.doesNotThrow(internals._obj, ...Array.from(arguments));
+        } else if (arguments[0] instanceof Error) {
+          arguments[0] = arguments[0].message;
+          chai.assert.throws(internals._obj, ...Array.from(arguments));
         } else {
           chai.assert.throws(internals._obj, ...Array.from(arguments));
         }

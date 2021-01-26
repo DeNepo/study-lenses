@@ -34,7 +34,7 @@ describe("replaceEntry: replaces a specific entry in an array", () => {
     it("the index cannot be less than 0", () => {
       const expected = "index cannot be less than 0";
       const actual = replaceEntry(["a", "b", "c"], -1, "x");
-      expect(actual).toBe(expected);
+      expect(actual).toStrictEqual(expected);
     });
     it("the index can be 0", () => {
       const expected = ["x", "b", "c"];
@@ -72,8 +72,14 @@ describe("replaceEntry: replaces a specific entry in an array", () => {
     });
   });
   it("throws", () => {
+    /*
+x regular expression: error message matches the pattern
+x string: error message includes the substring
+x error object: error message is equal to the message property of the object
+x error class: error object is instance of class
+    */
     expect(() => {
       throw new Error("oop");
-    }).toThrow(new Error("oop"));
+    }).toThrowError(new Error("oop"));
   });
 });
