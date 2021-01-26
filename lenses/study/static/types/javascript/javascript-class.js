@@ -5,6 +5,8 @@ export class JavaScriptFE extends CodeFE {
   constructor(config) {
     super(config);
     this.initJsUi();
+
+    import("../../dependencies/expect-to-strict-equal.js");
   }
 
   initJsUi() {
@@ -154,15 +156,23 @@ export class JavaScriptFE extends CodeFE {
           event.preventDefault();
         });
 
-      document
-        .getElementById("trace-config")
-        .addEventListener("change", (event) => {
-          const option = event.target.id;
-          if (typeof trace.config[option] === "boolean") {
-            trace.config[option] = !trace.config[option];
-          }
-          event.preventDefault();
-        });
+      const traceConfig = document.getElementById("trace-config");
+      traceConfig.addEventListener("change", (event) => {
+        const option = event.target.id;
+        if (typeof trace.config[option] === "boolean") {
+          trace.config[option] = !trace.config[option];
+        }
+        event.preventDefault();
+      });
+
+      for (const child of traceConfig.children) {
+        if (child.nodeName !== "INPUT") {
+          continue;
+        }
+        if (trace.config[child.id]) {
+          child.checked = true;
+        }
+      }
     }
   }
 

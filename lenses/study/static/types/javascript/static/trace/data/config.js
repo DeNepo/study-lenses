@@ -38,5 +38,5 @@ export const config = {
 
   // --- display settings ---
   lines: true,
-  steps: true,
+  steps: false,
 };

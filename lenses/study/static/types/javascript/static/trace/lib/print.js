@@ -19,7 +19,7 @@ const linePrefix = (line) => {
   if (config.steps) {
     const stepNumberString =
       state.loggedSteps < 10 ? " " + state.loggedSteps : "" + state.loggedSteps;
-    prefix = `step ${stepNumberString}. ` + prefix;
+    prefix = `${stepNumberString}. ` + prefix;
   }
 
   return prefix;

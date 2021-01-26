@@ -1,5 +1,5 @@
 {
   "study": {
-    "tested": ["test", "flower"]
+    "testExtensions": ["test", "flower"]
   }
 }

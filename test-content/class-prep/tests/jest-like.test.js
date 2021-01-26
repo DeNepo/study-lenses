@@ -71,4 +71,9 @@ describe("replaceEntry: replaces a specific entry in an array", () => {
       expect(argArray).toStrictEqual(["a", "b", "c"]);
     });
   });
+  it("throws", () => {
+    expect(() => {
+      throw new Error("oop");
+    }).toThrow(new Error("oop"));
+  });
 });

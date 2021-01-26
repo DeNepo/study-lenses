@@ -7,6 +7,7 @@
 
 {
   // if a function returns from inside a block, the leave trap is not called
+  //  could be handled if rendering is not inline but done by observing/proxying a scope stack
 }
 
 {

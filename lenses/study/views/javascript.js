@@ -147,13 +147,13 @@ class JavaScriptSSR extends CodeSSR {
         <code>options</code>
         <div  class='dropdown-content'>
           <form  id='trace-config'>
-            <input id='variables' type='checkbox' checked /> <label for='variables'>variables</label> <br>
-            <input id='blocks' type='checkbox' checked /> <label for='blocks'>blocks</label> <br>
+            <input id='variables' type='checkbox' /> <label for='variables'>variables</label> <br>
+            <input id='blocks' type='checkbox' /> <label for='blocks'>blocks</label> <br>
             <input id='functions' type='checkbox'  /> <label for='functions'>function calls</label> <br>
             <input id='this' type='checkbox'  /> <label for='this'>this</label>
             <hr>
-            <input id='lines' type='checkbox' checked /> <label for='lines'>lines</label> <br>
-            <input id='steps' type='checkbox' checked /> <label for='steps'>steps</label> <br>
+            <input id='lines' type='checkbox' /> <label for='lines'>lines</label> <br>
+            <input id='steps' type='checkbox' /> <label for='steps'>steps</label> <br>
           </form>
         </div>
       </div>
@@ -213,10 +213,9 @@ class JavaScriptSSR extends CodeSSR {
       this.config.locals.testExtensions.some((extension) =>
         base.includes(`.${extension}.`)
       );
-    console.log(this.config.locals.testExtensions);
-    console.log("---", isTestedFile);
     if (isTestedFile) {
-      superScriptsBody += `<script src='${this.config.ownStatic}/dependencies/describe-it.js'></script>
+      superScriptsBody += `
+      <script src='${this.config.ownStatic}/dependencies/describe-it.js'></script>
       <script>
         define('chai',
           ["${this.config.ownStatic}/dependencies/chai-and-chai-dom.js"],
