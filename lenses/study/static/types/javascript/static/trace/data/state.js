@@ -7,26 +7,48 @@ export const state = {
   loggedSteps: 0,
 };
 
-// can these objects reference a useful node or instrumented entity?
+// // can these objects reference a useful node or instrumented entity?
 
-class Scope {
-  locals = []; // all variables declared in the scope
-}
+// class Variable {
+//   type = "var" || "let" || "const";
+//   value = "whatever";
+//   name = "variable name";
+// }
 
-class Block extends Scope {
-  label = "block name" || null;
-}
+// class Scope {
+//   locals = []; // all variables declared in the scope
+// }
 
-class Lexical extends Scope {
-  name = "function name" || "anonymous";
-  closure = ["variable instances"];
-  this = {};
-}
+// class Block extends Scope {
+//   label = "block name" || null;
+// }
 
-class Global extends Scope {} // maybe useful?
+// class Lexical extends Scope {
+//   name = "function name" || "anonymous";
+//   closure = ["variable instances"];
+//   this = {};
+// }
 
-class Variable {
-  type = "var" || "let" || "const";
-  value = "whatever";
-  name = "variable name";
-}
+// class Global extends Scope {} // maybe useful?
+
+// class Step {
+//   line = 0;
+//   step = 0;
+//   trap = "";
+// }
+
+// class History {}
+
+// const e = {
+//   variable: [() => {}, () => {}],
+//   blocks: [() => {}, () => {}],
+// };
+
+// // will need to indicate transition
+// states = [{...}, {...}]
+// links = [{before:0, after:1, label:{type:"apply", this:{}, operator:"+"}}]
+
+// reference back to serial and crawl up tree to see
+
+// writing to a property is actually the apply trap, searching for Reflect.set
+//  ie. "set the property" instead of "assign the property" - being vocabulariful

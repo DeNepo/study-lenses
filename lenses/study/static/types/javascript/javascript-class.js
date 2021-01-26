@@ -6,7 +6,10 @@ export class JavaScriptFE extends CodeFE {
     super(config);
     this.initJsUi();
 
-    import("../../dependencies/expect-to-strict-equal.js");
+    try {
+      require("chai");
+      import("../../dependencies/expect-to-strict-equal.js");
+    } catch (o_0) {}
   }
 
   initJsUi() {
