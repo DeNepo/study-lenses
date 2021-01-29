@@ -155,7 +155,12 @@ export class JavaScriptFE extends CodeFE {
         .addEventListener("click", (event) => {
           // trace is a global function loaded if config.locals.trace === true
           // not a permenant solution
-          trace(this.editor.getValue());
+          // trace(this.editor.getValue());
+          const instrumented = instrumentShadowState(this.editor.getValue());
+          console.groupCollapsed("instrumented code");
+          console.log(instrumented);
+          console.groupEnd();
+          eval(instrumented);
           event.preventDefault();
         });
 

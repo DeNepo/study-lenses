@@ -18,21 +18,27 @@
           chai.assert.deepEqual(internals._obj, ...Array.from(arguments));
         }
       },
-      // toBe: function () {
-      //   if (internals.not) {
-      //     chai.assert.notEqual(internals._obj, ...Array.from(arguments));
-      //   } else {
-      //     chai.assert.equal(internals._obj, ...Array.from(arguments));
-      //   }
-      // },
-      // toEqual: function () {
-      //   if (internals.not) {
-      //     chai.assert.notDeepEqual(internals._obj, ...Array.from(arguments));
-      //   } else {
-      //     chai.assert.deepEqual(internals._obj, ...Array.from(arguments));
-      //   }
-      // },
+      toBe: function () {
+        if (internals.not) {
+          chai.assert.notEqual(internals._obj, ...Array.from(arguments));
+        } else {
+          chai.assert.equal(internals._obj, ...Array.from(arguments));
+        }
+      },
+      toEqual: function () {
+        if (internals.not) {
+          chai.assert.notDeepEqual(internals._obj, ...Array.from(arguments));
+        } else {
+          chai.assert.deepEqual(internals._obj, ...Array.from(arguments));
+        }
+      },
       toThrowError: function () {
+        /*
+          x regular expression: error message matches the pattern
+          x string: error message includes the substring
+          x error object: error message is equal to the message property of the object
+          x error class: error object is instance of class
+        */
         if (internals.not) {
           chai.assert.doesNotThrow(internals._obj, ...Array.from(arguments));
         } else if (arguments[0] instanceof Error) {

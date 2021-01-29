@@ -1,6 +1,17 @@
-use color, but how exactly?
-  for scopes and variables
-  anything else?
+auto-tracing
+  create an advice proxy that logs each call to an advice
 
-log line of code
-  and everything that happened under it
+api questions
+  rarifying functions
+    can be done by a node-parsing helper
+  will not need leave because of shadow state?
+  signatures
+    why leave not take label & variables?
+
+ignoring console call internals and the like
+  modify advice before and after apply
+    see shadow state
+
+student gotchas
+  lets in for loops are not block-scoped correctly
+    fixable with node inspecting?

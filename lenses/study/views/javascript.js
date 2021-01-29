@@ -198,15 +198,12 @@ class JavaScriptSSR extends CodeSSR {
 
   scriptsBody() {
     let superScriptsBody = super.scriptsBody();
+
     superScriptsBody += `
       <script src='${this.config.ownStatic}/types/javascript/static/clear-scheduled.js'></script>
-      <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>`;
+      <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>
+      <script src='${this.config.ownStatic}/types/javascript/static/trace/lib/deep-clone.js'></script>`;
 
-    if (this.config.locals.trace) {
-      superScriptsBody += `
-        <script src='${this.config.ownStatic}/types/javascript/static/trace/aran-build.js'></script>
-        <script src='${this.config.ownStatic}/types/javascript/static/trace/index.js' type='module'></script>`;
-    }
     const base = this.resource.info.base;
     const isTestedFile =
       Array.isArray(this.config.locals.testExtensions) &&
@@ -225,6 +222,13 @@ class JavaScriptSSR extends CodeSSR {
         );
       </script>`;
     }
+
+    // if (this.config.locals.trace) {
+    superScriptsBody += `
+        <script src='${this.config.ownStatic}/types/javascript/static/trace/aran-build.js'></script>
+        <script src='${this.config.ownStatic}/types/javascript/static/trace/index.js' type='module'></script>`;
+    superScriptsBody += `<script src='${this.config.ownStatic}/types/javascript/static/trace/shadow-state.js'></script>`;
+    // }
 
     return superScriptsBody;
   }
