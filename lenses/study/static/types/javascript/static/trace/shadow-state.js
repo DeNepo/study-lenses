@@ -16,41 +16,47 @@ const scopeof = new WeakMap();
 const callstack = [];
 const stack = [];
 
-const initialState = deepClone({
-  i: 0,
-  scope,
-  callstack,
-  scopeof,
-  stack,
-});
-const states = [initialState];
-const transitions = [
-  {
-    i: 0,
-    label: "initial",
-    before: initialState,
-  },
-];
-const history = {
-  states,
-  transitions,
-};
-const step = (label) => {
+let studentCode = "";
+let transitions = [];
+let states = [];
+
+const step = ({ serial, args, advice }) => {
   // debugger;
+
+  const node = aran.nodes[serial];
+  const src = Astring.generate(node);
+
+  states[states.length - 1].after = {
+    advice,
+    src,
+  };
   const before = deepClone({
     i: states.length,
+    before: {
+      advice,
+      src,
+    },
     scope,
     callstack,
     scopeof,
     stack,
+    node,
   });
   states.push(before);
 
   transitions[transitions.length - 1].after = before;
   transitions.push({
     i: transitions.length,
+    advice,
+    line: {
+      src: studentCode.split("\n")[node.loc.start.line - 1],
+      num: node.loc.start.line,
+    },
+    args,
     before,
-    ...deepClone(label),
+    serial,
+    node,
+    src,
   });
 };
 
@@ -62,6 +68,7 @@ const advice = new Proxy(preAdvice, {
         apply(target, thisValue, args) {
           step({
             advice: prop,
+            serial: args[args.length - 1],
             args,
           });
           return target(...args);
@@ -85,9 +92,84 @@ const output = (name, value, serial) => {
 window[aran.namespace] = advice;
 window.eval(aran.setup());
 
+// --- begin: render functions for the history ---
+
+const renderHistory = ({ transitions, states }) => {
+  const historyNotProgram = {
+    transitions: transitions.filter(
+      (transition) => transition.node && transition.node.type !== "Program"
+    ),
+    states: states.filter(
+      (state) => state.node && state.node.type !== "Program"
+    ),
+  };
+  console.log(historyNotProgram);
+  for (const transition of historyNotProgram.transitions) {
+    if (
+      transition.advice === "test" &&
+      transition.node.type === "IfStatement"
+    ) {
+      console.log(transition.line.num + ": " + transition.line.src);
+    }
+  }
+};
+
+// --- end: render functions for the history ---
+
 // --- the "exported" function ---
-window.instrumentShadowState = (script) =>
-  aran.weave(Acorn.parse(script), pointcut, null);
+
+const newHistory = () => {
+  const initialState = deepClone({
+    i: 0,
+    scope,
+    callstack,
+    scopeof,
+    stack,
+  });
+  const states = [initialState];
+  const transitions = [
+    {
+      i: 0,
+      label: "initial",
+      before: initialState,
+    },
+  ];
+  return {
+    states,
+    transitions,
+  };
+};
+
+window.shadowStateHistory = (script) => {
+  const history = newHistory();
+  transitions = history.transitions;
+  states = history.states;
+
+  studentCode = script;
+
+  const originalTree = Acorn.parse(script, { locations: true });
+  // const instrumented = aran.weave(deDebuggered, pointcut, null);
+  const deDebuggered = walk(originalTree, {
+    enter(node, parent, prop, index) {
+      if (node.type === "DebuggerStatement") {
+        this.remove();
+      }
+    },
+    // leave(node, parent, prop, index) {
+    //   // some code happens
+    // },
+  });
+  // console.log(Astring.generate(deDebuggered));
+  const instrumented = aran.weave(deDebuggered, pointcut, null);
+
+  console.groupCollapsed("instrumented code");
+  console.log(instrumented);
+  console.groupEnd();
+
+  eval(instrumented);
+
+  renderHistory(history);
+};
 // --- --- --- --- --- --- --- ---
 
 ///////////////
