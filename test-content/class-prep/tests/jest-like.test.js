@@ -34,41 +34,41 @@ describe("replaceEntry: replaces a specific entry in an array", () => {
     it("the index cannot be less than 0", () => {
       const expected = "index cannot be less than 0";
       const actual = replaceEntry(["a", "b", "c"], -1, "x");
-      expect(actual).toStrictEqual(expected);
+      expect(actual).toEqual(expected);
     });
     it("the index can be 0", () => {
       const expected = ["x", "b", "c"];
       const actual = replaceEntry(["a", "b", "c"], 0, "x");
-      expect(actual).toStrictEqual(expected);
+      expect(actual).toEqual(expected);
     });
   });
   describe("replaceEntry replaces the correct entry", () => {
     it("it can replace the first value", () => {
       const expected = ["x", "b", "c"];
       const actual = replaceEntry(["a", "b", "c"], 0, "x");
-      expect(actual).toStrictEqual(expected);
+      expect(actual).toEqual(expected);
     });
     it("it can add a new value at 1", () => {
       const expected = ["a", "x", "c"];
       const actual = replaceEntry(["a", "b", "c"], 1, "x");
-      expect(actual).toStrictEqual(expected);
+      expect(actual).toEqual(expected);
     });
     it("it can add the same value at 1", () => {
       const expected = ["a", "b", "c"];
       const actual = replaceEntry(["a", "b", "c"], 1, "b");
-      expect(actual).toStrictEqual(expected);
+      expect(actual).toEqual(expected);
     });
     it("it can replace the last value", () => {
       const expected = ["a", "b", "x"];
       const actual = replaceEntry(["a", "b", "c"], expected.length - 1, "x");
-      expect(actual).toStrictEqual(expected);
+      expect(actual).toEqual(expected);
     });
   });
   describe("replaceEntry has no side-effects", () => {
     it("it does not modify the argument array", () => {
       const argArray = ["a", "b", "c"];
       replaceEntry(argArray, 1, "x");
-      expect(argArray).toStrictEqual(["a", "b", "c"]);
+      expect(argArray).toEqual(["a", "b", "c"]);
     });
   });
   it("throws", () => {

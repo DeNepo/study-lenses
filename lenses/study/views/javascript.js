@@ -215,15 +215,9 @@ class JavaScriptSSR extends CodeSSR {
       );
     if (isTestedFile) {
       superScriptsBody += `
-      <script src='${this.config.ownStatic}/dependencies/describe-it.js'></script>
-      <script>
-        define('chai',
-          ["${this.config.ownStatic}/dependencies/chai-and-chai-dom.js"],
-          function (require, exports, beta) {
-            return require;
-          }
-        );
-      </script>`;
+      <script src='${this.config.ownStatic}/dependencies/describe-it.js'> </script>
+      <script src='${this.config.ownStatic}/dependencies/chai.js'> </script>
+      <script src='${this.config.ownStatic}/dependencies/jest-matchers.js'> </script>`;
     }
 
     return superScriptsBody;
@@ -231,3 +225,13 @@ class JavaScriptSSR extends CodeSSR {
 }
 
 module.exports = JavaScriptSSR;
+
+// <script>
+//   define('chai',
+//     ["${this.config.ownStatic}/dependencies/chai.js"],
+//     function (require, exports, beta) {
+//       return require;
+//     }
+//   );
+// </script>
+// <script src="${this.config.ownStatic}/dependencies/chai-dom.js"></script>;
