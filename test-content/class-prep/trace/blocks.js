@@ -2,7 +2,9 @@ let a = "cars";
 {
   a = "chair";
   q: {
-    a = "pinwheel";
+    console.log("-----------");
+    a = "pin" + "wheel";
+    console.log("-----------");
     const x = "mushroom";
     x;
   }

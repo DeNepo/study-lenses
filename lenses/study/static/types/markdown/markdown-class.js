@@ -5,8 +5,9 @@
 */
 
 import { CodeFE } from "../code/code-class.js";
+import { JavaScriptFE } from "../javascript/javascript-class.js";
 
-export class MarkdownFE extends CodeFE {
+class MarkdownFE extends CodeFE {
   constructor(config) {
     super(config, false);
     this.initMdUi();
@@ -92,3 +93,7 @@ export class MarkdownFE extends CodeFE {
     }
   }
 }
+
+Object.assign(MarkdownFE.prototype, JavaScriptFE.prototype);
+
+export { MarkdownFE };

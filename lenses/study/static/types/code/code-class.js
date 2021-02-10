@@ -283,18 +283,15 @@ export class CodeFE {
       },
     };
 
+    // console.log(pseudoResource);
+
     const stringifiedResource = encodeURIComponent(
       JSON.stringify(pseudoResource)
     );
 
     const resourceQuery = `--resource=${stringifiedResource}`;
 
-    const lenseQueryValue = encodeURIComponent(
-      JSON.stringify(this.config.locals)
-    );
-    const lenseQuery = `${queryKey}=${lenseQueryValue}`;
-
-    const url = window.location.origin + `?${resourceQuery}&${lenseQuery}`;
+    const url = window.location.origin + `?${queryKey}&${resourceQuery}`;
 
     window.open(url, "_blank");
   }

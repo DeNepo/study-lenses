@@ -7,38 +7,6 @@ export const state = {
   loggedSteps: 0,
 };
 
-// // can these objects reference a useful node or instrumented entity?
-
-// class Variable {
-//   type = "var" || "let" || "const";
-//   value = "whatever";
-//   name = "variable name";
-// }
-
-// class Scope {
-//   locals = []; // all variables declared in the scope
-// }
-
-// class Block extends Scope {
-//   label = "block name" || null;
-// }
-
-// class Lexical extends Scope {
-//   name = "function name" || "anonymous";
-//   closure = ["variable instances"];
-//   this = {};
-// }
-
-// class Global extends Scope {} // maybe useful?
-
-// class Step {
-//   line = 0;
-//   step = 0;
-//   trap = "";
-// }
-
-// class History {}
-
 // const e = {
 //   variable: [() => {}, () => {}],
 //   blocks: [() => {}, () => {}],

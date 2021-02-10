@@ -1,5 +1,5 @@
 import { CodeFE } from "../code/code-class.js";
-import { studyWith } from "./lib/study-with.js";
+import { studyWith } from "./static/study-with.js";
 
 export class JavaScriptFE extends CodeFE {
   constructor(config) {
@@ -150,7 +150,8 @@ export class JavaScriptFE extends CodeFE {
         .addEventListener("click", (event) => {
           // trace is a global function loaded if config.locals.trace === true
           // not a permenant solution
-          trace(this.editor.getValue());
+          // trace(this.editor.getValue());
+          shadowStateHistory(this.editor.getValue());
           event.preventDefault();
         });
 

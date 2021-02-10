@@ -2,11 +2,12 @@ class CodeAlongComponent extends HTMLElement {
   sourceCode = "";
   editor = null;
   editorContainer = null;
-  loopGuard = { active: false, max: 50 };
+  loopGuard = false;
   jsTutor = false;
 
-  constructor(code = "", config = {}) {
+  constructor(code = "", config) {
     super();
+
     this.sourceCode = code;
     if (!config) {
       return;
@@ -22,6 +23,41 @@ class CodeAlongComponent extends HTMLElement {
     if (config.openIn === "jsTutor" || config.openIn === "jsTutorLive") {
       this.jsTutor = true;
     }
+    if (config.parsons) {
+      this.parsons = true;
+    }
+    if (config.diff) {
+      this.diff = true;
+    }
+    if (config.eval || config.run) {
+      this.run = true;
+    }
+    if (config.eval || config.debug) {
+      this.debug = true;
+    }
+    if (config.trace) {
+      this.trace = true;
+    }
+  }
+
+  openWith(lens) {
+    const pseudoResource = {
+      resource: {
+        content: this.editor.getValue(),
+        // hard-coding for now, assume this is only used with JS
+        info: { ext: ".js" },
+      },
+    };
+
+    const stringifiedResource = encodeURIComponent(
+      JSON.stringify(pseudoResource)
+    );
+
+    const resourceQuery = `--resource=${stringifiedResource}`;
+
+    const url = window.location.origin + `?${lens}&${resourceQuery}`;
+
+    window.open(url, "_blank");
   }
 
   async connectedCallback() {
@@ -59,17 +95,24 @@ class CodeAlongComponent extends HTMLElement {
     buttonsContainer.style.paddingTop = "1em";
     this.appendChild(buttonsContainer);
 
-    const consoleButton = document.createElement("button");
-    consoleButton.innerHTML = "console";
-    consoleButton.onclick = () => {
-      eval(this.code);
-    };
-    buttonsContainer.appendChild(consoleButton);
+    if (this.run) {
+      const consoleButton = document.createElement("button");
+      consoleButton.innerHTML = "run";
+      consoleButton.onclick = () => {
+        eval(this.code);
+      };
+      buttonsContainer.appendChild(consoleButton);
+    }
 
-    const debuggerButton = document.createElement("button");
-    debuggerButton.innerHTML = "debugger";
-    debuggerButton.onclick = () => eval("debugger;\n\n" + this.code);
-    buttonsContainer.appendChild(debuggerButton);
+    if (this.debug) {
+      const debuggerButton = document.createElement("button");
+      debuggerButton.innerHTML = "debug";
+      debuggerButton.onclick = () => eval("debugger;\n\n" + this.code);
+      buttonsContainer.appendChild(debuggerButton);
+    }
+
+    if (this.trace) {
+    }
 
     if (this.jsTutor) {
       const jsTutorButton = document.createElement("button");
@@ -109,6 +152,11 @@ class CodeAlongComponent extends HTMLElement {
       buttonsContainer.appendChild(loopGuardForm);
     }
 
+    const highlightButton = document.createElement("button");
+    highlightButton.innerHTML = "draw on";
+    highlightButton.addEventListener("click", () => this.openWith("highlight"));
+    buttonsContainer.appendChild(highlightButton);
+
     buttonsContainer.appendChild(document.createTextNode(" || "));
 
     const formatButton = document.createElement("button");
@@ -125,27 +173,29 @@ class CodeAlongComponent extends HTMLElement {
     });
     buttonsContainer.appendChild(formatButton);
 
-    const parsonsButton = document.createElement("button");
-    parsonsButton.innerHTML = "parsonize selection";
-    parsonsButton.onclick = () => {
-      const code = this.getSelection();
-      if (!code) {
-        alert("no code selected");
-        return;
-      }
+    if (this.parsons) {
+      const parsonsButton = document.createElement("button");
+      parsonsButton.innerHTML = "parsonize selection";
+      parsonsButton.onclick = () => {
+        const code = this.getSelection();
+        if (!code) {
+          alert("no code selected");
+          return;
+        }
 
-      const baseConfig = {
-        code,
-        ext: ".js",
+        const baseConfig = {
+          code,
+          ext: ".js",
+        };
+        const finalConfig = Object.assign(baseConfig, config.locals);
+        const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
+        const query = `?parsons=${queryValue}`;
+        const url = window.location.origin + query;
+
+        window.open(url, "_blank");
       };
-      const finalConfig = Object.assign(baseConfig, config.locals);
-      const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
-      const query = `?parsons=${queryValue}`;
-      const url = window.location.origin + query;
-
-      window.open(url, "_blank");
-    };
-    buttonsContainer.appendChild(parsonsButton);
+      buttonsContainer.appendChild(parsonsButton);
+    }
 
     if (config.locals.flowchart) {
       const parsonsButton = document.createElement("button");

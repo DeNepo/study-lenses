@@ -14,6 +14,7 @@ const debugOption = () => {
   };
   const beforeEach = ({ lens }) => {
     console.log(`--debug:  before lens "${lens.queryKey}"`);
+    console.log("locals:", JSON.stringify(lens.locals, null, "  "));
   };
   const afterEach = ({ lens }) => {
     console.log(`--debug:  after lens "${lens.queryKey}"`);

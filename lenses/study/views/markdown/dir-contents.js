@@ -42,20 +42,18 @@ const dirContents = ({ dirElement, top = false, defaults = {} }) => {
           .join("\n")
       : "";
 
+    const relativePath = path.join(
+      dirElement.toCwd,
+      dirElement.dir,
+      dirElement.base
+    );
     return top
       ? subIndex
-      : `<li><details><summary>${nameElement}</summary>\n` +
+      : `<li><details style="margin-bottom: 0px;"><summary><a href="${relativePath}?--defaults">${nameElement}</a></summary>\n` +
           (subIndex
             ? '\n<ul style="list-style-type: none;">' + subIndex + "</ul>"
             : "") +
           "</details></li>";
-
-    // const query = defaults.directory ? defaults.directory : '';
-    // const relativePath = path.join(dirElement.toCwd, dirElement.dir, dirElement.base)
-    // return top ? subIndex
-    //   : (`<li><details><summary><a href="${relativePath}?${query}">${dirElement.base}</a></summary>\n`
-    //     + (subIndex ? '\n<ul>' + subIndex + '</ul>' : '')
-    //     + '</details></li>');
   }
 
   return "";

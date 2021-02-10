@@ -271,11 +271,12 @@ app.use(async (req, res, next) => {
     typeof req.query["--resource"].resource === "object";
   // should it be merged with the local resource?
   const mergeWithLocalResource =
-    req.query["--resource"] && req.query["--resource"].merge;
+    resourceProvided && req.query["--resource"].merge;
 
   // build the requested resource
   let resource = {};
   if (resourceProvided && mergeWithLocalResource) {
+    // console.log("++ merge");
     const localResource = await resourceFromAbsolutePath({
       absolutePath,
       localConfigs,
@@ -284,8 +285,10 @@ app.use(async (req, res, next) => {
       arrayMerge: combineMerge,
     });
   } else if (resourceProvided && !mergeWithLocalResource) {
+    // console.log("++ not merge");
     resource = req.query["--resource"].resource;
   } else {
+    // console.log("++ local");
     resource = await resourceFromAbsolutePath({
       absolutePath,
       localConfigs,

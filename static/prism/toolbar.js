@@ -2,18 +2,33 @@
 
 try {
   // does config exist and is it an object?
+
   config.property;
+
+  const openWith = (code, lens) => {
+    const pseudoResource = {
+      resource: {
+        content: code,
+        // hard-coding for now, assume this is only used with JS
+        info: { ext: ".js" },
+      },
+    };
+
+    const stringifiedResource = encodeURIComponent(
+      JSON.stringify(pseudoResource)
+    );
+
+    const resourceQuery = `--resource=${stringifiedResource}`;
+
+    const url = window.location.origin + `?${lens}&${resourceQuery}`;
+
+    window.open(url, "_blank");
+  };
 
   Prism.plugins.toolbar.registerButton("js-tutor", function (env) {
     if (
-      !(
-        config.locals.openIn === "jsTutor" ||
-        config.queryValue.openIn === "jsTutor"
-      ) &&
-      !(
-        config.locals.openIn === "jsTutorLive" ||
-        config.queryValue.openIn === "jsTutorLive"
-      )
+      !(config.locals.openIn === "jsTutor") &&
+      !(config.locals.openIn === "jsTutorLive")
     ) {
       return null;
     }
@@ -46,14 +61,7 @@ try {
   });
 
   Prism.plugins.toolbar.registerButton("debug", function (env) {
-    if (
-      !(
-        config.locals.eval ||
-        config.locals.debug ||
-        config.queryValue.eval ||
-        config.queryValue.debug
-      )
-    ) {
+    if (!(config.locals.eval || config.locals.debug)) {
       return null;
     }
 
@@ -76,14 +84,7 @@ try {
   });
 
   Prism.plugins.toolbar.registerButton("run", function (env) {
-    if (
-      !(
-        config.locals.eval ||
-        config.locals.run ||
-        config.queryValue.eval ||
-        config.queryValue.run
-      )
-    ) {
+    if (!(config.locals.eval || config.locals.run)) {
       return null;
     }
 
@@ -102,8 +103,38 @@ try {
     return consoleButton;
   });
 
+  Prism.plugins.toolbar.registerButton("trace", function (env) {
+    if (!config.locals.trace) {
+      return null;
+    }
+
+    if (env.language !== "js" && env.language !== "javascript") {
+      return null;
+    }
+    // const rootElement = env.element.parentElement;
+    // if (!rootElement.hasAttribute('eval')) {
+    //   return null;
+    // }
+
+    const consoleButton = document.createElement("trace");
+    consoleButton.textContent = "run";
+    consoleButton.setAttribute("type", "button");
+    consoleButton.addEventListener("click", () => trace(env.code));
+    return consoleButton;
+  });
+
+  Prism.plugins.toolbar.registerButton("highlight", function (env) {
+    const parsonsButton = document.createElement("button");
+    parsonsButton.textContent = "draw on";
+    parsonsButton.setAttribute("type", "button");
+    parsonsButton.addEventListener("click", () =>
+      openWith(env.code, "highlight")
+    );
+    return parsonsButton;
+  });
+
   Prism.plugins.toolbar.registerButton("flowchart", function (env) {
-    if (!(config.locals.flowchart || config.queryValue.flowchart)) {
+    if (!config.locals.flowchart) {
       return null;
     }
 
@@ -114,27 +145,14 @@ try {
     const flowchartButton = document.createElement("button");
     flowchartButton.textContent = "flowchart";
     flowchartButton.setAttribute("type", "button");
-    flowchartButton.addEventListener("click", () => {
-      const pseudoResource = {
-        resource: {
-          content: encodeURIComponent(env.code),
-          info: { ext: ".js", base: "resource.js" },
-        },
-      };
-
-      const stringifiedResource = encodeURIComponent(
-        JSON.stringify(pseudoResource)
-      );
-
-      const query = "flowchart&--resource=" + stringifiedResource;
-      const url = window.location.origin + "?" + query;
-      window.open(url, "_blank");
-    });
+    flowchartButton.addEventListener("click", () =>
+      openWith(env.code, "flowchart")
+    );
     return flowchartButton;
   });
 
   Prism.plugins.toolbar.registerButton("parsonize", function (env) {
-    if (!(config.locals.parsons || config.queryValue.parsons)) {
+    if (!config.locals.parsons) {
       return null;
     }
 
@@ -145,22 +163,16 @@ try {
     const parsonsButton = document.createElement("button");
     parsonsButton.textContent = "parsonize";
     parsonsButton.setAttribute("type", "button");
-    parsonsButton.addEventListener("click", () => {
-      const baseConfig = {
-        code: env.code,
-        ext: ".js",
-      };
-      const finalConfig = Object.assign(baseConfig, config.locals);
-      const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
-      const query = `?parsons=${queryValue}`;
-      const url = window.location.origin + query;
-
-      window.open(url, "_blank");
-    });
+    parsonsButton.addEventListener("click", () =>
+      openWith(env.code, "parsons")
+    );
     return parsonsButton;
   });
 
   Prism.plugins.toolbar.registerButton("diff", function (env) {
+    if (!config.locals.diff) {
+      return null;
+    }
     if (env.language !== "js" && env.language !== "javascript") {
       return null;
     }
@@ -168,18 +180,7 @@ try {
     const parsonsButton = document.createElement("button");
     parsonsButton.textContent = "diff";
     parsonsButton.setAttribute("type", "button");
-    parsonsButton.addEventListener("click", () => {
-      const baseConfig = {
-        code: env.code,
-        ext: ".js",
-      };
-      const finalConfig = Object.assign(baseConfig, config.locals);
-      const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
-      const query = `?diff=${queryValue}`;
-      const url = window.location.origin + query;
-
-      window.open(url, "_blank");
-    });
+    parsonsButton.addEventListener("click", () => openWith(env.code, "diff"));
     return parsonsButton;
   });
 
@@ -187,7 +188,7 @@ try {
     const editify = (root, oldElement, code) => {
       const codeAlong = new CodeAlongComponent(
         code,
-        Object.assign({}, config.queryValue, config.locals)
+        Object.assign({}, config.locals)
       );
       root.replaceChild(codeAlong, oldElement);
     };
