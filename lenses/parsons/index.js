@@ -47,6 +47,12 @@ const parsonsLense = ({ resource, config }) => {
   } else {
     frontendConfig.run = config.locals.run;
   }
+
+  if (config.queryValue.hasOwnProperty("trace")) {
+    frontendConfig.trace = config.queryValue.trace;
+  } else {
+    frontendConfig.trace = config.locals.trace;
+  }
   if (config.queryValue.hasOwnProperty("debug")) {
     frontendConfig.debug = config.queryValue.debug;
   } else {
@@ -57,6 +63,12 @@ const parsonsLense = ({ resource, config }) => {
     frontendConfig.openIn = config.queryValue.openIn;
   } else {
     frontendConfig.openIn = config.locals.openIn;
+  }
+
+  if (config.queryValue.hasOwnProperty("flowchart")) {
+    frontendConfig.flowchart = config.queryValue.flowchart;
+  } else {
+    frontendConfig.flowchart = config.locals.flowchart;
   }
 
   if (config.queryValue.hasOwnProperty("loopGuard")) {
@@ -120,6 +132,10 @@ const parsonsLense = ({ resource, config }) => {
     document.getElementById('parsons-container')
       .appendChild(parsonsComponent)
   </script>
+
+
+    <script src='${config.sharedStatic}/trace/aran-build.js'></script>
+    <script src='${config.sharedStatic}/trace/index.js' type='module'></script>
 
 </body>
 

@@ -18,7 +18,7 @@ export default {
     print({
       prefix: line,
       logs: [
-        "read from " + (node.left ? node.left.name : variable) + ": ",
+        (node.left ? node.left.name : variable) + ", read:",
         typeof value === "function" ? "a function named " + value.name : value,
       ],
     });
@@ -47,7 +47,7 @@ export default {
       // } else if (node.kind === "const") {
       print({
         prefix: line,
-        logs: ["declare (" + node.kind + "):", variable],
+        logs: [variable + ", declare:", node.kind],
       });
       // }
     }
@@ -61,7 +61,7 @@ export default {
         // logs: ["assigning to '" + variable + "': ", value],
         logs: [
           // variable + " <- ",
-          "assign to " + variable + ":",
+          variable + ", assign:",
           typeof value === "function"
             ? "a function named " + value.name
             : value,

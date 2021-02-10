@@ -4,10 +4,11 @@
   piping lenses does not work with this paradigm
 */
 
-import { CodeFE } from "../code/code-class.js";
+// import { CodeFE } from "../code/code-class.js";
 import { JavaScriptFE } from "../javascript/javascript-class.js";
 
-class MarkdownFE extends CodeFE {
+// class MarkdownFE extends CodeFE {
+class MarkdownFE extends JavaScriptFE {
   constructor(config) {
     super(config, false);
     this.initMdUi();
@@ -94,6 +95,6 @@ class MarkdownFE extends CodeFE {
   }
 }
 
-Object.assign(MarkdownFE.prototype, JavaScriptFE.prototype);
+// Object.assign(MarkdownFE.prototype, JavaScriptFE.prototype);
 
 export { MarkdownFE };

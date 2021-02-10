@@ -116,11 +116,11 @@ try {
     //   return null;
     // }
 
-    const consoleButton = document.createElement("trace");
-    consoleButton.textContent = "run";
-    consoleButton.setAttribute("type", "button");
-    consoleButton.addEventListener("click", () => trace(env.code));
-    return consoleButton;
+    const traceButton = document.createElement("button");
+    traceButton.textContent = "trace";
+    traceButton.setAttribute("type", "button");
+    traceButton.addEventListener("click", () => trace(env.code));
+    return traceButton;
   });
 
   Prism.plugins.toolbar.registerButton("highlight", function (env) {

@@ -13,7 +13,7 @@ const linePrefix = (line) => {
 
   if (config.lines) {
     const lineNumberString = line < 10 ? " " + line : "" + line;
-    prefix = `line ${lineNumberString}. ` + prefix;
+    prefix = `line ${lineNumberString}: ` + prefix;
   }
 
   if (config.steps) {

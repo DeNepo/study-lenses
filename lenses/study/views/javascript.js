@@ -22,7 +22,10 @@ class JavaScriptSSR extends CodeSSR {
       superScriptsHead +
       `
       <script src='${this.config.sharedStatic}/prettier/standalone.js'></script>
-      <script src='${this.config.sharedStatic}/prettier/parser-babel.js'></script>`
+      <script src='${this.config.sharedStatic}/prettier/parser-babel.js'></script>
+      <script src='${this.config.sharedStatic}/trace/aran-build.js'></script>
+      <script src='${this.config.sharedStatic}/trace/index.js' type='module'></script>
+      <script src='${this.config.sharedStatic}/trace/shadow-state.js'></script>`
     );
   }
 
@@ -147,11 +150,11 @@ class JavaScriptSSR extends CodeSSR {
         <code>options</code>
         <div  class='dropdown-content'>
           <form  id='trace-config'>
-            <input id='variables' type='checkbox' /> <label for='variables'>variables</label> <br>
+            <!-- <input id='variables' type='checkbox' /> <label for='variables'>variables</label> <br>
             <input id='blocks' type='checkbox' /> <label for='blocks'>blocks</label> <br>
             <input id='functions' type='checkbox'  /> <label for='functions'>function calls</label> <br>
             <input id='this' type='checkbox'  /> <label for='this'>this</label>
-            <hr>
+            <hr> -->
             <input id='lines' type='checkbox' /> <label for='lines'>lines</label> <br>
             <input id='steps' type='checkbox' /> <label for='steps'>steps</label> <br>
           </form>
@@ -202,7 +205,7 @@ class JavaScriptSSR extends CodeSSR {
     superScriptsBody += `
       <script src='${this.config.ownStatic}/types/javascript/static/clear-scheduled.js'></script>
       <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>
-      <script src='${this.config.ownStatic}/types/javascript/static/trace/lib/deep-clone.js'></script>`;
+      <script src='${this.config.sharedStatic}/trace/lib/deep-clone.js'></script>`;
 
     const base = this.resource.info.base;
     const isTestedFile =
@@ -216,13 +219,6 @@ class JavaScriptSSR extends CodeSSR {
       <script src='${this.config.ownStatic}/dependencies/chai.js'> </script>
       <script src='${this.config.ownStatic}/dependencies/jest-matchers.js'> </script>`;
     }
-
-    // if (this.config.locals.trace) {
-    superScriptsBody += `
-        <script src='${this.config.ownStatic}/types/javascript/static/trace/aran-build.js'></script>
-        <script src='${this.config.ownStatic}/types/javascript/static/trace/index.js' type='module'></script>`;
-    superScriptsBody += `<script src='${this.config.ownStatic}/types/javascript/static/trace/shadow-state.js'></script>`;
-    // }
 
     return superScriptsBody;
   }

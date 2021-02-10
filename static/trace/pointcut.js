@@ -13,14 +13,15 @@ export const pointcut = (name, node) => {
       node.type === "ExpressionStatement")
   ) {
     return true;
-  } else if (
-    (name === "enter" || name === "leave") &&
-    node.type === "BlockStatement"
-  ) {
-    return true;
   }
-  if (node.type !== "Program") {
-    // console.log(name, node);
-  }
+  // else if (
+  //   (name === "enter" || name === "leave") &&
+  //   node.type === "BlockStatement"
+  // ) {
+  //   return true;
+  // }
+  // if (node.type !== "Program") {
+  //   // console.log(name, node);
+  // }
   // ...
 };

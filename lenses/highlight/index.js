@@ -30,11 +30,19 @@ const highlightLense = async ({ resource, config }) => {
         : ""
     }
     ${
+      config.locals.trace && resource.info.ext === ".js"
+        ? `
+    <button style="float: right;" onclick="trace(decodeURIComponent(\`${encodeURIComponent(
+      resource.content
+    )}\`))">trace</button>`
+        : ""
+    }
+    ${
       (config.locals.debug || config.locals.eval) && resource.info.ext === ".js"
         ? `
     <button style="float: right;" onclick="eval('debugger; \n\n'+decodeURIComponent(\`${encodeURIComponent(
       resource.content
-    )}\`))">run</button>`
+    )}\`))">debug</button>`
         : ""
     }
     ${
@@ -106,6 +114,10 @@ const highlightLense = async ({ resource, config }) => {
     }
 
     <script src="${config.ownStatic}/open-with.js"></script>
+
+
+    <script src='${config.sharedStatic}/trace/aran-build.js'></script>
+    <script src='${config.sharedStatic}/trace/index.js' type='module'></script>
 
   </body>
 </html>`;

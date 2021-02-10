@@ -164,6 +164,10 @@ export class CodeFE {
   initEditor() {
     const container = document.getElementById("editor-container");
 
+    if (container === null) {
+      return;
+    }
+
     container.style.overflow = "hidden";
 
     // const readOnly = typeof this.config.readOnly === 'boolean'

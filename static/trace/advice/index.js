@@ -10,7 +10,7 @@ export const ADVICE = Object.assign(
   {},
   variables,
   functions,
-  error,
-  blocks,
-  debuggerStatement
+  error
+  // blocks,
+  // debuggerStatement
 );

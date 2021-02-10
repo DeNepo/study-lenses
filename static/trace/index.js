@@ -19,16 +19,12 @@ window.trace = (code) => {
   // it's no good pausing in instrumented code
   const deDebuggered = walk(estree1, {
     enter(node, parent, prop, index) {
-      console.log(node);
       if (node.type === "DebuggerStatement") {
         this.remove();
       }
     },
-    // leave(node, parent, prop, index) {
-    //   // some code happens
-    // },
   });
-  console.log(Astring.generate(deDebuggered));
+  // console.log(Astring.generate(deDebuggered));
 
   const estree2 = aran.weave(deDebuggered, pointcut);
   // console.log(estree2);

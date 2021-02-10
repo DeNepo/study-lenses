@@ -9,9 +9,9 @@ marked.setOptions({
   langPrefix: "line-numbers language-",
 });
 
-const CodeSSR = require("../code.js");
+const JavaScriptSSR = require("../javascript");
 
-class MarkdownSSR extends CodeSSR {
+class MarkdownSSR extends JavaScriptSSR {
   inlines = {
     jsBlocks: false,
     jsTutor: false,
@@ -177,7 +177,7 @@ class MarkdownSSR extends CodeSSR {
   scriptsBody() {
     let superScriptsBody = super.scriptsBody();
     // if (this.inlines.jsBlocks) {
-    superScriptsBody += `<script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>
+    superScriptsBody += `
       <script src="${this.config.sharedStatic}/prism/script.js" data-manual></script>
       <script src="${this.config.sharedStatic}/prism/toolbar.js"></script>`;
     // }

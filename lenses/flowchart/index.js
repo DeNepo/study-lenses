@@ -51,7 +51,7 @@ const flowchartLense = async ({ responseData, resource, config }) => {
       ": " +
       err.message +
       "\n\n- - - - - - - - - - - - - -\n\n" +
-      resource.content;
+      code;
     resource.info.ext = ".txt";
     responseData.status = 500;
     console.error(err);

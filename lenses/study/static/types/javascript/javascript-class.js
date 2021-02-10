@@ -9,6 +9,10 @@ export class JavaScriptFE extends CodeFE {
 
   initJsUi() {
     const formatButton = document.getElementById("format-button");
+    if (formatButton === null) {
+      return;
+    }
+
     const formatParent = formatButton.parentElement;
     const newFormatButton = document.createElement("button");
     newFormatButton.innerHTML = "format";
@@ -148,10 +152,9 @@ export class JavaScriptFE extends CodeFE {
       document
         .getElementById("trace-button")
         .addEventListener("click", (event) => {
-          // trace is a global function loaded if config.locals.trace === true
-          // not a permenant solution
-          // trace(this.editor.getValue());
-          shadowStateHistory(this.editor.getValue());
+          // trace is a global function
+          trace(this.editor.getValue());
+          // shadowStateHistory(this.editor.getValue());
           event.preventDefault();
         });
 

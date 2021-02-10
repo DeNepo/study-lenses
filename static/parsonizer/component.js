@@ -275,6 +275,14 @@ const renderStudyButtons = (container, config, editor) => {
     consoleButton.onclick = () => studyWith["console"];
     container.appendChild(consoleButton);
   }
+
+  if (config.trace) {
+    const traceButton = document.createElement("button");
+    traceButton.innerHTML = "trace";
+    traceButton.onclick = () => studyWith["trace"];
+    container.appendChild(traceButton);
+  }
+
   if (config.eval || config.debug) {
     const debuggerButton = document.createElement("button");
     debuggerButton.innerHTML = "debug";
@@ -352,6 +360,13 @@ const renderStudyButtons = (container, config, editor) => {
     }
   }
 
+  if (config.flowchart) {
+    const flowchartButton = document.createElement("button");
+    flowchartButton.innerHTML = "flowchart";
+    flowchartButton.onclick = () => studyWith["flowchart"];
+    container.appendChild(flowchartButton);
+  }
+
   const studyWith = new Proxy(
     {
       console: function (code) {
@@ -359,6 +374,7 @@ const renderStudyButtons = (container, config, editor) => {
         const stricted = "'use strict'; // in case you forgot ;) \n\n" + code;
         execute(stricted);
       },
+      trace: (code) => trace(code),
       debugger: function (code) {
         const stepThrough = eval;
         const debuggered =
@@ -395,7 +411,7 @@ const renderStudyButtons = (container, config, editor) => {
           ext: ".js",
         };
         const queryValue = encodeURIComponent(JSON.stringify(lenseConfig));
-        const query = `?${queryKey}=${queryValue}`;
+        const query = `?flowchart=${queryValue}`;
         const url = window.location.origin + query;
         window.open(url, "_blank");
       },

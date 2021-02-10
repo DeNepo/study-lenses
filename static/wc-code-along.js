@@ -32,6 +32,10 @@ class CodeAlongComponent extends HTMLElement {
     if (config.eval || config.run) {
       this.run = true;
     }
+
+    if (config.trace) {
+      this.trace = true;
+    }
     if (config.eval || config.debug) {
       this.debug = true;
     }
@@ -99,15 +103,24 @@ class CodeAlongComponent extends HTMLElement {
       const consoleButton = document.createElement("button");
       consoleButton.innerHTML = "run";
       consoleButton.onclick = () => {
-        eval(this.code);
+        eval(this.editor.getValue());
       };
       buttonsContainer.appendChild(consoleButton);
+    }
+    if (this.trace) {
+      const traceButton = document.createElement("button");
+      traceButton.innerHTML = "trace";
+      traceButton.onclick = () => {
+        trace(this.editor.getValue());
+      };
+      buttonsContainer.appendChild(traceButton);
     }
 
     if (this.debug) {
       const debuggerButton = document.createElement("button");
       debuggerButton.innerHTML = "debug";
-      debuggerButton.onclick = () => eval("debugger;\n\n" + this.code);
+      debuggerButton.onclick = () =>
+        eval("debugger;\n\n" + this.editor.getValue());
       buttonsContainer.appendChild(debuggerButton);
     }
 
