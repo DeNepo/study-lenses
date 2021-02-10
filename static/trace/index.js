@@ -14,7 +14,9 @@ window.trace = (code) => {
   state.blockLabels = [];
   state.loggedSteps = 0;
 
-  const estree1 = Acorn.parse(code, { locations: true });
+  const stricted = "'use strict';" + code;
+
+  const estree1 = Acorn.parse(stricted, { locations: true });
   // console.log(estree1);
   // it's no good pausing in instrumented code
   const deDebuggered = walk(estree1, {
@@ -33,7 +35,9 @@ window.trace = (code) => {
   const instrumented = Astring.generate(estree2);
   // console.log(instrumented);
 
-  window.eval(instrumented);
+  try {
+    window.eval(instrumented);
+  } catch (o_0) {}
 };
 
 trace.config = config;

@@ -2,7 +2,9 @@
 
 export const pointcut = (name, node) => {
   // console.log(name, node);
-  if (name === "apply" && node.type === "CallExpression") {
+  if (name === "failure") {
+    return true;
+  } else if (name === "apply" && node.type === "CallExpression") {
     return true;
   } else if (name === "read" && node.type === "Identifier") {
     return true;

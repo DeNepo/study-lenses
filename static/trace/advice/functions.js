@@ -42,12 +42,12 @@ export default {
     if (calledConsoleMethod) {
       print({
         prefix: line,
-        logs: [`console.${f.name}(`, ...xs, ")"],
+        logs: [`console.${f ? f.name : f}(`, ...xs, ")"],
       });
     } else {
       state.scopes.push({
         type: "lexical",
-        name: f.name,
+        name: f ? f.name : f,
       });
       x = Reflect.apply(f, t, xs);
       state.scopes.pop();

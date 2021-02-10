@@ -2,15 +2,14 @@
 
 import variables from "./variables.js";
 import functions from "./functions.js";
-import error from "./error.js";
+import failure from "./failure.js";
 import blocks from "./blocks.js";
-import debuggerStatement from "./debugger-statement.js";
 
 export const ADVICE = Object.assign(
   {},
   variables,
   functions,
-  error
+  failure
   // blocks,
   // debuggerStatement
 );

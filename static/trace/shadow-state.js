@@ -274,6 +274,7 @@ advice.success = (value, serial) => {
 };
 
 advice.failure = (value, serial) => {
+  // console.log(value, serial);
   // step({ type: "failure", value, serial });
   const shadow = stack.pop();
   while (scope[SymbolTag] !== "program") scope = Reflect.getPrototypeOf(scope);
