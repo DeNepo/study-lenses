@@ -21,15 +21,25 @@ class MarkdownSSR extends CodeSSR {
     tests: false,
     literate: false,
   };
-  constructor({ config, resource }) {
+
+  dirRegex = /(<!--[ \t]*begin[ \t]*dir[ \t]*-->)([\s\S]*)(<!--[ \t]*end[ \t]*dir[ \t]*-->)/gim;
+
+  constructor({
+    config,
+    resource,
+    content = "" /* used by directory subclass */,
+  }) {
     super({ config, resource });
 
-    this.content = resource.content;
+    this.content = content || resource.content;
     this.inlines.jsBlocks = /^(([ \t]*`{3,4})([js|javascript])([\s\S]+?)(^[ \t]*\2))/gim.test(
       this.content
     );
-    this.inlines.jsTutor = /(<!--[ \t]*tutor[ \t]*-->)/gim.test(this.content);
-    this.inlines.parsons = /(<!--[ \t]*parsons[ \t]*-->)/gim.test(this.content);
+
+    // // are handled by lensed iframes
+    // this.inlines.jsTutor = /(<!--[ \t]*tutor[ \t]*-->)/gim.test(this.content);
+    // this.inlines.parsons = /(<!--[ \t]*parsons[ \t]*-->)/gim.test(this.content);
+
     // https://github.com/regexhq/gfm-code-block-regex/blob/master/index.js
     this.inlines.mermaid = /^(([ \t]*`{3,4})(mermaid)([\s\S]+?)(^[ \t]*\2))/gim.test(
       this.content
@@ -64,9 +74,53 @@ class MarkdownSSR extends CodeSSR {
     return superScriptsHead;
   }
 
-  configOptions() {
-    return "";
-  }
+  // configOptions() {
+  //   const superConfigOptions = super.configOptions();
+  //   return (
+  //     `
+  //   <form>
+  //     <input id='run-input' type='checkbox' ${
+  //       this.config.locals.run || this.config.locals.eval ? "checked" : ""
+  //     } /> <label for='run-input'>run</label>
+  //   </form>
+
+  //   ${
+  //     this.config.locals.trace
+  //       ? `<form>
+  //     <input id='trace-input' type='checkbox' ${
+  //       this.config.locals.trace ? "checked" : ""
+  //     } /> <label for='trace-input'>trace</label>
+  //   </form>`
+  //       : ""
+  //   }
+  //   <form>
+  //     <input id='debug-input' type='checkbox' ${
+  //       this.config.locals.debug || this.config.locals.eval ? "checked" : ""
+  //     } /> <label for='debug-input'>debug</label>
+  //   </form>
+  //   <form>
+  //     <input id='open-in-input' type='checkbox' ${
+  //       this.config.locals.openIn ? "checked" : ""
+  //     } /> <label for='open-in-input'>open in ...</label>
+  //   </form>
+  //   <form>
+  //     <input id='loop-guard-input' type='checkbox' ${
+  //       this.config.locals.loopGuard ? "checked" : ""
+  //     } /> <label for='loop-guard-input'>loop guard</label>
+  //   </form>
+  //   <form>
+  //     <input id='clear-scheduled-input' type='checkbox' ${
+  //       this.config.locals.clearScheduled ? "checked" : ""
+  //     } /> <label for='clear-scheduled-input'>clear scheduled</label>
+  //   </form>
+  //   <form>
+  //     <input id='flowchart-input' type='checkbox' ${
+  //       this.config.locals.flowchart ? "checked" : ""
+  //     } /> <label for='flowchart-input'>flowchart</label>
+  //   </form>
+  //   ` + superConfigOptions
+  //   );
+  // }
 
   panel() {
     return "";
@@ -74,13 +128,17 @@ class MarkdownSSR extends CodeSSR {
 
   async code() {
     let content = this.content;
-    const dirRegex = /(<!--[ \t]*begin[ \t]*dir[ \t]*-->)([\s\S]*)(<!--[ \t]*end[ \t]*dir[ \t]*-->)/gim;
-    if (dirRegex.test(content)) {
-      const absolutePath = path.join(
-        this.resource.info.root,
-        this.resource.info.dir
-      );
-      console.log(absolutePath);
+
+    if (this.dirRegex.test(content)) {
+      const absolutePath =
+        this.resource.info.type === "directory"
+          ? path.join(
+              this.resource.info.root,
+              this.resource.info.dir,
+              this.resource.info.base
+            )
+          : path.join(this.resource.info.root, this.resource.info.dir);
+      // console.log(absolutePath);
       const virtualDirectory = await resourceFromAbsolutePath({
         absolutePath,
         cwd: this.resource.info.root,
@@ -100,7 +158,7 @@ class MarkdownSSR extends CodeSSR {
         defaults: this.config.locals,
       });
       content = content.replace(
-        dirRegex,
+        this.dirRegex,
         `<!-- BEGIN DIR -->\n<ul style="list-style-type: none;">${dirToc}</ul>\n<!-- END DIR -->`
       );
     }
@@ -118,32 +176,34 @@ class MarkdownSSR extends CodeSSR {
 
   scriptsBody() {
     let superScriptsBody = super.scriptsBody();
-    if (this.inlines.jsBlocks) {
-      superScriptsBody += `<script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>
+    // if (this.inlines.jsBlocks) {
+    superScriptsBody += `<script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>
       <script src="${this.config.sharedStatic}/prism/script.js" data-manual></script>
       <script src="${this.config.sharedStatic}/prism/toolbar.js"></script>`;
-    }
+    // }
 
-    if (this.inlines.parsons) {
-      superScriptsBody += `<script src="${this.config.sharedStatic}/parsonizer/component.js"></script>
-      <script src="${this.config.sharedStatic}/parsonizer/jquery.min.js"></script>
-      <script src="${this.config.sharedStatic}/parsonizer/lis.js"></script>
-      <script src="${this.config.sharedStatic}/parsonizer/jquery-ui.min.js"></script>
-      <script src="${this.config.sharedStatic}/parsonizer/jquery.ui.touch-punch.min.js"></script>
-      <script src="${this.config.sharedStatic}/parsonizer/parsons.js"></script>`;
-    }
+    // // parsons problems are iframed
+    // if (this.inlines.parsons) {
+    //   superScriptsBody += `<script src="${this.config.sharedStatic}/parsonizer/component.js"></script>
+    //   <script src="${this.config.sharedStatic}/parsonizer/jquery.min.js"></script>
+    //   <script src="${this.config.sharedStatic}/parsonizer/lis.js"></script>
+    //   <script src="${this.config.sharedStatic}/parsonizer/jquery-ui.min.js"></script>
+    //   <script src="${this.config.sharedStatic}/parsonizer/jquery.ui.touch-punch.min.js"></script>
+    //   <script src="${this.config.sharedStatic}/parsonizer/parsons.js"></script>`;
+    // }
 
-    if (this.inlines.tests) {
-      superScriptsBody += `<script src='${this.config.ownStatic}/dependencies/describe-it.js'></script>
-      <script>
-        define('chai',
-          ["${this.config.ownStatic}/dependencies/chai-and-chai-dom.js"],
-          function (require, exports, beta) {
-            return require;
-          }
-        );
-      </script>`;
-    }
+    // // required by main index.js
+    // if (this.inlines.tests) {
+    //   superScriptsBody += `<script src='${this.config.ownStatic}/dependencies/describe-it.js'></script>
+    //   <script>
+    //     define('chai',
+    //       ["${this.config.ownStatic}/dependencies/chai-and-chai-dom.js"],
+    //       function (require, exports, beta) {
+    //         return require;
+    //       }
+    //     );
+    //   </script>`;
+    // }
 
     if (this.inlines.mermaid) {
       superScriptsBody += `<script src='${this.config.sharedStatic}/mermaid/index.js'></script>`;

@@ -6,6 +6,7 @@ const flowchartLense = async ({ responseData, resource, config }) => {
   if (!resource.info && !config.queryValue.code) {
     return;
   }
+  // console.log(resource);
 
   let code = resource.content;
   let ext = resource.info.ext;

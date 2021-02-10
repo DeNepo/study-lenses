@@ -1,0 +1,13 @@
+pieces
+  user advice
+  combiner
+    cesking advice
+
+
+1. user writes advice
+2. passes advice to combiner
+3. combiner returns combined advice & new history
+
+it should
+  know at each step if it was pointcuted or not
+    need to also wrap the user's pointcut

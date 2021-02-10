@@ -18,8 +18,9 @@ const config = require("config");
 */
 const userArgs = process.argv.slice(2);
 // use the first arg that doesn't match a port config
+
 const pathToStudy =
-  userArgs.find((entry) => !/--port=[\d]*/i.test(entry)) || "";
+  userArgs.find((entry) => !/--[\d]=[\d]*/i.test(entry)) || "";
 
 // todo
 //   search process.argv for "-h"
@@ -58,9 +59,12 @@ const cliPortSearch = process.argv.find((entry) => {
   }
   return false;
 });
-
 const cliPort =
   cliPortSearch !== undefined ? cliPortSearch.split("=")[1] : undefined;
+
+const cliLensSearch = process.argv.find((entry) => /--lens=[\d]*/i.test(entry));
+const cliLens =
+  cliLensSearch !== undefined ? cliLensSearch.split("=")[1] : undefined;
 
 let rootStudyConfig = {};
 try {
@@ -79,7 +83,7 @@ const getParameterCaseInsensitive = (object, key) => {
 };
 const rootStudyConfigPort = getParameterCaseInsensitive(
   rootStudyConfig,
-  "port"
+  "--port"
 );
 const rootStudyConfigPortValidated =
   !Number.isNaN(rootStudyConfigPort) &&
@@ -97,7 +101,10 @@ const queryMarker = defaultLense ? "?" : "";
 // construct a url using global configurations and the user-provided sub-path
 // should this not normalize? might it make url paths in windows backslashes?
 const pathToOpen = path.normalize(pathToStudy);
-const url = `http://localhost:${port}/${pathToOpen}${queryMarker}${defaultLense}`;
+// const url = `http://localhost:${port}/${pathToOpen}${queryMarker}${defaultLense}`;
+const url = `http://localhost:${port}/${pathToOpen}${queryMarker}${
+  cliLens || "--defaults"
+}`;
 console.log("studying: ", url);
 
 // launch the server

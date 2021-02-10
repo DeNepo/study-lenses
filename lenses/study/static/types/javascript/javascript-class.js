@@ -1,5 +1,5 @@
 import { CodeFE } from "../code/code-class.js";
-import { studyWith } from "./lib/study-with.js";
+import { studyWith } from "./static/study-with.js";
 
 export class JavaScriptFE extends CodeFE {
   constructor(config) {

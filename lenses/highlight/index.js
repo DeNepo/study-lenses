@@ -19,7 +19,23 @@ const highlightLense = async ({ resource, config }) => {
         <button id="red" class="color">Red</button>
         <button id="green" class="color">Green</button>
         <button id="blue" class="color">Blue</button>
-        <button id="black" class="color">Black</button>`
+        <button id="orange" class="color">Orange</button>`
+    }
+    ${
+      (config.locals.run || config.locals.eval) && resource.info.ext === ".js"
+        ? `
+    <button style="float: right;" onclick="eval(decodeURIComponent(\`${encodeURIComponent(
+      resource.content
+    )}\`))">run</button>`
+        : ""
+    }
+    ${
+      (config.locals.debug || config.locals.eval) && resource.info.ext === ".js"
+        ? `
+    <button style="float: right;" onclick="eval('debugger; \n\n'+decodeURIComponent(\`${encodeURIComponent(
+      resource.content
+    )}\`))">run</button>`
+        : ""
     }
     ${
       config.locals.flowchart && resource.info.ext === ".js"

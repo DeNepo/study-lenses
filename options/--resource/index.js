@@ -24,14 +24,18 @@ const combineMerge = (target, source, options) => {
 };
 
 const resourceOption = ({ resource, config }) => {
-  if (config.queryValue.merge === true) {
-    resource = deepMerge(resource, config.queryValue.resource, {
-      arrayMerge: combineMerge,
-    });
-  }
-  return {
-    resource,
-  };
+  // because the server level handles this
+  // if (config.queryValue.merge === true) {
+  //   resource = deepMerge(resource, config.queryValue.resource, {
+  //     arrayMerge: combineMerge,
+  //   });
+  // } else {
+  //   resource = config.queryValue.resource;
+  // }
+  // console.log(resource);
+  // return {
+  //   resource,
+  // };
 };
 
 module.exports = resourceOption;

@@ -45,9 +45,9 @@ document
   .addEventListener("click", () => cfd.setDrawingColor([0, 255, 0]));
 document
   .getElementById("blue")
-  .addEventListener("click", () => cfd.setDrawingColor([0, 0, 255]));
+  .addEventListener("click", () => cfd.setDrawingColor([114, 223, 250]));
 document
-  .getElementById("black")
-  .addEventListener("click", () => cfd.setDrawingColor([0, 0, 0]));
+  .getElementById("orange")
+  .addEventListener("click", () => cfd.setDrawingColor([255, 179, 0]));
 
 document.getElementsByClassName("code-toolbar")[0].style.zIndex = 20;

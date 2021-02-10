@@ -122,3 +122,13 @@ it's 3: b
 
 <!-- begin dir -->
 <!-- end dir -->
+
+## Dependencies
+
+> ala /j-l/recursion
+
+<!-- study:dependency -->
+
+```js
+const visRecursion = () => {};
+```
