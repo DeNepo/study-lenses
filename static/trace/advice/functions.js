@@ -12,7 +12,7 @@ const nativeInteractions = [prompt, alert, confirm];
 
 export default {
   apply(f, t, xs, serial) {
-    state.inNativeCallstack = isNative(f);
+    const inNativeFunction = isNative(f);
 
     // account for native methods
     const node = aran.nodes[serial];
@@ -34,10 +34,7 @@ export default {
         prefix: line,
         logs: [`console.${f ? f.name : f}(`, ...commaSeparatedArgs, ")"],
       });
-    } else if (
-      !state.inNativeCallstack ||
-      (isNativeInteraction && config.interactions)
-    ) {
+    } else if (!inNativeFunction && config.functions) {
       print({
         prefix: line,
         // logs: ["call: " + f.name + "(", ...commaSeparatedArgs, ")"],
@@ -49,50 +46,64 @@ export default {
           logs: ["%cthis:", "font-weight: bold;", t],
         });
       }
+    } else if (isNativeInteraction && config.interactions) {
+      print({
+        prefix: line,
+        // logs: ["call: " + f.name + "(", ...commaSeparatedArgs, ")"],
+        logs: [f.name + " (function call):", ...commaSeparatedArgs],
+        out: console.groupCollapsed,
+      });
     }
 
     let x = undefined;
-
-    state.scopes.push({
-      type: "lexical",
-      name: f ? f.name : f,
-    });
     if (!calledConsoleMethod) {
       x = Reflect.apply(f, t, xs);
     }
-    state.scopes.pop();
 
-    if (isNativeInteraction && config.interactions) {
+    if (!inNativeFunction && config.functions) {
       print({
-        logs: ["%c (return value):", "font-weight: bold;", x],
+        //   prefix: (prefixify) => prefixify(line) + " (return value):",
+        prefix: "(return value):",
+        logs: [x],
+        style: "font-weight: bold;",
       });
-    }
-    if (
-      !state.inNativeCallstack ||
-      (isNativeInteraction && config.interactions)
-    ) {
+      console.groupEnd();
+    } else if (isNativeInteraction && config.interactions) {
+      print({
+        //   prefix: (prefixify) => prefixify(line) + " (return value):",
+        prefix: "(return value):",
+        logs: [x],
+        style: "font-weight: bold;",
+      });
       console.groupEnd();
     }
 
-    state.inNativeCallstack = !isNative(f);
-
     return x;
   },
-  return: (value, serial) => {
-    // return META.return($x, @serial);
-    // debugger;
-    // account for native methods
-    const node = aran.nodes[serial];
-    // console.log(node);
-    const line = node.loc.start.line;
-    if (!state.inNativeCallstack) {
-      print({
-        prefix: (prefixify) => prefixify(line) + " (return value):",
-        logs: [value],
-        style: "font-weight: bold;",
-      });
-    }
 
-    return value;
-  },
+  // // no good for this, will miss implicit returns. and can't tell if there was an explicti or no
+  // return: (value, serial) => {
+  //   // return META.return($x, @serial);
+  //   // debugger;
+  //   // account for native methods
+  //   const node = aran.nodes[serial];
+  //   // console.log(node);
+  //   const line = node.loc.start.line;
+  //   if (!state.inNativeCallstack) {
+  //     print({
+  //       prefix: (prefixify) => prefixify(line) + " (return value):",
+  //       logs: [value],
+  //       style: "font-weight: bold;",
+  //     });
+  //   }
+
+  //   return value;
+  // },
 };
+
+// state.scopes.push({
+//   type: "lexical",
+//   name: f ? f.name : f,
+// });
+// x = Reflect.apply(f, t, xs);
+// state.scopes.pop();

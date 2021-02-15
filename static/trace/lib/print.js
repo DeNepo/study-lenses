@@ -29,7 +29,7 @@ export const print = ({ logs = [], prefix, out = console.log, style = "" }) => {
   if (typeof prefix === "number") {
     out(linePrefix(prefix), style || "", ...logs);
   } else if (typeof prefix === "string") {
-    out(prefix, style || "", ...logs);
+    out("%c" + prefix, style || "", ...logs);
   } else if (typeof prefix === "function") {
     const finalPrefix = prefix(linePrefix);
     out(finalPrefix, style || "", ...logs);

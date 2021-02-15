@@ -7,6 +7,13 @@ it should
   remove all debugger statements
   insert loop guards
     ast version of regex injection
+  extract one-line comments
+    with data for where to re-insert
+  extract block comments
+    with data for where to re-insert
+    option: leave or extract JSDOC (default true)
+  extract JSDOC comments
+    with data for where to re-insert
 it should not
   become a weak linter
   test code

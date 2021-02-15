@@ -30,7 +30,7 @@ export const pointcut = (name, node) => {
     node.type === "ReturnStatement" &&
     config.functions
   ) {
-    return true;
+    // return true;
   } else if (
     (config.functions ||
       config.console ||

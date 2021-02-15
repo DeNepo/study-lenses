@@ -69,12 +69,12 @@ class JavaScriptSSR extends CodeSSR {
     <form>
       <input id='ast-input' type='checkbox' ${
         this.config.locals.ast ? "checked" : ""
-      } /> <labe
+      } /> <label for='ast-input'>syntax tree</label>
+    </form>
     <form>
       <input id='flowchart-input' type='checkbox' ${
         this.config.locals.flowchart ? "checked" : ""
       } /> <label for='flowchart-input'>flowchart</label>
-    </form>l for='ast-input'>syntax tree</label>
     </form>
     ` + superConfigOptions
     );
@@ -146,8 +146,13 @@ class JavaScriptSSR extends CodeSSR {
       <button id='run-button'>run</button>
     </div>`;
 
-    const traceDisplay = locals.trace ? "inline-block" : "none";
+    const debugDisplay = locals.eval || locals.debug ? "inline-block" : "none";
+    superPanel += `
+    <div id='debug-container' style='display: ${debugDisplay};'>
+      <button id='debug-button'>debug</button>
+    </div>`;
 
+    const traceDisplay = locals.trace ? "inline-block" : "none";
     superPanel += `
     <div id='trace-container' style='display: ${traceDisplay};'>
       <button id='trace-button'>trace</button>
@@ -176,11 +181,6 @@ class JavaScriptSSR extends CodeSSR {
       </div>
     </div>`;
 
-    const debugDisplay = locals.eval || locals.debug ? "inline-block" : "none";
-    superPanel += `
-    <div id='debug-container' style='display: ${debugDisplay};'>
-      <button id='debug-button'>debug</button>
-    </div>`;
     // }
     // if (locals.openIn) {
     const openInDisplay = locals.openIn ? "inline-block" : "none";

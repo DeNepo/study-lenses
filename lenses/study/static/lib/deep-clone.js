@@ -8,9 +8,8 @@
  * @returns {any} a deep clone of the value passed in
  */
 const deepClone = (src, clonesMap = new Map()) => {
-
   // primitives & functions
-  if (!src || typeof src !== 'object' || typeof src === 'function') {
+  if (!src || typeof src !== "object" || typeof src === "function") {
     return src;
   }
 
@@ -25,7 +24,7 @@ const deepClone = (src, clonesMap = new Map()) => {
     clonesMap.set(src, clone);
     for (const entry of src) {
       clone.push(deepClone(entry, clonesMap));
-    };
+    }
     return clone;
   }
 
@@ -47,7 +46,7 @@ const deepClone = (src, clonesMap = new Map()) => {
     const srcEntries = src.entries();
     const arrayFromEntries = Array.from(srcEntries);
     const clonedEntries = deepClone(arrayFromEntries, clonesMap);
-    clonedEntries.forEach(entry => clone.set(...entry))
+    clonedEntries.forEach((entry) => clone.set(...entry));
     return clone;
   }
 
@@ -57,7 +56,7 @@ const deepClone = (src, clonesMap = new Map()) => {
     const srcValues = src.values();
     const arrayFromValues = Array.from(srcValues);
     const clonedValues = deepClone(arrayFromValues, clonesMap);
-    clonedValues.forEach(entry => clone.add(entry));
+    clonedValues.forEach((entry) => clone.add(entry));
     return clone;
   }
 
@@ -65,12 +64,15 @@ const deepClone = (src, clonesMap = new Map()) => {
     const clone = Object.create(src);
     clonesMap.set(src, clone);
     for (const key in src) {
-      clone[key] = deepClone(src[key], clonesMap);
+      try {
+        clone[key] = deepClone(src[key], clonesMap);
+      } catch (o_0) {
+        // read-only keys
+      }
     }
     return clone;
   }
 
   // ?
   return src;
-
 };

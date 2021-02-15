@@ -69,7 +69,11 @@ export const deepClone = (src, clonesMap = new Map()) => {
     const clone = Object.create(src);
     clonesMap.set(src, clone);
     for (const key in src) {
-      clone[key] = deepClone(src[key], clonesMap);
+      try {
+        clone[key] = deepClone(src[key], clonesMap);
+      } catch (o_0) {
+        // read-only keys
+      }
     }
     return clone;
   }
