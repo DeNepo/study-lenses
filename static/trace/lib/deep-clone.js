@@ -1,3 +1,4 @@
+"use strict";
 /**
  * creates a deep clone of the most common JavaScript data types and structures
  * @param {any} src - the value to clone
@@ -7,7 +8,7 @@
  *  or as an argument when the function calls itself recursively
  * @returns {any} a deep clone of the value passed in
  */
-const deepClone = (src, clonesMap = new Map()) => {
+export const deepClone = (src, clonesMap = new Map()) => {
   // primitives & functions
   if (!src || typeof src !== "object" || typeof src === "function") {
     return src;

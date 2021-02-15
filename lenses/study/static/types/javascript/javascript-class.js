@@ -4,6 +4,40 @@ import { studyWith } from "./static/study-with.js";
 export class JavaScriptFE extends CodeFE {
   constructor(config) {
     super(config);
+
+    if (this.config.locals.trace) {
+      for (const key in this.config.locals.trace) {
+        if (key === "variables") {
+          if (this.config.variables === false) {
+            trace.config.variables = {
+              declare: false,
+              assign: false,
+              read: false,
+            };
+            continue;
+          }
+          if (this.config.locals.trace.variables === true) {
+            trace.config.variables = {
+              declare: true,
+              assign: true,
+              read: true,
+            };
+            continue;
+          }
+          if (this.config.locals.trace) {
+            for (const key in this.config.locals.trace.variables) {
+              trace.config.variables[key] = this.config.locals.trace.variables[
+                key
+              ];
+            }
+          }
+        }
+        if (typeof this.config.locals.trace[key] === "boolean") {
+          trace.config[key] = this.config.locals.trace[key];
+        }
+      }
+    }
+
     this.initJsUi();
   }
 
@@ -82,6 +116,22 @@ export class JavaScriptFE extends CodeFE {
     );
     // }
 
+    const astButton = document.getElementById("ast-button");
+    document.getElementById("ast-input").addEventListener("change", (event) => {
+      if (event.target.checked) {
+        astButton.style = "display: inline-block;";
+      } else {
+        astButton.style = "display: none;";
+      }
+    });
+    astButton.addEventListener("click", () => {
+      try {
+        console.log(Acorn.parse(this.editor.getValue(), { locations: true }));
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
     // if (this.config.locals.eval) {
 
     const runContainer = document.getElementById("run-container");
@@ -136,46 +186,67 @@ export class JavaScriptFE extends CodeFE {
       });
     // }
 
-    if (this.config.locals.trace) {
-      const traceContainer = document.getElementById("trace-container");
-      document
-        .getElementById("trace-input")
-        .addEventListener("change", (event) => {
-          this.config.locals.trace = !this.config.locals.trace;
-          if (event.target.checked) {
-            traceContainer.style = "display: inline-block;";
-          } else {
-            traceContainer.style = "display: none;";
-          }
-        });
-
-      document
-        .getElementById("trace-button")
-        .addEventListener("click", (event) => {
-          // trace is a global function
-          trace(this.editor.getValue());
-          // shadowStateHistory(this.editor.getValue());
-          event.preventDefault();
-        });
-
-      const traceConfig = document.getElementById("trace-config");
-      traceConfig.addEventListener("change", (event) => {
-        const option = event.target.id;
-        if (typeof trace.config[option] === "boolean") {
-          trace.config[option] = !trace.config[option];
+    // if (this.config.locals.trace) {
+    const traceContainer = document.getElementById("trace-container");
+    document
+      .getElementById("trace-input")
+      .addEventListener("change", (event) => {
+        this.config.locals.trace = !this.config.locals.trace;
+        if (event.target.checked) {
+          traceContainer.style = "display: inline-block;";
+        } else {
+          traceContainer.style = "display: none;";
         }
+      });
+
+    document
+      .getElementById("trace-button")
+      .addEventListener("click", (event) => {
+        // trace is a global function
+        trace(this.editor.getValue());
+        // shadowStateHistory(this.editor.getValue());
         event.preventDefault();
       });
 
-      for (const child of traceConfig.children) {
-        if (child.nodeName !== "INPUT") {
+    const traceConfig = document.getElementById("trace-config");
+    traceConfig.addEventListener("change", (event) => {
+      event.preventDefault();
+      const option = event.target.id;
+      if (option.includes("variables")) {
+        const subOption = option.split("-").pop();
+        trace.config.variables[subOption] = !trace.config.variables[subOption];
+      }
+      if (typeof trace.config[option] === "boolean") {
+        trace.config[option] = !trace.config[option];
+      }
+    });
+
+    for (const child of traceConfig.children) {
+      if (child.nodeName !== "INPUT") {
+        continue;
+      }
+      if (child.id.includes("variables")) {
+        if (!trace.config.variables) {
           continue;
         }
-        if (trace.config[child.id]) {
+        if (trace.config.variables === true) {
           child.checked = true;
+          continue;
+        }
+        for (const variableConfig in trace.config.variables) {
+          if (
+            trace.config.variables[variableConfig] &&
+            child.id.includes(variableConfig)
+          ) {
+            child.checked = true;
+          }
         }
       }
+      if (trace.config[child.id]) {
+        child.checked = true;
+      }
     }
+    // }
   }
 
   static insertLoopGuards = (evalCode, maxIterations) => {

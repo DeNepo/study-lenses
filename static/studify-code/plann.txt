@@ -1,0 +1,13 @@
+- ast based
+  acorn + estree-walker
+
+it should
+  - modify code to make it more studyable
+  insert a debugger statement at the top of a program
+  remove all debugger statements
+  insert loop guards
+    ast version of regex injection
+it should not
+  become a weak linter
+  test code
+

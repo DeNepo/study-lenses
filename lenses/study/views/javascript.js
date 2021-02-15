@@ -9,6 +9,8 @@ class JavaScriptSSR extends CodeSSR {
       this.config.locals.run || this.config.locals.eval || false;
     this.config.locals.debug =
       this.config.locals.debug || this.config.locals.eval || false;
+
+    this.config.trace = config.trace;
   }
 
   styles() {
@@ -25,7 +27,7 @@ class JavaScriptSSR extends CodeSSR {
       <script src='${this.config.sharedStatic}/prettier/parser-babel.js'></script>
       <script src='${this.config.sharedStatic}/trace/aran-build.js'></script>
       <script src='${this.config.sharedStatic}/trace/index.js' type='module'></script>
-      <script src='${this.config.sharedStatic}/trace/shadow-state.js'></script>`
+      <!-- <script src='${this.config.sharedStatic}/trace/shadow-state.js'></script> -->`
     );
   }
 
@@ -39,15 +41,11 @@ class JavaScriptSSR extends CodeSSR {
       } /> <label for='run-input'>run</label>
     </form>
 
-    ${
-      this.config.locals.trace
-        ? `<form>
+    ${`<form>
       <input id='trace-input' type='checkbox' ${
         this.config.locals.trace ? "checked" : ""
       } /> <label for='trace-input'>trace</label>
-    </form>`
-        : ""
-    }
+    </form>`}
     <form>
       <input id='debug-input' type='checkbox' ${
         this.config.locals.debug || this.config.locals.eval ? "checked" : ""
@@ -69,9 +67,14 @@ class JavaScriptSSR extends CodeSSR {
       } /> <label for='clear-scheduled-input'>clear scheduled</label>
     </form>
     <form>
+      <input id='ast-input' type='checkbox' ${
+        this.config.locals.ast ? "checked" : ""
+      } /> <labe
+    <form>
       <input id='flowchart-input' type='checkbox' ${
         this.config.locals.flowchart ? "checked" : ""
       } /> <label for='flowchart-input'>flowchart</label>
+    </form>l for='ast-input'>syntax tree</label>
     </form>
     ` + superConfigOptions
     );
@@ -126,6 +129,10 @@ class JavaScriptSSR extends CodeSSR {
       <button id='flowchart-button' style='display: ${flowchartDisplay};'>flowchart</button>`;
     // }
 
+    const astDisplay = locals.ast ? "inline-block" : "none";
+    superPanel += `
+      <button id='ast-button' style='display: ${astDisplay};'>syntax tree</button>`;
+
     superPanel += "</div>";
 
     // if (locals.eval || locals.openIn) {
@@ -141,7 +148,6 @@ class JavaScriptSSR extends CodeSSR {
 
     const traceDisplay = locals.trace ? "inline-block" : "none";
 
-    // TODO: refactor the check-boxes to render from trace's config
     superPanel += `
     <div id='trace-container' style='display: ${traceDisplay};'>
       <button id='trace-button'>trace</button>
@@ -150,13 +156,21 @@ class JavaScriptSSR extends CodeSSR {
         <code>options</code>
         <div  class='dropdown-content'>
           <form  id='trace-config'>
-            <!-- <input id='variables' type='checkbox' /> <label for='variables'>variables</label> <br>
-            <input id='blocks' type='checkbox' /> <label for='blocks'>blocks</label> <br>
+            <input id='variables-declare' type='checkbox' /> <label for='variables-declare'>variables: declare</label> <br>
+            <input id='variables-assign' type='checkbox' /> <label for='variables-assign'>variables: assign</label> <br>
+            <input id='variables-read' type='checkbox' /> <label for='variables-read'>variables: read</label> <br>
+            <input id='operators' type='checkbox' /> <label for='operators'>operators</label> <br>
+            <!-- <input id='blocks' type='checkbox' /> <label for='blocks'>blocks</label> <br> -->
             <input id='functions' type='checkbox'  /> <label for='functions'>function calls</label> <br>
-            <input id='this' type='checkbox'  /> <label for='this'>this</label>
-            <hr> -->
+            <!-- <input id='this' type='checkbox'  /> <label for='this'>this</label> <br> -->
+            <!-- <input id='break' type='checkbox'  /> <label for='break'>break</label> <br> -->
+            <!-- <input id='continue' type='checkbox'  /> <label for='continue'>continue</label> <br> -->
+            <!-- <input id='this' type='checkbox'  /> <label for='this'>this</label> -->
+            <hr>
             <input id='lines' type='checkbox' /> <label for='lines'>lines</label> <br>
             <input id='steps' type='checkbox' /> <label for='steps'>steps</label> <br>
+            <input id='console' type='checkbox' /> <label for='console'>console</label> <br>
+            <input id='interactions' type='checkbox' /> <label for='interactions'>interactions</label> <br>
           </form>
         </div>
       </div>
@@ -204,8 +218,7 @@ class JavaScriptSSR extends CodeSSR {
 
     superScriptsBody += `
       <script src='${this.config.ownStatic}/types/javascript/static/clear-scheduled.js'></script>
-      <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>
-      <script src='${this.config.sharedStatic}/trace/lib/deep-clone.js'></script>`;
+      <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>`;
 
     const base = this.resource.info.base;
     const isTestedFile =

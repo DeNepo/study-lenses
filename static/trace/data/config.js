@@ -15,26 +15,37 @@
 
 export const config = {
   // default active options, the base needed for tracing data and mistakes
-  variables: true /* declare, assign, read. hosting is represented as step 0
+  variables: {
+    declare: true,
+    read: true,
+    assign: true,
+  } /* declare, assign, read.
+                      passing true sets to these defaults
+                      hosting should represented as step 0
                       function declarations fall under variables
                       how to visually differentiate block and lexical without too much clutter? */,
-  error: true,
-  console: false, // enable/disable tracing calls to the console. for less clutter mostly
+  failure: true, // (always)
+  console: true, // (possible) enable/disable tracing calls to the console. for less clutter mostly
+  interactions: true, // prompt/alert/confirm
+  document: false, // the DOM, same as with console
 
   // core language features
-  blocks: true, // say if a new scope is block or lexical. if block label, log it
-  conditions: false, // how to handle switch/case vs. if/else?
-  loops: false, // how to handle different loop types
-  breakContinue: false, // add an extra line to the trace for break/continue
+  // blocks: true, // say if a new scope is block or lexical. if block label, log it
+  // not doing blocks for now because for loops are complicated with JS and aran. read/write/assign is good enough atm
+  // conditions: false, // how to handle switch/case vs. if/else? // see comment under blocks
+  // loops: false, // how to handle different loop types // see comment under blocks
+  break: false, // add an extra line to the trace for break/continue
+  continue: false, //
   functions: false, // name, args, return
 
   // advanceder options
-  locals: false /* logs all variables that will be available in a scope (params, and local declarations. hosting + TDZ)
-                  advanceder because it will add clutter */,
+  // locals: false, // nah, too much. entering debugger territory
+  /* logs all variables that will be available in a scope (params, and local declarations. hosting + TDZ)
+                  advanceder because it will add clutter */
   operators: false, // for stepping through operations & precedence
-  this: false, // logs the this value at the top of each function call
-  closure: false, // logs a frame's closure values
-  throw: false,
+  this: false, // logs the this value at the top of each function call // yes, but later
+  // closure: false, // logs a frame's closure values // nah, too much. entering debugger territory
+  throw: false, // yes, but a little later
 
   // --- display settings ---
   lines: true,

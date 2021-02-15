@@ -119,7 +119,10 @@ try {
     const traceButton = document.createElement("button");
     traceButton.textContent = "trace";
     traceButton.setAttribute("type", "button");
-    traceButton.addEventListener("click", () => trace(env.code));
+    traceButton.addEventListener("click", () => {
+      // debugger;
+      trace(env.code);
+    });
     return traceButton;
   });
 
@@ -208,14 +211,16 @@ try {
       }
 
       const editButton = document.createElement("button");
-      editButton.textContent = "edit";
+      editButton.textContent = "study";
       editButton.setAttribute("type", "button");
-      editButton.addEventListener("click", () =>
-        editify(
-          env.element.parentElement.parentElement.parentElement,
-          env.element.parentElement.parentElement,
-          env.code
-        )
+      editButton.addEventListener(
+        "click",
+        () => openWith(env.code, "study")
+        // editify(
+        //   env.element.parentElement.parentElement.parentElement,
+        //   env.element.parentElement.parentElement,
+        //   env.code
+        // )
       );
       return editButton;
     });

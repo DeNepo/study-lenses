@@ -103,7 +103,7 @@ class CodeAlongComponent extends HTMLElement {
       const consoleButton = document.createElement("button");
       consoleButton.innerHTML = "run";
       consoleButton.onclick = () => {
-        eval(this.editor.getValue());
+        eval("'use strict';" + this.editor.getValue());
       };
       buttonsContainer.appendChild(consoleButton);
     }
@@ -120,7 +120,10 @@ class CodeAlongComponent extends HTMLElement {
       const debuggerButton = document.createElement("button");
       debuggerButton.innerHTML = "debug";
       debuggerButton.onclick = () =>
-        eval("debugger;\n\n" + this.editor.getValue());
+        eval(
+          "debugger;\n\n'use strict' // just in case you forgot\n\n" +
+            this.editor.getValue()
+        );
       buttonsContainer.appendChild(debuggerButton);
     }
 

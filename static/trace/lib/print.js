@@ -22,17 +22,17 @@ const linePrefix = (line) => {
     prefix = `${stepNumberString}. ` + prefix;
   }
 
-  return prefix;
+  return "%c" + prefix;
 };
 
-export const print = ({ logs = [], prefix, out = console.log }) => {
+export const print = ({ logs = [], prefix, out = console.log, style = "" }) => {
   if (typeof prefix === "number") {
-    out(linePrefix(prefix), ...logs);
+    out(linePrefix(prefix), style || "", ...logs);
   } else if (typeof prefix === "string") {
-    out(prefix, ...logs);
+    out(prefix, style || "", ...logs);
   } else if (typeof prefix === "function") {
     const finalPrefix = prefix(linePrefix);
-    out(finalPrefix, ...logs);
+    out(finalPrefix, style || "", ...logs);
   } else {
     out(...logs);
   }

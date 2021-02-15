@@ -16,7 +16,16 @@ window.trace = (code) => {
 
   const stricted = "'use strict';" + code;
 
-  const estree1 = Acorn.parse(stricted, { locations: true });
+  let estree1;
+  try {
+    estree1 = Acorn.parse(stricted, { locations: true });
+  } catch (err) {
+    console.log(
+      "%c" + err.name + ": " + err.message,
+      "color:red; font-weight: bold;"
+    );
+    return;
+  }
   // console.log(estree1);
   // it's no good pausing in instrumented code
   const deDebuggered = walk(estree1, {
