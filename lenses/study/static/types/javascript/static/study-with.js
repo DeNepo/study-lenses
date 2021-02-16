@@ -3,14 +3,20 @@ const studyWithEval = (debug) => (code) => {
     // this should never happen, but just in case ....
     throw new TypeError("code is not a string");
   }
-  const trimmedFirstLine = code.trim().split("\n")[0].trim();
-  const firstLineIsUseStrict = /^['|"]use strict['|"]/.test(trimmedFirstLine);
-  const stricted = !firstLineIsUseStrict
-    ? "'use strict'; // you forgot ;) \n\n" + code
-    : code;
-  const finalCode = debug ? "debugger;\n\n" + stricted : stricted;
+  // const trimmedFirstLine = code.trim().split("\n")[0].trim();
+  // const firstLineIsUseStrict = /^['|"]use strict['|"]/.test(trimmedFirstLine);
+  // const stricted =
+  //   !firstLineIsUseStrict && debug
+  //     ? "'use strict'; // you forgot ;) \n\n" + code
+  //     : !firstLineIsUseStrict && !debug
+  //     ? "'use strict'; /* you forgot ;) */  " + code
+  //     : e;
+  // const finalCode = debug ? "debugger;\n\n" + stricted : stricted;
+  const finalCode = debug ? "debugger;\n\n" + code : code;
   // for cleaner scoping in the debugger
   const execute = eval;
+
+  ("use strict");
   execute(finalCode);
 };
 

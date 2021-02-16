@@ -100,10 +100,3 @@ export default {
   //   return value;
   // },
 };
-
-// state.scopes.push({
-//   type: "lexical",
-//   name: f ? f.name : f,
-// });
-// x = Reflect.apply(f, t, xs);
-// state.scopes.pop();

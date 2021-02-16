@@ -5,7 +5,6 @@ export const state = {
   // or just arrays of strings for each variable name
   scopes: [],
   loggedSteps: 0,
-  inNativeCallstack: false,
 };
 
 // const e = {
