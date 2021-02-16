@@ -1,4 +1,5 @@
 const highlightLense = async ({ resource, config }) => {
+  // console.log(resource.content);
   resource.content = `
 <!DOCTYPE html>
   <html>

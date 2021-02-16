@@ -1,3 +1,5 @@
+"use strict";
+
 const studyWithEval = (debug) => (code) => {
   if (typeof code !== "string") {
     // this should never happen, but just in case ....

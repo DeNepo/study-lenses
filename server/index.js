@@ -269,9 +269,11 @@ app.use(async (req, res, next) => {
     req.query["--resource"] &&
     req.query["--resource"].resource &&
     typeof req.query["--resource"].resource === "object";
+  // console.log(resourceProvided);
   // should it be merged with the local resource?
   const mergeWithLocalResource =
     resourceProvided && req.query["--resource"].merge;
+  // console.log(mergeWithLocalResource);
 
   // build the requested resource
   let resource = {};

@@ -273,12 +273,9 @@ export class CodeFE {
     return selection;
   }
 
-  openSelectionWith(queryKey) {
-    const code = this.getSelection();
-    if (!code) {
-      alert("no code selected");
-      return;
-    }
+  openSelectionWith(queryKey, code = "") {
+    const selectedCode = getMonacoSelection(this.editor);
+    code = code || selectedCode || this.editor.getValue();
 
     const pseudoResource = {
       resource: {
@@ -286,17 +283,26 @@ export class CodeFE {
         info: { ext: this.config.ext },
       },
     };
-
     // console.log(pseudoResource);
 
     const stringifiedResource = encodeURIComponent(
       JSON.stringify(pseudoResource)
     );
 
-    const resourceQuery = `--resource=${stringifiedResource}`;
-
-    const url = window.location.origin + `?${queryKey}&${resourceQuery}`;
-
+    const baseConfig = {
+      code,
+      ext: this.config.ext,
+    };
+    // const queryValue = encodeURIComponent(JSON.stringify(baseConfig));
+    const finalConfig = Object.assign(baseConfig, this.config);
+    const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
+    // if the full file is used, open lense with local configs from exercise
+    //  otherwise don't, because anything syntax/runtime based will probably break for selections
+    const url = selectedCode
+      ? window.location.origin +
+        `?--resource=${stringifiedResource}&${queryKey}`
+      : window.location.origin +
+        `?--resource=${stringifiedResource}&${queryKey}=${queryValue}`;
     window.open(url, "_blank");
   }
 }

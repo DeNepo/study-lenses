@@ -1,0 +1,2 @@
+render a dom element for consistency across study lenses
+  args: code-getting-function, config

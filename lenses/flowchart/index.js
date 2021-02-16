@@ -13,7 +13,7 @@ const flowchartLense = async ({ responseData, resource, config }) => {
 
   if (typeof config.queryValue.code === "string") {
     code = config.queryValue.code;
-    ext = config.queryValue.ext || "";
+    ext = config.queryValue.ext || resource.info.ext;
   } else if (typeof resource.content !== "string") {
     return;
   }

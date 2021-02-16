@@ -7,7 +7,7 @@ import { aran } from "../setup.js";
 
 export default {
   failure: (value, serial) => {
-    console.log(value);
+    // console.log(value);
     // still figuring out aran errors
     console.log(
       "%c" + (value ? value.name : "failure"),

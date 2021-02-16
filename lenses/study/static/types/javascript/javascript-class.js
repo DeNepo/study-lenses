@@ -124,13 +124,7 @@ export class JavaScriptFE extends CodeFE {
         astButton.style = "display: none;";
       }
     });
-    astButton.addEventListener("click", () => {
-      try {
-        console.log(Acorn.parse(this.editor.getValue(), { locations: true }));
-      } catch (err) {
-        console.error(err);
-      }
-    });
+    astButton.addEventListener("click", () => this.studyWith("acorn"));
 
     // if (this.config.locals.eval) {
 
@@ -278,19 +272,37 @@ export class JavaScriptFE extends CodeFE {
   }
 
   studyWith(environment) {
+    if (environment === "acorn") {
+      try {
+        console.log(Acorn.parse(this.editor.getValue(), { locations: true }));
+      } catch (err) {
+        console.error(err);
+      }
+      return;
+    }
+
+    let formatted = getMonacoSelection(this.editor) || this.editor.getValue();
     if (
       this.config.locals.loopGuard &&
       this.config.locals.loopGuard.active &&
-      !(environment === "parsons" || environment === "flowchart")
+      environment !== "parsons" &&
+      environment !== "flowchart" &&
+      environment !== "diff" &&
+      environment !== "highlight"
     ) {
       const loopGuarded = JavaScriptFE.insertLoopGuards(
         this.editor.getValue(),
         this.config.locals.loopGuard.max || 20
       );
-      const formatted = this.prettierFormat(loopGuarded);
+      formatted = this.prettierFormat(loopGuarded);
+      studyWith[environment](formatted);
+      return;
+    }
+
+    if (typeof studyWith[environment] === "function") {
       studyWith[environment](formatted);
     } else {
-      studyWith[environment](this.editor.getValue());
+      this.openSelectionWith(environment, formatted);
     }
   }
 }

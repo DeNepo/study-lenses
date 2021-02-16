@@ -24,7 +24,38 @@ const combineMerge = (target, source, options) => {
 };
 
 const resourceOption = ({ resource, config }) => {
-  // because the server level handles this
+  // // did the URL contain a resource?
+  // const resourceProvided =
+  //   req.query["--resource"] &&
+  //   req.query["--resource"].resource &&
+  //   typeof req.query["--resource"].resource === "object";
+  // console.log(resourceProvided);
+  // // should it be merged with the local resource?
+  // const mergeWithLocalResource =
+  //   resourceProvided && req.query["--resource"].merge;
+  // console.log(mergeWithLocalResource);
+  // // build the requested resource
+  // let resource = {};
+  // if (resourceProvided && mergeWithLocalResource) {
+  //   // console.log("++ merge");
+  //   const localResource = await resourceFromAbsolutePath({
+  //     absolutePath,
+  //     localConfigs,
+  //   });
+  //   resource = deepMerge(localResource, req.query["--resource"].resource, {
+  //     arrayMerge: combineMerge,
+  //   });
+  // } else if (resourceProvided && !mergeWithLocalResource) {
+  //   // console.log("++ not merge");
+  //   resource = req.query["--resource"].resource;
+  // } else {
+  //   // console.log("++ local");
+  //   resource = await resourceFromAbsolutePath({
+  //     absolutePath,
+  //     localConfigs,
+  //   });
+  // }
+  // because the server's index.js handles this (for now)
   // if (config.queryValue.merge === true) {
   //   resource = deepMerge(resource, config.queryValue.resource, {
   //     arrayMerge: combineMerge,

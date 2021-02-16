@@ -64,7 +64,10 @@ class CodeSSR {
   <script src="${this.config.sharedStatic}/monaco/min/vs/editor/editor.main.nls.js"></script>
   <script src="${this.config.sharedStatic}/monaco/min/vs/editor/editor.main.js"></script>
 
-  <script src='${this.config.sharedStatic}/lib/monaco-ext-to-language.js'></script>`;
+  <script src='${this.config.sharedStatic}/lib/monaco-ext-to-language.js'></script>
+
+  <script src="${this.config.ownStatic}/lib/get-monaco-selection.js"></script>
+  <script src="${this.config.ownStatic}/lib/study-selection.js"></script>`;
 
     // <script src='${this.config.ownStatic}/lib/monacoing.js'></script>
     // <script src='${this.config.ownStatic}/lib/get-monaco-selection.js'></script>
