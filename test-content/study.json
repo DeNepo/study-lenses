@@ -7,6 +7,6 @@
   "hello-world": {
     "/": "chups"
   },
-  "--local-lenses": "./lenses",
+  "--lenses": "./lenses",
   "Port": 8080
 }

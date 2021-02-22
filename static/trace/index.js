@@ -27,15 +27,25 @@ window.trace = (code) => {
     return;
   }
   // console.log(estree1);
+
   // it's no good pausing in instrumented code
+  // and you can't just remove debugger (line numbering)
+
   const deDebuggered = walk(estree1, {
     enter(node, parent, prop, index) {
       if (node.type === "DebuggerStatement") {
-        this.remove();
+        // works even though null is shorter than debugger because of white-space insensitivity
+        const nullNode = Acorn.parse("null").body[0];
+        nullNode.start = node.start;
+        nullNode.end = node.end;
+        nullNode.expression.start = node.start;
+        nullNode.expression.end = node.end;
+        this.replace(nullNode);
       }
     },
   });
   // console.log(Astring.generate(deDebuggered));
+  // console.log(deDebuggered);
 
   const estree2 = aran.weave(deDebuggered, pointcut);
   // console.log(estree2);

@@ -11,6 +11,7 @@ const pipeResource = async ({
   responseData,
   resource,
   lenses,
+  options,
   hooks,
 }) => {
   console.log(": piping request");
@@ -44,6 +45,9 @@ const pipeResource = async ({
 
   pipingResource: for (const lens of lenses) {
     // console.log(':  ' + lens.queryKey);
+    if (!lens.requested) {
+      continue;
+    }
 
     beforeEach: {
       const beforeEachReturned = await evaluateHooks({
@@ -85,6 +89,8 @@ const pipeResource = async ({
         requestData: deepClone(pipedRequestData),
         responseData: deepClone(pipedResponseData),
         resource: deepClone(pipedResource),
+        options: deepClone(options),
+        lenses: deepClone(lenses),
       });
 
       if (returned && returned.abort === true) {

@@ -1,66 +1,77 @@
-'use strict'
+"use strict";
 
-const fs = require('fs')
-const path = require('path')
-const util = require('util')
+const fs = require("fs");
+const path = require("path");
+const util = require("util");
 
-const readFilePromise = util.promisify(fs.readFile)
+const readFilePromise = util.promisify(fs.readFile);
 
-const isItADirectory = require('../lib/is-it-a-directory.js')
-
+const isItADirectory = require("../lib/is-it-a-directory.js");
 
 const loadPlugins = async (type, pluginsPath) => {
-
   // array of absolute paths to each plugin folder
-  const pluginPaths = fs.readdirSync(pluginsPath)
-    .map(subPath => path.join(pluginsPath, subPath))
-    .filter(isItADirectory)
+  const pluginPaths = fs
+    .readdirSync(pluginsPath)
+    .map((subPath) => path.join(pluginsPath, subPath))
+    .filter(isItADirectory);
 
-  const plugins = []
+  const plugins = [];
 
   for (const absolutePluginPath of pluginPaths) {
-
     if (!isItADirectory(absolutePluginPath)) {
-      continue
+      continue;
     }
 
-    let module = null
+    let module = null;
     try {
-      module = require(path.join(absolutePluginPath, 'index.js'))
-      if (typeof module !== 'function') {
-        throw new Error(path.basename(absolutePluginPath) + ': module is not a function')
+      module = require(path.join(absolutePluginPath, "index.js"));
+      if (typeof module !== "function") {
+        throw new Error(
+          path.basename(absolutePluginPath) + ": module is not a function"
+        );
       }
     } catch (err) {
-      console.error(err)
+      console.error(err);
       // if there is an error loading the function, there's no point loading the plugin
-      continue
+      continue;
     }
 
-    let userGuide = ''
+    let userGuide = "";
     try {
-      userGuide = await readFilePromise(path.join(absolutePluginPath, 'user-guide.md'), 'utf-8')
+      userGuide = await readFilePromise(
+        path.join(absolutePluginPath, "user-guide.md"),
+        "utf-8"
+      );
     } catch (err) {
-      console.error(err)
+      // console.error(err)
     }
 
-    const nextPluginDirName = path.basename(absolutePluginPath)
+    let docs = "";
+    try {
+      docs = await readFilePromise(
+        path.join(absolutePluginPath, "docs.md"),
+        "utf-8"
+      );
+    } catch (err) {
+      // console.error(err)
+    }
+
+    const nextPluginDirName = path.basename(absolutePluginPath);
     const nextPlugin = {
       module,
       queryKey: nextPluginDirName,
-      queryValue: '',
+      queryValue: "",
       // these paths could be centrally configured
       ownStatic: `/own_static_resources_${type}/${nextPluginDirName}/static`,
       sharedStatic: `/shared_static_resources`,
-      userGuide
-    }
+      userGuide,
+      docs,
+    };
 
-    plugins.push(nextPlugin)
+    plugins.push(nextPlugin);
   }
 
+  return plugins;
+};
 
-  return plugins
-
-}
-
-
-module.exports = loadPlugins
+module.exports = loadPlugins;

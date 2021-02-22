@@ -12,3 +12,13 @@ const generated = Astring.generate(settedUp);
 window.eval(generated);
 
 export { aran };
+
+// window.EMPTY = {};
+// const expander = Aran({ namespace: "EMPTY" });
+// const settedUpEx = expander.setup();
+// // console.log(settedUp);
+// const generatedEx = Astring.generate(settedUpEx);
+// // console.log(generated);
+// window.eval(generatedEx);
+
+// export { expander };

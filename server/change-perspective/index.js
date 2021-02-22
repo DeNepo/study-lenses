@@ -12,6 +12,9 @@ const changePerspective = async ({
   options,
   resource,
 }) => {
+  const requestedOptions = options.find((option) => option.requested);
+  const requestedLenses = lenses.find((lens) => lens.requested);
+
   let configuredHooks = {
     beforeAll: [],
     afterAll: [],
@@ -19,7 +22,8 @@ const changePerspective = async ({
     afterEach: [],
     onError: [],
   };
-  if (options) {
+
+  if (requestedOptions) {
     // evaluate options
     // if the options modify the resource or response data, send immediately
     // options are not lenses, they shouldn't be used to change the response
@@ -68,7 +72,7 @@ const changePerspective = async ({
 
   let finalResource = resource;
   let finalResponseData = responseData;
-  if (lenses) {
+  if (requestedLenses) {
     const {
       pipedResource,
       pipedResponseData,

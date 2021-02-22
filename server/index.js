@@ -33,25 +33,26 @@ const optionsPromise = loadPlugins("options", optionsPath);
 const lensesPath = path.join(__dirname, "..", "lenses");
 const lensesPromise = loadPlugins("lenses", lensesPath);
 
-let localLensesPromise = null;
-let localLensesPath = "";
-let localLensesPathIsValid = false;
-// console.log(config.locals)
-if (typeof config.locals["--local-lenses"] === "string") {
-  // console.log(config.locals['--local-lenses'])
-  localLensesPath = path.join(process.cwd(), config.locals["--local-lenses"]);
-  // console.log(localLensesPath)
-  if (
-    !fs.existsSync(localLensesPath) ||
-    !fs.lstatSync(localLensesPath).isFile()
-  ) {
-    localLensesPathIsValid = true;
-    localLensesPromise = loadPlugins("local_lenses", localLensesPath);
-    // localLensesPromise.then(console.log)
-  } else {
-    localLensesPath = "";
-  }
-}
+// // broken, and not priority atm
+// let localLensesPromise = null;
+// let localLensesPath = "";
+// let localLensesPathIsValid = false;
+// console.log(config.locals);
+// if (typeof config.locals["--lenses"] === "string") {
+//   // console.log(config.locals['--local-lenses'])
+//   localLensesPath = path.join(process.cwd(), config.locals["--lenses"]);
+//   // console.log(localLensesPath)
+//   if (
+//     !fs.existsSync(localLensesPath) ||
+//     !fs.lstatSync(localLensesPath).isFile()
+//   ) {
+//     localLensesPathIsValid = true;
+//     localLensesPromise = loadPlugins("local_lenses", localLensesPath);
+//     // localLensesPromise.then(console.log)
+//   } else {
+//     localLensesPath = "";
+//   }
+// }
 
 const deepMerge = require("deepmerge");
 const combineMerge = (target, source, options) => {
@@ -126,12 +127,13 @@ app.use(
   /[\s\S]*shared_static_resources/,
   express.static(path.join(__dirname, "..", "static"))
 );
-if (localLensesPathIsValid) {
-  app.use(
-    /[\s\S]*own_static_resources_local_lenses/,
-    express.static(localLensesPath)
-  );
-}
+// // broken, and not priority atm
+// if (localLensesPathIsValid) {
+//   app.use(
+//     /[\s\S]*own_static_resources_local_lenses/,
+//     express.static(localLensesPath)
+//   );
+// }
 
 if (config.locals.static && typeof config.locals.static === "object") {
   for (const staticPath in config.locals.static) {
@@ -145,13 +147,13 @@ if (config.locals.static && typeof config.locals.static === "object") {
 
 app.use(async (req, res, next) => {
   // if the requested resource does not exist, fall back to static serving
-  const isPublicExample = /[\s\S]*public_example_files/.test(req.path);
+  const isPublicExample = /[\s\S]*study_lenses_public/.test(req.path);
   const absolutePath = isPublicExample
     ? path.join(
         __dirname,
         "..",
-        "public-example-files",
-        req.path.replace(/[\s\S]*public_example_files/, "")
+        "study_lenses_public",
+        req.path.replace(/[\s\S]*study_lenses_public/, "")
       )
     : path.join(process.cwd(), req.path);
   if (!fs.existsSync(absolutePath)) {
@@ -248,14 +250,18 @@ app.use(async (req, res, next) => {
   if (builtinLenses) {
     lenses.push(...builtinLenses);
   }
-  const localLenses = configurePlugins(
-    await localLensesPromise,
-    localConfigs,
-    req.query
-  );
-  if (localLenses) {
-    lenses.push(...localLenses);
-  }
+  // // broken, and not priority atm
+  // const localLenses = configurePlugins(
+  //   await localLensesPromise,
+  //   localConfigs,
+  //   req.query
+  // );
+  // console.log(localLenses);
+  // if (localLenses) {
+  //   lenses.push(...localLenses);
+  // }
+
+  // console.log(options, lenses);
 
   // if the parameters were not valid options or lenses
   //  fallback to static serving
@@ -368,8 +374,8 @@ app.use(async (req, res, next) => {
 });
 
 app.use(
-  /[\s\S]*public_example_files/,
-  express.static(path.join(__dirname, "..", "public-example-files"))
+  /[\s\S]*study_lenses_public/,
+  express.static(path.join(__dirname, "..", "study_lenses_public"))
 );
 
 // if they requested a directory, send index.html or rendered README

@@ -28,6 +28,10 @@ const evaluateOptions = async ({
   };
 
   pipeOptions: for (const nextOption of options) {
+    if (!nextOption.requested) {
+      continue;
+    }
+
     console.log(":  " + nextOption.queryKey);
 
     const config = Object.assign({}, nextOption);

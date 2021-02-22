@@ -12,12 +12,12 @@ things i did not finish last night
 
 "use strict";
 
-const renderPluginGuide = require("./render-plugin-guide.js");
+const renderPluginDocs = require("./render-plugin-docs.js");
 
-const renderMainGuide = require("./render-main-guide.js");
+const renderMainDocs = require("./render-main-docs.js");
 
 const helpOption = async ({ config, resource, lenses, options }) => {
-  // console.log("help!");
+  // console.log("docs!");
 
   if (resource.info) {
     resource.info.ext = ".html";
@@ -26,9 +26,9 @@ const helpOption = async ({ config, resource, lenses, options }) => {
   }
 
   if (config.queryValue) {
-    resource.content = await renderPluginGuide({ config, lenses, options });
+    resource.content = await renderPluginDocs({ config, lenses, options });
   } else {
-    resource.content = await renderMainGuide({
+    resource.content = await renderMainDocs({
       config,
       resource,
       lenses,

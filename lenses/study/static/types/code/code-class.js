@@ -300,9 +300,9 @@ export class CodeFE {
     //  otherwise don't, because anything syntax/runtime based will probably break for selections
     const url = selectedCode
       ? window.location.origin +
-        `?--resource=${stringifiedResource}&${queryKey}`
+        `?${queryKey}&--resource=${stringifiedResource}`
       : window.location.origin +
-        `?--resource=${stringifiedResource}&${queryKey}=${queryValue}`;
+        `?${queryKey}=${queryValue}&--resource=${stringifiedResource}`;
     window.open(url, "_blank");
   }
 }

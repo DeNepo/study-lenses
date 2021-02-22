@@ -1,6 +1,10 @@
-const spaghettiLense = async ({ requestData, responseData, config, resource }) => {
-
-  resource.info.ext = '.html';
+const spaghettiLense = async ({
+  requestData,
+  responseData,
+  config,
+  resource,
+}) => {
+  resource.info.ext = ".html";
   resource.content = `
 <!DOCTYPE html>
   <html>
@@ -8,23 +12,27 @@ const spaghettiLense = async ({ requestData, responseData, config, resource }) =
   <body>
 
     <pre>
-resource.info: ${JSON.stringify(resource.info, null, '  ')}
-resource.error: ${JSON.stringify(resource.error, null, '  ')}
+resource.info: ${JSON.stringify(resource.info, null, "  ")}
+resource.error: ${JSON.stringify(resource.error, null, "  ")}
 resource.content:
     </pre>
 
-    <textarea style="height: 50vh; width: 100vw;">${JSON.stringify(resource.content, null, '  ')}</textarea>
+    <textarea style="height: 50vh; width: 100vw;">${JSON.stringify(
+      resource.content,
+      null,
+      "  "
+    )}</textarea>
 
     <pre>
-config: ${JSON.stringify(config, null, '  ')}
+config: ${JSON.stringify(config, null, "  ")}
     </pre>
 
     <pre>
-responseData: ${JSON.stringify(responseData, null, '  ')}
+responseData: ${JSON.stringify(responseData, null, "  ")}
     </pre>
 
     <pre>
-requestData: ${JSON.stringify(requestData, null, '  ')}
+requestData: ${JSON.stringify(requestData, null, "  ")}
     </pre>
 
     <script src="${config.ownStatic}/script.js"></script>
