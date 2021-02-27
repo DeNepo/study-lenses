@@ -33,26 +33,8 @@ const optionsPromise = loadPlugins("options", optionsPath);
 const lensesPath = path.join(__dirname, "..", "lenses");
 const lensesPromise = loadPlugins("lenses", lensesPath);
 
-// // broken, and not priority atm
-// let localLensesPromise = null;
-// let localLensesPath = "";
-// let localLensesPathIsValid = false;
-// console.log(config.locals);
-// if (typeof config.locals["--lenses"] === "string") {
-//   // console.log(config.locals['--local-lenses'])
-//   localLensesPath = path.join(process.cwd(), config.locals["--lenses"]);
-//   // console.log(localLensesPath)
-//   if (
-//     !fs.existsSync(localLensesPath) ||
-//     !fs.lstatSync(localLensesPath).isFile()
-//   ) {
-//     localLensesPathIsValid = true;
-//     localLensesPromise = loadPlugins("local_lenses", localLensesPath);
-//     // localLensesPromise.then(console.log)
-//   } else {
-//     localLensesPath = "";
-//   }
-// }
+const localLensesPath = path.join(process.cwd(), ".lenses");
+const localLensesPromise = loadPlugins("local_lenses", localLensesPath);
 
 const deepMerge = require("deepmerge");
 const combineMerge = (target, source, options) => {
@@ -118,6 +100,10 @@ app.use(cookieParser());
 app.use(
   /[\s\S]*own_static_resources_lenses/,
   express.static(path.join(__dirname, "..", "lenses"))
+);
+app.use(
+  /[\s\S]*own_static_resources_local_lenses/,
+  express.static(path.join(process.cwd(), ".lenses"))
 );
 app.use(
   /[\s\S]*own_static_resources_options/,
@@ -235,7 +221,10 @@ app.use(async (req, res, next) => {
   // filter for the requested plugins (url params)
   //  configure them with local & param configurations
   const unconfiguredOptions = await optionsPromise;
-  const unconfiguredLenses = await lensesPromise;
+  const unconfiguredLenses = [
+    ...(await lensesPromise),
+    ...(await localLensesPromise),
+  ];
   const options = configurePlugins(
     unconfiguredOptions,
     localConfigs,
@@ -250,16 +239,6 @@ app.use(async (req, res, next) => {
   if (builtinLenses) {
     lenses.push(...builtinLenses);
   }
-  // // broken, and not priority atm
-  // const localLenses = configurePlugins(
-  //   await localLensesPromise,
-  //   localConfigs,
-  //   req.query
-  // );
-  // console.log(localLenses);
-  // if (localLenses) {
-  //   lenses.push(...localLenses);
-  // }
 
   // console.log(options, lenses);
 

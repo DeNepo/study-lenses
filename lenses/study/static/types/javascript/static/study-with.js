@@ -1,4 +1,4 @@
-"use strict";
+// "use strict";
 
 const studyWithEval = (debug) => (code) => {
   if (typeof code !== "string") {
@@ -15,11 +15,31 @@ const studyWithEval = (debug) => (code) => {
   //     : e;
   // const finalCode = debug ? "debugger;\n\n" + stricted : stricted;
   const finalCode = debug ? "debugger;\n\n" + code : code;
-  // for cleaner scoping in the debugger
-  const execute = eval;
 
-  ("use strict");
-  execute(finalCode);
+  let evaller = document.getElementById("evaller");
+  if (evaller === null) {
+    evaller = document.createElement("iframe");
+    evaller.id = "evaller";
+  } else {
+    document.body.removeChild(evaller);
+  }
+
+  evaller.onload = () => {
+    const script = document.createElement("script");
+
+    script.innerHTML = finalCode;
+
+    if (config.locals.type === "module") {
+      script.type = "module";
+    } else if (config.locals.strict) {
+      script.innerHTML = `'use strict';\neval(decodeURI(\`${encodeURI(
+        script.innerHTML
+      )}\`));`;
+    }
+
+    evaller.contentDocument.body.appendChild(script);
+  };
+  document.body.appendChild(evaller);
 };
 
 export const studyWith = {

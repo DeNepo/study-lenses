@@ -5,6 +5,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const open = require("open");
+
 process.env["NODE_CONFIG_DIR"] = path.join(__dirname, "..", "config");
 
 const config = require("config");
@@ -105,10 +107,16 @@ const pathToOpen = path.normalize(pathToStudy);
 const url = `http://localhost:${port}/${pathToOpen}${queryMarker}${
   cliLens || "--defaults"
 }`;
-console.log("studying: ", url);
+const helpUrl = `http://localhost:${port}?--help`;
 
 // launch the server
-require("../server/index.js")(port).then((_) => require("open")(url));
+require("../server/index.js")(port).then((_) => {
+  console.log("studying: ", url);
+  open(url);
+  // if (config.locals["--help"]) {
+  //   setTimeout(() => open(helpUrl), 200);
+  // }
+});
 
 /*
   go to ../server/index.js for the next step in your journey

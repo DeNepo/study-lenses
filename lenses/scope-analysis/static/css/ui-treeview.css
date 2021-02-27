@@ -1,0 +1,10 @@
+ui-treeview {
+  font-family: Source Code Pro;
+  font-size: small;
+  line-height: 120%;
+  cursor: default;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}

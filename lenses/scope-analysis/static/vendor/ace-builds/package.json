@@ -1,0 +1,48 @@
+{
+  "_args": [
+    [
+      "ace-builds@1.4.2",
+      "/Users/mbruce/shift-website"
+    ]
+  ],
+  "_from": "ace-builds@1.4.2",
+  "_id": "ace-builds@1.4.2",
+  "_inBundle": false,
+  "_integrity": "sha512-M1JtZctO2Zg+1qeGUFZXtYKsyaRptqQtqpVzlj80I0NzGW9MF3um0DBuizIvQlrPYUlTdm+wcOPZpZoerkxQdA==",
+  "_location": "/ace-builds",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "ace-builds@1.4.2",
+    "name": "ace-builds",
+    "escapedName": "ace-builds",
+    "rawSpec": "1.4.2",
+    "saveSpec": null,
+    "fetchSpec": "1.4.2"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/ace-builds/-/ace-builds-1.4.2.tgz",
+  "_spec": "1.4.2",
+  "_where": "/Users/mbruce/shift-website",
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/ajaxorg/ace-builds/issues"
+  },
+  "description": "Ace (Ajax.org Cloud9 Editor)",
+  "homepage": "https://github.com/ajaxorg/ace-builds",
+  "license": "BSD",
+  "main": "./src-noconflict/ace.js",
+  "name": "ace-builds",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ajaxorg/ace-builds.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "typings": "ace.d.ts",
+  "version": "1.4.2"
+}

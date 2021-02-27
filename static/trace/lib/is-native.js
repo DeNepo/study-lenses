@@ -1,5 +1,12 @@
 "use strict";
 
+// recursively check the iframe's window object for all functions
+//  compare each called function to see if it's there
+/*
+  Reflect.ownKeys - capture non-enumerable
+  Reflect.getOwnPropertyDescription
+*/
+
 export const isNative = (arg) => {
   // https://davidwalsh.name/detect-native-function
 

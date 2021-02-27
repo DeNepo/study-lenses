@@ -13,12 +13,13 @@ window.trace = (code) => {
   state.scopeDepth = 1;
   state.blockLabels = [];
   state.loggedSteps = 0;
+  state.callExpressions = [];
 
-  const stricted = "'use strict';" + code;
+  state.code = code;
 
   let estree1;
   try {
-    estree1 = Acorn.parse(stricted, { locations: true });
+    estree1 = Acorn.parse(code, { locations: true });
   } catch (err) {
     console.log(
       "%c" + err.name + ": " + err.message,
@@ -33,7 +34,9 @@ window.trace = (code) => {
 
   const deDebuggered = walk(estree1, {
     enter(node, parent, prop, index) {
-      if (node.type === "DebuggerStatement") {
+      if (node.type === "CallExpression") {
+        state.callExpressions.push(node);
+      } else if (node.type === "DebuggerStatement") {
         // works even though null is shorter than debugger because of white-space insensitivity
         const nullNode = Acorn.parse("null").body[0];
         nullNode.start = node.start;

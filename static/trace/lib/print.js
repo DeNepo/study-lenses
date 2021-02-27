@@ -2,8 +2,9 @@
 
 import { state } from "../data/state.js";
 import { config } from "../data/config.js";
+import { deepClone } from "./deep-clone.js";
 
-const linePrefix = (line) => {
+const linePrefix = (line, col = null) => {
   state.loggedSteps += 1;
 
   let prefix = "";
@@ -13,7 +14,11 @@ const linePrefix = (line) => {
 
   if (config.lines) {
     const lineNumberString = line < 10 ? " " + line : "" + line;
-    prefix = `line ${lineNumberString}: ` + prefix;
+    const colNumberString = col < 10 ? col + " " : "" + col;
+    prefix =
+      `line ${lineNumberString}:${
+        typeof col === "number" ? colNumberString : ""
+      } -` + prefix;
   }
 
   if (config.steps) {
@@ -26,8 +31,15 @@ const linePrefix = (line) => {
 };
 
 export const print = ({ logs = [], prefix, out = console.log, style = "" }) => {
+  logs = logs.map((thing) =>
+    typeof thing === "function"
+      ? 'a function named "' + thing.name + '"'
+      : deepClone(thing)
+  );
   if (typeof prefix === "number") {
     out(linePrefix(prefix), style || "", ...logs);
+  } else if (Array.isArray(prefix)) {
+    out(linePrefix(...prefix), style || "", ...logs);
   } else if (typeof prefix === "string") {
     out("%c" + prefix, style || "", ...logs);
   } else if (typeof prefix === "function") {

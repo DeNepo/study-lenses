@@ -61,15 +61,18 @@ const deepClone = (src, clonesMap = new Map()) => {
   }
 
   if (src instanceof Object) {
-    const clone = Object.create(src);
+    // const clone = Object.create(src);
+    // clonesMap.set(src, clone);
+    // for (const key in src) {
+    //   try {
+    //     clone[key] = deepClone(src[key], clonesMap);
+    //   } catch (o_0) {
+    //     // read-only keys
+    //   }
+    // }
+    const clone = Object.create(src.__proto__);
+    Object.assign(clone, src);
     clonesMap.set(src, clone);
-    for (const key in src) {
-      try {
-        clone[key] = deepClone(src[key], clonesMap);
-      } catch (o_0) {
-        // read-only keys
-      }
-    }
     return clone;
   }
 

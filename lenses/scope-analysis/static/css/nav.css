@@ -1,0 +1,14 @@
+.nav {
+  margin: 30px 0 60px 0;
+}
+
+ul li:hover ul.dropdown-menu,
+ul li a:focus + ul.dropdown-menu,
+ul li a:active + ul.dropdown-menu {
+  display: initial;
+  margin-top: 0px;
+}
+
+.dropdown .caret {
+  margin: 5px 0 0 2px;
+}

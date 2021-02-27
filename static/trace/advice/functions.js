@@ -8,16 +8,29 @@ import { aran } from "../setup.js";
 import { isNative } from "../lib/is-native.js";
 
 const nativeConsole = console;
-const nativeInteractions = [prompt, alert, confirm];
 
 export default {
   apply(f, t, xs, serial) {
-    const inNativeFunction = isNative(f);
+    const isNativeFunction = isNative(f);
+    const isNativeGetter = isNativeFunction && f.name === "get";
 
-    // account for native methods
+    const isConsoleCall =
+      (isNativeFunction && Object.values(nativeConsole).includes(f)) ||
+      t === nativeConsole;
+
     const node = aran.nodes[serial];
-    // console.log(node);
+    // remove when upgrading to new Aran
+    if (f === Reflect.get || f === Object) {
+      if (node.callee.type === "MemberExpression") {
+        if (!isConsoleCall) {
+          // let errors be handled by failure
+          return Reflect.apply(f, t, xs);
+        }
+      }
+    }
+
     const line = node.loc.start.line;
+    const col = node.loc.start.column;
 
     const commaSeparatedArgs = [];
     for (const arg of xs) {
@@ -26,18 +39,37 @@ export default {
     }
     commaSeparatedArgs.pop();
 
-    const isNativeInteraction = nativeInteractions.includes(f);
-    // eventually do the same thing for dom
-    const calledConsoleMethod = Object.values(nativeConsole).includes(f);
-    if (calledConsoleMethod && config.console) {
+    const traceConsole = config.console && isConsoleCall;
+    const traceNative =
+      config.functionsNative && isNativeFunction && !isConsoleCall;
+    // &&
+    // !state.inNativeCallstack;
+    const traceDefined = config.functionsDefined && !isNativeFunction;
+
+    if (isNativeGetter) {
+    } else if (traceConsole) {
+      // console.group("console");
+      // console.log(isConsoleCall, t, f);
+      // console.groupEnd();
       print({
-        prefix: line,
+        prefix: [line, col],
         logs: [`console.${f ? f.name : f}(`, ...commaSeparatedArgs, ")"],
       });
-    } else if (!inNativeFunction && config.functions) {
+    } else if (traceNative) {
+      // console.group("native");
+      // console.log(isConsoleCall, t, f);
+      // console.groupEnd();
       print({
-        prefix: line,
-        // logs: ["call: " + f.name + "(", ...commaSeparatedArgs, ")"],
+        prefix: [line, col],
+        logs: [f.name + " (function call):", ...commaSeparatedArgs],
+        out: console.groupCollapsed,
+      });
+    } else if (traceDefined) {
+      // console.group("defined");
+      // console.log(isConsoleCall, t, f);
+      // console.groupEnd();
+      print({
+        prefix: [line, col],
         logs: [f.name + " (function call):", ...commaSeparatedArgs],
         out: console.groupCollapsed,
       });
@@ -46,31 +78,38 @@ export default {
           logs: ["%cthis:", "font-weight: bold;", t],
         });
       }
-    } else if (isNativeInteraction && config.interactions) {
-      print({
-        prefix: line,
-        // logs: ["call: " + f.name + "(", ...commaSeparatedArgs, ")"],
-        logs: [f.name + " (function call):", ...commaSeparatedArgs],
-        out: console.groupCollapsed,
-      });
     }
 
     let x = undefined;
-    if (!calledConsoleMethod) {
+    if (!isConsoleCall) {
+      // let errors be handled by failure
       x = Reflect.apply(f, t, xs);
     }
 
-    if (!inNativeFunction && config.functions) {
+    // if (isNativeFunction && isNative(x)) {
+    //   return x;
+    // }
+
+    if (isNativeGetter) {
+    } else if (traceConsole) {
+      // console.group("console");
+      // console.log(isConsoleCall, t, f);
+      // console.groupEnd();
+    } else if (traceNative) {
+      // console.group("native");
+      // console.log(isConsoleCall, t, f);
+      // console.groupEnd();
       print({
-        //   prefix: (prefixify) => prefixify(line) + " (return value):",
         prefix: "(return value):",
         logs: [x],
         style: "font-weight: bold;",
       });
       console.groupEnd();
-    } else if (isNativeInteraction && config.interactions) {
+    } else if (traceDefined) {
+      // console.group("defined");
+      // console.log(isConsoleCall, t, f);
+      // console.groupEnd();
       print({
-        //   prefix: (prefixify) => prefixify(line) + " (return value):",
         prefix: "(return value):",
         logs: [x],
         style: "font-weight: bold;",
@@ -80,6 +119,21 @@ export default {
 
     return x;
   },
+
+  // closure: (f, serial) => {
+  //   const g = function (...xs) {
+  //     return Reflect.apply(f, this, Array.from(arguments));
+  //   };
+  //   Reflect.defineProperty(g, "name", {
+  //     __proto__: null,
+  //     value: f.name,
+  //   });
+  //   Reflect.defineProperty(g, "length", {
+  //     __proto__: null,
+  //     value: f.length,
+  //   });
+  //   return g;
+  // },
 
   // // no good for this, will miss implicit returns. and can't tell if there was an explicti or no
   // return: (value, serial) => {

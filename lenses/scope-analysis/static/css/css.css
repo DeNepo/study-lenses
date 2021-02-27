@@ -1,0 +1,114 @@
+.container-narrow {
+  margin: 0 auto;
+  max-width: 700px;
+}
+
+.container, .container-narrow {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+}
+
+.jumbotron {
+  clear: both;
+  margin: 50px 0;
+  text-align: center;
+  cursor: default;
+}
+
+.jumbotron h1 {
+  font-size: 70px;
+}
+
+.jumbotron .btn {
+  font-size: 21px;
+  padding: 14px 24px;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  line-height: 140%;
+  font-size: medium;
+}
+
+li {
+  line-height: 140%;
+}
+
+p {
+  margin-bottom: 14px;
+}
+
+hr {
+  border: 0;
+  border-bottom: 1px dashed #DDD;
+}
+
+code {
+  padding: 2px 5px;
+}
+
+pre {
+  margin: 12px 0;
+  padding: 0;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow: auto;
+}
+
+@media(min-width: 768px) {
+  pre {
+    margin: 12px -14px;
+  }
+}
+
+code, pre {
+  color: #000;
+  border: 0;
+  font-family: Source Code Pro, DejaVu Sans Mono, Droid Sans Mono, Courier New, Courier, monospace;
+  border-radius: 6px;
+  font-size: 0.94em;
+}
+
+pre code, pre code.hljs {
+  padding: 1em;
+  display: block;
+  overflow-x: auto;
+  white-space: pre;
+  word-wrap: normal;
+}
+
+.shift {
+  background-image: url(../img/shift_logo_v2.fw.png);
+  background-repeat: no-repeat;
+  background-size: 1em;
+  background-position: left center;
+  padding-left: 1.2em;
+}
+
+a.hub-link::before {
+  content: "\238B";
+  padding: 5px;
+}
+a.hub-link:hover, a.hub-link:focus {
+  text-decoration: none;
+}
+
+section {
+  margin: 1em 0 1.5em;
+}
+
+.lead {
+  margin: 1em 4em;
+}
+
+.footer {
+  margin: 0 0 20px;
+  color: #888;
+  text-align: center;
+}

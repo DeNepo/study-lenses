@@ -20,7 +20,7 @@ class DirectorySSR extends MarkdownSSR {
       content = fs.readFileSync(readmePath, "utf-8");
       // console.log(content);
     } catch (o_0) {
-      console.error(o_0);
+      // console.error(o_0);
     }
 
     const dirRegex = /(<!--[ \t]*begin[ \t]*dir[ \t]*-->)([\s\S]*)(<!--[ \t]*end[ \t]*dir[ \t]*-->)/gim;

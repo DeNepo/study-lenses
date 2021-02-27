@@ -1,16 +1,36 @@
-"use strict";
+const newPointcut = {
+  test: (node) => {
+    return true || false;
+  },
+  test: true, // same as () => true for this API
+};
+
+("use strict");
 
 import { config } from "./data/config.js";
 
 export const pointcut = (name, node) => {
-  // console.log(name, node);
+  // if (name === "write" || name === "read") {
+  //   debugger;
+  // }
 
   if (name === "failure") {
     return true;
+    // } else if (name === "closure") {
+    //   return true;
   } else if (
-    name === "test" &&
-    node.type === "ConditionalExpression" &&
-    config.operators
+    (name === "test" || name === "break" || name === "continue") &&
+    config.controlFlow &&
+    (node.type === "ConditionalExpression" ||
+      node.type === "IfStatement" ||
+      node.type === "SwitchCase" ||
+      node.type === "WhileStatement" ||
+      node.type === "DoWhileStatement" ||
+      node.type === "ForStatement" ||
+      // node.type === "ForOfStatement" ||
+      // node.type === "ForInStatement" ||
+      node.type === "BreakStatement" ||
+      node.type === "ContinueStatement")
   ) {
     return true;
   } else if (
@@ -26,27 +46,21 @@ export const pointcut = (name, node) => {
   ) {
     return true;
   } else if (
-    name === "return" &&
-    node.type === "ReturnStatement" &&
-    config.functions
-  ) {
-    // return true;
-  } else if (
-    (config.functions ||
-      config.console ||
-      config.interactions ||
-      config.document) &&
+    (config.functionsNative || config.functionsDefined) &&
     name === "apply" &&
     node.type === "CallExpression"
   ) {
     return true;
+  } else if (config.newInstance && name === "construct") {
+    return true;
   } else if (
-    config.variables.read &&
+    config.variablesRead &&
     name === "read" &&
     node.type === "Identifier"
   ) {
     return true;
   } else if (
+    (config.variablesAssign || config.variablesDeclare) &&
     name === "write" &&
     (node.type === "AssignmentExpression" ||
       node.type === "ExpressionStatement" ||

@@ -76,6 +76,11 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.flowchart ? "checked" : ""
       } /> <label for='flowchart-input'>flowchart</label>
     </form>
+    <form>
+      <input id='scope-analysis-input' type='checkbox' ${
+        this.config.locals.scopeAnalysis ? "checked" : ""
+      } /> <label for='scope-analysis-input'>scope-analysis</label>
+    </form>
     ` + superConfigOptions
     );
   }
@@ -129,6 +134,10 @@ class JavaScriptSSR extends CodeSSR {
       <button id='flowchart-button' style='display: ${flowchartDisplay};'>flowchart</button>`;
     // }
 
+    const scopeAnalysisDisplay = locals.scopeAnalysis ? "inline-block" : "none";
+    superPanel += `
+      <button id='scope-analysis-button' style='display: ${scopeAnalysisDisplay};'>scope analysis</button>`;
+
     const astDisplay = locals.ast ? "inline-block" : "none";
     superPanel += `
       <button id='ast-button' style='display: ${astDisplay};'>syntax tree</button>`;
@@ -161,12 +170,15 @@ class JavaScriptSSR extends CodeSSR {
         <code>options</code>
         <div  class='dropdown-content'>
           <form  id='trace-config'>
-            <input id='variables-declare' type='checkbox' /> <label for='variables-declare'>variables: declare</label> <br>
-            <input id='variables-assign' type='checkbox' /> <label for='variables-assign'>variables: assign</label> <br>
-            <input id='variables-read' type='checkbox' /> <label for='variables-read'>variables: read</label> <br>
+            variables:  <input id='variables' type='text' />  <br>
+            <input id='variablesDeclare' type='checkbox' /> <label for='variablesDeclare'>declare</label> <br>
+            <input id='variablesAssign' type='checkbox' /> <label for='variablesAssign'>assign</label> <br>
+            <input id='variablesRead' type='checkbox' /> <label for='variablesRead'>read</label> <br>
+            <hr>
             <input id='operators' type='checkbox' /> <label for='operators'>operators</label> <br>
-            <!-- <input id='blocks' type='checkbox' /> <label for='blocks'>blocks</label> <br> -->
-            <input id='functions' type='checkbox'  /> <label for='functions'>function calls</label> <br>
+            <input id='controlFlow' type='checkbox'  /> <label for='controlFlow'>control flow</label> <br>
+            <input id='functionsDefined' type='checkbox'  /> <label for='functionsDefined'>function: declared</label> <br>
+            <input id='functionsNative' type='checkbox'  /> <label for='functionsNative'>function: native</label> <br>
             <!-- <input id='this' type='checkbox'  /> <label for='this'>this</label> <br> -->
             <!-- <input id='break' type='checkbox'  /> <label for='break'>break</label> <br> -->
             <!-- <input id='continue' type='checkbox'  /> <label for='continue'>continue</label> <br> -->
@@ -175,7 +187,7 @@ class JavaScriptSSR extends CodeSSR {
             <input id='lines' type='checkbox' /> <label for='lines'>lines</label> <br>
             <input id='steps' type='checkbox' /> <label for='steps'>steps</label> <br>
             <input id='console' type='checkbox' /> <label for='console'>console</label> <br>
-            <input id='interactions' type='checkbox' /> <label for='interactions'>interactions</label> <br>
+            <!-- <input id='interactions' type='checkbox' /> <label for='interactions'>interactions</label> <br> -->
           </form>
         </div>
       </div>

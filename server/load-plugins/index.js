@@ -9,6 +9,10 @@ const readFilePromise = util.promisify(fs.readFile);
 const isItADirectory = require("../lib/is-it-a-directory.js");
 
 const loadPlugins = async (type, pluginsPath) => {
+  if (!fs.existsSync(pluginsPath)) {
+    return [];
+  }
+
   // array of absolute paths to each plugin folder
   const pluginPaths = fs
     .readdirSync(pluginsPath)
@@ -66,6 +70,7 @@ const loadPlugins = async (type, pluginsPath) => {
       sharedStatic: `/shared_static_resources`,
       userGuide,
       docs,
+      type: type.includes("lens") ? "lens" : "option",
     };
 
     plugins.push(nextPlugin);

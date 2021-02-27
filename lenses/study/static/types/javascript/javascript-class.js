@@ -7,31 +7,6 @@ export class JavaScriptFE extends CodeFE {
 
     if (this.config.locals.trace) {
       for (const key in this.config.locals.trace) {
-        if (key === "variables") {
-          if (this.config.variables === false) {
-            trace.config.variables = {
-              declare: false,
-              assign: false,
-              read: false,
-            };
-            continue;
-          }
-          if (this.config.locals.trace.variables === true) {
-            trace.config.variables = {
-              declare: true,
-              assign: true,
-              read: true,
-            };
-            continue;
-          }
-          if (this.config.locals.trace) {
-            for (const key in this.config.locals.trace.variables) {
-              trace.config.variables[key] = this.config.locals.trace.variables[
-                key
-              ];
-            }
-          }
-        }
         if (typeof this.config.locals.trace[key] === "boolean") {
           trace.config[key] = this.config.locals.trace[key];
         }
@@ -115,6 +90,22 @@ export class JavaScriptFE extends CodeFE {
       this.studyWith("flowchart")
     );
     // }
+
+    const scopeAnalysisButton = document.getElementById(
+      "scope-analysis-button"
+    );
+    document
+      .getElementById("flowchart-input")
+      .addEventListener("change", (event) => {
+        if (event.target.checked) {
+          scopeAnalysisButton.style = "display: inline-block;";
+        } else {
+          scopeAnalysisButton.style = "display: none;";
+        }
+      });
+    scopeAnalysisButton.addEventListener("click", () =>
+      this.studyWith("scope-analysis")
+    );
 
     const astButton = document.getElementById("ast-button");
     document.getElementById("ast-input").addEventListener("change", (event) => {
@@ -206,12 +197,12 @@ export class JavaScriptFE extends CodeFE {
     traceConfig.addEventListener("change", (event) => {
       event.preventDefault();
       const option = event.target.id;
-      if (option.includes("variables")) {
-        const subOption = option.split("-").pop();
-        trace.config.variables[subOption] = !trace.config.variables[subOption];
-      }
       if (typeof trace.config[option] === "boolean") {
         trace.config[option] = !trace.config[option];
+      } else if (option === "variables") {
+        trace.config.variables = event.target.value
+          .split(",")
+          .map((s) => s.trim());
       }
     });
 
@@ -219,28 +210,10 @@ export class JavaScriptFE extends CodeFE {
       if (child.nodeName !== "INPUT") {
         continue;
       }
-      if (child.id.includes("variables")) {
-        if (!trace.config.variables) {
-          continue;
-        }
-        if (trace.config.variables === true) {
-          child.checked = true;
-          continue;
-        }
-        for (const variableConfig in trace.config.variables) {
-          if (
-            trace.config.variables[variableConfig] &&
-            child.id.includes(variableConfig)
-          ) {
-            child.checked = true;
-          }
-        }
-      }
       if (trace.config[child.id]) {
         child.checked = true;
       }
     }
-    // }
   }
 
   static insertLoopGuards = (evalCode, maxIterations) => {

@@ -1,0 +1,48 @@
+{
+  "_args": [
+    [
+      "ui-treeview@1.0.3",
+      "/Users/mbruce/shift-website"
+    ]
+  ],
+  "_from": "ui-treeview@1.0.3",
+  "_id": "ui-treeview@1.0.3",
+  "_inBundle": false,
+  "_integrity": "sha512-KMefAjGDqqkmvAjb3msPtFxWxQi80U04L7pJlBg6SxRlQhGhIgg6eWrgtBokco61XP4Ts60oW7lzZuRRNC30rg==",
+  "_location": "/ui-treeview",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "ui-treeview@1.0.3",
+    "name": "ui-treeview",
+    "escapedName": "ui-treeview",
+    "rawSpec": "1.0.3",
+    "saveSpec": null,
+    "fetchSpec": "1.0.3"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/ui-treeview/-/ui-treeview-1.0.3.tgz",
+  "_spec": "1.0.3",
+  "_where": "/Users/mbruce/shift-website",
+  "author": "",
+  "dependencies": {
+    "@polymer/polymer": "3.1.0",
+    "@webcomponents/webcomponentsjs": "2.2.0"
+  },
+  "description": "javascript object data display as a tree",
+  "devDependencies": {
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
+    "babelify": "^7.2.0",
+    "browserify": "^13.0.0"
+  },
+  "license": "None",
+  "main": "demo.html",
+  "name": "ui-treeview",
+  "scripts": {
+    "build": "browserify src/index.js -o dist/index.js --global-transform [ babelify --plugins [ transform-es2015-modules-commonjs ] ] "
+  },
+  "version": "1.0.3"
+}

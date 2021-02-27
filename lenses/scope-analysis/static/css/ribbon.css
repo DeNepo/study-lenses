@@ -1,0 +1,57 @@
+/* inspired by http://unindented.org/articles/github-ribbon-using-css-transforms/ */
+
+.ribbon-container {
+  position: fixed;
+  z-index: 1;
+  top: 0px;
+  overflow: hidden;
+  width: 167px;
+  height: 100px;
+}
+
+.ribbon {
+  position: absolute;
+  top: 22px;
+  font-size: 14px;
+  background-color: #a00;
+  white-space: nowrap;
+  -webkit-box-shadow: 0 0 10px #888;
+     -moz-box-shadow: 0 0 10px #888;
+          box-shadow: 0 0 10px #888;
+}
+
+.ribbon-container.right {
+  right: 0;
+}
+.ribbon-container.right .ribbon {
+  -webkit-transform: rotate(32deg);
+     -moz-transform: rotate(32deg);
+      -ms-transform: rotate(32deg);
+       -o-transform: rotate(32deg);
+          transform: rotate(32deg);
+}
+
+.ribbon-container.left {
+  left: 0;
+}
+.ribbon-container.left .ribbon {
+  -webkit-transform: rotate(-32deg);
+     -moz-transform: rotate(-32deg);
+      -ms-transform: rotate(-32deg);
+       -o-transform: rotate(-32deg);
+          transform: rotate(-32deg);
+  position: absolute;
+  left: -55px;
+}
+
+.ribbon a {
+  border: 1px solid #faa;
+  color: #fff;
+  display: block;
+  font: bold 81.25% 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  margin: 1px 0;
+  padding: 7px 60px;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: 0 0 5px #444;
+}

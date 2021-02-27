@@ -15,11 +15,10 @@
 
 export const config = {
   // default active options, the base needed for tracing data and mistakes
-  variables: {
-    declare: true,
-    read: true,
-    assign: true,
-  } /* declare, assign, read.
+  variables: [],
+  variablesDeclare: true,
+  variablesAssign: true,
+  variablesRead: true /* declare, assign, read.
                       passing true sets to these defaults
                       hosting should represented as step 0
                       function declarations fall under variables
@@ -34,9 +33,11 @@ export const config = {
   // not doing blocks for now because for loops are complicated with JS and aran. read/write/assign is good enough atm
   // conditions: false, // how to handle switch/case vs. if/else? // see comment under blocks
   // loops: false, // how to handle different loop types // see comment under blocks
-  break: false, // add an extra line to the trace for break/continue
-  continue: false, //
+  controlFlow: false, // all occurrences of the 'test' trap, and break/continue
   functions: false, // name, args, return
+  // replace the single functions with these two options
+  functionsNative: true,
+  functionsDefined: true,
 
   // advanceder options
   // locals: false, // nah, too much. entering debugger territory
