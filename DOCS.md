@@ -242,7 +242,7 @@ The server will also scan the request's directory and parents (up to `cwd`) sear
 
 This application's whole _raison d'être_
 
-Lenses are loaded into the server as an array of `plugin` objects, parsed from the `/lenses` directory. When a request with lens parameters is received, the indicated lenses are filtered out from all the .lenses and used to process the resource before sending the response
+Lenses are loaded into the server as an array of `plugin` objects, parsed from the `/lenses` directory (for "native" lenses that come with this module) or the `/.lenses` directory in your code's repository (for custom lenses). When a request with lens parameters is received, the indicated lenses are filtered out from all the .lenses and used to process the resource before sending the response
 
 Lenses are used to process the `resource`, `requestData` and `responseData`, transforming the resource for study. They are called one after the other, the return values of the last being fed into the next in the order they are written into the URL.
 
