@@ -1,3 +1,5 @@
+> you can read these docs plus the docs.md for all lenses and options by running `$ study` locally and using the `?--docs` option
+
 # Study Lenses Docs
 
 How does this work? Let me explain you
