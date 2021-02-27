@@ -280,7 +280,7 @@ Lens behavior can go from very simple to very complex, here's an artificial hier
 
 1. **Basic**: Pure functions that transform the `requestData`, `responseData` and/or `resource` data then return the changes. Check out the `reverse` function that simply reverses `resource.content` if it is a string.
 2. **Static**: Static lenses take advantage of `config.ownStatic` and/or `config.sharedStatic` to send static web pages. This could include embedding the requested resource in an editor, highlighting it in an HTML document, or anything else a static web page can do. Check out the `hello-world` lens for the kitchen sink
-3. **CRUD**: lenses have access to the file system. You could write a static lens that "routes" POST requests to itself using URL params then updates or creates files on disk. (no examples of this yet)
+3. **CRUD**: lenses have access to the file system. You could write a static lens that "routes" POST requests to itself using URL params then updates or creates files on disk. (the ?study lens does this to save changes from the browser)
 4. **Web**: lenses can send & receive HTTP requests (`http`, `node-fetch`, ...). Imagine a `?translate=dutch` lens that uses the DeepL API to translate a text before forwarding the response to the browser. (no examples of this yet)
 5. **Client/Server**: One of these is essentially a fullstack server embedded within the study server. The lens can send a frontend app that "routes" all requests back to the lens using it's URL parameter. It can can then send arbitrary data back and forth using the req/res bodies. (no examples of this yet)
 
