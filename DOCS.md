@@ -295,7 +295,7 @@ Lens behavior can go from very simple to very complex, here's an artificial hier
 
 Inspired by [cli conventions](https://nullprogram.com/blog/2020/08/01/) (but not exactly alike), Options are params that are prefixed with `--` and operate "outside" the normal control flow to observe, modify, or stop the server's behavior. Requested Options will be filtered out and evaluated before the resource is processed by any Lenses. In contrast to Lenses, an Option cannot modify the `resource` without ending the request/response cycle (ie. `--help` will send a user guide).
 
-Options will be executed in order passing the (possibly) modified res/req on to the next, each one receiving the same original data. If an Option returns a `resource` or `responseData` object, they will be used to generate the response and the Lenses will not be piped. After the first Option returns valid data, the others will still be executed but their data will be ignored (useful for debugging or reporting Options).
+Options will be executed in order passing the (possibly) modified res/req on to the next, each one receiving the same original data. If an Option returns a `resource` or `responseData` object, they will be used to generate the response and the Lenses will not be piped\*. After the first Option returns valid data, the others will still be executed but their data will be ignored (useful for debugging or reporting Options).
 
 - Options are called in [./server/handle-request/evaluate-options/index.js](./server/handle-request/evaluate-options/index.js)
 
@@ -333,6 +333,8 @@ const anOption = async ({
 
 </details>
 <br>
+
+> \* with the execption of the `--resource` option, which can be used from the frontend to replace the local resource at that path.
 
 <!-- BEGIN OPTIONS -->
 <!-- END OPTIONS -->
