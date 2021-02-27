@@ -177,7 +177,7 @@ class JavaScriptSSR extends CodeSSR {
             <hr>
             <input id='operators' type='checkbox' /> <label for='operators'>operators</label> <br>
             <input id='controlFlow' type='checkbox'  /> <label for='controlFlow'>control flow</label> <br>
-            <input id='functionsDefined' type='checkbox'  /> <label for='functionsDefined'>function: declared</label> <br>
+            <input id='functionsDefined' type='checkbox'  /> <label for='functionsDefined'>function: defined</label> <br>
             <input id='functionsNative' type='checkbox'  /> <label for='functionsNative'>function: native</label> <br>
             <!-- <input id='this' type='checkbox'  /> <label for='this'>this</label> <br> -->
             <!-- <input id='break' type='checkbox'  /> <label for='break'>break</label> <br> -->

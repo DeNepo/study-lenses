@@ -115,6 +115,9 @@ const scopeAnalysisLens = ({ resource, config }) => {
   </head>
 
   <body>
+
+    <!--
+
     <div class="ribbon-container right">
       <div class="ribbon">
         <a
@@ -124,6 +127,8 @@ const scopeAnalysisLens = ({ resource, config }) => {
         >
       </div>
     </div>
+
+    -->
 
     <div class="container">
       <div class="content">
@@ -245,6 +250,12 @@ let globalScope = analyze(/* Shift AST */);</code></pre>
 
       <div class="footer">
         <p>&copy; Shape Security, Inc.</p>
+
+        <a
+          href="https://github.com/shapesecurity/shift-scope-js"
+          target="_blank"
+          >Fork me on GitHub</a
+        >
       </div>
     </div>
   </body>
