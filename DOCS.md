@@ -496,7 +496,6 @@ Once all this works and is reliable:
 - tests for new lenses and options
 - architected for deployment on netlify
 - global server configurations
-  - `port`
   - `trust` ?
     - should requests be trusted?
     - when running locally, sure. when deployed, no
