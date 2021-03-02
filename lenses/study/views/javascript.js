@@ -27,6 +27,7 @@ class JavaScriptSSR extends CodeSSR {
       <script src='${this.config.sharedStatic}/prettier/parser-babel.js'></script>
       <script src='${this.config.sharedStatic}/trace/aran-build.js'></script>
       <script src='${this.config.sharedStatic}/trace/index.js' type='module'></script>
+      <script src='${this.config.sharedStatic}/trace/trace-init.js' type='module'></script>
       <!-- <script src='${this.config.sharedStatic}/trace/shadow-state.js'></script> -->`
     );
   }
@@ -77,9 +78,9 @@ class JavaScriptSSR extends CodeSSR {
       } /> <label for='flowchart-input'>flowchart</label>
     </form>
     <form>
-      <input id='scope-analysis-input' type='checkbox' ${
-        this.config.locals.scopeAnalysis ? "checked" : ""
-      } /> <label for='scope-analysis-input'>scope-analysis</label>
+      <input id='variables-input' type='checkbox' ${
+        this.config.locals.variables ? "checked" : ""
+      } /> <label for='variables-input'>variables</label>
     </form>
     ` + superConfigOptions
     );
@@ -134,9 +135,9 @@ class JavaScriptSSR extends CodeSSR {
       <button id='flowchart-button' style='display: ${flowchartDisplay};'>flowchart</button>`;
     // }
 
-    const scopeAnalysisDisplay = locals.scopeAnalysis ? "inline-block" : "none";
+    const variablesDisplay = locals.variables ? "inline-block" : "none";
     superPanel += `
-      <button id='scope-analysis-button' style='display: ${scopeAnalysisDisplay};'>scope analysis</button>`;
+      <button id='variables-button' style='display: ${variablesDisplay};'>variables</button>`;
 
     const astDisplay = locals.ast ? "inline-block" : "none";
     superPanel += `
@@ -164,33 +165,7 @@ class JavaScriptSSR extends CodeSSR {
     const traceDisplay = locals.trace ? "inline-block" : "none";
     superPanel += `
     <div id='trace-container' style='display: ${traceDisplay};'>
-      <button id='trace-button'>trace</button>
-
-      <div class="dropdown">
-        <code>options</code>
-        <div  class='dropdown-content'>
-          <form  id='trace-config'>
-            variables:  <input id='variables' type='text' />  <br>
-            <input id='variablesDeclare' type='checkbox' /> <label for='variablesDeclare'>declare</label> <br>
-            <input id='variablesAssign' type='checkbox' /> <label for='variablesAssign'>assign</label> <br>
-            <input id='variablesRead' type='checkbox' /> <label for='variablesRead'>read</label> <br>
-            <hr>
-            <input id='operators' type='checkbox' /> <label for='operators'>operators</label> <br>
-            <input id='controlFlow' type='checkbox'  /> <label for='controlFlow'>control flow</label> <br>
-            <input id='functionsDefined' type='checkbox'  /> <label for='functionsDefined'>function: defined</label> <br>
-            <input id='functionsNative' type='checkbox'  /> <label for='functionsNative'>function: native</label> <br>
-            <!-- <input id='this' type='checkbox'  /> <label for='this'>this</label> <br> -->
-            <!-- <input id='break' type='checkbox'  /> <label for='break'>break</label> <br> -->
-            <!-- <input id='continue' type='checkbox'  /> <label for='continue'>continue</label> <br> -->
-            <!-- <input id='this' type='checkbox'  /> <label for='this'>this</label> -->
-            <hr>
-            <input id='lines' type='checkbox' /> <label for='lines'>lines</label> <br>
-            <input id='steps' type='checkbox' /> <label for='steps'>steps</label> <br>
-            <input id='console' type='checkbox' /> <label for='console'>console</label> <br>
-            <!-- <input id='interactions' type='checkbox' /> <label for='interactions'>interactions</label> <br> -->
-          </form>
-        </div>
-      </div>
+      <trace-it></trace-it>
     </div>`;
 
     // }

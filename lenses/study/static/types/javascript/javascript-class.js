@@ -5,13 +5,15 @@ export class JavaScriptFE extends CodeFE {
   constructor(config) {
     super(config);
 
-    if (this.config.locals.trace) {
-      for (const key in this.config.locals.trace) {
-        if (typeof this.config.locals.trace[key] === "boolean") {
-          trace.config[key] = this.config.locals.trace[key];
-        }
-      }
-    }
+    // if (this.config.locals.trace) {
+    //   for (const key in this.config.locals.trace) {
+    //     if (typeof this.config.locals.trace[key] === "boolean") {
+    //       trace.config[key] = this.config.locals.trace[key];
+    //     }
+    //   }
+    // }
+
+    window.editor = this.editor;
 
     this.initJsUi();
   }
@@ -91,20 +93,18 @@ export class JavaScriptFE extends CodeFE {
     );
     // }
 
-    const scopeAnalysisButton = document.getElementById(
-      "scope-analysis-button"
-    );
+    const variablesButton = document.getElementById("variables-button");
     document
       .getElementById("flowchart-input")
       .addEventListener("change", (event) => {
         if (event.target.checked) {
-          scopeAnalysisButton.style = "display: inline-block;";
+          variablesButton.style = "display: inline-block;";
         } else {
-          scopeAnalysisButton.style = "display: none;";
+          variablesButton.style = "display: none;";
         }
       });
-    scopeAnalysisButton.addEventListener("click", () =>
-      this.studyWith("scope-analysis")
+    variablesButton.addEventListener("click", () =>
+      this.studyWith("variables")
     );
 
     const astButton = document.getElementById("ast-button");
@@ -172,48 +172,48 @@ export class JavaScriptFE extends CodeFE {
     // }
 
     // if (this.config.locals.trace) {
-    const traceContainer = document.getElementById("trace-container");
-    document
-      .getElementById("trace-input")
-      .addEventListener("change", (event) => {
-        this.config.locals.trace = !this.config.locals.trace;
-        if (event.target.checked) {
-          traceContainer.style = "display: inline-block;";
-        } else {
-          traceContainer.style = "display: none;";
-        }
-      });
+    // const traceContainer = document.getElementById("trace-container");
+    // document
+    //   .getElementById("trace-input")
+    //   .addEventListener("change", (event) => {
+    //     this.config.locals.trace = !this.config.locals.trace;
+    //     if (event.target.checked) {
+    //       traceContainer.style = "display: inline-block;";
+    //     } else {
+    //       traceContainer.style = "display: none;";
+    //     }
+    //   });
 
-    document
-      .getElementById("trace-button")
-      .addEventListener("click", (event) => {
-        // trace is a global function
-        trace(this.editor.getValue());
-        // shadowStateHistory(this.editor.getValue());
-        event.preventDefault();
-      });
+    // document
+    //   .getElementById("trace-button")
+    //   .addEventListener("click", (event) => {
+    //     // trace is a global function
+    //     trace(this.editor.getValue());
+    //     // shadowStateHistory(this.editor.getValue());
+    //     event.preventDefault();
+    //   });
 
-    const traceConfig = document.getElementById("trace-config");
-    traceConfig.addEventListener("change", (event) => {
-      event.preventDefault();
-      const option = event.target.id;
-      if (typeof trace.config[option] === "boolean") {
-        trace.config[option] = !trace.config[option];
-      } else if (option === "variables") {
-        trace.config.variables = event.target.value
-          .split(",")
-          .map((s) => s.trim());
-      }
-    });
+    // const traceConfig = document.getElementById("trace-config");
+    // traceConfig.addEventListener("change", (event) => {
+    //   event.preventDefault();
+    //   const option = event.target.id;
+    //   if (typeof trace.config[option] === "boolean") {
+    //     trace.config[option] = !trace.config[option];
+    //   } else if (option === "variables") {
+    //     trace.config.variables = event.target.value
+    //       .split(",")
+    //       .map((s) => s.trim());
+    //   }
+    // });
 
-    for (const child of traceConfig.children) {
-      if (child.nodeName !== "INPUT") {
-        continue;
-      }
-      if (trace.config[child.id]) {
-        child.checked = true;
-      }
-    }
+    // for (const child of traceConfig.children) {
+    //   if (child.nodeName !== "INPUT") {
+    //     continue;
+    //   }
+    //   if (trace.config[child.id]) {
+    //     child.checked = true;
+    //   }
+    // }
   }
 
   static insertLoopGuards = (evalCode, maxIterations) => {

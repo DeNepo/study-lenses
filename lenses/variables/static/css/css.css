@@ -3,7 +3,8 @@
   max-width: 700px;
 }
 
-.container, .container-narrow {
+.container,
+.container-narrow {
   display: flex;
   min-height: 100vh;
   flex-direction: column;
@@ -29,7 +30,8 @@
   padding: 14px 24px;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   line-height: 140%;
@@ -46,7 +48,7 @@ p {
 
 hr {
   border: 0;
-  border-bottom: 1px dashed #DDD;
+  border-bottom: 1px dashed #ddd;
 }
 
 code {
@@ -61,21 +63,24 @@ pre {
   overflow: auto;
 }
 
-@media(min-width: 768px) {
+@media (min-width: 768px) {
   pre {
     margin: 12px -14px;
   }
 }
 
-code, pre {
+code,
+pre {
   color: #000;
   border: 0;
-  font-family: Source Code Pro, DejaVu Sans Mono, Droid Sans Mono, Courier New, Courier, monospace;
+  font-family: Source Code Pro, DejaVu Sans Mono, Droid Sans Mono, Courier New,
+    Courier, monospace;
   border-radius: 6px;
   font-size: 0.94em;
 }
 
-pre code, pre code.hljs {
+pre code,
+pre code.hljs {
   padding: 1em;
   display: block;
   overflow-x: auto;
@@ -95,7 +100,8 @@ a.hub-link::before {
   content: "\238B";
   padding: 5px;
 }
-a.hub-link:hover, a.hub-link:focus {
+a.hub-link:hover,
+a.hub-link:focus {
   text-decoration: none;
 }
 

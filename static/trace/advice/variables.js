@@ -1,7 +1,7 @@
 "use strict";
 
 import { config } from "../data/config.js";
-import { print } from "../lib/print.js";
+import { print } from "../lib/trace-log.js";
 import { aran } from "../setup.js";
 
 export default {
@@ -9,7 +9,10 @@ export default {
     if (!config.variablesRead) {
       return value;
     }
-    if (config.variables.length !== 0 && !config.variables.includes(variable)) {
+    if (
+      config.variablesList.length !== 0 &&
+      !config.variablesList.includes(variable)
+    ) {
       return value;
     }
     // because aran encodes generated variables as number strings
@@ -33,7 +36,10 @@ export default {
     if (!(config.variablesWrite || config.variablesDeclare)) {
       return value;
     }
-    if (config.variables.length !== 0 && !config.variables.includes(variable)) {
+    if (
+      config.variablesList.length !== 0 &&
+      !config.variablesList.includes(variable)
+    ) {
       return value;
     }
     // because aran encodes generated variables as number strings
@@ -61,11 +67,11 @@ export default {
     if (
       (node.type === "AssignmentExpression" ||
         node.type === "ExpressionStatement") &&
-      config.variablesAssign
+      config.variablesWrite
     ) {
       print({
         prefix: [line, col],
-        logs: [variable + " (assign):", value],
+        logs: [variable + " (write):", value],
       });
     }
     // console.log(value);

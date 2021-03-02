@@ -2,7 +2,7 @@
 
 import { config } from "../data/config.js";
 import { state } from "../data/state.js";
-import { print } from "../lib/print.js";
+import { print } from "../lib/trace-log.js";
 import { aran } from "../setup.js";
 
 import { isNative } from "../lib/is-native.js";
@@ -11,24 +11,7 @@ const nativeConsole = console;
 
 export default {
   apply(f, t, xs, serial) {
-    const isNativeFunction = isNative(f);
-    const isNativeGetter = isNativeFunction && f.name === "get";
-
-    const isConsoleCall =
-      (isNativeFunction && Object.values(nativeConsole).includes(f)) ||
-      t === nativeConsole;
-
     const node = aran.nodes[serial];
-    // remove when upgrading to new Aran
-    if (f === Reflect.get || f === Object) {
-      if (node.callee.type === "MemberExpression") {
-        if (!isConsoleCall) {
-          // let errors be handled by failure
-          return Reflect.apply(f, t, xs);
-        }
-      }
-    }
-
     const line = node.loc.start.line;
     const col = node.loc.start.column;
 
@@ -39,83 +22,57 @@ export default {
     }
     commaSeparatedArgs.pop();
 
-    const traceConsole = config.console && isConsoleCall;
-    const traceNative =
-      config.functionsNative && isNativeFunction && !isConsoleCall;
-    // &&
-    // !state.inNativeCallstack;
-    const traceDefined = config.functionsDefined && !isNativeFunction;
-
-    if (isNativeGetter) {
-    } else if (traceConsole) {
-      // console.group("console");
-      // console.log(isConsoleCall, t, f);
-      // console.groupEnd();
-      print({
-        prefix: [line, col],
-        logs: [`console.${f ? f.name : f}(`, ...commaSeparatedArgs, ")"],
-      });
-    } else if (traceNative) {
-      // console.group("native");
-      // console.log(isConsoleCall, t, f);
-      // console.groupEnd();
-      print({
-        prefix: [line, col],
-        logs: [f.name + " (function call):", ...commaSeparatedArgs],
-        out: console.groupCollapsed,
-      });
-    } else if (traceDefined) {
-      // console.group("defined");
-      // console.log(isConsoleCall, t, f);
-      // console.groupEnd();
-      print({
-        prefix: [line, col],
-        logs: [f.name + " (function call):", ...commaSeparatedArgs],
-        out: console.groupCollapsed,
-      });
-      if (config.this) {
+    // priority to console trace configuration
+    const isConsoleCall =
+      Object.values(nativeConsole).includes(f) || t === nativeConsole;
+    // console.log(isConsoleCall);
+    if (isConsoleCall) {
+      if (config.console) {
         print({
-          logs: ["%cthis:", "font-weight: bold;", t],
+          prefix: [line, col],
+          logs: [`console.${f ? f.name : f}(`, ...commaSeparatedArgs, ")"],
         });
+      }
+      return;
+    }
+
+    // account for Aran implementation
+    //  remove when upgrading to new Aran
+    else if (f === Reflect.get || f === Object) {
+      if (node.callee.type === "MemberExpression") {
+        // let errors be handled by failure
+        return Reflect.apply(f, t, xs);
       }
     }
 
+    // tracing selected functions
+    if (
+      config.functionsList.length !== 0 &&
+      !config.functionsList.includes(f.name)
+    ) {
+      return Reflect.apply(f, t, xs);
+    }
+
+    print({
+      prefix: [line, col],
+      logs: [f.name + " (function call):", ...commaSeparatedArgs],
+      out: console.groupCollapsed,
+    });
+    if (config.this) {
+      print({
+        logs: ["%cthis:", "font-weight: bold;", t],
+      });
+    }
+
     let x = undefined;
-    if (!isConsoleCall) {
-      // let errors be handled by failure
-      x = Reflect.apply(f, t, xs);
-    }
+    x = Reflect.apply(f, t, xs);
 
-    // if (isNativeFunction && isNative(x)) {
-    //   return x;
-    // }
-
-    if (isNativeGetter) {
-    } else if (traceConsole) {
-      // console.group("console");
-      // console.log(isConsoleCall, t, f);
-      // console.groupEnd();
-    } else if (traceNative) {
-      // console.group("native");
-      // console.log(isConsoleCall, t, f);
-      // console.groupEnd();
-      print({
-        prefix: "(return value):",
-        logs: [x],
-        style: "font-weight: bold;",
-      });
-      console.groupEnd();
-    } else if (traceDefined) {
-      // console.group("defined");
-      // console.log(isConsoleCall, t, f);
-      // console.groupEnd();
-      print({
-        prefix: "(return value):",
-        logs: [x],
-        style: "font-weight: bold;",
-      });
-      console.groupEnd();
-    }
+    print({
+      prefix: "(return value):",
+      logs: [x],
+      style: "font-weight: bold;",
+    });
+    console.groupEnd();
 
     return x;
   },

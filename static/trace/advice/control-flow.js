@@ -2,7 +2,7 @@
 
 import { config } from "../data/config.js";
 import { state } from "../data/state.js";
-import { print } from "../lib/print.js";
+import { print } from "../lib/trace-log.js";
 import { aran } from "../setup.js";
 
 const breakOrContinue = (type) => (label, serial) => {

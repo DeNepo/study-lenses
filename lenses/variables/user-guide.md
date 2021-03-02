@@ -1,4 +1,4 @@
-## Scope Analysis
+## Variables
 
 Explore every variable & identifier in your program:
 

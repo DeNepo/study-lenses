@@ -22,20 +22,13 @@ const highlightLense = async ({ resource, config }) => {
         <button id="blue" class="color">Blue</button>
         <button id="orange" class="color">Orange</button>`
     }
+
     ${
       (config.locals.run || config.locals.eval) && resource.info.ext === ".js"
         ? `
     <button style="float: right;" onclick="eval(decodeURIComponent(\`${encodeURIComponent(
       resource.content
     )}\`))">run</button>`
-        : ""
-    }
-    ${
-      config.locals.trace && resource.info.ext === ".js"
-        ? `
-    <button style="float: right;" onclick="trace(decodeURIComponent(\`${encodeURIComponent(
-      resource.content
-    )}\`))">trace</button>`
         : ""
     }
     ${
@@ -61,6 +54,25 @@ const highlightLense = async ({ resource, config }) => {
       resource.content
     )}\`, 'diff')">diff</button>`
         : ""
+    }
+
+    ${
+      config.locals.variables && resource.info.ext === ".js"
+        ? `<button style="float: right;" onclick="openWith( \`${encodeURIComponent(
+            resource.content
+          )}\`, 'variables')">variables</button>`
+        : ""
+    }
+
+    ${
+      config.locals.trace && resource.info.ext === ".js"
+        ? `<button style="float: right;"><trace-it></trace-it></button>`
+        : ""
+      //     ? `
+      // <button style="float: right;" onclick="trace(decodeURIComponent(\`${encodeURIComponent(
+      //   resource.content
+      // )}\`))">trace</button>`
+      //     : ""
     }
 
     <div id="container">
@@ -116,9 +128,14 @@ const highlightLense = async ({ resource, config }) => {
 
     <script src="${config.ownStatic}/open-with.js"></script>
 
+    <script src="${config.ownStatic}/fake-editor.js"></script>
+
 
     <script src='${config.sharedStatic}/trace/aran-build.js'></script>
     <script src='${config.sharedStatic}/trace/index.js' type='module'></script>
+    <script src='${
+      config.sharedStatic
+    }/trace/trace-init.js' type='module'></script>
 
   </body>
 </html>`;

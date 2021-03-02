@@ -28,7 +28,9 @@ const scopeAnalysisLens = ({ resource, config }) => {
     <link rel="icon" href="favicon.ico" />
 
     <link href="${config.ownStatic}/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="${config.ownStatic}/css/bootstrap-responsive.min.css" rel="stylesheet" />
+    <link href="${
+      config.ownStatic
+    }/css/bootstrap-responsive.min.css" rel="stylesheet" />
     <link href="${config.ownStatic}/css/ribbon.css" rel="stylesheet" />
     <link href="${config.ownStatic}/css/css.css" rel="stylesheet" />
     <link href="${config.ownStatic}/css/demo.css" rel="stylesheet" />
@@ -42,12 +44,32 @@ const scopeAnalysisLens = ({ resource, config }) => {
 
     <!-- ace editor -->
     <script src="${config.ownStatic}/vendor/ace-builds/src-min/ace.js"></script>
-    <script src="${config.ownStatic}/vendor/ace-builds/src-min/mode-javascript.js"></script>
-    <script src="${config.ownStatic}/vendor/ace-builds/src-min/theme-monokai.js"></script>
+    <script src="${
+      config.ownStatic
+    }/vendor/ace-builds/src-min/mode-javascript.js"></script>
+    <script src="${
+      config.ownStatic
+    }/vendor/ace-builds/src-min/theme-monokai.js"></script>
 
     <script src="${config.ownStatic}/js/shift-parser.js"></script>
     <script src="${config.ownStatic}/js/shift-codegen.js"></script>
     <script src="${config.ownStatic}/js/shift-scope.js"></script>
+
+    <script>
+      var code = decodeURIComponent("${encodeURIComponent(
+        typeof resource.content === "object"
+          ? JSON.stringify(resource.content, null, "  ")
+          : resource.content
+      )}");
+      var config = JSON.parse(decodeURIComponent("${encodeURIComponent(
+        JSON.stringify(config)
+      )}"));
+    </script>
+
+    <!-- trace -->
+    <script src='${config.sharedStatic}/trace/aran-build.js'></script>
+    <script src='${config.sharedStatic}/trace/index.js' type='module'></script>
+    <script src="${config.sharedStatic}/trace/trace-init.js"></script>
 
     <style>
       #demo1 {
@@ -58,7 +80,8 @@ const scopeAnalysisLens = ({ resource, config }) => {
         line-height: 15pt;
       }
       #demo1 .output-container {
-        width: 50%;
+        width: 100%;
+        height: 100%;
       }
       .program-radio-label {
         font-size: medium;
@@ -194,7 +217,7 @@ const scopeAnalysisLens = ({ resource, config }) => {
             >, and <span class="code-identifier var-delete">deletes</span>.
           </p>
 
-          <p id="program-radio" class="text-center">
+          <p id="program-radio" class="text-center" style="display: none;">
             <label class="radio inline program-radio-label">
               <input
                 type="radio"
@@ -216,12 +239,15 @@ const scopeAnalysisLens = ({ resource, config }) => {
             </label>
           </p>
 
+          <trace-it></trace-it>
+
           <div class="demo" id="demo1">
-            <div class="editor" spellcheck="false">${resource.content}</div>
             <div class="output-container">
               <div class="output" style="white-space: pre"></div>
               <div class="error-message"></div>
             </div>
+
+            <div class="editor" spellcheck="false">${resource.content}</div>
             <script src="${config.ownStatic}/js/scope/main.js"></script>
           </div>
         </section>

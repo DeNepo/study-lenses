@@ -1,0 +1,3 @@
+window.editor = {
+  getValue: () => code,
+};

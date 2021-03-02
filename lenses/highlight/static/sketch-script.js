@@ -26,6 +26,7 @@ const cfd = new CanvasFreeDrawing.default({
   lineWidth: 2,
   transparent: true,
   strokeColor: [255, 255, 255],
+  maxSnapshots: 100,
 });
 
 cfd.canvas.getContext("2d").fillStyle = "hsla(0, 0%, 100%, 0)";

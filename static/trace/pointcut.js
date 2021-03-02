@@ -46,7 +46,7 @@ export const pointcut = (name, node) => {
   ) {
     return true;
   } else if (
-    (config.functionsNative || config.functionsDefined) &&
+    config.functions &&
     name === "apply" &&
     node.type === "CallExpression"
   ) {
@@ -60,7 +60,7 @@ export const pointcut = (name, node) => {
   ) {
     return true;
   } else if (
-    (config.variablesAssign || config.variablesDeclare) &&
+    (config.variablesWrite || config.variablesDeclare) &&
     name === "write" &&
     (node.type === "AssignmentExpression" ||
       node.type === "ExpressionStatement" ||

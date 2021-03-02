@@ -126,6 +126,24 @@ try {
     return traceButton;
   });
 
+  Prism.plugins.toolbar.registerButton("variables", function (env) {
+    if (!config.locals.variables) {
+      return null;
+    }
+
+    if (env.language !== "js" && env.language !== "javascript") {
+      return null;
+    }
+
+    const traceButton = document.createElement("button");
+    traceButton.textContent = "variables";
+    traceButton.setAttribute("type", "button");
+    traceButton.addEventListener("click", () => {
+      openWith(env.code, "variables");
+    });
+    return traceButton;
+  });
+
   Prism.plugins.toolbar.registerButton("highlight", function (env) {
     const parsonsButton = document.createElement("button");
     parsonsButton.textContent = "draw on";
