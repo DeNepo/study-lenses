@@ -1,3 +1,5 @@
+> you can read these docs plus the docs.md for all lenses and options by running `$ study` locally and using the `?--docs` option
+
 # Study Lenses Docs
 
 How does this work? Let me explain you
@@ -242,7 +244,7 @@ The server will also scan the request's directory and parents (up to `cwd`) sear
 
 This application's whole _raison d'être_
 
-Lenses are loaded into the server as an array of `plugin` objects, parsed from the `/lenses` directory. When a request with lens parameters is received, the indicated lenses are filtered out from all the .lenses and used to process the resource before sending the response
+Lenses are loaded into the server as an array of `plugin` objects, parsed from the `/lenses` directory (for "native" lenses that come with this module) or the `/.lenses` directory in your code's repository (for custom lenses). When a request with lens parameters is received, the indicated lenses are filtered out from all the configured lenses and used to process the resource before sending the response
 
 Lenses are used to process the `resource`, `requestData` and `responseData`, transforming the resource for study. They are called one after the other, the return values of the last being fed into the next in the order they are written into the URL.
 
@@ -280,7 +282,7 @@ Lens behavior can go from very simple to very complex, here's an artificial hier
 
 1. **Basic**: Pure functions that transform the `requestData`, `responseData` and/or `resource` data then return the changes. Check out the `reverse` function that simply reverses `resource.content` if it is a string.
 2. **Static**: Static lenses take advantage of `config.ownStatic` and/or `config.sharedStatic` to send static web pages. This could include embedding the requested resource in an editor, highlighting it in an HTML document, or anything else a static web page can do. Check out the `hello-world` lens for the kitchen sink
-3. **CRUD**: lenses have access to the file system. You could write a static lens that "routes" POST requests to itself using URL params then updates or creates files on disk. (no examples of this yet)
+3. **CRUD**: lenses have access to the file system. You could write a static lens that "routes" POST requests to itself using URL params then updates or creates files on disk. (the ?study lens does this to save changes from the browser)
 4. **Web**: lenses can send & receive HTTP requests (`http`, `node-fetch`, ...). Imagine a `?translate=dutch` lens that uses the DeepL API to translate a text before forwarding the response to the browser. (no examples of this yet)
 5. **Client/Server**: One of these is essentially a fullstack server embedded within the study server. The lens can send a frontend app that "routes" all requests back to the lens using it's URL parameter. It can can then send arbitrary data back and forth using the req/res bodies. (no examples of this yet)
 
@@ -295,7 +297,7 @@ Lens behavior can go from very simple to very complex, here's an artificial hier
 
 Inspired by [cli conventions](https://nullprogram.com/blog/2020/08/01/) (but not exactly alike), Options are params that are prefixed with `--` and operate "outside" the normal control flow to observe, modify, or stop the server's behavior. Requested Options will be filtered out and evaluated before the resource is processed by any Lenses. In contrast to Lenses, an Option cannot modify the `resource` without ending the request/response cycle (ie. `--help` will send a user guide).
 
-Options will be executed in order passing the (possibly) modified res/req on to the next, each one receiving the same original data. If an Option returns a `resource` or `responseData` object, they will be used to generate the response and the Lenses will not be piped. After the first Option returns valid data, the others will still be executed but their data will be ignored (useful for debugging or reporting Options).
+Options will be executed in order passing the (possibly) modified res/req on to the next, each one receiving the same original data. If an Option returns a `resource` or `responseData` object, they will be used to generate the response and the Lenses will not be piped\*. After the first Option returns valid data, the others will still be executed but their data will be ignored (useful for debugging or reporting Options).
 
 - Options are called in [./server/handle-request/evaluate-options/index.js](./server/handle-request/evaluate-options/index.js)
 
@@ -333,6 +335,8 @@ const anOption = async ({
 
 </details>
 <br>
+
+> \* with the execption of the `--resource` option, which can be used from the frontend to replace the local resource at that path.
 
 <!-- BEGIN OPTIONS -->
 <!-- END OPTIONS -->
@@ -492,7 +496,6 @@ Once all this works and is reliable:
 - tests for new lenses and options
 - architected for deployment on netlify
 - global server configurations
-  - `port`
   - `trust` ?
     - should requests be trusted?
     - when running locally, sure. when deployed, no
