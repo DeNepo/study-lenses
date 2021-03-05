@@ -46,7 +46,8 @@ export const pointcut = (name, node) => {
   ) {
     return true;
   } else if (
-    config.functions &&
+    // to properly disable console.logs, this cannot be pointcutted by config
+    // (config.functions || config.console) &&
     name === "apply" &&
     node.type === "CallExpression"
   ) {

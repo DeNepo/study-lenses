@@ -25,15 +25,19 @@ export default {
     // priority to console trace configuration
     const isConsoleCall =
       Object.values(nativeConsole).includes(f) || t === nativeConsole;
-    // console.log(isConsoleCall);
     if (isConsoleCall) {
       if (config.console) {
         print({
           prefix: [line, col],
-          logs: [`console.${f ? f.name : f}(`, ...commaSeparatedArgs, ")"],
+          logs: [` console.${f ? f.name : f}(`, ...commaSeparatedArgs, ")"],
         });
       }
       return;
+    }
+
+    // in case only console & not functions
+    if (!config.functions) {
+      return Reflect.apply(f, t, xs);
     }
 
     // account for Aran implementation

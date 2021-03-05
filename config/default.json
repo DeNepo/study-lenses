@@ -5,11 +5,12 @@
   },
   "locals": {
     "--defaults": {
+      "": "",
       "default": "",
+      "directory": "study",
       ".md": "study",
       ".html": "",
       ".txt": "",
-      "": "",
       ".js": "study",
       ".jsx": "study",
       ".css": "study",
@@ -21,7 +22,10 @@
       ".svg": "",
       ".mmd": "mermaid",
       ".ts": "study",
-      "directory": "study"
+      ".mp4": "video",
+      ".ogg": "video",
+      ".mov": "video",
+      ".webm": "video"
     }
   },
   "ORIGIN": {

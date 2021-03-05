@@ -130,7 +130,7 @@ export class CodeFE {
       .addEventListener("click", () => this.openSelectionWith("parsons"));
 
     document
-      .getElementById("draw-on-selection-button")
+      .getElementById("highlight-selection-button")
       .addEventListener("click", () => this.openSelectionWith("highlight"));
 
     const diffSelectionButton = document.getElementById(
