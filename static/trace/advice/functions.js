@@ -6,6 +6,7 @@ import { print } from "../lib/trace-log.js";
 import { aran } from "../setup.js";
 
 import { isNative } from "../lib/is-native.js";
+import { isInRange } from "../lib/is-in-range.js";
 
 const nativeConsole = console;
 
@@ -22,11 +23,14 @@ export default {
     }
     commaSeparatedArgs.pop();
 
+    const nodeIsInRange = isInRange(node);
+
     // priority to console trace configuration
     const isConsoleCall =
       Object.values(nativeConsole).includes(f) || t === nativeConsole;
     if (isConsoleCall) {
-      if (config.console) {
+      if (!nodeIsInRange) {
+      } else if (config.console) {
         print({
           prefix: [line, col],
           logs: [` console.${f ? f.name : f}(`, ...commaSeparatedArgs, ")"],
@@ -36,7 +40,7 @@ export default {
     }
 
     // in case only console & not functions
-    if (!config.functions) {
+    if (!config.functions || !nodeIsInRange) {
       return Reflect.apply(f, t, xs);
     }
 

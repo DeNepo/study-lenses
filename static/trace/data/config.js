@@ -17,7 +17,7 @@ export const config = {
   // --- variable tracing ---
   variablesList: [],
   variablesDeclare: true,
-  variablesWrite: true,
+  variablesAssign: true,
   variablesRead: true /* declare, write, read.
                       passing true sets to these defaults
                       hosting should represented as step 0
@@ -33,10 +33,17 @@ export const config = {
   this: false, // logs the this value at the top of each function call
   errorHandling: false, // yes, but a little later: try/catch/finally, throw
 
+  // --- selected traces ---
+  range: {
+    start: 1,
+    end: 100,
+  },
+
   // --- display settings ---
   lines: true,
   steps: true,
   console: true,
+  isInRange: true, // toggled with each visit to the pointcut. will not work for async code
 
   // --- not configurable from the Ui ---
   failure: true,

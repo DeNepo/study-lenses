@@ -2,11 +2,16 @@
 
 import { config } from "../data/config.js";
 import { state } from "../data/state.js";
+import { isInRange } from "../lib/is-in-range.js";
 import { print } from "../lib/trace-log.js";
 import { aran } from "../setup.js";
 
 const breakOrContinue = (type) => (label, serial) => {
   const node = aran.nodes[serial];
+  if (!isInRange(node)) {
+    return;
+  }
+
   // console.log(node);
   const line = node.test ? node.test.loc.start.line : node.loc.start.line;
   const col = node.test ? node.test.loc.start.column : node.loc.start.column;
@@ -20,10 +25,11 @@ const breakOrContinue = (type) => (label, serial) => {
 
 export default {
   test: (consumed, serial) => {
-    // console.log(state.inNativeCallstack);
-    // if (!state.inNativeCallstack) {
     const node = aran.nodes[serial];
-    // console.log(node);
+    if (!isInRange(node)) {
+      return consumed;
+    }
+
     const line = node.test ? node.test.loc.start.line : node.loc.start.line;
     const col = node.test ? node.test.loc.start.column : node.loc.start.column;
 

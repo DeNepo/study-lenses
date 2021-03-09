@@ -31,7 +31,7 @@ window.addEventListener("DOMContentLoaded", () => {
           }
         </style>
         <div id='trace-container'>
-          <button id='trace-button' onclick='trace("")'>trace</button>
+          <button id='trace-button'>trace</button>
 
           <div class="dropdown">
             <code>options</code>
@@ -40,7 +40,7 @@ window.addEventListener("DOMContentLoaded", () => {
                 variables:  <input id='variablesList' type='text' />  <br>
                 <input id='variablesDeclare' type='checkbox' /> <label for='variablesDeclare'>declare</label> <br>
                 <input id='variablesRead' type='checkbox' /> <label for='variablesRead'>read</label> <br>
-                <input id='variablesWrite' type='checkbox' /> <label for='variablesWrite'>write</label> <br>
+                <input id='variablesAssign' type='checkbox' /> <label for='variablesAssign'>assign</label> <br>
                 <hr>
                 <input id='operators' type='checkbox' /> <label for='operators'>operators</label> <br>
                 <input id='operatorsList' type='text' />  <br>
@@ -50,6 +50,8 @@ window.addEventListener("DOMContentLoaded", () => {
                 <input id='functions' type='checkbox'  /> <label for='functions'>function calls</label> <br>
                 <input id='functionsList' type='text' />  <br>
                 <!-- <input id='this' type='checkbox'  /> <label for='this'>this</label> <br> -->
+                <hr>
+                from  <input id='rangeStart' style="width: 25%;" min="1" type='number' />  to <input id='rangeEnd' style="width: 25%;" min="1" type='number' /> <br>
                 <hr>
                 <input id='lines' type='checkbox' /> <label for='lines'>lines</label> <br>
                 <input id='steps' type='checkbox' /> <label for='steps'>steps</label> <br>
@@ -90,16 +92,23 @@ window.addEventListener("DOMContentLoaded", () => {
             trace.config[option] = event.target.value
               .split(",")
               .map((s) => s.trim());
+          } else if (option.includes("range")) {
+            trace.config.range[
+              option.replace("range", "").toLowerCase()
+            ] = Number(event.target.value);
           }
 
           event.preventDefault();
         });
 
+        shadow.getElementById("rangeStart").value = trace.config.range.start;
+        shadow.getElementById("rangeEnd").value = trace.config.range.end;
+
         for (const child of traceConfig.children) {
           if (child.nodeName !== "INPUT") {
             continue;
           }
-          if (child.id.includes("List")) {
+          if (child.id.includes("List") || child.id.includes("range")) {
             continue;
           }
           if (trace.config[child.id]) {

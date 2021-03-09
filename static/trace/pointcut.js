@@ -61,7 +61,7 @@ export const pointcut = (name, node) => {
   ) {
     return true;
   } else if (
-    (config.variablesWrite || config.variablesDeclare) &&
+    (config.variablesAssign || config.variablesDeclare) &&
     name === "write" &&
     (node.type === "AssignmentExpression" ||
       node.type === "ExpressionStatement" ||

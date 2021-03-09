@@ -1,3 +1,5 @@
-import { JavaScriptFE } from './javascript-class.js'
+import { JavaScriptFE } from "./javascript-class.js";
 
-new JavaScriptFE(config)
+window.exercise = new JavaScriptFE(config);
+
+window.insertLoopGuards = JavaScriptFE.insertLoopGuards;

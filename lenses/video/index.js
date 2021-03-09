@@ -1,7 +1,15 @@
 "use strict";
 
 const videoLens = ({ resource }) => {
-  if (!resource.info && !resource.info.ext === ".mp4") {
+  if (
+    !resource.info &&
+    !(
+      resource.info.ext === ".mp4" ||
+      resource.info.ext === ".ogg" ||
+      resource.info.ext === ".mov" ||
+      resource.info.ext === ".webm"
+    )
+  ) {
     return;
   }
 

@@ -3,9 +3,15 @@
 import { config } from "../data/config.js";
 import { print } from "../lib/trace-log.js";
 import { aran } from "../setup.js";
+import { isInRange } from "../lib/is-in-range.js";
 
 export default {
   read: (value, variable, serial) => {
+    const node = aran.nodes[serial];
+    if (!isInRange(node)) {
+      return value;
+    }
+
     if (!config.variablesRead) {
       return value;
     }
@@ -19,7 +25,6 @@ export default {
     if (!isNaN(variable)) {
       return value;
     }
-    const node = aran.nodes[serial];
     const line = node.loc.start.line;
     const col = node.loc.start.column;
     print({
@@ -33,7 +38,12 @@ export default {
     return value;
   },
   write: (value, variable, serial) => {
-    if (!(config.variablesWrite || config.variablesDeclare)) {
+    const node = aran.nodes[serial];
+    if (!isInRange(node)) {
+      return value;
+    }
+
+    if (!(config.variablesAssign || config.variablesDeclare)) {
       return value;
     }
     if (
@@ -47,7 +57,6 @@ export default {
       return value;
     }
 
-    const node = aran.nodes[serial];
     const line = node.loc.start.line;
     const col = node.loc.start.column;
 
@@ -67,11 +76,11 @@ export default {
     if (
       (node.type === "AssignmentExpression" ||
         node.type === "ExpressionStatement") &&
-      config.variablesWrite
+      config.variablesAssign
     ) {
       print({
         prefix: [line, col],
-        logs: [variable + " (write):", value],
+        logs: [variable + " (assign):", value],
       });
     }
     // console.log(value);

@@ -111,10 +111,10 @@ class JavaScriptSSR extends CodeSSR {
     };
     superPanel += `
       <form id='loop-guard-form' style='display: ${loopGuardDisplay};'>
-        <input name='active' type='checkbox' ${
+        <input name='active' id='loop-guard-active' type='checkbox' ${
           locals.loopGuard.active ? "checked" : ""
         } />
-        loop guard:
+        <label for='loop-guard-active'>loop guard:</label>
         <input name='max' type='number' value='${
           locals.loopGuard.max
         }' style='width: 3em;' />

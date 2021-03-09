@@ -1,5 +1,3 @@
-"use strict";
-
 import { pointcut } from "./pointcut.js";
 import { state } from "./data/state.js";
 import { aran } from "./setup.js";
@@ -50,8 +48,17 @@ window.trace = (code) => {
   // console.log(Astring.generate(deDebuggered));
   // console.log(deDebuggered);
 
-  const estree2 = aran.weave(deDebuggered, pointcut);
+  let estree2 = aran.weave(deDebuggered, pointcut);
   // console.log(estree2);
+
+  try {
+    if (exercise.config.locals.loopGuard.active) {
+      estree2 = insertLoopGuards(estree2, exercise.config.locals.loopGuard.max);
+    }
+    // console.log(estree2);
+  } catch (o_0) {
+    // console.error(o_0);
+  }
 
   // const instrumented = "debugger;\n\n" + Astring.generate(estree2);
   const instrumented = Astring.generate(estree2);
@@ -59,7 +66,9 @@ window.trace = (code) => {
 
   try {
     window.eval(instrumented);
-  } catch (o_0) {}
+  } catch (o_0) {
+    // console.error(o_0);
+  }
 };
 
 trace.config = config;

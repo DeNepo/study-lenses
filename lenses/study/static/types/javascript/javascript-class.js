@@ -170,60 +170,87 @@ export class JavaScriptFE extends CodeFE {
         event.preventDefault();
       });
     // }
-
-    // if (this.config.locals.trace) {
-    // const traceContainer = document.getElementById("trace-container");
-    // document
-    //   .getElementById("trace-input")
-    //   .addEventListener("change", (event) => {
-    //     this.config.locals.trace = !this.config.locals.trace;
-    //     if (event.target.checked) {
-    //       traceContainer.style = "display: inline-block;";
-    //     } else {
-    //       traceContainer.style = "display: none;";
-    //     }
-    //   });
-
-    // document
-    //   .getElementById("trace-button")
-    //   .addEventListener("click", (event) => {
-    //     // trace is a global function
-    //     trace(this.editor.getValue());
-    //     // shadowStateHistory(this.editor.getValue());
-    //     event.preventDefault();
-    //   });
-
-    // const traceConfig = document.getElementById("trace-config");
-    // traceConfig.addEventListener("change", (event) => {
-    //   event.preventDefault();
-    //   const option = event.target.id;
-    //   if (typeof trace.config[option] === "boolean") {
-    //     trace.config[option] = !trace.config[option];
-    //   } else if (option === "variables") {
-    //     trace.config.variables = event.target.value
-    //       .split(",")
-    //       .map((s) => s.trim());
-    //   }
-    // });
-
-    // for (const child of traceConfig.children) {
-    //   if (child.nodeName !== "INPUT") {
-    //     continue;
-    //   }
-    //   if (trace.config[child.id]) {
-    //     child.checked = true;
-    //   }
-    // }
   }
 
+  // static insertLoopGuards = (evalCode, maxIterations) => {
+  //   let loopNum = 0;
+  //   const loopHeadRegex = /(for|while)([\s]*)\(([^\{]*)\)([\s]*)\{|do([\s]*)\{/gm;
+  //   return evalCode.replace(loopHeadRegex, (loopHead) => {
+  //     const id = ++loopNum;
+  //     const newLine = `let loopGuard_${id} = 0\n${loopHead}\nif (++loopGuard_${id} > ${maxIterations}) { throw new RangeError('loopGuard_${id} is greater than ${maxIterations}') }\n`;
+  //     return newLine;
+  //   });
+  // };
+
   static insertLoopGuards = (evalCode, maxIterations) => {
-    let loopNum = 0;
-    const loopHeadRegex = /(for|while)([\s]*)\(([^\{]*)\)([\s]*)\{|do([\s]*)\{/gm;
-    return evalCode.replace(loopHeadRegex, (loopHead) => {
-      const id = ++loopNum;
-      const newLine = `let loopGuard_${id} = 0\n${loopHead}\nif (++loopGuard_${id} > ${maxIterations}) { throw new RangeError('loopGuard_${id} is greater than ${maxIterations}') }\n`;
-      return newLine;
+    const blockify = (...body) => {
+      const blockStatement = Acorn.parse("{}").body[0];
+      blockStatement.body = body;
+      return blockStatement;
+    };
+
+    const generateLoopGuard = (id, max) => {
+      const variable = Acorn.parse(`let loopGuard_${id} = 0;`).body[0];
+      variable.generated = true;
+      const check = Acorn.parse(
+        `if (++loopGuard_${id} > ${max}) { throw new RangeError("loopGuard_${id} is greater than ${max}"); }`
+      );
+      check.generated = true;
+      return {
+        variable,
+        check,
+      };
+    };
+
+    const ast =
+      typeof evalCode === "object"
+        ? evalCode
+        : Acorn.parse(evalCode, { locations: true });
+
+    let loopNumber = 1;
+
+    const guardedTree = walk(ast, {
+      enter(node) {
+        if (node.generated || node.visited) {
+          this.skip();
+        }
+      },
+      leave(node, parent, prop, index) {
+        if (
+          node.type !== "WhileStatement" &&
+          node.type !== "ForStatement" &&
+          node.type !== "ForOfStatement" &&
+          node.type !== "ForInStatement" &&
+          node.type !== "DoWhileStatement"
+        ) {
+          return;
+        }
+        const { variable, check } = generateLoopGuard(
+          loopNumber,
+          maxIterations
+        );
+        if (node.body && node.body.type !== "BlockStatement") {
+          node.body = blockify(node.body);
+        }
+
+        node.body.body.unshift(check);
+
+        const indexOfNode = parent.body.indexOf(node);
+
+        parent.body.splice(indexOfNode, 0, variable);
+
+        node.visited = true;
+
+        loopNumber++;
+      },
     });
+
+    const guarded =
+      typeof evalCode === "object"
+        ? guardedTree
+        : Astring.generate(guardedTree);
+
+    return guarded;
   };
 
   prettierFormat(code = this.editor.getValue()) {
