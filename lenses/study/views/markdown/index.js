@@ -14,8 +14,6 @@ const JavaScriptSSR = require("../javascript");
 const dirRegex = /(<!--[ \t]*begin[ \t]*dir[ \t]*-->)([\s\S]*)(<!--[ \t]*end[ \t]*dir[ \t]*-->)/gim;
 
 class MarkdownSSR extends JavaScriptSSR {
-  dirRegex = /(<!--[ \t]*begin[ \t]*dir[ \t]*-->)([\s\S]*)(<!--[ \t]*end[ \t]*dir[ \t]*-->)/gim;
-
   constructor({
     config,
     resource,
