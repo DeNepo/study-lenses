@@ -7,7 +7,7 @@ import { aran } from "../setup.js";
 
 export default {
   failure: (value, serial) => {
-    // console.error(value);
+    console.error(value);
     // still figuring out aran errors
     if (value.message.includes("loopGuard")) {
       console.log(

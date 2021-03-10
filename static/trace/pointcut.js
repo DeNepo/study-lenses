@@ -57,15 +57,19 @@ export const pointcut = (name, node) => {
   } else if (
     config.variablesRead &&
     name === "read" &&
-    node.type === "Identifier"
+    (node.type === "Identifier" ||
+      node.type === "ExpressionStatement" ||
+      node.type === "UpdateExpression")
   ) {
     return true;
   } else if (
     (config.variablesAssign || config.variablesDeclare) &&
     name === "write" &&
-    (node.type === "AssignmentExpression" ||
+    (node.type === "Identifier" ||
+      node.type === "AssignmentExpression" ||
       node.type === "ExpressionStatement" ||
-      node.type === "VariableDeclaration")
+      node.type === "VariableDeclaration" ||
+      node.type === "UpdateExpression")
   ) {
     return true;
   }

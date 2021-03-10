@@ -17,7 +17,7 @@ export default {
     }
     if (
       config.variablesList.length !== 0 &&
-      !config.variablesList.includes(variable)
+      !config.variablesList.find((query) => new RegExp(query).test(variable))
     ) {
       return value;
     }
@@ -48,7 +48,7 @@ export default {
     }
     if (
       config.variablesList.length !== 0 &&
-      !config.variablesList.includes(variable)
+      !config.variablesList.find((query) => new RegExp(query).test(variable))
     ) {
       return value;
     }

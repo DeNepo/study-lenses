@@ -56,7 +56,7 @@ export default {
     // tracing selected functions
     if (
       config.functionsList.length !== 0 &&
-      !config.functionsList.includes(f.name)
+      !config.functionsList.find((query) => new RegExp(query).test(f.name))
     ) {
       return Reflect.apply(f, t, xs);
     }

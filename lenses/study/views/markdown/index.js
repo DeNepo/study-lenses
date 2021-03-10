@@ -11,17 +11,9 @@ marked.setOptions({
 
 const JavaScriptSSR = require("../javascript");
 
-class MarkdownSSR extends JavaScriptSSR {
-  inlines = {
-    jsBlocks: false,
-    jsTutor: false,
-    parsons: false,
-    mermaid: false,
-    quiz: false,
-    tests: false,
-    literate: false,
-  };
+const dirRegex = /(<!--[ \t]*begin[ \t]*dir[ \t]*-->)([\s\S]*)(<!--[ \t]*end[ \t]*dir[ \t]*-->)/gim;
 
+class MarkdownSSR extends JavaScriptSSR {
   dirRegex = /(<!--[ \t]*begin[ \t]*dir[ \t]*-->)([\s\S]*)(<!--[ \t]*end[ \t]*dir[ \t]*-->)/gim;
 
   constructor({
@@ -30,6 +22,16 @@ class MarkdownSSR extends JavaScriptSSR {
     content = "" /* used by directory subclass */,
   }) {
     super({ config, resource });
+
+    this.inlines = {
+      jsBlocks: false,
+      jsTutor: false,
+      parsons: false,
+      mermaid: false,
+      quiz: false,
+      tests: false,
+      literate: false,
+    };
 
     this.content = content || resource.content;
     this.inlines.jsBlocks = /^(([ \t]*`{3,4})([js|javascript])([\s\S]+?)(^[ \t]*\2))/gim.test(
@@ -129,7 +131,8 @@ class MarkdownSSR extends JavaScriptSSR {
   async code() {
     let content = this.content;
 
-    if (this.dirRegex.test(content)) {
+    // if (this.dirRegex.test(content)) {
+    if (dirRegex.test(content)) {
       const absolutePath =
         this.resource.info.type === "directory"
           ? path.join(
@@ -158,7 +161,8 @@ class MarkdownSSR extends JavaScriptSSR {
         defaults: this.config.locals,
       });
       content = content.replace(
-        this.dirRegex,
+        // this.dirRegex,
+        dirRegex,
         `<!-- BEGIN DIR -->\n<ul style="list-style-type: none;">${dirToc}</ul>\n<!-- END DIR -->`
       );
     }
