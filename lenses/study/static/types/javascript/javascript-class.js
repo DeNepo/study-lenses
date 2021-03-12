@@ -129,6 +129,18 @@ export class JavaScriptFE extends CodeFE {
       }
     });
 
+    const traceContainer = document.getElementById("trace-container");
+    document
+      .getElementById("trace-input")
+      .addEventListener("change", (event) => {
+        this.config.locals.trace = !this.config.locals.trace;
+        if (event.target.checked) {
+          traceContainer.style = "display: inline-block;";
+        } else {
+          traceContainer.style = "display: none;";
+        }
+      });
+
     const debugContainer = document.getElementById("debug-container");
     document
       .getElementById("debug-input")

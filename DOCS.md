@@ -58,7 +58,7 @@ These data types are the core of this application, they are used throughout `han
 
 ### `requestData`
 
-A subset of the HTTP request will be passed to lenses and options, see [subset-http-data](./server/handle-request/subset-http-data/index.js) for implementation. it is created by reading from the express-parsed request:
+A subset of the HTTP request will be passed to lenses and options, see [./server/study.js](./server/study.js) for implementation. it is created by reading from the express-parsed request:
 
 <details>
 <summary>request data initialized to:</summary>
@@ -78,7 +78,7 @@ const requestData = {
 
 ### `responseData`
 
-A subset of the HTTP response will be passed to lenses and options, see [subset-http-data](./server/handle-request/subset-http-data/index.js) for implementation. it is created by reading from the express-parsed response. lenses don't have direct access to the `.body` property because the body will be generated from `resource`, to modify the body lenses modify `resource.content` (and `resource.info.ext` if changing mime type):
+A subset of the HTTP response will be passed to lenses and options, see [./server/study.js](./server/study.js) for implementation. it is created by reading from the express-parsed response. lenses don't have direct access to the `.body` property because the body will be generated from `resource`, to modify the body lenses modify `resource.content` (and `resource.info.ext` if changing mime type):
 
 <details>
 <summary>response data initialized to:</summary>
@@ -96,7 +96,7 @@ const responseData = {
 
 ### `resource`
 
-When a user requests a resource it will be represented as an object, see [resource-from-absolute-path](./server/handle-request/resource-from-absolute-path/index.js) for implementation. Examples:
+When a user requests a resource it will be represented as an object, see [resource-from-absolute-path](./server/resource-from-absolute-path/index.js) for implementation. Examples:
 
 <details>
 <summary>A file resource</summary>
@@ -185,7 +185,7 @@ When a user requests a resource it will be represented as an object, see [resour
 
 ### `plugin`
 
-This is the data type used within the server to represent a Lens or an Option. Lenses and Options may be represented by the same data type, but are used differently by `handle-request` only based on where they are stored - either in `/lenses` or `/options`. The `plugin` data type is generated in [./server/handle-request/load-plugins.js](./server/handle-request/load-plugins.js)
+This is the data type used within the server to represent a Lens or an Option. Lenses and Options may be represented by the same data type, but are used differently by `handle-request` only based on where they are stored - either in `/lenses` or `/options`. The `plugin` data type is generated in [./server/load-plugins.js](./server/load-plugins.js)
 
 While Lenses and Options are represented by the same data type, they are called by two names because `handle-request` uses them quite differently. The `.module` function of a Lens can be thought of as an option module where the server ignores certain arguments and return values. More on that in the specs below
 
@@ -212,7 +212,7 @@ While Lenses and Options are represented by the same data type, they are called 
 
 ### `config`
 
-The config object is passed as an argument to plugin modules. They're just a copy of the module's `plugin` object with the `.module` removed. this takes place in [./server/handle-request/evaluate-options/index.js](./server/handle-request/evaluate-options/index.js) and [./server/handle-request/pipe-resource/index.js](./server/handle-request/pipe-resource/index.js)
+The config object is passed as an argument to plugin modules. They're just a copy of the module's `plugin` object with the `.module` removed. this takes place in [./server/change-perspective/evaluate-options/index.js](./server/change-perspective/evaluate-options/index.js) and [./server/change-perspective/pipe-resource/index.js](./server/change-perspective/pipe-resource/index.js)
 
 The server will also scan the request's directory and parents (up to `cwd`) searching for a `lenses.json` file, generating a custom configuration by deep assigning configurations lower in the folder structure onto higher ones. At the end there will be an object with keys corresponding to plugin `.queryKey`s. For each requested plugin the local configuration will be assigned into the the `config` object. This allows repositories of content to be written and configured specifically for a lens. ie. indicating that javascript files are `eval`-friendly, or loading helper functions like `deepCompare`.
 
@@ -250,7 +250,7 @@ Lenses are used to process the `resource`, `requestData` and `responseData`, tra
 
 Lens arguments and return values are copied, not passed by reference. The only way for them to modify the response is to return modified data. If a Lens returns nothing or an invalid `requestData`, `responseData` or `resource`, the previous data will be passed again to the next lens.
 
-- Lenses are called in [./server/handle-request/pipe-resource/index.js](./server/handle-request/pipe-resource/index.js)
+- Lenses are called in [./server/change-perspective/pipe-resource/index.js](./server/change-perspective/pipe-resource/index.js)
 
 <details>
 <summary>example Lens function</summary>
@@ -299,7 +299,7 @@ Inspired by [cli conventions](https://nullprogram.com/blog/2020/08/01/) (but not
 
 Options will be executed in order passing the (possibly) modified res/req on to the next, each one receiving the same original data. If an Option returns a `resource` or `responseData` object, they will be used to generate the response and the Lenses will not be piped\*. After the first Option returns valid data, the others will still be executed but their data will be ignored (useful for debugging or reporting Options).
 
-- Options are called in [./server/handle-request/evaluate-options/index.js](./server/handle-request/evaluate-options/index.js)
+- Options are called in [./server/change-perspective/evaluate-options/index.js](./server/change-perspective/evaluate-options/index.js)
 
 <details>
 <summary>example option function</summary>
@@ -345,13 +345,13 @@ const anOption = async ({
 
 ---
 
-### Hooks
+### Option Hooks
 
 Hooks are functions returned from an option that will be executed at different points in the lens pipeline. If a Hook returns a valid `responseData` or `resource`, the cycle will be ended without piping then next Lens and the Hook's data will be rendered into an HTTP response.
 
-- Hooks are returned from their option in [./server/handle-request/evaluate-options/evaluate-hooks.js](./server/handle-request/evaluate-options/evaluate-hooks.js)
+- Hooks are returned from their option in [./server/change-perspective/evaluate-options/evaluate-hooks.js](./server/change-perspective/evaluate-options/evaluate-hooks.js)
 - Hooks are assigned the `.queryKey` from their Option when returned. This is helpful for debugging later on as they are stored as an array of functions, and hook function names cannot be configured by their Option
-- Hooks are called in [./server/handle-request/pipe-resource/evaluate-hooks.js](./server/handle-request/pipe-resource/evaluate-hooks.js)
+- Hooks are called in [./server/change-perspective/pipe-resource/evaluate-hooks.js](./server/change-perspective/pipe-resource/evaluate-hooks.js)
 
 > this needs some help, in concept and in code
 
@@ -389,6 +389,10 @@ const aHook = async ({
 - **`afterEach`**: Evaluated _after_ the pipeline has begun, and _after_ the current lens is evaluated. it will not be evaluated if an error occurs (unless using the `--recover` option)
 - **`onError`**: Evaluated if an error occurs in the pipeline. the pipeline does not recover after an error unless this hook returns `.recover === true`
 
+---
+
+> this is just some of the most useful options, to learn about them all start study-lenses and navigate to `?--docs`
+
 ### [`--help`](./options/--help)
 
 This hook sends a guide on how to use parameters, and the user guide for each Lens and Option.
@@ -419,16 +423,24 @@ certain directory-view lenses may use these defaults. generated by assigning the
 
 this option exists to create repositories of specialized exercises. ie. a repository of code snippets for parsons problems. (see `/test-content/parsons`)
 
+### `--force`
+
+Forces all requests to be processed with their local default lenses, regardless of whether any parameters were passed. particularly helpful for studying repositories with markdown and relative links, so you don't need to write `?--defaults` into each and every path.
+
+This only exists as a local `study.json` config option. there's not point in having it as a URL parameter, it's equivalent to using the `?--defaults` option in a query.
+
 ### `--ignore`
 
-> does not have a plugin. used to configure the handler at the beginning of a cycle
+> over-rides `?--force`
 
-- local config file: true/false
-- param: exists or not
+does not have a plugin. this is implemented at the beginning of [./server/study.js](./server/study.js) to skip changing perspectives, no matter what other lenses or options are used. all requests with this param will fall back to standard express static serving.
 
-this is all-or-nothing. there is no way to ignore selected lenses
+especially useful for fetching assets in a `--force`ed setting - see [./lenses/video/index.js](./lenses/video/index.js)
 
-the idea here is to force the server into basic static-serverhood with local configurations
+- local config file: `"--ignore": true`
+- param: `?--ignore`
+
+will eventually be able to ignore specific lenses, but for now is a all-or-nothing.
 
 [TOP](#study-lens-docs)
 
@@ -494,7 +506,9 @@ play around with this: `?reverse&--ignore&error&--debug&hello-world=bye&--recove
 Once all this works and is reliable:
 
 - tests for new lenses and options
-- architected for deployment on netlify
+- architected for deployment
+  - right now there is no security as it's for running locally, studying local files
+  - it is also not efficient with requests and assets for the same reason
 - global server configurations
   - `trust` ?
     - should requests be trusted?
