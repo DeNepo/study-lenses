@@ -1,5 +1,10 @@
 "use strict";
 
+const path = require("path");
+const fs = require("fs");
+
+const config = require("config");
+
 const mime = require("mime");
 
 const deepClone = require("./lib/deep-clone.js");
