@@ -29,11 +29,11 @@ export default {
       const col = node.loc.start.column;
       print({
         prefix: [line, col],
-        logs: ["(operation):", operator, value],
+        logs: ["operation (" + operator + "):", operator, value],
         style: "font-weight: bold;",
         out: console.groupCollapsed,
       });
-      print({ logs: ["operation (" + operator + "):", result] });
+      print({ logs: ["(evaluates to):", result] });
       console.groupEnd();
     }
     // console.log(node);

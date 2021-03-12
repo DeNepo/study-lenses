@@ -10,14 +10,17 @@ const newPointcut = {
 import { config } from "./data/config.js";
 
 export const pointcut = (name, node) => {
-  // if (name === "write" || name === "read") {
-  //   debugger;
+  // if (node.type === "LogicalExpression") {
+  //   console.log(name, node);
   // }
-
   if (name === "failure") {
     return true;
-    // } else if (name === "closure") {
-    //   return true;
+  } else if (
+    name === "test" &&
+    node.type === "LogicalExpression" &&
+    config.operators
+  ) {
+    return true;
   } else if (
     (name === "test" || name === "break" || name === "continue") &&
     config.controlFlow &&

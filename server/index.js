@@ -94,6 +94,7 @@ app.use(
 
 // if they requested a directory, send index.html or rendered README
 // otherwise fallback to static serving (so 404)
+// - should this stay?
 app.use(async (req, res, next) => {
   // continue to static serving if it's not a directory
   const absolutePath = path.join(process.cwd(), req.path);

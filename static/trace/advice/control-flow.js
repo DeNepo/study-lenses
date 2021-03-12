@@ -33,6 +33,20 @@ export default {
     const line = node.test ? node.test.loc.start.line : node.loc.start.line;
     const col = node.test ? node.test.loc.start.column : node.loc.start.column;
 
+    if (node.type === "LogicalExpression") {
+      const lineOfCode = state.code.split("\n")[line - 1];
+
+      const truthiness = consumed ? "truthy" : "falsy";
+      print({
+        prefix: [line, col],
+        logs: ["operator (" + node.operator + ", " + truthiness + ")"],
+        out: console.groupCollapsed,
+      });
+      // print({ logs: ["(evaluates to):", consumed] });
+      console.groupEnd();
+      return consumed;
+    }
+
     let controlName = "";
     if (node.type === "ConditionalExpression") {
       controlName = "ternary";
