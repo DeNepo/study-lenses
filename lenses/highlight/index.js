@@ -23,6 +23,7 @@ const highlightLense = async ({ resource, config }) => {
         <button id="orange" class="color">Orange</button>`
     }
 
+    <button style="float: right;" id="random-line">random line</button>
     ${
       (config.locals.run || config.locals.eval) && resource.info.ext === ".js"
         ? `
@@ -136,6 +137,8 @@ const highlightLense = async ({ resource, config }) => {
     <script src='${
       config.sharedStatic
     }/trace/trace-init.js' type='module'></script>
+
+    <script src='${config.ownStatic}/random-line.js'></script>
 
   </body>
 </html>`;

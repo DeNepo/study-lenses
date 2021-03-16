@@ -72,6 +72,7 @@ export const pointcut = (name, node) => {
       node.type === "AssignmentExpression" ||
       node.type === "ExpressionStatement" ||
       node.type === "VariableDeclaration" ||
+      // node.type === "VariableDeclarator" ||
       node.type === "UpdateExpression")
   ) {
     return true;

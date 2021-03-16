@@ -1,6 +1,3 @@
-test:
-  truthy/falsy
-  what is next (in the more details)
 
 about strict mode
   advice needs to be in same strictness as students' code
@@ -15,3 +12,9 @@ instrumenting functions
       arrival
       return
       leave
+
+questions for next meeting
+  variables
+    declare vs. initialize
+    hoisting
+  for loops

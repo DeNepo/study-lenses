@@ -61,17 +61,17 @@ export default {
     const col = node.loc.start.column;
 
     if (node.type === "VariableDeclaration" && config.variablesDeclare) {
-      const logs = [];
-      if (node.declarations[0].init) {
-        logs.push(variable + " (declare " + node.kind + ", init):");
-        logs.push(value);
-      } else {
-        logs.push(variable + " (declare " + node.kind + ")");
-      }
       print({
         prefix: [line, col],
-        logs,
+        logs: [variable + " (declare, " + node.kind + ")"],
       });
+
+      if (node.declarations[0].init) {
+        print({
+          prefix: [line, col],
+          logs: [variable + " (initialize):", value],
+        });
+      }
     }
     if (
       (node.type === "AssignmentExpression" ||
