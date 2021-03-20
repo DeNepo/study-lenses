@@ -274,7 +274,7 @@ export class CodeFE {
   }
 
   openSelectionWith(queryKey, code = "") {
-    const selectedCode = getMonacoSelection(this.editor);
+    const selectedCode = code || getMonacoSelection(this.editor);
     code = code || selectedCode || this.editor.getValue();
 
     const pseudoResource = {

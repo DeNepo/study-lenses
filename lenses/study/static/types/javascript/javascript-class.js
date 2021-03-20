@@ -95,7 +95,7 @@ export class JavaScriptFE extends CodeFE {
 
     const variablesButton = document.getElementById("variables-button");
     document
-      .getElementById("flowchart-input")
+      .getElementById("variables-input")
       .addEventListener("change", (event) => {
         if (event.target.checked) {
           variablesButton.style = "display: inline-block;";
@@ -300,7 +300,8 @@ export class JavaScriptFE extends CodeFE {
       environment !== "parsons" &&
       environment !== "flowchart" &&
       environment !== "diff" &&
-      environment !== "highlight"
+      environment !== "highlight" &&
+      environment !== "variables"
     ) {
       const loopGuarded = JavaScriptFE.insertLoopGuards(
         this.editor.getValue(),

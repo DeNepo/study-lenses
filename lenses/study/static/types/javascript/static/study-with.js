@@ -14,7 +14,7 @@ const studyWithEval = (debug) => (code) => {
   //     ? "'use strict'; /* you forgot ;) */  " + code
   //     : e;
   // const finalCode = debug ? "debugger;\n\n" + stricted : stricted;
-  const finalCode = debug ? "debugger;\n\n" + code : code;
+  const finalCode = debug ? "debugger;\n\n" + code + "\n\ndebugger;" : code;
 
   let evaller = document.getElementById("evaller");
   if (evaller === null) {

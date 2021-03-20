@@ -23,7 +23,7 @@ function setup() {
 
 function draw() {
   background(0);
-  balls.forEach(ball => {
+  balls.forEach((ball) => {
     ball.collide();
     ball.move();
     ball.display();

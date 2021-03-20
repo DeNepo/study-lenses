@@ -8,11 +8,18 @@ const newPointcut = {
 ("use strict");
 
 import { config } from "./data/config.js";
+import { state } from "./data/state.js";
 
 export const pointcut = (name, node) => {
+  // console.log(name, node.type);
   // if (node.type === "LogicalExpression") {
   //   console.log(name, node);
   // }
+
+  if (name === "enter") {
+    return true;
+  }
+
   if (name === "failure") {
     return true;
   } else if (
@@ -71,12 +78,17 @@ export const pointcut = (name, node) => {
     (node.type === "Identifier" ||
       node.type === "AssignmentExpression" ||
       node.type === "ExpressionStatement" ||
-      node.type === "VariableDeclaration" ||
+      node.type === "ForOfStatement" ||
+      node.type === "ForInStatement" ||
       // node.type === "VariableDeclarator" ||
       node.type === "UpdateExpression")
   ) {
     return true;
   }
+  // if (name === "write") {
+  //   return true;
+  // }
+
   // else if (
   //   (name === "enter" || name === "leave") &&
   //   node.type === "BlockStatement"

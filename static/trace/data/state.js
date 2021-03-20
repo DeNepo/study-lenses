@@ -1,11 +1,16 @@
 "use strict";
 
+const noTempValue = Symbol("no temp value");
+
 export const state = {
   // this could contain objects with key/value pairs representing all variables in scope
   // or just arrays of strings for each variable name
   scopes: [],
   loggedSteps: 0,
   callExpressions: [],
+  updateExpression: null || Node.type === "UPdateExpressions",
+  updateTempValue: noTempValue,
+  noTempValue,
 };
 
 // const e = {

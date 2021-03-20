@@ -7,7 +7,7 @@ import { walk } from "./lib/estree-walker/index.js";
 
 window.walk = walk;
 
-window.trace = (code) => {
+window.trace = (code, returnCode = false) => {
   state.scopeDepth = 1;
   state.blockLabels = [];
   state.loggedSteps = 0;
@@ -64,10 +64,14 @@ window.trace = (code) => {
   const instrumented = Astring.generate(estree2);
   // console.log(instrumented);
 
-  try {
-    window.eval(instrumented);
-  } catch (o_0) {
-    // console.error(o_0);
+  if (returnCode) {
+    return instrumented;
+  } else {
+    try {
+      window.eval(instrumented);
+    } catch (o_0) {
+      // console.error(o_0);
+    }
   }
 };
 
