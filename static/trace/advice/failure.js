@@ -6,7 +6,7 @@ import { print } from "../lib/trace-log.js";
 
 export default {
   failure: (value, serial) => {
-    console.error(value);
+    // console.error(value);
     // still figuring out aran errors
     if (value.message.includes("loopGuard")) {
       console.log(

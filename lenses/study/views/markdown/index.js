@@ -173,7 +173,7 @@ class MarkdownSSR extends JavaScriptSSR {
     }
 
     return `<hr><hr>
-    <main class="markdown-body">${marked(content)}</main>`;
+    <main class="markdown-body"><div></div>${marked(content)}</main>`;
   }
 
   scriptsBody() {

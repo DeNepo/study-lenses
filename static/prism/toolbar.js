@@ -25,6 +25,53 @@ try {
     window.open(url, "_blank");
   };
 
+  const studyWithEval = (code, debug) => {
+    if (typeof code !== "string") {
+      // this should never happen, but just in case ....
+      throw new TypeError("code is not a string");
+    }
+    // const trimmedFirstLine = code.trim().split("\n")[0].trim();
+    // const firstLineIsUseStrict = /^['|"]use strict['|"]/.test(trimmedFirstLine);
+    // const stricted =
+    //   !firstLineIsUseStrict && debug
+    //     ? "'use strict'; // you forgot ;) \n\n" + code
+    //     : !firstLineIsUseStrict && !debug
+    //     ? "'use strict'; /* you forgot ;) */  " + code
+    //     : e;
+    // const finalCode = debug ? "debugger;\n\n" + stricted : stricted;
+    const finalCode = debug
+      ? "/* ------------------------ */ debugger;\n\n\n\n\n" +
+        code +
+        "\n\n\n\n/* ------------------------ */ debugger;"
+      : code;
+
+    let evaller = document.getElementById("evaller");
+    if (evaller !== null) {
+      document.body.removeChild(evaller);
+    }
+
+    evaller = document.createElement("iframe");
+    evaller.style.display = "none";
+    evaller.id = "evaller";
+
+    evaller.onload = () => {
+      const script = document.createElement("script");
+
+      script.innerHTML = finalCode;
+
+      if (config.locals.type === "module") {
+        script.type = "module";
+      } else if (config.locals.strict) {
+        script.innerHTML = `'use strict';\neval(decodeURI(\`${encodeURI(
+          script.innerHTML
+        )}\`));`;
+      }
+
+      evaller.contentDocument.body.appendChild(script);
+    };
+    document.body.appendChild(evaller);
+  };
+
   Prism.plugins.toolbar.registerButton("js-tutor", function (env) {
     if (
       !(config.locals.openIn === "jsTutor") &&
@@ -78,7 +125,7 @@ try {
     debuggerButton.textContent = "debug";
     debuggerButton.setAttribute("type", "button");
     debuggerButton.addEventListener("click", () =>
-      eval("debugger;\n\n" + env.code)
+      studyWithEval(env.code, true)
     );
     return debuggerButton;
   });
@@ -99,7 +146,9 @@ try {
     const consoleButton = document.createElement("button");
     consoleButton.textContent = "run";
     consoleButton.setAttribute("type", "button");
-    consoleButton.addEventListener("click", () => eval(env.code));
+    consoleButton.addEventListener("click", () => {
+      studyWithEval(env.code);
+    });
     return consoleButton;
   });
 

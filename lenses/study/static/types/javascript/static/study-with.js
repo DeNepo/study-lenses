@@ -21,12 +21,13 @@ const studyWithEval = (debug) => (code) => {
     : code;
 
   let evaller = document.getElementById("evaller");
-  if (evaller === null) {
-    evaller = document.createElement("iframe");
-    evaller.id = "evaller";
-  } else {
+  if (evaller !== null) {
     document.body.removeChild(evaller);
   }
+
+  evaller = document.createElement("iframe");
+  evaller.style.display = "none";
+  evaller.id = "evaller";
 
   evaller.onload = () => {
     const script = document.createElement("script");
