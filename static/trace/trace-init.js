@@ -46,10 +46,12 @@ window.addEventListener("DOMContentLoaded", () => {
                 <input id='operatorsList' type='text' />  <br>
                 <hr>
                 <input id='controlFlow' type='checkbox'  /> <label for='controlFlow'>control flow</label> <br>
+                <input id='controlFlowList' type='text' />  <br>
                 <hr>
+                functions: <input id='functionsList' type='text' />  <br>
                 <input id='functions' type='checkbox'  /> <label for='functions'>function calls</label> <br>
-                <input id='functionsList' type='text' />  <br>
-                <!-- <input id='this' type='checkbox'  /> <label for='this'>this</label> <br> -->
+                <input id='functionDeclarations' type='checkbox'  /> <label for='functionDeclarations'>declarations</label> <br>
+                <input id='this' type='checkbox'  /> <label for='this'>this</label> <br>
                 <hr>
                 from  <input id='rangeStart' style="width: 25%;" min="1" type='number' />  to <input id='rangeEnd' style="width: 25%;" min="1" type='number' /> <br>
                 <hr>
@@ -65,11 +67,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
         try {
           config.exists;
-          trace.config =
-            config.locals.trace && typeof config.locals.trace === "object"
-              ? Object.assign(trace.config, config.locals.trace)
-              : trace.config;
+          Object.assign(traceConfig, config.locals.trace);
         } catch (err) {
+          // console.error(err);
+        }
+        // console.log(traceConfig);
+
+        try {
+          !trace.editor && typeof trace.editor.getValue !== "function";
+        } catch (err) {
+          editor.exists;
+          trace.editor = editor;
           // console.error(err);
         }
 
@@ -77,23 +85,32 @@ window.addEventListener("DOMContentLoaded", () => {
           .getElementById("trace-button")
           .addEventListener("click", (event) => {
             // trace is a global function
-            trace(editor.getValue());
+            // console.log(traceConfig);
+            trace(
+              (config.locals.strict ? '"use strict";' : "") +
+                trace.editor.getValue()
+            );
             // shadowStateHistory(this.editor.getValue());
             event.preventDefault();
           });
 
-        const traceConfig = shadow.getElementById("trace-config");
-        traceConfig.addEventListener("change", (event) => {
+        const traceConfigEl = shadow.getElementById("trace-config");
+        traceConfigEl.addEventListener("change", (event) => {
           const option = event.target.id;
 
-          if (typeof trace.config[option] === "boolean") {
-            trace.config[option] = !trace.config[option];
+          if (typeof traceConfig[option] === "boolean") {
+            traceConfig[option] = !traceConfig[option];
           } else if (option.toLowerCase().includes("list")) {
-            trace.config[option] = event.target.value
+            const trimmedList = event.target.value
               .split(",")
               .map((s) => s.trim());
+            const newList =
+              trimmedList.length === 1 && trimmedList[0] === ""
+                ? []
+                : trimmedList;
+            traceConfig[option] = newList;
           } else if (option.includes("range")) {
-            trace.config.range[
+            traceConfig.range[
               option.replace("range", "").toLowerCase()
             ] = Number(event.target.value);
           }
@@ -101,18 +118,18 @@ window.addEventListener("DOMContentLoaded", () => {
           event.preventDefault();
         });
 
-        shadow.getElementById("rangeStart").value = trace.config.range.start;
-        shadow.getElementById("rangeEnd").value = trace.config.range.end;
+        shadow.getElementById("rangeStart").value = traceConfig.range.start;
+        shadow.getElementById("rangeEnd").value = traceConfig.range.end;
 
-        for (const child of traceConfig.children) {
+        for (const child of traceConfigEl.children) {
           if (child.nodeName !== "INPUT") {
             continue;
           }
           if (child.id.includes("List") || child.id.includes("range")) {
             continue;
           }
-          if (trace.config[child.id]) {
-            child.checked = trace.config[child.id];
+          if (traceConfig[child.id]) {
+            child.checked = traceConfig[child.id];
           }
         }
       }

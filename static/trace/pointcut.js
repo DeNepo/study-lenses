@@ -12,21 +12,40 @@ import { state } from "./data/state.js";
 
 export const pointcut = (name, node) => {
   // console.log(name, node.type);
-  // if (node.type === "LogicalExpression") {
-  //   console.log(name, node);
+
+  // if (
+  //   node.type === "VariableDeclaration" &&
+  //   node.kind === "var" &&
+  //   config.variablesDeclare
+  // ) {
+  //   if (!state.hoisted.includes(node)) {
+  //     state.hoisted.push(node);
+  //   }
+  // }
+  // if (node.type === "FunctionDeclaration" && config.functionDeclarations) {
+  //   if (!state.hoisted.includes(node)) {
+  //     state.hoisted.push(node);
+  //   }
   // }
 
-  if (name === "enter") {
+  if (
+    name === "test" &&
+    (node.type === "LogicalExpression" ||
+      node.type === "ConditionalExpression") &&
+    config.operators
+  ) {
     return true;
+  }
+  if (
+    name !== "test" &&
+    (node.type === "LogicalExpression" ||
+      node.type === "ConditionalExpression") &&
+    !config.operators
+  ) {
+    return false;
   }
 
   if (name === "failure") {
-    return true;
-  } else if (
-    name === "test" &&
-    node.type === "LogicalExpression" &&
-    config.operators
-  ) {
     return true;
   } else if (
     (name === "test" || name === "break" || name === "continue") &&
@@ -37,8 +56,8 @@ export const pointcut = (name, node) => {
       node.type === "WhileStatement" ||
       node.type === "DoWhileStatement" ||
       node.type === "ForStatement" ||
-      // node.type === "ForOfStatement" ||
-      // node.type === "ForInStatement" ||
+      node.type === "ForOfStatement" ||
+      node.type === "ForInStatement" ||
       node.type === "BreakStatement" ||
       node.type === "ContinueStatement")
   ) {
@@ -83,19 +102,24 @@ export const pointcut = (name, node) => {
       node.type === "VariableDeclarator" ||
       node.type === "VariableDeclaration" ||
       node.type === "UpdateExpression")
+    // ||
+    // node.type === "FunctionDeclaration"
+  ) {
+    return true;
+  } else if (
+    name === "enter" &&
+    config.blockScope &&
+    node.type === "BlockStatement"
+  ) {
+    return true;
+  } else if (
+    name === "leave" &&
+    config.blockScope &&
+    node.type === "BlockStatement"
   ) {
     return true;
   }
-  // if (name === "write") {
-  //   return true;
-  // }
 
-  // else if (
-  //   (name === "enter" || name === "leave") &&
-  //   node.type === "BlockStatement"
-  // ) {
-  //   return true;
-  // }
   // if (node.type !== "Program") {
   //   // console.log(name, node);
   // }

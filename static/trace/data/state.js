@@ -6,11 +6,15 @@ export const state = {
   // this could contain objects with key/value pairs representing all variables in scope
   // or just arrays of strings for each variable name
   scopes: [],
+  blockScopeDepth: 0,
   loggedSteps: 0,
   callExpressions: [],
   updateExpression: null || Node.type === "UPdateExpressions",
   updateTempValue: noTempValue,
   noTempValue,
+  hoisted: [],
+  aran: null, // an initialized aran instance
+  firstInstrumentedCall: false,
 };
 
 // const e = {

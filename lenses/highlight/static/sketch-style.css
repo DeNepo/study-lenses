@@ -45,6 +45,11 @@ button.active {
   color: black;
 }
 
+#black {
+  background-color: black;
+  color: white;
+}
+
 /*
 #container {
   position: relative;

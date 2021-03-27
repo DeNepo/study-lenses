@@ -23,6 +23,10 @@ class JavaScriptSSR extends CodeSSR {
     return (
       superScriptsHead +
       `
+      <script type="module">
+        import { walk } from '${this.config.sharedStatic}/estree-walker/index.js'
+        window.walk = walk;
+      </script>
       <script src='${this.config.sharedStatic}/prettier/standalone.js'></script>
       <script src='${this.config.sharedStatic}/prettier/parser-babel.js'></script>
       <script src='${this.config.sharedStatic}/trace/aran-build.js'></script>
@@ -56,6 +60,11 @@ class JavaScriptSSR extends CodeSSR {
       <input id='open-in-input' type='checkbox' ${
         this.config.locals.openIn ? "checked" : ""
       } /> <label for='open-in-input'>open in ...</label>
+    </form>
+    <form>
+      <input id='p5-input' type='checkbox' ${
+        this.config.locals.p5 ? "checked" : ""
+      } /> <label for='p5-input'>p5</label>
     </form>
     <form>
       <input id='loop-guard-input' type='checkbox' ${
@@ -189,6 +198,12 @@ class JavaScriptSSR extends CodeSSR {
         </select>
       </form>`;
     // }
+
+    const p5Display = locals.p5 ? "inline-block" : "none";
+    superPanel += `
+    <div id='p5-container' style='display: ${p5Display};'>
+      <button id='p5-button'>p5</button>
+    </div>`;
 
     superPanel += "</div>";
 

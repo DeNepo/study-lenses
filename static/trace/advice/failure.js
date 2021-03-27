@@ -3,7 +3,6 @@
 import { config } from "../data/config.js";
 import { state } from "../data/state.js";
 import { print } from "../lib/trace-log.js";
-import { aran } from "../setup.js";
 
 export default {
   failure: (value, serial) => {
@@ -22,12 +21,13 @@ export default {
         " run or debug code for a complete error message"
       );
     }
+    console.log("-> execution phase");
 
     // console.log(value);
     // account for native methods
-    // const node = aran.nodes[serial];
-    // console.log(node);
-    // const line = node.loc.start.line;
+    // state.node = state.aran.nodes[serial];
+    // console.log(state.node);
+    // const line = state.node.loc.start.line;
     // print({
     //   // prefix: line,
     //   logs: [

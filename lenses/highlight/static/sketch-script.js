@@ -18,6 +18,15 @@ const width = Math.max(
   html.offsetWidth
 );
 
+const colors = {
+  white: [255, 255, 255],
+  red: [255, 0, 0],
+  green: [0, 255, 0],
+  blue: [114, 223, 250],
+  orange: [255, 179, 0],
+  black: [0, 0, 0],
+};
+
 const cfd = new CanvasFreeDrawing.default({
   elementId: "cfd",
   width,
@@ -25,7 +34,9 @@ const cfd = new CanvasFreeDrawing.default({
   showWarnings: true,
   lineWidth: 2,
   transparent: true,
-  strokeColor: [255, 255, 255],
+  strokeColor: colors[config.locals.color]
+    ? colors[config.locals.color]
+    : colors.white,
   maxSnapshots: 100,
 });
 
@@ -50,5 +61,11 @@ document
 document
   .getElementById("orange")
   .addEventListener("click", () => cfd.setDrawingColor([255, 179, 0]));
+document
+  .getElementById("black")
+  .addEventListener("click", () => cfd.setDrawingColor([0, 0, 0]));
 
-document.getElementsByClassName("code-toolbar")[0].style.zIndex = 20;
+const codeToolbar = document.getElementsByClassName("code-toolbar");
+if (codeToolbar[0]) {
+  codeToolbar[0].style.zIndex = 20;
+}

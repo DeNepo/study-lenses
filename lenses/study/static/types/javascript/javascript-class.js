@@ -14,6 +14,9 @@ export class JavaScriptFE extends CodeFE {
     // }
 
     window.editor = this.editor;
+    // trace.editor = {
+    //   getValue: this.getSelection.bind(this),
+    // };
 
     this.initJsUi();
   }
@@ -129,6 +132,16 @@ export class JavaScriptFE extends CodeFE {
       }
     });
 
+    const p5Container = document.getElementById("p5-container");
+    document.getElementById("p5-input").addEventListener("change", (event) => {
+      this.config.locals.p5 = !this.config.locals.p5;
+      if (event.target.checked) {
+        p5Container.style = "display: inline-block;";
+      } else {
+        p5Container.style = "display: none;";
+      }
+    });
+
     const traceContainer = document.getElementById("trace-container");
     document
       .getElementById("trace-input")
@@ -152,6 +165,10 @@ export class JavaScriptFE extends CodeFE {
           debugContainer.style = "display: none;";
         }
       });
+
+    document
+      .getElementById("p5-button")
+      .addEventListener("click", () => this.studyWith("p5"));
 
     document
       .getElementById("run-button")

@@ -1,0 +1,11 @@
+{
+  "study": {
+    "run": false,
+    "debug": false,
+    "eval": false,
+    "p5": true,
+    "openIn": false,
+    "flowchart": true,
+    "variables": true
+  }
+}

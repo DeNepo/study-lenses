@@ -4,14 +4,13 @@ import { config } from "../data/config.js";
 import { state } from "../data/state.js";
 import { isInRange } from "../lib/is-in-range.js";
 import { print } from "../lib/trace-log.js";
-import { aran } from "../setup.js";
 
 export default {
   unary: (operator, value, serial) => {
-    const result = aran.unary(operator, value);
+    const result = state.aran.unary(operator, value);
 
-    const node = aran.nodes[serial];
-    if (!isInRange(node)) {
+    state.node = state.aran.nodes[serial];
+    if (!isInRange(state.node)) {
       return result;
     }
 
@@ -25,8 +24,8 @@ export default {
     }
 
     if (!state.inNativeCallstack) {
-      const line = node.loc.start.line;
-      const col = node.loc.start.column;
+      const line = state.node.loc.start.line;
+      const col = state.node.loc.start.column;
       print({
         prefix: [line, col],
         logs: ["operation (" + operator + "):", operator, value],
@@ -36,14 +35,14 @@ export default {
       print({ logs: ["(evaluates to):", result] });
       console.groupEnd();
     }
-    // console.log(node);
+    // console.log(state.node);
     return result;
   },
   binary: (operator, left, right, serial) => {
-    const result = aran.binary(operator, left, right);
+    const result = state.aran.binary(operator, left, right);
     // META.binary("+", $x, $y, @serial)
-    const node = aran.nodes[serial];
-    if (!isInRange(node)) {
+    state.node = state.aran.nodes[serial];
+    if (!isInRange(state.node)) {
       return result;
     }
 
@@ -55,8 +54,8 @@ export default {
     }
 
     if (!state.inNativeCallstack) {
-      const line = node.loc.start.line;
-      const col = node.loc.start.column;
+      const line = state.node.loc.start.line;
+      const col = state.node.loc.start.column;
       print({
         prefix: [line, col],
         logs: ["operation (" + operator + "):", left, operator, right],
@@ -66,7 +65,7 @@ export default {
       print({ logs: ["(evaluates to):", result] });
       console.groupEnd();
     }
-    // console.log(node);
+    // console.log(state.node);
     return result;
   },
 };

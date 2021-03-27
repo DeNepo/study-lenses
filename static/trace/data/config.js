@@ -27,11 +27,16 @@ export const config = {
   // --- other options ---
   operatorsList: [],
   operators: true, // for stepping through operations & precedence
+
+  controlFlowList: [],
   controlFlow: true, // all occurrences of the 'test' trap, and break/continue
   functionsList: [],
   functions: true,
+  functionDeclarations: true,
   this: false, // logs the this value at the top of each function call
   errorHandling: false, // yes, but a little later: try/catch/finally, throw
+
+  blockScope: false, // until the new Aran with finally blocks for leave
 
   // --- selected traces ---
   range: {

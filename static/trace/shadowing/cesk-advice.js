@@ -8,7 +8,7 @@ const ceskAdviceSignature = (
   history,
   aran
 ) => (...args) => {
-  const node = aran.nodes[serial];
+  const node = state.aran.nodes[serial];
   // do your cesky thing, use history
   if (typeof userAdvice === "function" && userPointcut(adviceName, node)) {
     value = userAdvice(...args);

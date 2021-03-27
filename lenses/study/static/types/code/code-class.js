@@ -237,7 +237,7 @@ export class CodeFE {
     updateEditorHeight();
   }
 
-  getSelection(monacoThing) {
+  getSelection() {
     const editorSelection = this.editor.getSelection();
     const editorSelectionEntries = Object.entries(editorSelection);
     const columnEntries = [];
@@ -298,11 +298,12 @@ export class CodeFE {
     const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
     // if the full file is used, open lense with local configs from exercise
     //  otherwise don't, because anything syntax/runtime based will probably break for selections
-    const url = selectedCode
-      ? window.location.origin +
-        `?${queryKey}&--resource=${stringifiedResource}`
-      : window.location.origin +
-        `?${queryKey}=${queryValue}&--resource=${stringifiedResource}`;
+    const url =
+      window.location.origin +
+      window.location.pathname +
+      (selectedCode
+        ? `?${queryKey}&--resource=${stringifiedResource}`
+        : `?${queryKey}=${queryValue}&--resource=${stringifiedResource}`);
     window.open(url, "_blank");
   }
 }

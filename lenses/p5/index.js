@@ -46,9 +46,19 @@ const p5lense = async ({ resource, config }) => {
   <head>
     <script src="${config.sharedStatic}/p5.min.js"></script>
     <script src="${config.sharedStatic}/p5.sound.min.js"></script>
+    <script> function setup() { } </script>
+
+    <script>const code = decodeURI("${encodeURI(code)}");</script>
+
   </head>
   <body>
-    <script>${code}</script>
+    <br>
+    <button id='restart-button'>restart</button>
+    <button id='debug-button'>debug</button>
+    | <input id='loop-checkbox' type='checkbox' checked /> loop
+    <hr>
+
+    <script src="${config.ownStatic}/index.js"></script>
   </body>
 </html>`;
   resource.info.ext = ".html";

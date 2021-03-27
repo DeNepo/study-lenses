@@ -20,6 +20,8 @@ const marked = require("marked");
 const Logger = require("./lib/logger.js");
 const gitbookfiy = require("./gitbookify/index.js");
 const study = require("./study.js");
+const sandbox = require("./sandbox.js");
+const draw = require("./draw.js");
 // const Logger = console
 
 // error and exit handling ...
@@ -50,6 +52,9 @@ app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+app.use(sandbox);
+app.use(draw);
 
 app.use(
   /[\s\S]*own_static_resources_lenses/,

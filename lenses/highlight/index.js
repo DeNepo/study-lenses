@@ -20,10 +20,15 @@ const highlightLense = async ({ resource, config }) => {
         <button id="red" class="color">Red</button>
         <button id="green" class="color">Green</button>
         <button id="blue" class="color">Blue</button>
-        <button id="orange" class="color">Orange</button>`
+        <button id="orange" class="color">Orange</button>
+        <button id="black" class="color">Black</button>`
     }
 
-    <button style="float: right;" id="random-line">random line</button>
+    ${
+      config.locals.randomLine !== false
+        ? `<button style="float: right;" id="random-line">random line</button>`
+        : ""
+    }
     ${
       (config.locals.run || config.locals.eval) && resource.info.ext === ".js"
         ? `
@@ -77,13 +82,17 @@ const highlightLense = async ({ resource, config }) => {
     }
 
     <div id="container">
-      <div id="code-container" class="stacked">
-        <pre><code id='code-goes-here' class="line-numbers language-${
-          typeof resource.content === "object"
-            ? "json"
-            : resource.info.ext.split(".").join("")
-        }"></code></pre>
-      </div>
+      ${
+        config.locals.code !== false
+          ? `<div id="code-container" class="stacked">
+          <pre><code id='code-goes-here' class="line-numbers language-${
+            typeof resource.content === "object"
+              ? "json"
+              : resource.info.ext.split(".").join("")
+          }"></code></pre>
+        </div>`
+          : ""
+      }
       <div id="canvas-container" class="stacked"><canvas id="cfd"></canvas></div>
     </div>
 
@@ -104,19 +113,21 @@ const highlightLense = async ({ resource, config }) => {
     <script src="${config.sharedStatic}/prism/script.js"></script>
     <script src="${config.sharedStatic}/prism/toolbar.js"></script>
     <script>
-      // https://stackoverflow.com/a/24631113
-      function escapeHTML(string) {
-        var pre = document.createElement('pre');
-        var text = document.createTextNode(string);
-        pre.appendChild(text);
-        return pre.innerHTML;
+
+      if (config.locals.code !== false) {
+        // https://stackoverflow.com/a/24631113
+        function escapeHTML(string) {
+          var pre = document.createElement('pre');
+          var text = document.createTextNode(string);
+          pre.appendChild(text);
+          return pre.innerHTML;
+        }
+
+
+        const codeGoesHere = document.getElementById('code-goes-here')
+        codeGoesHere.innerHTML = escapeHTML(code)
+        Prism.highlightAllUnder(codeGoesHere.parentElement);
       }
-
-
-      const codeGoesHere = document.getElementById('code-goes-here')
-      codeGoesHere.innerHTML = escapeHTML(code)
-      Prism.highlightAllUnder(codeGoesHere.parentElement);
-
     </script>
 
 

@@ -69,6 +69,7 @@ export class P5FE extends CodeFE {
     }
     try {
       if (this.trace) {
+        // broken because trace no longer returns instrumented code
         execute(trace(this.editor.getValue(), true));
       } else {
         execute(this.editor.getValue());

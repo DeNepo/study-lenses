@@ -23,7 +23,7 @@ let states = [];
 const step = ({ serial, args, advice }) => {
   // debugger;
 
-  const node = aran.nodes[serial];
+  const node = state.aran.nodes[serial];
   const src = Astring.generate(node);
 
   states[states.length - 1].after = {

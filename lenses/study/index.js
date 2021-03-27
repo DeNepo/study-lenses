@@ -16,6 +16,7 @@ const liveStudyLense = async ({
   responseData,
   requestData,
 }) => {
+  debugger;
   if (config.locals.save === true && requestData.method === "POST") {
     try {
       const absolutePath = path.join(
@@ -87,7 +88,9 @@ const liveStudyLense = async ({
 
 <head>
   <meta charset="UTF-8">
-  <title id='title'>${resource.info.dir}/${resource.info.base}</title>
+  <title id='title'>${
+    config.title || `${resource.info.dir}/${resource.info.base}`
+  }</title>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
   ${await typeView.styles()}
@@ -105,7 +108,10 @@ const liveStudyLense = async ({
     <div class="dropdown">
       <code>&#187; options &#171;</code>
       <div class='dropdown-content'>
-        <a href='?--help' target='_blank'><code>--help</code>!  what is this?</a>
+        <a href='?--sandbox=js' target='_blank'><button>js</button></a>
+        <a href='?--sandbox=html' target='_blank'><button>html</button></a>
+        <a href='?--draw' target='_blank'><button>draw</button></a> <br>
+        <a href='?--help' target='_blank'><code>--help</code>!  what is this?</a> <br>
         ${await typeView.configOptions()}
       </div>
     </div>

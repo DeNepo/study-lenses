@@ -2,13 +2,14 @@
 
 import { config } from "../data/config.js";
 import { print } from "../lib/trace-log.js";
-import { aran } from "../setup.js";
+import { state } from "../data/state.js";
+
 import { isInRange } from "../lib/is-in-range.js";
 
 /* ++, --
 
   - normalization always stars with a read
-  check if node is an update
+  check if state.node is an update
   then update state
   also check if operators are enabled
 
@@ -48,8 +49,8 @@ if only operators
 
 dirty hack:
   first trap is read
-  he will have an associated node
-    is that node the identifier or update expression?
+  he will have an associated state.node
+    is that state.node the identifier or update expression?
   set it in state
 
   possible ending traps
@@ -59,21 +60,24 @@ dirty hack:
   at leaving every read/write/apply
     if state.updateExpression !== null
       go recursively thorugh the update
-      if  the current node is not a child of the update
+      if  the current state.node is not a child of the update
         set it to null
 
 
 
 */
 
+let lastFuncDecStep = 0;
+let lastFuncDec = null;
+
 export default {
   read: (value, variable, serial) => {
-    const node = aran.nodes[serial];
-    if (!isInRange(node)) {
+    state.node = state.aran.nodes[serial];
+    if (!isInRange(state.node)) {
       return value;
     }
 
-    // console.log(node);
+    // console.log(state.node);
 
     if (!config.variablesRead) {
       return value;
@@ -89,28 +93,41 @@ export default {
     if (!isNaN(variable)) {
       return value;
     }
-    const line = node.loc.start.line;
-    const col = node.loc.start.column;
+    const line = state.node.loc.start.line;
+    const col = state.node.loc.start.column;
     print({
       prefix: [line, col],
-      logs: [(node.left ? node.left.name : variable) + " (read):", value],
+      logs: [
+        (state.node.left ? state.node.left.name : variable) + " (read):",
+        value,
+      ],
     });
     // console.log("value:", value);
     // console.log("variable:", variable);
     // console.log("serial:", serial);
-    // console.log("node:", node);
+    // console.log("state.node:", state.node);
     return value;
   },
   write: (value, variable, serial) => {
-    const node = aran.nodes[serial];
-    if (!isInRange(node)) {
+    // if (variable === "p") {
+    //   debugger;
+    // }
+
+    state.node = state.aran.nodes[serial];
+
+    // if (state.node.type === "FunctionDeclaration") {
+    //   console.log(state.node);
+    // }
+
+    if (!isInRange(state.node)) {
       return value;
     }
-    // console.log(node);
+    // console.log(state.node);
 
     if (!(config.variablesAssign || config.variablesDeclare)) {
       return value;
     }
+
     if (
       config.variablesList.length !== 0 &&
       // !config.variablesList.find((query) => new RegExp(query).test(variable))
@@ -123,27 +140,84 @@ export default {
       return value;
     }
 
-    const line = node.loc.start.line;
-    const col = node.loc.start.column;
+    const line = state.node.loc.start.line;
+    const col = state.node.loc.start.column;
 
-    if (node.type === "VariableDeclaration" && config.variablesDeclare) {
+    if (
+      (state.node.type === "ForOfStatement" ||
+        state.node.type === "ForInStatement") &&
+      config.variablesDeclare
+    ) {
+      const kind = state.node.left.kind;
+      const focusedLine = state.node.left.loc.start.line;
+      const focusedCol = state.node.left.loc.start.column;
+
       print({
-        prefix: [line, col],
-        logs: [variable + " (declare, " + node.kind + ")"],
+        prefix: [focusedLine, focusedCol],
+        logs: [variable + " (declare, " + kind + ")"],
       });
-    }
-    if (node.declarations && node.declarations[0].init) {
       print({
-        prefix: [line, col],
+        prefix: [focusedLine, focusedCol],
         logs: [variable + " (initialize):", value],
       });
+    } else if (
+      (state.node.type === "VariableDeclaration" ||
+        state.node.type === "VariableDeclarator") &&
+      // || state.node.type === "ExpressionStatement"
+      config.variablesDeclare
+    ) {
+      // if (state.hoisted.includes(state.node)) {
+      //   return value;
+      // }
+      print({
+        prefix: [line, col],
+        logs: [variable + " (declare, " + state.node.kind + ")"],
+      });
+
+      const declarator = state.node.declarations.find(
+        (declarator) => declarator.id.name === variable
+      );
+      // console.log(declarator);
+      if (declarator.init) {
+        const line = declarator.init.loc.start.line;
+        const col = declarator.init.loc.start.column;
+        print({
+          prefix: [line, col],
+          logs: [
+            variable +
+              " (" +
+              "initialize" +
+              // (state.node.kind === "var" ? "assign" : "initialize") +
+              "):",
+            value,
+          ],
+        });
+      }
     }
+    // else if (
+    //   state.node.type === "FunctionDeclaration" &&
+    //   // || state.node.type === "ExpressionStatement"
+    //   config.functionDeclarations
+    // ) {
+    //   if (
+    //     lastFuncDecStep == state.loggedSteps - 1 &&
+    //     lastFuncDec === state.node
+    //   ) {
+    //     return value;
+    //   }
+
+    //   lastFuncDecStep = state.loggedSteps;
+    //   lastFuncDec = state.node;
+    //   print({
+    //     prefix: [line, col],
+    //     logs: [variable + " (declare, function)"],
+    //   });
+    // }
+
     if (
-      (node.type === "AssignmentExpression" ||
-        node.type === "UpdateExpression" ||
-        node.type === "ForOfStatement" ||
-        node.type === "ForInStatement" ||
-        node.type === "ExpressionStatement") &&
+      (state.node.type === "AssignmentExpression" ||
+        state.node.type === "UpdateExpression" ||
+        state.node.type === "ExpressionStatement") &&
       config.variablesAssign
     ) {
       print({
@@ -151,10 +225,6 @@ export default {
         logs: [variable + " (assign):", value],
       });
     }
-    // console.log(value);
-    // console.log(variable);
-    // console.log(serial);
-    // console.log(node);
     return value;
   },
   enter: (tag, labels, variables, serial) => {
@@ -163,24 +233,27 @@ export default {
       return;
     }
 
-    const node = aran.nodes[serial];
-    // console.log(node);
-    if (!isInRange(node)) {
+    state.node = state.aran.nodes[serial];
+    // console.log(state.node);
+    if (!isInRange(state.node)) {
       return;
     }
 
-    if (node.type !== "ForOfStatement" && node.type !== "ForInStatement") {
+    if (
+      state.node.type !== "ForOfStatement" &&
+      state.node.type !== "ForInStatement"
+    ) {
       return;
     }
 
-    // console.log(node);
+    // console.log(state.node);
 
     if (!config.variablesDeclare) {
       return;
     }
 
-    const line = node.loc.start.line;
-    const col = node.loc.start.column;
+    const line = state.node.loc.start.line;
+    const col = state.node.loc.start.column;
     for (const variable of variables) {
       if (!isNaN(variable)) {
         continue;
@@ -200,6 +273,6 @@ export default {
     // console.log("value:", value);
     // console.log("variable:", variable);
     // console.log("serial:", serial);
-    // console.log("node:", node);
+    // console.log("state.node:", state.node);
   },
 };

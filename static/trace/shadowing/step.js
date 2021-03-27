@@ -7,7 +7,7 @@ export const stepFactory = (history, ceskState, aran) => ({
 }) => {
   // debugger;
 
-  const node = aran.nodes[serial];
+  const node = state.aran.nodes[serial];
   const src = Astring.generate(node);
 
   history.states[history.states.length - 1].after = {

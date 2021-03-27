@@ -2,7 +2,7 @@
 
 const CodeSSR = require("./code.js");
 
-class JavaScriptSSR extends CodeSSR {
+class P5SSR extends CodeSSR {
   constructor({ config, resource }) {
     super({ config, resource });
   }
@@ -54,4 +54,4 @@ class JavaScriptSSR extends CodeSSR {
   }
 }
 
-module.exports = JavaScriptSSR;
+module.exports = P5SSR;
