@@ -34,14 +34,14 @@ export const config = {
   functions: true,
   functionDeclarations: true,
   this: false, // logs the this value at the top of each function call
-  errorHandling: false, // yes, but a little later: try/catch/finally, throw
+  errorHandling: true, // yes, but a little later: try/catch/finally, throw
 
   blockScope: false, // until the new Aran with finally blocks for leave
 
   // --- selected traces ---
   range: {
     start: 1,
-    end: 100,
+    end: 1000,
   },
 
   // --- display settings ---

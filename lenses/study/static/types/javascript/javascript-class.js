@@ -5,6 +5,17 @@ export class JavaScriptFE extends CodeFE {
   constructor(config) {
     super(config);
 
+    if (
+      this.config.base &&
+      Array.isArray(this.config.locals.tests) &&
+      this.config.locals.tests.find((matcher) =>
+        new RegExp(matcher, "i").test(this.config.base)
+      )
+    ) {
+      this.testedExtensions = this.config.locals.tests;
+      this.config.locals.tests = true;
+    }
+
     // if (this.config.locals.trace) {
     //   for (const key in this.config.locals.trace) {
     //     if (typeof this.config.locals.trace[key] === "boolean") {
@@ -42,6 +53,41 @@ export class JavaScriptFE extends CodeFE {
     };
     formatParent.replaceChild(newFormatButton, formatButton);
 
+    const environmentForm = document.getElementById("environment-form");
+    document
+      .getElementById("environment-input")
+      .addEventListener("change", (event) => {
+        if (event.target.checked) {
+          this.config.locals.environment = false;
+          environmentForm.style = "display: inline-block;";
+        } else {
+          this.config.locals.environment = true;
+          environmentForm.style = "display: none;";
+        }
+        event.preventDefault();
+      });
+    environmentForm.addEventListener("change", (event) => {
+      const target = event.target;
+      if (target.name === "strict" && this.config.locals.type !== "module") {
+        this.config.locals.strict = !this.config.locals.strict;
+      } else if (
+        target.name === "strict" &&
+        this.config.locals.type === "module"
+      ) {
+        target.form.strict.checked = true;
+        event.preventDefault();
+        event.stopPropagation();
+      } else {
+        if (this.config.locals.type === "module") {
+          this.config.locals.type = "text/javascript";
+          environmentForm.strict.checked = this.config.locals.strict;
+        } else {
+          this.config.locals.type = "module";
+          environmentForm.strict.checked = true;
+        }
+      }
+    });
+
     // if (this.config.locals.loopGuard) {
     const loopGuardForm = document.getElementById("loop-guard-form");
     let lastActiveValue = this.config.locals.loopGuard.active;
@@ -63,6 +109,24 @@ export class JavaScriptFE extends CodeFE {
       this.config.locals.loopGuard.max = Number(event.target.form.max.value);
     });
     // }
+
+    const testsForm = document.getElementById("tests-form");
+    if (this.config.locals.tests === true) {
+      document.getElementById("tests").checked = true;
+    }
+    document
+      .getElementById("tests-input")
+      .addEventListener("change", (event) => {
+        if (event.target.checked) {
+          testsForm.style = "display: inline-block;";
+        } else {
+          testsForm.style = "display: none;";
+        }
+        event.preventDefault();
+      });
+    testsForm.addEventListener("change", (event) => {
+      this.config.locals.tests = event.target.form.tests.checked;
+    });
 
     // if (this.config.locals.clearScheduled) {
     const clearScheduledButton = document.getElementById(
@@ -222,7 +286,7 @@ export class JavaScriptFE extends CodeFE {
       const variable = Acorn.parse(`let loopGuard_${id} = 0;`).body[0];
       variable.generated = true;
       const check = Acorn.parse(
-        `if (++loopGuard_${id} > ${max}) { throw new RangeError("loopGuard_${id} is greater than ${max}"); }`
+        `loopGuard_${id}++; if (loopGuard_${id} > ${max}) { throw new RangeError("loopGuard_${id} is greater than ${max}"); }`
       );
       check.generated = true;
       return {

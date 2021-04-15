@@ -41,6 +41,11 @@ class JavaScriptSSR extends CodeSSR {
     return (
       `
     <form>
+      <input id='environment-input' type='checkbox' ${
+        this.config.locals.environment ? "checked" : ""
+      } /> <label for='environment-input'>environment</label>
+    </form>
+    <form>
       <input id='run-input' type='checkbox' ${
         this.config.locals.run || this.config.locals.eval ? "checked" : ""
       } /> <label for='run-input'>run</label>
@@ -72,6 +77,11 @@ class JavaScriptSSR extends CodeSSR {
       } /> <label for='loop-guard-input'>loop guard</label>
     </form>
     <form>
+      <input id='tests-input' type='checkbox' ${
+        this.config.locals.tests ? "checked" : ""
+      } /> <label for='tests-input'>tests</label>
+    </form>
+    <form>
       <input id='clear-scheduled-input' type='checkbox' ${
         this.config.locals.clearScheduled ? "checked" : ""
       } /> <label for='clear-scheduled-input'>clear scheduled</label>
@@ -101,7 +111,36 @@ class JavaScriptSSR extends CodeSSR {
     const locals = this.config.locals;
 
     // if (locals.loopGuard || locals.clearScheduled || locals.flowchart) {
-    superPanel += "<br><div>";
+
+    // if (locals.flowchart) {
+    const flowchartDisplay = locals.flowchart ? "inline-block" : "none";
+    superPanel += `
+      <button id='flowchart-button' style='display: ${flowchartDisplay};'>flowchart</button>`;
+    // }
+
+    const variablesDisplay = locals.variables ? "inline-block" : "none";
+    superPanel += `
+      <button id='variables-button' style='display: ${variablesDisplay};'>variables</button>`;
+
+    const astDisplay = locals.ast ? "inline-block" : "none";
+    superPanel += `
+      <button id='ast-button' style='display: ${astDisplay};'>syntax tree</button>`;
+
+    superPanel += `
+
+    <br>  <div>
+    <form id='environment-form' style='display: ${
+      locals.environment ? "inline-block" : "none"
+    };'>
+      <input name='strict' id='strict' type='checkbox' ${
+        locals.strict === true || locals.type === "module" ? "checked" : ""
+      } />
+      <label for='strict'>strict</label>
+      <input name='module' id='module' type='checkbox' ${
+        locals.type === "module" ? "checked" : ""
+      } />
+      <label for='module'>module</label>
+    </form>`;
     // }
 
     // if (locals.loopGuard) {
@@ -138,19 +177,14 @@ class JavaScriptSSR extends CodeSSR {
       <button id='clear-scheduled-button' style='display: ${clearScheduledDisplay};'>clear scheduled</button>`;
     // }
 
-    // if (locals.flowchart) {
-    const flowchartDisplay = locals.flowchart ? "inline-block" : "none";
+    const testsDisplay = locals.tests ? "inline-block" : "none";
     superPanel += `
-      <button id='flowchart-button' style='display: ${flowchartDisplay};'>flowchart</button>`;
-    // }
-
-    const variablesDisplay = locals.variables ? "inline-block" : "none";
-    superPanel += `
-      <button id='variables-button' style='display: ${variablesDisplay};'>variables</button>`;
-
-    const astDisplay = locals.ast ? "inline-block" : "none";
-    superPanel += `
-      <button id='ast-button' style='display: ${astDisplay};'>syntax tree</button>`;
+      <form id='tests-form' style='display: ${testsDisplay};'>
+        <input name='tests' id='tests' type='checkbox' ${
+          locals.loopGuard.tests ? "checked" : ""
+        } />
+        <label for='tests'>tests</label>
+      </form>`;
 
     superPanel += "</div>";
 
@@ -222,18 +256,18 @@ class JavaScriptSSR extends CodeSSR {
       <script src='${this.config.ownStatic}/types/javascript/static/clear-scheduled.js'></script>
       <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>`;
 
-    const base = this.resource.info.base;
-    const isTestedFile =
-      Array.isArray(this.config.locals.testExtensions) &&
-      this.config.locals.testExtensions.some((extension) =>
-        base.includes(`.${extension}.`)
-      );
-    if (isTestedFile) {
-      superScriptsBody += `
+    // const base = this.resource.info.base;
+    // const isTestedFile =
+    //   Array.isArray(this.config.locals.tests) &&
+    //   this.config.locals.tests.some((extension) =>
+    //     base.includes(`.${extension}.`)
+    //   );
+    // if (isTestedFile) {
+    superScriptsBody += `
       <script src='${this.config.ownStatic}/dependencies/describe-it.js'> </script>
       <script src='${this.config.ownStatic}/dependencies/chai.js'> </script>
       <script src='${this.config.ownStatic}/dependencies/jest-matchers.js'> </script>`;
-    }
+    // }
 
     return superScriptsBody;
   }

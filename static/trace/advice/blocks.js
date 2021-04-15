@@ -1,5 +1,3 @@
-"use strict";
-
 import { config } from "../data/config.js";
 import { state } from "../data/state.js";
 import { print } from "../lib/trace-log.js";
@@ -16,7 +14,7 @@ const getRandomColor = () => {
 
 export default {
   enter: (tag, labels, variables, serial) => {
-    debugger;
+    // debugger;
     if (config.blockScope) {
       state.blockScopeDepth += 1;
       console.log("enter ", state.blockScopeDepth);

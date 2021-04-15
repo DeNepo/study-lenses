@@ -1,5 +1,3 @@
-"use strict";
-
 import { config } from "../data/config.js";
 import { print } from "../lib/trace-log.js";
 import { state } from "../data/state.js";
@@ -152,14 +150,24 @@ export default {
       const focusedLine = state.node.left.loc.start.line;
       const focusedCol = state.node.left.loc.start.column;
 
-      print({
-        prefix: [focusedLine, focusedCol],
-        logs: [variable + " (declare, " + kind + ")"],
-      });
-      print({
-        prefix: [focusedLine, focusedCol],
-        logs: [variable + " (initialize):", value],
-      });
+      if (kind !== "var") {
+        print({
+          prefix: [focusedLine, focusedCol],
+          logs: [variable + " (declare, " + kind + ")"],
+        });
+
+        print({
+          prefix: [focusedLine, focusedCol],
+          logs: [
+            variable +
+              " (" +
+              (state.node.kind === "var" ? "assign" : "initialize") +
+              "):",
+            ,
+            value,
+          ],
+        });
+      }
     } else if (
       (state.node.type === "VariableDeclaration" ||
         state.node.type === "VariableDeclarator") &&
@@ -169,10 +177,12 @@ export default {
       // if (state.hoisted.includes(state.node)) {
       //   return value;
       // }
-      print({
-        prefix: [line, col],
-        logs: [variable + " (declare, " + state.node.kind + ")"],
-      });
+      if (state.node.kind !== "var") {
+        print({
+          prefix: [line, col],
+          logs: [variable + " (declare, " + state.node.kind + ")"],
+        });
+      }
 
       const declarator = state.node.declarations.find(
         (declarator) => declarator.id.name === variable
@@ -186,8 +196,7 @@ export default {
           logs: [
             variable +
               " (" +
-              "initialize" +
-              // (state.node.kind === "var" ? "assign" : "initialize") +
+              (state.node.kind === "var" ? "assign" : "initialize") +
               "):",
             value,
           ],

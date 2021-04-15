@@ -1,3 +1,3 @@
-const portOption = () => {};
+const logOption = () => {};
 
-module.exports = portOption;
+module.exports = logOption;

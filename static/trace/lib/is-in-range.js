@@ -2,6 +2,11 @@ import { config } from "../data/config.js";
 
 export const isInRange = (node) => {
   // debugger;
+  if (!node.loc) {
+    // console.log(node);
+    return false;
+  }
+
   const start = node.loc.start.line;
   const end = node.loc.end.line;
   const range = config.range.end - config.range.start;
@@ -14,5 +19,6 @@ export const isInRange = (node) => {
   } else {
     itIs = start === config.range.start;
   }
+  // console.log(itIs, node);
   return itIs;
 };

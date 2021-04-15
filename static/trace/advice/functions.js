@@ -1,5 +1,3 @@
-"use strict";
-
 import { config } from "../data/config.js";
 import { state } from "../data/state.js";
 import { print } from "../lib/trace-log.js";
@@ -9,11 +7,23 @@ import { isInRange } from "../lib/is-in-range.js";
 
 export default {
   apply(f, t, xs, serial) {
-    if (!f) {
+    if (typeof f !== "function") {
       // throw the error right away for failure advice to catch
       //  without doing any apply logging
       f();
     }
+
+    // hack, because of instrumentation
+    if (
+      f.name === "Object" &&
+      f !== Object &&
+      xs.length === 1 &&
+      xs[0] &&
+      xs[0].name === "Object"
+    ) {
+      return Reflect.apply(f, t, xs);
+    }
+    // console.log(1);
 
     const functionName = f.name || "anonymous";
 
@@ -44,11 +54,16 @@ export default {
           ],
         });
       }
-      return;
+      return undefined;
     }
+    // console.log(2);
 
-    if (f.name === "get" && xs[0] === console && xs[2] === console) {
-      // because of iframing the instrumentation
+    // because of instrumentation
+    // if (f.name === "get" && xs[0] === console && xs[2] === console) {
+
+    const firstAndThirdAreSame =
+      (xs[0] ? xs[0].toString() : xs[0]) === (xs[2] ? xs[2].toString() : xs[2]);
+    if (f.name === "get" && xs.length === 3 && firstAndThirdAreSame) {
       return Reflect.apply(f, t, xs);
     }
 
@@ -56,7 +71,6 @@ export default {
 
     // in case only console & not functions
     if (!config.functions || !nodeIsInRange) {
-      console.log(3.5);
       return Reflect.apply(f, t, xs);
     }
 
@@ -69,7 +83,7 @@ export default {
       }
     }
 
-    // console.log(5);
+    // console.log(4);
 
     // tracing selected functions
     if (
@@ -83,7 +97,7 @@ export default {
       return result;
     }
 
-    // console.log(6);
+    // console.log(5);
 
     print({
       prefix: [line, col],

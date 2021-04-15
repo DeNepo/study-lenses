@@ -21,7 +21,7 @@ const optionsPromise = loadPlugins("options", optionsPath);
 const lensesPath = path.join(__dirname, "..", "lenses");
 const lensesPromise = loadPlugins("lenses", lensesPath);
 
-const localLensesPath = path.join(process.cwd(), ".lenses");
+const localLensesPath = path.join(process.cwd(), ".study-lenses");
 const localLensesPromise = loadPlugins("local_lenses", localLensesPath);
 
 const deepMerge = require("deepmerge");

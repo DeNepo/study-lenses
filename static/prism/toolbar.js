@@ -5,12 +5,12 @@ try {
 
   config.property;
 
-  const openWith = (code, lens) => {
+  const openWith = (code, lens, ext = ".js") => {
     const pseudoResource = {
       resource: {
         content: code,
         // hard-coding for now, assume this is only used with JS
-        info: { ext: ".js" },
+        info: { ext },
       },
     };
 
@@ -239,6 +239,23 @@ try {
     return parsonsButton;
   });
 
+  Prism.plugins.toolbar.registerButton("new tab", function (env) {
+    if (env.language !== "html") {
+      return null;
+    }
+
+    const newTabButton = document.createElement("button");
+    newTabButton.textContent = "new tab";
+    newTabButton.setAttribute("type", "button");
+    newTabButton.addEventListener("click", () => {
+      const x = window.open();
+      x.document.open();
+      x.document.write(env.code);
+      x.document.close();
+    });
+    return newTabButton;
+  });
+
   Prism.plugins.toolbar.registerButton("diff", function (env) {
     if (!config.locals.diff) {
       return null;
@@ -269,20 +286,30 @@ try {
       codeAlongExists = true;
     } catch (_) {}
 
-    Prism.plugins.toolbar.registerButton("edit", function (env) {
+    Prism.plugins.toolbar.registerButton("study", function (env) {
       if (!codeAlongExists) {
         return null;
       }
-      if (env.language !== "js" && env.language !== "javascript") {
+      if (
+        env.language !== "js" &&
+        env.language !== "javascript" &&
+        env.language !== "html" &&
+        env.language !== "html"
+      ) {
         return null;
       }
+
+      const ext =
+        env.language === "js" || env.language === "javascript"
+          ? ".js"
+          : ".html";
 
       const editButton = document.createElement("button");
       editButton.textContent = "study";
       editButton.setAttribute("type", "button");
       editButton.addEventListener(
         "click",
-        () => openWith(env.code, "study")
+        () => openWith(env.code, "study", ext)
         // editify(
         //   env.element.parentElement.parentElement.parentElement,
         //   env.element.parentElement.parentElement,

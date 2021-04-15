@@ -47,6 +47,8 @@ export const pointcut = (name, node) => {
 
   if (name === "failure") {
     return true;
+  } else if ((name === "error" || name === "throw") && config.errorHandling) {
+    return true;
   } else if (
     (name === "test" || name === "break" || name === "continue") &&
     config.controlFlow &&

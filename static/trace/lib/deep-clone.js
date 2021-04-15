@@ -41,6 +41,12 @@ export const deepClone = (src, clonesMap = new Map()) => {
     return new RegExp(src);
   }
 
+  if (src instanceof Error) {
+    const newError = new src.constructor(src.message);
+    newError.stack = src.stack;
+    return newError;
+  }
+
   if (src instanceof Date) {
     return new Date(src.getTime());
   }

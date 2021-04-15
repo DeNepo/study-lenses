@@ -1,5 +1,6 @@
 // "use strict";
 
+let evaller = null;
 const studyWithEval = (debug) => (code) => {
   if (typeof code !== "string") {
     // this should never happen, but just in case ....
@@ -17,10 +18,10 @@ const studyWithEval = (debug) => (code) => {
   const finalCode = debug
     ? "/* ------------------------ */ debugger;\n\n\n\n\n" +
       code +
-      "\n\n\n\n/* ------------------------ */ debugger;"
+      "\n\n\n\n\n/* ------------------------ */ debugger;"
     : code;
 
-  let evaller = document.getElementById("evaller");
+  evaller = document.getElementById("evaller");
   if (evaller !== null) {
     document.body.removeChild(evaller);
   }
@@ -30,16 +31,26 @@ const studyWithEval = (debug) => (code) => {
   evaller.id = "evaller";
 
   evaller.onload = () => {
+    if (config.locals.tests) {
+      evaller.contentWindow.describe = describe;
+      evaller.contentWindow.it = it;
+      evaller.contentWindow.expect = expect;
+    }
+
     const script = document.createElement("script");
 
-    script.innerHTML = finalCode;
-
     if (config.locals.type === "module") {
-      script.type = "module";
+      script.type = config.locals.type;
+      script.innerHTML = finalCode;
     } else if (config.locals.strict) {
       script.innerHTML = `'use strict';\neval(decodeURI(\`${encodeURI(
-        script.innerHTML
+        finalCode
       )}\`));`;
+      // script.innerHTML = "'use strict';\n\n" + finalCode;
+    } else {
+      // evalling in non-strict script so callstacks are consistent
+      //  to avoid misconception that strict is fundamentally different
+      script.innerHTML = `\neval(decodeURI(\`${encodeURI(finalCode)}\`));`;
     }
 
     evaller.contentDocument.body.appendChild(script);

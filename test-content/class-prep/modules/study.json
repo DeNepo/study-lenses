@@ -1,5 +1,7 @@
 {
   "study": {
-    "type": "module"
+    "type": "module",
+    "strict": true,
+    "environment": true
   }
 }

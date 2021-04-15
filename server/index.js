@@ -62,7 +62,7 @@ app.use(
 );
 app.use(
   /[\s\S]*own_static_resources_local_lenses/,
-  express.static(path.join(process.cwd(), ".lenses"))
+  express.static(path.join(process.cwd(), ".study-lenses"))
 );
 app.use(
   /[\s\S]*own_static_resources_options/,

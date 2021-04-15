@@ -45,8 +45,10 @@ window.addEventListener("DOMContentLoaded", () => {
                 <input id='operators' type='checkbox' /> <label for='operators'>operators</label> <br>
                 <input id='operatorsList' type='text' />  <br>
                 <hr>
-                <input id='controlFlow' type='checkbox'  /> <label for='controlFlow'>control flow</label> <br>
+                control flow:
                 <input id='controlFlowList' type='text' />  <br>
+                <input id='controlFlow' type='checkbox'  /> <label for='controlFlow'>checks</label> <br>
+                <input id='errorHandling' type='checkbox'  /> <label for='errorHandling'>error handling</label>
                 <hr>
                 functions: <input id='functionsList' type='text' />  <br>
                 <input id='functions' type='checkbox'  /> <label for='functions'>function calls</label> <br>

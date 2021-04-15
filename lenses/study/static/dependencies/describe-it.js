@@ -96,10 +96,13 @@ const { describe, it, beforeEach, afterEach } = (() => {
           `%c✖ FAIL: ${description}`,
           "font-weight: bold; color: red;"
         );
+
         const toLog =
           thrown &&
           typeof thrown.name === "string" &&
-          thrown.name.includes("AssertionError")
+          (thrown.name.includes("AssertionError") || // from the days of chai
+            (thrown.message.includes("expect(received)") &&
+              thrown.message.includes("Received:")))
             ? thrown.message
             : `uncaught${thrown && thrown.name ? ` ${thrown.name}` : ""}${
                 thrown && thrown.message ? `: ${thrown.message}` : ""

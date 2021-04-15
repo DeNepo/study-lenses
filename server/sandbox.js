@@ -31,10 +31,9 @@ const sandbox = async (req, res, next) => {
       study: {
         save: false,
         eval: true,
-        loopGuard: { active: false, max: 100 },
         flowchart: true,
         variables: true,
-        trace: true,
+        environment: true,
       },
     },
     { study: "" }
@@ -44,7 +43,8 @@ const sandbox = async (req, res, next) => {
 
   const content =
     ext === ".html"
-      ? `<html lang="">
+      ? `<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <title></title>
@@ -53,10 +53,12 @@ const sandbox = async (req, res, next) => {
   </head>
 
   <body>
-    <div></div>
+    <div id="root"></div>
+
     <script></script>
   </body>
-</html>`
+</html>
+`
       : ext === ".js"
       ? ""
       : "";

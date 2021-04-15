@@ -34,17 +34,30 @@ const linePrefix = (line, col = null) => {
 };
 
 export const print = ({ logs = [], prefix, out = console.log, style = "" }) => {
-  logs = logs.map((thing) =>
-    typeof thing === "function"
-      ? 'a function named "' + thing.name + '"'
-      : deepClone(thing)
-  );
+  logs = logs
+    .map((thing) =>
+      thing &&
+      thing.__proto__ &&
+      typeof thing.__proto__.name === "string" &&
+      thing.__proto__.name.includes("Error")
+        ? thing.name
+        : thing
+    )
+    .map((thing) =>
+      typeof thing === "function"
+        ? 'a function named "' + thing.name + '"'
+        : deepClone(thing)
+    );
+
+  // console.log(logs);
   const tabbing = config.blockScope
     ? [].fill("  ", 0, state.blockScopeDepth).join("  ")
     : "";
+
   if (tabbing) {
     logs.unshift(tabbing);
   }
+
   if (typeof prefix === "number") {
     out(linePrefix(prefix), style, ...logs);
   } else if (Array.isArray(prefix)) {

@@ -5,9 +5,6 @@ const dirContents = require("./dir-contents");
 const path = require("path");
 
 const marked = require("marked");
-marked.setOptions({
-  langPrefix: "line-numbers language-",
-});
 
 const JavaScriptSSR = require("../javascript");
 
@@ -30,6 +27,13 @@ class MarkdownSSR extends JavaScriptSSR {
       tests: false,
       literate: false,
     };
+
+    console.log(this.resource.info.base);
+
+    marked.setOptions({
+      baseUrl: "./" + this.resource.info.base, // why no work?
+      langPrefix: "line-numbers language-",
+    });
 
     this.content = content || resource.content;
     this.inlines.jsBlocks = /^(([ \t]*`{3,4})([js|javascript])([\s\S]+?)(^[ \t]*\2))/gim.test(
@@ -73,54 +77,6 @@ class MarkdownSSR extends JavaScriptSSR {
     }
     return superScriptsHead;
   }
-
-  // configOptions() {
-  //   const superConfigOptions = super.configOptions();
-  //   return (
-  //     `
-  //   <form>
-  //     <input id='run-input' type='checkbox' ${
-  //       this.config.locals.run || this.config.locals.eval ? "checked" : ""
-  //     } /> <label for='run-input'>run</label>
-  //   </form>
-
-  //   ${
-  //     this.config.locals.trace
-  //       ? `<form>
-  //     <input id='trace-input' type='checkbox' ${
-  //       this.config.locals.trace ? "checked" : ""
-  //     } /> <label for='trace-input'>trace</label>
-  //   </form>`
-  //       : ""
-  //   }
-  //   <form>
-  //     <input id='debug-input' type='checkbox' ${
-  //       this.config.locals.debug || this.config.locals.eval ? "checked" : ""
-  //     } /> <label for='debug-input'>debug</label>
-  //   </form>
-  //   <form>
-  //     <input id='open-in-input' type='checkbox' ${
-  //       this.config.locals.openIn ? "checked" : ""
-  //     } /> <label for='open-in-input'>open in ...</label>
-  //   </form>
-  //   <form>
-  //     <input id='loop-guard-input' type='checkbox' ${
-  //       this.config.locals.loopGuard ? "checked" : ""
-  //     } /> <label for='loop-guard-input'>loop guard</label>
-  //   </form>
-  //   <form>
-  //     <input id='clear-scheduled-input' type='checkbox' ${
-  //       this.config.locals.clearScheduled ? "checked" : ""
-  //     } /> <label for='clear-scheduled-input'>clear scheduled</label>
-  //   </form>
-  //   <form>
-  //     <input id='flowchart-input' type='checkbox' ${
-  //       this.config.locals.flowchart ? "checked" : ""
-  //     } /> <label for='flowchart-input'>flowchart</label>
-  //   </form>
-  //   ` + superConfigOptions
-  //   );
-  // }
 
   panel() {
     return "";

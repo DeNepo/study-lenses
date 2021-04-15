@@ -40,7 +40,7 @@ const highlightLense = async ({ resource, config }) => {
     ${
       (config.locals.debug || config.locals.eval) && resource.info.ext === ".js"
         ? `
-    <button style="float: right;" onclick="eval('debugger; \n\n'+decodeURIComponent(\`${encodeURIComponent(
+    <button style="float: right;" onclick="eval('debugger; \\n\\n' + decodeURIComponent(\`${encodeURIComponent(
       resource.content
     )}\`))">debug</button>`
         : ""

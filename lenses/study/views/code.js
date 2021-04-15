@@ -43,7 +43,8 @@ class CodeSSR {
     <button id='parsonize-selection-button'>parsonize</button>
     <button id='diff-selection-button' style='display: ${
       this.config.locals.diff ? "inline-block" : "none"
-    };'>diff</button><div id='buttons-panel'></div>`;
+    };'>diff</button>
+    <!-- <div id='buttons-panel'></div> -->`;
   }
 
   code() {

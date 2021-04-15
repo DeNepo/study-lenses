@@ -1,5 +1,3 @@
-"use strict";
-
 import { config } from "../data/config.js";
 import { state } from "../data/state.js";
 import { isInRange } from "../lib/is-in-range.js";
