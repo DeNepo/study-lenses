@@ -50,10 +50,12 @@ const liveStudyLense = async ({
     resource.info.ext = config.ext || resource.info.ext;
     resource.info.base = config.base || resource.info.base;
   }
-
+  console.log(0);
   if (resource.content === null || resource.info === null || resource.error) {
     return;
   }
+
+  console.log(1);
 
   const type = detectType(resource);
 

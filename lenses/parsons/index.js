@@ -97,11 +97,14 @@ const parsonsLense = ({ resource, config }) => {
   <title id='title'></title>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 
-  <link rel="stylesheet" href="${config.sharedStatic}/parsonizer/parsons.css">
-  <link rel="stylesheet" href="${config.sharedStatic}/prism/style.css">
 
   <script src='${config.sharedStatic}/prettier/standalone.js'></script>
   <script src='${config.sharedStatic}/prettier/parser-babel.js'></script>
+
+
+  <link rel="stylesheet" href="${config.sharedStatic}/prism/style.css">
+  <link rel="stylesheet" href="${config.sharedStatic}/parsonizer/parsons.css">
+
 
 </head>
 
@@ -136,6 +139,8 @@ const parsonsLense = ({ resource, config }) => {
 
     <script src='${config.sharedStatic}/trace/aran-build.js'></script>
     <script src='${config.sharedStatic}/trace/index.js' type='module'></script>
+
+
 
 </body>
 

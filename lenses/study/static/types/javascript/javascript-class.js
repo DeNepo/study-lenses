@@ -218,6 +218,16 @@ export class JavaScriptFE extends CodeFE {
         }
       });
 
+    const askContainer = document.getElementById("ask-container");
+    document.getElementById("ask-input").addEventListener("change", (event) => {
+      this.config.locals.ask = !this.config.locals.ask;
+      if (event.target.checked) {
+        askContainer.style = "display: inline-block;";
+      } else {
+        askContainer.style = "display: none;";
+      }
+    });
+
     const debugContainer = document.getElementById("debug-container");
     document
       .getElementById("debug-input")
@@ -384,11 +394,15 @@ export class JavaScriptFE extends CodeFE {
       environment !== "highlight" &&
       environment !== "variables"
     ) {
-      const loopGuarded = JavaScriptFE.insertLoopGuards(
-        this.editor.getValue(),
-        this.config.locals.loopGuard.max || 20
-      );
-      formatted = this.prettierFormat(loopGuarded);
+      try {
+        const loopGuarded = JavaScriptFE.insertLoopGuards(
+          this.editor.getValue(),
+          this.config.locals.loopGuard.max || 20
+        );
+        formatted = this.prettierFormat(loopGuarded);
+      } catch (err) {
+        // don't log the acorn error, let it be an eval error in the study type
+      }
       studyWith[environment](formatted);
       return;
     }

@@ -1,3 +1,17 @@
+1. cek (no store)
+  leave out:
+    instrumented functions called by outside world (callbacks passed to natives/libraries)
+    store. can be managed by JS, i just look at it
+    tracking changes to objects by non-instrumented code
+2. store
+  - entering membrane territory
+  ie. splice array - proxify array to trace changes
+    more protection - weakmap from proxy to arrays
+
+
+
+
+
 pieces
   user advice
   combiner
@@ -11,3 +25,4 @@ pieces
 it should
   know at each step if it was pointcuted or not
     need to also wrap the user's pointcut
+

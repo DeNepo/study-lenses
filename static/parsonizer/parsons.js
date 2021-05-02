@@ -12,17 +12,22 @@
 //  https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_isFunction
 
 // (function ($, _) { // wrap in anonymous function to not show some helper variables // descore
-(function ($) { // wrap in anonymous function to not show some helper variables
+(function ($) {
+  // wrap in anonymous function to not show some helper variables
 
-  const interceptorFactory = (intercept) => function (thing) { intercept(thing); return thing; };
+  const interceptorFactory = (intercept) =>
+    function (thing) {
+      intercept(thing);
+      return thing;
+    };
   const log = interceptorFactory(console.trace);
 
   // regexp used for trimming
   var trimRegexp = /^\s*(.*?)\s*$/;
   var translations = {
     fi: {
-      trash_label: 'Raahaa rivit ohjelmaasi tästä',
-      solution_label: 'Muodosta ratkaisusi tähän',
+      trash_label: "Raahaa rivit ohjelmaasi tästä",
+      solution_label: "Muodosta ratkaisusi tähän",
       order: function () {
         return "Ohjelma sisältää vääriä palasia tai palasten järjestys on väärä. Tämä on mahdollista korjata siirtämällä, poistamalla tai vaihtamalla korostettuja palasia.";
       },
@@ -33,41 +38,91 @@
         return "Ohjelmassasi on liian monta palasta, jotta se toimisi oikein.";
       },
       no_matching: function (lineNro) {
-        return "Korostettu palanen (" + lineNro + ") on sisennetty kieliopin vastaisesti.";
+        return (
+          "Korostettu palanen (" +
+          lineNro +
+          ") on sisennetty kieliopin vastaisesti."
+        );
       },
       no_matching_open: function (lineNro, block) {
-        return "Rivillä " + lineNro + " päätettävää " + block +
-          " lohkoa ei ole aloitettu.";
+        return (
+          "Rivillä " +
+          lineNro +
+          " päätettävää " +
+          block +
+          " lohkoa ei ole aloitettu."
+        );
       },
       no_matching_close: function (lineNro, block) {
         return block + " lohkoa riviltä " + lineNro + " ei ole päätetty.";
       },
-      block_close_mismatch: function (closeLine, closeBlock, openLine, inBlock) {
-        return "Ei voi päättää lohkoa " + closeBlock + " rivillä " + closeLine +
-          " oltaessa vielä lohkossa " + inBlock + " riviltä " + openLine;
+      block_close_mismatch: function (
+        closeLine,
+        closeBlock,
+        openLine,
+        inBlock
+      ) {
+        return (
+          "Ei voi päättää lohkoa " +
+          closeBlock +
+          " rivillä " +
+          closeLine +
+          " oltaessa vielä lohkossa " +
+          inBlock +
+          " riviltä " +
+          openLine
+        );
       },
       block_structure: function (lineNro) {
-        return "Korostettu palanen (" + lineNro + ") on sisennetty väärään koodilohkoon.";
+        return (
+          "Korostettu palanen (" +
+          lineNro +
+          ") on sisennetty väärään koodilohkoon."
+        );
       },
       unittest_error: function (errormsg) {
-        return "<span class='msg'>Virhe ohjelman jäsentämisessä/suorituksessa</span><br/> <span class='errormsg'>" + errormsg + "</span>";
+        return (
+          "<span class='msg'>Virhe ohjelman jäsentämisessä/suorituksessa</span><br/> <span class='errormsg'>" +
+          errormsg +
+          "</span>"
+        );
       },
       unittest_output_assertion: function (expected, actual) {
-        return "Odotettu tulostus: <span class='expected output'>" + expected + "</span>" +
-          "Ohjelmasi tulostus: <span class='actual output'>" + actual + "</span>";
+        return (
+          "Odotettu tulostus: <span class='expected output'>" +
+          expected +
+          "</span>" +
+          "Ohjelmasi tulostus: <span class='actual output'>" +
+          actual +
+          "</span>"
+        );
       },
       unittest_assertion: function (expected, actual) {
-        return "Odotettu arvo: <span class='expected'>" + expected + "</span><br>" +
-          "Ohjelmasi antama arvo: <span class='actual'>" + actual + "</span>";
+        return (
+          "Odotettu arvo: <span class='expected'>" +
+          expected +
+          "</span><br>" +
+          "Ohjelmasi antama arvo: <span class='actual'>" +
+          actual +
+          "</span>"
+        );
       },
       variabletest_assertion: function (varname, expected, actual) {
-        return "Muuttujan " + varname + " odotettu arvo: <span class='expected'>" + expected + "</span> " +
-          "Ohjelmasi antama arvo: <span class='actual'>" + actual + "</span>";
-      }
+        return (
+          "Muuttujan " +
+          varname +
+          " odotettu arvo: <span class='expected'>" +
+          expected +
+          "</span> " +
+          "Ohjelmasi antama arvo: <span class='actual'>" +
+          actual +
+          "</span>"
+        );
+      },
     },
     en: {
-      trash_label: 'Drag from here',
-      solution_label: 'Construct your solution here',
+      trash_label: "Drag from here",
+      solution_label: "Construct your solution here",
       order: function () {
         return "Code fragments in your program are wrong, or in wrong order. This can be fixed by moving, removing, or replacing highlighted fragments.";
       },
@@ -78,34 +133,88 @@
         return "Your program has too many code fragments.";
       },
       no_matching: function (lineNro) {
-        return "Based on language syntax, the highlighted fragment (" + lineNro + ") is not correctly indented.";
+        return (
+          "Based on language syntax, the highlighted fragment (" +
+          lineNro +
+          ") is not correctly indented."
+        );
       },
       no_matching_open: function (lineNro, block) {
         return "The " + block + " ended on line " + lineNro + " never started.";
       },
       no_matching_close: function (lineNro, block) {
-        return "Block " + block + " defined on line " + lineNro + " not ended properly";
+        return (
+          "Block " +
+          block +
+          " defined on line " +
+          lineNro +
+          " not ended properly"
+        );
       },
-      block_close_mismatch: function (closeLine, closeBlock, openLine, inBlock) {
-        return "Cannot end block " + closeBlock + " on line " + closeLine + " when still inside block " + inBlock + " started on line " + openLine;
+      block_close_mismatch: function (
+        closeLine,
+        closeBlock,
+        openLine,
+        inBlock
+      ) {
+        return (
+          "Cannot end block " +
+          closeBlock +
+          " on line " +
+          closeLine +
+          " when still inside block " +
+          inBlock +
+          " started on line " +
+          openLine
+        );
       },
-      block_structure: function (lineNro) { return "The highlighted fragment " + lineNro + " belongs to a wrong block (i.e. indentation)."; },
+      block_structure: function (lineNro) {
+        return (
+          "The highlighted fragment " +
+          lineNro +
+          " belongs to a wrong block (i.e. indentation)."
+        );
+      },
       unittest_error: function (errormsg) {
-        return "<span class='msg'>Error in parsing/executing your program</span><br/> <span class='errormsg'>" + errormsg + "</span>";
+        return (
+          "<span class='msg'>Error in parsing/executing your program</span><br/> <span class='errormsg'>" +
+          errormsg +
+          "</span>"
+        );
       },
       unittest_output_assertion: function (expected, actual) {
-        return "Expected output: <span class='expected output'>" + expected + "</span>" +
-          "Output of your program: <span class='actual output'>" + actual + "</span>";
+        return (
+          "Expected output: <span class='expected output'>" +
+          expected +
+          "</span>" +
+          "Output of your program: <span class='actual output'>" +
+          actual +
+          "</span>"
+        );
       },
       unittest_assertion: function (expected, actual) {
-        return "Expected value: <span class='expected'>" + expected + "</span><br>" +
-          "Actual value: <span class='actual'>" + actual + "</span>";
+        return (
+          "Expected value: <span class='expected'>" +
+          expected +
+          "</span><br>" +
+          "Actual value: <span class='actual'>" +
+          actual +
+          "</span>"
+        );
       },
       variabletest_assertion: function (varname, expected, actual) {
-        return "Expected value of variable " + varname + ": <span class='expected'>" + expected + "</span><br>" +
-          "Actual value: <span class='actual'>" + actual + "</span>";
-      }
-    }
+        return (
+          "Expected value of variable " +
+          varname +
+          ": <span class='expected'>" +
+          expected +
+          "</span><br>" +
+          "Actual value: <span class='actual'>" +
+          actual +
+          "</span>"
+        );
+      },
+    },
   };
 
   // Different graders
@@ -141,17 +250,22 @@
     //  js isn't white-space sensitive
     // var student_code = parson.normalizeIndents(parson.getModifiedCode("#ul-" + elemId));
     var student_code = parson.getModifiedCode("#ul-" + elemId);
-    var lines_to_check = Math.min(student_code.length, parson.model_solution.length);
-    var errors = [], log_errors = [];
-    var incorrectLines = [], studentCodeLineObjects = [];
+    var lines_to_check = Math.min(
+      student_code.length,
+      parson.model_solution.length
+    );
+    var errors = [],
+      log_errors = [];
+    var incorrectLines = [],
+      studentCodeLineObjects = [];
     var i;
     var wrong_order = false;
 
     // Find the line objects for the student's code
     for (i = 0; i < student_code.length; i++) {
-      studentCodeLineObjects.push($.extend(true,
-        {},
-        parson.getLineById(student_code[i].id)));
+      studentCodeLineObjects.push(
+        $.extend(true, {}, parson.getLineById(student_code[i].id))
+      );
     }
 
     // This maps codeline strings to the index, at which starting from 0, we have last
@@ -162,9 +276,14 @@
     $.each(studentCodeLineObjects, function (index, lineObject) {
       // find the first matching line in the model solution
       // starting from where we have searched previously
-      for (var i = (typeof (lastFoundCodeIndex[lineObject.code]) !== 'undefined') ? lastFoundCodeIndex[lineObject.code] + 1 : 0;
+      for (
+        var i =
+          typeof lastFoundCodeIndex[lineObject.code] !== "undefined"
+            ? lastFoundCodeIndex[lineObject.code] + 1
+            : 0;
         i < parson.model_solution.length;
-        i++) {
+        i++
+      ) {
         if (parson.model_solution[i].code === lineObject.code) {
           // found a line in the model solution that matches the student's line
           lastFoundCodeIndex[lineObject.code] = i;
@@ -175,7 +294,7 @@
         }
       }
       if (i === parson.model_solution.length) {
-        if (typeof (lastFoundCodeIndex[lineObject.code]) === 'undefined') {
+        if (typeof lastFoundCodeIndex[lineObject.code] === "undefined") {
           // Could not find the line in the model solution at all,
           // it must be a distractor
           // => add to feedback, log, and ignore in LIS computation
@@ -198,18 +317,23 @@
           lineObject.lisIgnore = false;
           lineObject.position = lastFoundCodeIndex[lineObject.code];
         }
-
       }
     });
 
-    var lisStudentCodeLineObjects =
-      studentCodeLineObjects.filter(function (lineObject) { return !lineObject.lisIgnore; });
-    var inv =
-      LIS.best_lise_inverse_indices(lisStudentCodeLineObjects
-        .map(function (lineObject) { return lineObject.position; }));
+    var lisStudentCodeLineObjects = studentCodeLineObjects.filter(function (
+      lineObject
+    ) {
+      return !lineObject.lisIgnore;
+    });
+    var inv = LIS.best_lise_inverse_indices(
+      lisStudentCodeLineObjects.map(function (lineObject) {
+        return lineObject.position;
+      })
+    );
     $.each(inv, function (_index, lineObjectIndex) {
       // Highlight the lines that could be moved to fix code as defined by the LIS computation
-      !options.skipHighlight && lisStudentCodeLineObjects[lineObjectIndex].markIncorrectPosition();
+      !options.skipHighlight &&
+        lisStudentCodeLineObjects[lineObjectIndex].markIncorrectPosition();
       incorrectLines.push(lisStudentCodeLineObjects[lineObjectIndex].orig);
     });
     if (inv.length > 0 || incorrectLines.length > 0) {
@@ -243,21 +367,26 @@
         if (code_line.indent !== model_line.indent) {
           !options.skipHighlight && code_line.markIncorrectIndent();
           errors.push(parson.translations.block_structure(i + 1));
-          log_errors.push({ type: "incorrectIndent", line: (i + 1) });
+          log_errors.push({ type: "incorrectIndent", line: i + 1 });
         }
         // if (code_line.code == model_line.code &&
         //   code_line.indent == model_line.indent &&
         //   errors.length === 0) {
-        if (code_line.code == model_line.code &&
-          code_line.indent == model_line.indent) {
+        if (
+          code_line.code == model_line.code &&
+          code_line.indent == model_line.indent
+        ) {
           !options.skipHighlight && code_line.markCorrect();
         }
       }
     }
 
-    return { errors: errors, log_errors: log_errors, success: (errors.length === 0) };
+    return {
+      errors: errors,
+      log_errors: log_errors,
+      success: errors.length === 0,
+    };
   };
-
 
   var python_indents = [],
     spaces = "";
@@ -282,16 +411,21 @@
         curr += step;
       }
       return opts;
-    }
+    },
   };
   var addToggleableElements = function (widget, states) {
-    states = states || {}
+    states = states || {};
     for (var i = 0; i < widget.modified_lines.length; i++) {
       widget.modified_lines[i]._addToggles();
     }
     // toggleable elements are only enabled for unit tests
-    if (!widget.options.unittests && !widget.options.vartests) { return; }
-    var handlers = $.extend(defaultToggleTypeHandlers, widget.options.toggleTypeHandlers);
+    if (!widget.options.unittests && !widget.options.vartests) {
+      return;
+    }
+    var handlers = $.extend(
+      defaultToggleTypeHandlers,
+      widget.options.toggleTypeHandlers
+    );
     var trashContext = $("#" + widget.options.trashId);
     var sortableContext = $("#" + widget.options.sortableId);
 
@@ -301,7 +435,9 @@
           $(item).text(states[index]);
         }
         var type = $(item).data("type");
-        if (!type) { return; }
+        if (!type) {
+          return;
+        }
         var handler = handlers[type],
           jspOptions;
         if ($.isFunction(handler)) {
@@ -317,23 +453,28 @@
     updateToggles(trashContext, states.input);
     updateToggles(sortableContext, states.output);
     // register a click handler for all the toggleable elements (and unregister existing)
-    trashContext.add(sortableContext).off("click", ".jsparson-toggle").on("click", ".jsparson-toggle", function () {
-      var $this = $(this),
-        curVal = $this.text(),
-        choices = $this.data("jsp-options"),
-        newVal = choices[(choices.indexOf(curVal) + 1) % choices.length],
-        $parent = $this.parent("li");
-      // clear existing feedback
-      widget.clearFeedback();
-      // change the shown toggle element
-      $this.text(newVal);
-      // log the event
-      widget.addLogEntry({
-        type: "toggle", oldvalue: curVal, newvalue: newVal,
-        target: $parent[0].id,
-        toggleindex: $parent.find(".jsparson-toggle").index($this)
+    trashContext
+      .add(sortableContext)
+      .off("click", ".jsparson-toggle")
+      .on("click", ".jsparson-toggle", function () {
+        var $this = $(this),
+          curVal = $this.text(),
+          choices = $this.data("jsp-options"),
+          newVal = choices[(choices.indexOf(curVal) + 1) % choices.length],
+          $parent = $this.parent("li");
+        // clear existing feedback
+        widget.clearFeedback();
+        // change the shown toggle element
+        $this.text(newVal);
+        // log the event
+        widget.addLogEntry({
+          type: "toggle",
+          oldvalue: curVal,
+          newvalue: newVal,
+          target: $parent[0].id,
+          toggleindex: $parent.find(".jsparson-toggle").index($this),
+        });
       });
-    });
   };
 
   // Create a line object skeleton with only code and indentation from
@@ -348,7 +489,11 @@
       // represent newlines => replace them with actual new line characters "\n"
       // hack - use JS comments
       // this.code = codestring.replace(/#distractor\s*$/, "").replace(trimRegexp, "$1").replace(/\\n/g, "\n");
-      this.code = codestring.replace(/\/\/( |\t)+distractor\s*$/, "").replace(/\/\/distractor\s*$/, "").replace(trimRegexp, "$1").replace(/\\n/g, "\n");
+      this.code = codestring
+        .replace(/\/\/( |\t)+distractor\s*$/, "")
+        .replace(/\/\/distractor\s*$/, "")
+        .replace(trimRegexp, "$1")
+        .replace(/\\n/g, "\n");
       this.indent = codestring.length - codestring.replace(/^\s+/, "").length;
     }
   };
@@ -367,22 +512,32 @@
   };
   //
   ParsonsCodeline.prototype._addToggles = function () {
-    var toggleRegexp = new RegExp("\\$\\$toggle(" + this.widget.options.toggleSeparator + ".*?)?\\$\\$", "g");
+    var toggleRegexp = new RegExp(
+      "\\$\\$toggle(" + this.widget.options.toggleSeparator + ".*?)?\\$\\$",
+      "g"
+    );
     var toggles = this.code.match(toggleRegexp);
     var that = this;
     this._toggles = [];
     if (toggles) {
       var html = this.code;
       for (var i = 0; i < toggles.length; i++) {
-        var opts = toggles[i].substring(10, toggles[i].length - 2).split(this.widget.options.toggleSeparator);
-        html = html.replace(toggles[i], "<span class='jsparson-toggle' data-jsp-options='" +
-          JSON.stringify(opts).replace("<", "&lt;") + "'></span>");
-
+        var opts = toggles[i]
+          .substring(10, toggles[i].length - 2)
+          .split(this.widget.options.toggleSeparator);
+        html = html.replace(
+          toggles[i],
+          "<span class='jsparson-toggle' data-jsp-options='" +
+            JSON.stringify(opts).replace("<", "&lt;") +
+            "'></span>"
+        );
       }
       this.elem().html(html);
-      this.elem().find(".jsparson-toggle").each(function (index, item) {
-        that._toggles.push(item);
-      });
+      this.elem()
+        .find(".jsparson-toggle")
+        .each(function (index, item) {
+          that._toggles.push(item);
+        });
     }
   };
   // Returns the number of toggleable elements in this code block
@@ -392,14 +547,18 @@
   // Returns the index of the currently selected toggle option for the
   // toggle element at given index
   ParsonsCodeline.prototype.selectedToggleIndex = function (index) {
-    if (index < 0 || index >= this._toggles.length) { return -1; }
+    if (index < 0 || index >= this._toggles.length) {
+      return -1;
+    }
     var elem = this._toggles[index];
     var opts = $(elem).data("jsp-options");
     return opts.indexOf(elem.textContent);
   };
   // Returns the value of the toggleable element at the given index (0-based)
   ParsonsCodeline.prototype.toggleValue = function (index) {
-    if (index < 0 || index >= this._toggles.length) { return undefined; }
+    if (index < 0 || index >= this._toggles.length) {
+      return undefined;
+    }
     return this._toggles[index].textContent;
   };
   // expose the type for testing, extending etc
@@ -425,23 +584,23 @@
     this.states = {};
 
     var defaults = {
-      'incorrectSound': false,
-      'x_indent': 50,
-      'can_indent': true,
-      'feedback_cb': false,
-      'first_error_only': true,
-      'max_wrong_lines': 10,
-      'lang': 'en',
-      'toggleSeparator': '::'
+      incorrectSound: false,
+      x_indent: 50,
+      can_indent: true,
+      feedback_cb: false,
+      first_error_only: true,
+      max_wrong_lines: 10,
+      lang: "en",
+      toggleSeparator: "::",
     };
 
     this.options = jQuery.extend({}, defaults, options);
     this.feedback_exists = false;
-    this.id_prefix = options['sortableId'] + 'codeline';
+    this.id_prefix = options["sortableId"] + "codeline";
     if (translations.hasOwnProperty(this.options.lang)) {
       this.translations = translations[this.options.lang];
     } else {
-      this.translations = translations['en'];
+      this.translations = translations["en"];
     }
 
     // translate trash_label and solution_label
@@ -452,23 +611,31 @@
       this.options.solution_label = this.translations.solution_label;
     }
     this.FEEDBACK_STYLES = {
-      'correctPosition': 'correctPosition',
-      'incorrectPosition': 'incorrectPosition',
-      'correctIndent': 'correctIndent',
-      'incorrectIndent': 'incorrectIndent'
+      correctPosition: "correctPosition",
+      incorrectPosition: "incorrectPosition",
+      correctIndent: "correctIndent",
+      incorrectIndent: "incorrectIndent",
     };
 
     // use grader passed as an option if defined and is a function
     // if (this.options.grader && _.isFunction(this.options.grader)) { // descore
-    if (this.options.grader && ((this.options.grader && typeof this.options.grader === "function") ? true : false)) {
+    if (
+      this.options.grader &&
+      (this.options.grader && typeof this.options.grader === "function"
+        ? true
+        : false)
+    ) {
       this.grader = new this.options.grader(this);
     } else {
       // initialize the grader
-      if (typeof (this.options.unittests) !== "undefined") { /// unittests are specified
+      if (typeof this.options.unittests !== "undefined") {
+        /// unittests are specified
         this.grader = new UnitTestGrader(this);
-      } else if (typeof (this.options.vartests) !== "undefined") { /// tests for variable values
+      } else if (typeof this.options.vartests !== "undefined") {
+        /// tests for variable values
         this.grader = new VariableCheckGrader(this);
-      } else { // "traditional" parson feedback
+      } else {
+        // "traditional" parson feedback
         this.grader = new LineBasedGrader(this);
       }
     }
@@ -477,20 +644,27 @@
 
   ////Public methods
 
-
   // hack - copied this in from variable grader for the "debug solution" button
   ParsonsWidget.prototype.getStudentCode = function () {
-    var student_code = this.parson.getModifiedCode("#ul-" + this.parson.options.sortableId);
+    var student_code = this.parson.getModifiedCode(
+      "#ul-" + this.parson.options.sortableId
+    );
     var executableCode = "";
-    $.each(student_code, function (index, item) { // dequery
+    $.each(student_code, function (index, item) {
+      // dequery
       // Array.from(student_code).forEach(function (item) {
       // split codeblocks on br elements
-      var lines = $("#" + item.id).html().split(/<br\s*\/?>/); // dequery
+      var lines = $("#" + item.id)
+        .html()
+        .split(/<br\s*\/?>/); // dequery
       // var lines = document.getElementById(item.id).innerHTML.split(/<br\s*\/?>/);
       // go through all the lines
       for (var i = 0; i < lines.length; i++) {
         // add indents and get the text for the line (to remove the syntax highlight html elements)
-        executableCode += python_indents[item.indent] + $("<span>" + lines[i] + "</span>").text() + "\n"; // dequery
+        executableCode +=
+          python_indents[item.indent] +
+          $("<span>" + lines[i] + "</span>").text() +
+          "\n"; // dequery
         // not yet dequeried because won't be using variable check grader
       }
     });
@@ -526,7 +700,10 @@
       lineObject.orig = index;
       // hack: js comments
       // if (item.search(/#distractor\s*$/) >= 0) {
-      if ((item.search(/\/\/( |\t)+distractor\s*$/) >= 0) || (item.search(/\/\/distractor\s*$/) >= 0)) {
+      if (
+        item.search(/\/\/( |\t)+distractor\s*$/) >= 0 ||
+        item.search(/\/\/distractor\s*$/) >= 0
+      ) {
         // This line is a distractor
         lineObject.indent = -1;
         lineObject.distractor = true;
@@ -573,13 +750,16 @@
       // an array of line objects specifying the initial code arrangement
       // given to the user to use in constructing the solution
       widgetInitial: $.extend(true, [], widgetData),
-      errors: errors
+      errors: errors,
     };
   };
 
   ParsonsWidget.prototype.init = function (text) {
     // TODO: Error handling, parseCode may return errors in an array in property named errors.
-    var initial_structures = this.parseCode(text.split("\n"), this.options.max_wrong_lines);
+    var initial_structures = this.parseCode(
+      text.split("\n"),
+      this.options.max_wrong_lines
+    );
     this.model_solution = initial_structures.solution;
     this.extra_lines = initial_structures.distractors;
     this.modified_lines = initial_structures.widgetInitial;
@@ -594,7 +774,7 @@
 
   ParsonsWidget.prototype.getHash = function (searchString) {
     var hash = [],
-      ids = $(searchString).sortable('toArray'),
+      ids = $(searchString).sortable("toArray"),
       line;
     for (var i = 0; i < ids.length; i++) {
       line = this.getLineById(ids[i]);
@@ -619,27 +799,40 @@
   ParsonsWidget.prototype.whatWeDidPreviously = function () {
     var hash = this.solutionHash();
     var previously = this.states[hash];
-    if (!previously) { return undefined; }
-    var visits = this.state_path.filter(function (state) {
-      return state == hash;
-    }).length - 1;
-    var i, stepsToLast = 0, s,
-      outputStepTypes = ['removeOutput', 'addOutput', 'moveOutput'];
+    if (!previously) {
+      return undefined;
+    }
+    var visits =
+      this.state_path.filter(function (state) {
+        return state == hash;
+      }).length - 1;
+    var i,
+      stepsToLast = 0,
+      s,
+      outputStepTypes = ["removeOutput", "addOutput", "moveOutput"];
     for (i = this.state_path.length - 2; i > 0; i--) {
       s = this.states[this.state_path[i]];
       if (s && outputStepTypes.indexOf(s.type) != -1) {
         stepsToLast++;
       }
-      if (hash === this.state_path[i]) { break; }
+      if (hash === this.state_path[i]) {
+        break;
+      }
     }
-    return $.extend(false, { 'visits': visits, stepsToLast: stepsToLast }, previously);
+    return $.extend(
+      false,
+      { visits: visits, stepsToLast: stepsToLast },
+      previously
+    );
   };
 
   /**
-    * Returns states of the toggles for logging purposes
-    */
+   * Returns states of the toggles for logging purposes
+   */
   ParsonsWidget.prototype._getToggleStates = function () {
-    var context = $("#" + this.options.sortableId + ", #" + this.options.trashId),
+    var context = $(
+        "#" + this.options.sortableId + ", #" + this.options.trashId
+      ),
       toggles = $(".jsparson-toggle", context),
       toggleStates = {};
     $("#" + this.options.sortableId + " .jsparson-toggle").each(function () {
@@ -654,8 +847,10 @@
         toggleStates.input.push($(this).text());
       });
     }
-    if ((toggleStates.output && toggleStates.output.length > 0) ||
-      (toggleStates.input && toggleStates.input.length > 0)) {
+    if (
+      (toggleStates.output && toggleStates.output.length > 0) ||
+      (toggleStates.input && toggleStates.input.length > 0)
+    ) {
       return toggleStates;
     } else {
       return undefined;
@@ -667,7 +862,7 @@
     var logData = {
       time: new Date(),
       output: this.solutionHash(),
-      type: "action"
+      type: "action",
     };
 
     if (this.options.trashId) {
@@ -710,9 +905,10 @@
    * leftDiff horizontal difference from (before and after drag) in px
    ***/
   ParsonsWidget.prototype.updateIndent = function (leftDiff, id) {
-
     var code_line = this.getLineById(id);
-    var new_indent = this.options.can_indent ? code_line.indent + Math.floor(leftDiff / this.options.x_indent) : 0;
+    var new_indent = this.options.can_indent
+      ? code_line.indent + Math.floor(leftDiff / this.options.x_indent)
+      : 0;
     new_indent = Math.max(0, new_indent);
     code_line.indent = new_indent;
 
@@ -753,11 +949,9 @@
       return normalizedLines;
     }
 
-    const rawIndents = lines.map(line => line.indent);
-    const indentMaps = rawIndents
-      .map((val, ind) => [ind, val]);
+    const rawIndents = lines.map((line) => line.indent);
+    const indentMaps = rawIndents.map((val, ind) => [ind, val]);
     indentMaps.sort((a, b) => a[1] - b[1]);
-
 
     let currentNorm = 0;
     let lastVal = indentMaps[0][1];
@@ -769,12 +963,10 @@
       return [map[0], currentNorm];
     });
 
-
     const normalizedIndents = new Array(lines.length);
     for (const map of normalizedMaps) {
       normalizedIndents[map[0]] = map[1];
     }
-
 
     const normalizedLines = [];
     for (var i = 0; i < lines.length; i++) {
@@ -786,7 +978,6 @@
     return normalizedLines;
   };
 
-
   /**
    * Retrieve the code lines based on what is in the DOM
    *
@@ -795,8 +986,9 @@
   ParsonsWidget.prototype.getModifiedCode = function (search_string) {
     //ids of the the modified code
     var lines_to_return = [],
-      solution_ids = $(search_string).sortable('toArray'),
-      i, item;
+      solution_ids = $(search_string).sortable("toArray"),
+      i,
+      item;
     for (i = 0; i < solution_ids.length; i++) {
       item = this.getLineById(solution_ids[i]);
       lines_to_return.push($.extend(new ParsonsCodeline(), item));
@@ -843,7 +1035,6 @@
     return ids;
   };
 
-
   /**
    * TODO(petri) refoctor to UI
    */
@@ -857,9 +1048,6 @@
   ParsonsWidget.prototype.colorFeedback = function (elemId) {
     return new LineBasedGrader(this).grade(null, elemId);
   };
-
-
-
 
   /**
    * @return
@@ -876,11 +1064,20 @@
       $("#ul-" + this.options.sortableId).addClass("correct");
     }
     // log the feedback and return; based on the type of grader
-    if ('html' in fb) { // unittest/vartests type feedback
-      this.addLogEntry({ type: "feedback", tests: fb.tests, success: fb.success });
+    if ("html" in fb) {
+      // unittest/vartests type feedback
+      this.addLogEntry({
+        type: "feedback",
+        tests: fb.tests,
+        success: fb.success,
+      });
       return { feedback: fb.html, success: fb.success };
     } else {
-      this.addLogEntry({ type: "feedback", errors: fb.log_errors, success: fb.success });
+      this.addLogEntry({
+        type: "feedback",
+        errors: fb.log_errors,
+        success: fb.success,
+      });
       return fb.errors;
     }
   };
@@ -895,7 +1092,6 @@
     }
     this.feedback_exists = false;
   };
-
 
   ParsonsWidget.prototype.getRandomPermutation = function (n) {
     var permutation = [];
@@ -914,9 +1110,10 @@
     return permutation;
   };
 
-
   ParsonsWidget.prototype.shuffleLines = function () {
-    var permutation = (this.options.permutation ? this.options.permutation : this.getRandomPermutation)(this.modified_lines.length);
+    var permutation = (this.options.permutation
+      ? this.options.permutation
+      : this.getRandomPermutation)(this.modified_lines.length);
     var idlist = [];
     for (var i in permutation) {
       idlist.push(this.modified_lines[permutation[i]].id);
@@ -929,7 +1126,11 @@
     addToggleableElements(this);
   };
 
-  ParsonsWidget.prototype.createHTMLFromHashes = function (solutionHash, trashHash, toggleStates) {
+  ParsonsWidget.prototype.createHTMLFromHashes = function (
+    solutionHash,
+    trashHash,
+    toggleStates
+  ) {
     var solution = this.hashToIDList(solutionHash);
     var trash = this.hashToIDList(trashHash);
     this.createHTMLFromLists(solution, trash);
@@ -939,49 +1140,66 @@
 
   ParsonsWidget.prototype.updateHTMLIndent = function (codelineID) {
     var line = this.getLineById(codelineID);
-    $('#' + codelineID).css("margin-left", this.options.x_indent * line.indent + "px");
+    $("#" + codelineID).css(
+      "margin-left",
+      this.options.x_indent * line.indent + "px"
+    );
   };
-
 
   ParsonsWidget.prototype.codeLineToHTML = function (codeline) {
     // return '<li id="' + codeline.id + '" class="prettyprint lang-py">' + codeline.code + '<\/li>'; // hack
     // https://stackoverflow.com/a/24631113
     function escapeHTML(string) {
-      var pre = document.createElement('pre');
+      var pre = document.createElement("pre");
       var text = document.createTextNode(string);
       pre.appendChild(text);
       return pre.innerHTML;
     }
-    `<pre><code class="language-css">p { color: red }</code></pre>`
-    return '<li id="' + codeline.id + `"><pre class="language-${this.options.language} no-line-numbers" style="font-size: 70%;"><code>` + escapeHTML(codeline.code) + '</code></pre></li>';
+    `<pre><code class="language-css">p { color: red }</code></pre>`;
+    return (
+      '<li id="' +
+      codeline.id +
+      `"><pre class="language-${this.options.language} no-line-numbers" style="font-size: 70%;"><code>` +
+      escapeHTML(codeline.code) +
+      "</code></pre></li>"
+    );
     // return '<li id="' + codeline.id + `"><pre class="language-${this.options.language} no-line-numbers" style="font-size: 70%;"><code>` + (this.options.language === 'html' ? escapeHTML(codeline.code) : codeline.code) + '</code></pre></li>';
     // return '<li id="' + codeline.id + `" class="prettyprint lang-${this.options.language}">` + (this.options.language === 'html' ? escapeHTML(codeline.code) : codeline.code) + '</li>';
   };
 
-  ParsonsWidget.prototype.codeLinesToHTML = function (codelineIDs, destinationID) {
+  ParsonsWidget.prototype.codeLinesToHTML = function (
+    codelineIDs,
+    destinationID
+  ) {
     var lineHTML = [];
     for (var id in codelineIDs) {
       var line = this.getLineById(codelineIDs[id]);
       lineHTML.push(this.codeLineToHTML(line));
     }
-    return '<ul id="ul-' + destinationID + '">' + lineHTML.join('') + '</ul>';
+    return '<ul id="ul-' + destinationID + '">' + lineHTML.join("") + "</ul>";
   };
 
   /** modifies the DOM by inserting exercise elements into it */
-  ParsonsWidget.prototype.createHTMLFromLists = function (solutionIDs, trashIDs) {
+  ParsonsWidget.prototype.createHTMLFromLists = function (
+    solutionIDs,
+    trashIDs
+  ) {
     var html;
     if (this.options.trashId) {
-      html = (this.options.trash_label ? '<p>' + this.options.trash_label + '</p>' : '') +
-        this.codeLinesToHTML(trashIDs, this.options.trashId);
+      html =
+        (this.options.trash_label
+          ? "<p>" + this.options.trash_label + "</p>"
+          : "") + this.codeLinesToHTML(trashIDs, this.options.trashId);
       $("#" + this.options.trashId).html(html);
-      html = (this.options.solution_label ? '<p>' + this.options.solution_label + '</p>' : '') +
-        this.codeLinesToHTML(solutionIDs, this.options.sortableId);
+      html =
+        (this.options.solution_label
+          ? "<p>" + this.options.solution_label + "</p>"
+          : "") + this.codeLinesToHTML(solutionIDs, this.options.sortableId);
       $("#" + this.options.sortableId).html(html);
     } else {
       html = this.codeLinesToHTML(solutionIDs, this.options.sortableId);
       $("#" + this.options.sortableId).html(html);
     }
-
 
     // allow to use https://github.com/google/code-prettify/
     // var prettyPrint = window.PR.prettyPrint || window.prettyPrint;
@@ -998,47 +1216,56 @@
     // }
 
     var that = this;
-    var sortable = $("#ul-" + this.options.sortableId).sortable(
-      {
-        start: function () { that.clearFeedback(); },
-        stop: function (event, ui) {
-          if ($(event.target)[0] != ui.item.parent()[0]) {
-            return;
-          }
-          that.updateIndent(ui.position.left - ui.item.parent().position().left,
-            ui.item[0].id);
-          that.updateHTMLIndent(ui.item[0].id);
-          that.addLogEntry({ type: "moveOutput", target: ui.item[0].id }, true);
-        },
-        receive: function (event, ui) {
-          var ind = that.updateIndent(ui.position.left - ui.item.parent().position().left,
-            ui.item[0].id);
-          that.updateHTMLIndent(ui.item[0].id);
-          that.addLogEntry({ type: "addOutput", target: ui.item[0].id }, true);
-        },
-        grid: that.options.can_indent ? [that.options.x_indent, 1] : false
-      });
+    var sortable = $("#ul-" + this.options.sortableId).sortable({
+      start: function () {
+        that.clearFeedback();
+      },
+      stop: function (event, ui) {
+        if ($(event.target)[0] != ui.item.parent()[0]) {
+          return;
+        }
+        that.updateIndent(
+          ui.position.left - ui.item.parent().position().left,
+          ui.item[0].id
+        );
+        that.updateHTMLIndent(ui.item[0].id);
+        that.addLogEntry({ type: "moveOutput", target: ui.item[0].id }, true);
+      },
+      receive: function (event, ui) {
+        var ind = that.updateIndent(
+          ui.position.left - ui.item.parent().position().left,
+          ui.item[0].id
+        );
+        that.updateHTMLIndent(ui.item[0].id);
+        that.addLogEntry({ type: "addOutput", target: ui.item[0].id }, true);
+      },
+      grid: that.options.can_indent ? [that.options.x_indent, 1] : false,
+    });
     sortable.addClass("output");
 
     if (this.options.trashId) {
-      var trash = $("#ul-" + this.options.trashId).sortable(
-        {
-          connectWith: sortable,
-          start: function () { that.clearFeedback(); },
-          receive: function (event, ui) {
-            that.getLineById(ui.item[0].id).indent = 0;
-            that.updateHTMLIndent(ui.item[0].id);
-            that.addLogEntry({ type: "removeOutput", target: ui.item[0].id }, true);
-          },
-          stop: function (event, ui) {
-            if ($(event.target)[0] != ui.item.parent()[0]) {
-              // line moved to output and logged there
-              return;
-            }
-            that.addLogEntry({ type: "moveInput", target: ui.item[0].id }, true);
+      var trash = $("#ul-" + this.options.trashId).sortable({
+        connectWith: sortable,
+        start: function () {
+          that.clearFeedback();
+        },
+        receive: function (event, ui) {
+          that.getLineById(ui.item[0].id).indent = 0;
+          that.updateHTMLIndent(ui.item[0].id);
+          that.addLogEntry(
+            { type: "removeOutput", target: ui.item[0].id },
+            true
+          );
+        },
+        stop: function (event, ui) {
+          if ($(event.target)[0] != ui.item.parent()[0]) {
+            // line moved to output and logged there
+            return;
           }
-        });
-      sortable.sortable('option', 'connectWith', trash);
+          that.addLogEntry({ type: "moveInput", target: ui.item[0].id }, true);
+        },
+      });
+      sortable.sortable("option", "connectWith", trash);
     }
     // Log the original codelines in the exercise in order to be able to
     // match the input/output hashes to the code later on. We need only a
@@ -1046,9 +1273,9 @@
     var bindings = [];
     for (var i = 0; i < this.modified_lines.length; i++) {
       var line = this.modified_lines[i];
-      bindings.push({ code: line.code, distractor: line.distractor })
+      bindings.push({ code: line.code, distractor: line.distractor });
     }
-    this.addLogEntry({ type: 'init', time: new Date(), bindings: bindings });
+    this.addLogEntry({ type: "init", time: new Date(), bindings: bindings });
   };
 
   ParsonsWidget.prototype.getStudentCode = function () {
@@ -1072,12 +1299,13 @@
       var indents = repeatStringNumTimes("  ", item.indent);
       lines.push(indents + text);
     });
-    return lines.join('\n');
+    return lines.join("\n");
   };
 
-  window['ParsonsWidget'] = ParsonsWidget;
-}
+  window["ParsonsWidget"] = ParsonsWidget;
+})(
   // allows _ and $ to be modified with noconflict without changing the globals
   // that parsons uses
   // )($, _); // descore
-)($);
+  $
+);

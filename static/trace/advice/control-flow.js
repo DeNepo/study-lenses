@@ -89,6 +89,8 @@ export default {
     let controlName = "";
     if (state.node.type === "IfStatement") {
       controlName = "if";
+    } else if (state.node.type === "SwitchStatement") {
+      controlName = "switch";
     } else if (state.node.type === "SwitchCase") {
       controlName = "case";
     } else if (state.node.type === "WhileStatement") {

@@ -48,7 +48,7 @@ class CodeSSR {
   }
 
   code() {
-    return `<div id='editor-container' style='height: 90vh'></div>`;
+    return `<div id='editor-container' style='height: 95vh'></div>`;
   }
 
   configScript() {

@@ -1,3 +1,26 @@
+// Error.captureStackTrace pollyfill
+//  https://github.com/floatdrop/capture-stack-trace/commit/69a3a4c53ffdc007753fd5a7d06fe405b22ab2e1
+
+if (typeof Error.captureStackTrace !== "function") {
+  Error.captureStackTrace = function (error) {
+    var container = new Error();
+
+    Object.defineProperty(error, "stack", {
+      configurable: true,
+      get: function getStack() {
+        var stack = container.stack;
+
+        Object.defineProperty(this, "stack", {
+          value: stack,
+        });
+
+        return stack;
+      },
+    });
+  };
+}
+
+
 // pulled from: git@github.com:plondon/jest-lite.git
 
 (window.expect = window.expect || {}),

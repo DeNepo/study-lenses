@@ -29,6 +29,7 @@ class JavaScriptSSR extends CodeSSR {
       </script>
       <script src='${this.config.sharedStatic}/prettier/standalone.js'></script>
       <script src='${this.config.sharedStatic}/prettier/parser-babel.js'></script>
+      <script src='${this.config.sharedStatic}/ask/component/ask-me.js' type='module'></script>
       <script src='${this.config.sharedStatic}/trace/aran-build.js'></script>
       <script src='${this.config.sharedStatic}/trace/index.js' type='module'></script>
       <script src='${this.config.sharedStatic}/trace/trace-init.js' type='module'></script>
@@ -65,6 +66,11 @@ class JavaScriptSSR extends CodeSSR {
       <input id='open-in-input' type='checkbox' ${
         this.config.locals.openIn ? "checked" : ""
       } /> <label for='open-in-input'>open in ...</label>
+    </form>
+    <form>
+      <input id='ask-input' type='checkbox' ${
+        this.config.locals.ask ? "checked" : ""
+      } /> <label for='ask-input'>ask me</label>
     </form>
     <form>
       <input id='p5-input' type='checkbox' ${
@@ -127,7 +133,6 @@ class JavaScriptSSR extends CodeSSR {
       <button id='ast-button' style='display: ${astDisplay};'>syntax tree</button>`;
 
     superPanel += `
-
     <br>  <div>
     <form id='environment-form' style='display: ${
       locals.environment ? "inline-block" : "none"
@@ -232,6 +237,12 @@ class JavaScriptSSR extends CodeSSR {
         </select>
       </form>`;
     // }
+
+    const askDisplay = locals.ask ? "inline-block" : "none";
+    superPanel += `
+    <div id='ask-container' style='display: ${askDisplay};'>
+      <ask-me></ask-me>
+    </div>`;
 
     const p5Display = locals.p5 ? "inline-block" : "none";
     superPanel += `

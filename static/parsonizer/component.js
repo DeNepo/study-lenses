@@ -36,10 +36,16 @@ class JSParsons extends HTMLElement {
       .split(distractorReplacer)
       .join("// distractor");
 
-    this.code = strippedCode;
+    this.code = strippedCode.replace("\\", "\\ ");
   }
 
   async connectedCallback() {
+    function displayErrors(fb) {
+      if (fb.errors.length > 0) {
+        alert(fb.errors.toString());
+      }
+    }
+
     if (this.blockComments) {
       const blockCommentContainer = document.createElement("div");
       this.appendChild(blockCommentContainer);
@@ -47,15 +53,31 @@ class JSParsons extends HTMLElement {
         if (!blockComment) {
           continue;
         }
-        const commentPre = document.createElement("pre");
-        commentPre.innerHTML = blockComment;
-        blockCommentContainer.appendChild(commentPre);
-      }
-    }
 
-    function displayErrors(fb) {
-      if (fb.errors.length > 0) {
-        alert(fb.errors.toString());
+        const commentPre = document.createElement("pre");
+
+        const toCollapse = blockComment.match(/parsons\-collapse\:.*/gim);
+        if (toCollapse) {
+          const summaryText = toCollapse[0].replace(
+            /parsons\-collapse\:/gim,
+            ""
+          );
+          const summaryEl = document.createElement("summary");
+          summaryEl.innerHTML = summaryText;
+
+          const preText = blockComment.replace(toCollapse[0], "");
+          const preEl = document.createElement("pre");
+          preEl.innerHTML = preText;
+
+          const details = document.createElement("details");
+          details.appendChild(summaryEl);
+          details.appendChild(preEl);
+
+          blockCommentContainer.appendChild(details);
+        } else {
+          commentPre.innerHTML = blockComment;
+          blockCommentContainer.appendChild(commentPre);
+        }
       }
     }
 
@@ -67,8 +89,8 @@ class JSParsons extends HTMLElement {
     const parsonsButtons = document.createElement("div");
     buttonsContainer.appendChild(parsonsButtons);
 
-    parsonsButtons.appendChild(document.createElement("br"));
-    parsonsButtons.appendChild(document.createElement("br"));
+    // parsonsButtons.appendChild(document.createElement("br"));
+    // parsonsButtons.appendChild(document.createElement("br"));
 
     const newInstanceButton = document.createElement("button");
     newInstanceButton.innerHTML = "new instance";
