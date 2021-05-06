@@ -273,7 +273,7 @@ export class CodeFE {
     return selection;
   }
 
-  openSelectionWith(queryKey, code = "") {
+  openSelectionWith(queryKey, code = "", cb) {
     const selectedCode = code || getMonacoSelection(this.editor);
     code = code || selectedCode || this.editor.getValue();
 
@@ -301,9 +301,13 @@ export class CodeFE {
     const url =
       window.location.origin +
       window.location.pathname +
-      (selectedCode
+      (queryValue
         ? `?${queryKey}&--resource=${stringifiedResource}`
         : `?${queryKey}=${queryValue}&--resource=${stringifiedResource}`);
-    window.open(url, "_blank");
+    if (typeof cb === "function") {
+      cb(url);
+    } else {
+      window.open(url, "_blank");
+    }
   }
 }

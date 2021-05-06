@@ -7,7 +7,7 @@
   - entering membrane territory
   ie. splice array - proxify array to trace changes
     more protection - weakmap from proxy to arrays
-
+http://matt.might.net/articles/cesk-machines/
 
 
 

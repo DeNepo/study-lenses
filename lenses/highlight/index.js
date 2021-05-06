@@ -81,7 +81,7 @@ const highlightLense = async ({ resource, config }) => {
     }
 
     ${
-      resource.info.ext === ".js"
+      config.locals.ask && resource.info.ext === ".js"
         ? `<button><ask-me style=''></ask-me></button>`
         : ""
     }

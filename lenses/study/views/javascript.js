@@ -107,6 +107,11 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.variables ? "checked" : ""
       } /> <label for='variables-input'>variables</label>
     </form>
+    <form>
+      <input id='eslint-input' type='checkbox' ${
+        this.config.locals.eslint ? "checked" : ""
+      } /> <label for='eslint-input'>eslint</label>
+    </form>
     ` + superConfigOptions
     );
   }
@@ -190,6 +195,13 @@ class JavaScriptSSR extends CodeSSR {
         } />
         <label for='tests'>tests</label>
       </form>`;
+
+    // if (locals.eval) {
+    const eslintDisplay = locals.eslint ? "inline-block" : "none";
+    superPanel += `
+    <div id='eslint-container' style='display: ${eslintDisplay};'>
+      <button id='eslint-button'>eslint</button>
+    </div>`;
 
     superPanel += "</div>";
 

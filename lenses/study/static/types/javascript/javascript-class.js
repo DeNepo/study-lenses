@@ -196,6 +196,22 @@ export class JavaScriptFE extends CodeFE {
       }
     });
 
+    const eslintContainer = document.getElementById("eslint-container");
+    document
+      .getElementById("eslint-input")
+      .addEventListener("change", (event) => {
+        this.config.locals.eslint = !this.config.locals.eslint;
+        if (event.target.checked) {
+          eslintContainer.style = "display: inline-block;";
+        } else {
+          eslintContainer.style = "display: none;";
+        }
+      });
+
+    document
+      .getElementById("eslint-button")
+      .addEventListener("click", () => this.studyWith("eslint"));
+
     const p5Container = document.getElementById("p5-container");
     document.getElementById("p5-input").addEventListener("change", (event) => {
       this.config.locals.p5 = !this.config.locals.p5;
@@ -375,6 +391,17 @@ export class JavaScriptFE extends CodeFE {
   }
 
   studyWith(environment) {
+    if (environment === "eslint") {
+      const lintCode = (url) =>
+        fetch(url)
+          .then((res) => res.text())
+          .then((lintResult) => console.log(lintResult))
+          .catch((err) => console.error(err));
+
+      this.openSelectionWith(environment, this.editor.getValue(), lintCode);
+      return;
+    }
+
     if (environment === "acorn") {
       try {
         console.log(Acorn.parse(this.editor.getValue(), { locations: true }));
