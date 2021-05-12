@@ -31,6 +31,17 @@ export default {
     const line = state.node.loc.start.line;
     const col = state.node.loc.start.column;
 
+    // console.log(f, t, xs, serial, state.aran.nodes[serial]);
+    // don't trace implicit object coercion of primitives
+    if (
+      state.node.callee &&
+      state.node.callee.object &&
+      (state.node.callee.object.type === "Literal" || t === undefined) &&
+      f.name === "Object"
+    ) {
+      return Reflect.apply(f, t, xs);
+    }
+
     const commaSeparatedArgs = [];
     for (const arg of xs) {
       commaSeparatedArgs.push(arg);

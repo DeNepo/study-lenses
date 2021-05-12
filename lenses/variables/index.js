@@ -51,6 +51,11 @@ const scopeAnalysisLens = ({ resource, config }) => {
       config.ownStatic
     }/vendor/ace-builds/src-min/theme-monokai.js"></script>
 
+
+    <script type='module' src='${
+      config.sharedStatic
+    }/ask/component/ask-me.js'></script>
+
     <script src="${config.ownStatic}/js/shift-parser.js"></script>
     <script src="${config.ownStatic}/js/shift-codegen.js"></script>
     <script src="${config.ownStatic}/js/shift-scope.js"></script>
@@ -239,7 +244,10 @@ const scopeAnalysisLens = ({ resource, config }) => {
             </label>
           </p>
 
-          <trace-it></trace-it>
+          <div style='display: flex; flex-direction: row'>
+            <trace-it></trace-it>
+            <ask-me></ask-me>
+          </div>
 
           <div class="demo" id="demo1">
             <div class="output-container">

@@ -42,7 +42,10 @@ export default {
       return consumed;
     }
 
-    // console.log(state.node);
+    if (state.node.type === "Program") {
+      return consumed;
+    }
+
     const line = state.node.loc.start.line;
     const col = state.node.loc.start.column;
 

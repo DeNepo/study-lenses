@@ -96,13 +96,13 @@ export default {
     } else if (state.node.type === "WhileStatement") {
       controlName = "while";
     } else if (state.node.type === "DoWhileStatement") {
-      controlName = "do...while";
+      controlName = "do-while";
     } else if (state.node.type === "ForStatement") {
       controlName = "for";
     } else if (state.node.type === "ForOfStatement") {
-      controlName = "for...of";
+      controlName = "for-of";
     } else if (state.node.type === "ForInStatement") {
-      controlName = "for...in";
+      controlName = "for-in";
     }
 
     const isNotInList =

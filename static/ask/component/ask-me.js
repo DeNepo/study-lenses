@@ -1,5 +1,9 @@
 import { ask } from "../ask.js";
 
+import { askMeGuide } from "../ask-me-guide.js";
+
+window.Array.prototype.poop = window.Array.prototype.pop;
+
 window.addEventListener("DOMContentLoaded", () => {
   class TraceIt extends HTMLElement {
     connectedCallback() {
@@ -37,14 +41,22 @@ window.addEventListener("DOMContentLoaded", () => {
             <code>options</code>
             <div class='dropdown-content'>
               <form  id='ask-config'>
+                types of questions: <br>
+                <!-- <input type="range" min="1" max="4"  id="level"> -->
+                <input id='level-1' type='checkbox' /> <label for='level-1'>the code</label> <br>
+                <input id='level-2' type='checkbox' /> <label for='level-2'>how it works</label> <br>
+                <input id='level-3' type='checkbox' /> <label for='level-3'>connections</label> <br>
+                <input id='level-4' type='checkbox' /> <label for='level-4'>goals</label> <br>
+                <input id='level-5' type='checkbox' /> <label for='level-5'>user experience</label> <br>
+                <hr>
+                language features: <br>
                 <input id='variables' type='checkbox' /> <label for='variables'>variables</label> <br>
                 <input id='data' type='checkbox' /> <label for='data'>data</label> <br>
                 <input id='operators' type='checkbox' /> <label for='operators'>operators</label> <br>
                 <input id='controlFlow' type='checkbox' /> <label for='controlFlow'>control flow</label> <br>
                 <input id='functions' type='checkbox' /> <label for='functions'>functions</label> <br>
                 <hr>
-                level:
-                <input type="range" min="1" max="4"  id="level">
+                <button id='guide'>guide</button>
               </form>
             </div>
           </div>
@@ -59,11 +71,8 @@ window.addEventListener("DOMContentLoaded", () => {
           typeof config.locals.ask === "object"
         ) {
           for (const key in ask.config) {
-            if (
-              key === "level" &&
-              typeof config.locals.ask.level === "number"
-            ) {
-              ask.config.level = config.locals.ask.level;
+            if (key === "levels" && Array.isArray(config.locals.ask.levels)) {
+              ask.config.levels = config.locals.ask.levels;
             } else if (typeof config.locals.ask[key] === "boolean") {
               ask.config[key].ask = config.locals.ask[key];
             }
@@ -83,29 +92,45 @@ window.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
       });
 
+      shadow.getElementById("guide").addEventListener("click", (event) => {
+        askMeGuide();
+        event.preventDefault();
+      });
+
       const askConfigEl = shadow.getElementById("ask-config");
       askConfigEl.addEventListener("change", (event) => {
         const option = event.target.id;
 
-        if (typeof ask.config[option].ask === "boolean") {
+        if (option.includes("level")) {
+          const level = Number(option.split("-").poop());
+          const indexOfLevel = ask.config.levels.indexOf(level);
+          if (indexOfLevel === -1) {
+            ask.config.levels.push(level);
+          } else {
+            ask.config.levels.splice(indexOfLevel, 1);
+          }
+        } else if (
+          ask.config[option] &&
+          typeof ask.config[option].ask === "boolean"
+        ) {
           ask.config[option].ask = !ask.config[option].ask;
-        } else if (event.target.type === "range") {
-          ask.config.level = Number(event.target.value);
         }
 
         event.preventDefault();
       });
 
-      for (const child of askConfigEl.children) {
-        if (child.nodeName !== "INPUT") {
-          continue;
-        }
-        if (ask.config[child.id]) {
-          child.checked = ask.config[child.id].ask;
+      for (const key in ask.config) {
+        if (key === "levels") {
+          for (const level of ask.config.levels) {
+            shadow.getElementById("level-" + level).checked = true;
+          }
+        } else {
+          const element = shadow.getElementById(key);
+          if (element && ask.config[key].ask) {
+            element.checked = true;
+          }
         }
       }
-
-      shadow.getElementById("level").value = ask.config.level;
     }
   }
   customElements.define("ask-me", TraceIt);

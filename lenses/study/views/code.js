@@ -40,7 +40,9 @@ class CodeSSR {
     <br><br>
     selection:
     <button id='highlight-selection-button'>highlight</button>
-    <button id='parsonize-selection-button'>parsonize</button>
+    <button id='parsonize-selection-button' style='display: ${
+      this.config.locals.parsons === false ? "none" : "inline-block"
+    };'>parsonize</button>
     <button id='diff-selection-button' style='display: ${
       this.config.locals.diff ? "inline-block" : "none"
     };'>diff</button>

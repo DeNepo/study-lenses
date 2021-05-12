@@ -22,6 +22,7 @@ const linePrefix = (line, col = null) => {
       `line ${lineNumberString}:${
         typeof col === "number" ? colNumberString : ""
       } -` + prefix;
+    // prefix = `line${lineNumberString} -` + prefix;
   }
 
   if (config.steps) {

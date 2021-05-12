@@ -33,6 +33,9 @@ class JavaScriptSSR extends CodeSSR {
       <script src='${this.config.sharedStatic}/trace/aran-build.js'></script>
       <script src='${this.config.sharedStatic}/trace/index.js' type='module'></script>
       <script src='${this.config.sharedStatic}/trace/trace-init.js' type='module'></script>
+      <script src='${this.config.sharedStatic}/parsonizer/jquery.min.js'></script>
+      <script src='${this.config.sharedStatic}/parsonizer/jquery-ui.min.js'></script>
+      <script src='${this.config.sharedStatic}/wc-trace-table/configurable-button.js' type='module'></script>
       <!-- <script src='${this.config.sharedStatic}/trace/shadow-state.js'></script> -->`
     );
   }
@@ -51,16 +54,20 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.run || this.config.locals.eval ? "checked" : ""
       } /> <label for='run-input'>run</label>
     </form>
-
-    ${`<form>
-      <input id='trace-input' type='checkbox' ${
-        this.config.locals.trace ? "checked" : ""
-      } /> <label for='trace-input'>trace</label>
-    </form>`}
     <form>
       <input id='debug-input' type='checkbox' ${
         this.config.locals.debug || this.config.locals.eval ? "checked" : ""
       } /> <label for='debug-input'>debug</label>
+    </form>
+    <form>
+      <input id='trace-input' type='checkbox' ${
+        this.config.locals.trace ? "checked" : ""
+      } /> <label for='trace-input'>trace</label>
+    </form>
+    <form>
+      <input id='table-input' type='checkbox' ${
+        this.config.locals.table ? "checked" : ""
+      } /> <label for='table-input'>trace table</label>
     </form>
     <form>
       <input id='open-in-input' type='checkbox' ${
@@ -228,6 +235,18 @@ class JavaScriptSSR extends CodeSSR {
       <trace-it></trace-it>
     </div>`;
 
+    const tableDisplay = locals.table ? "inline-block" : "none";
+    superPanel += `
+    <div id='table-container' style='display: ${tableDisplay};'>
+      <trace-table-button></trace-table-button>
+    </div>`;
+
+    const askDisplay = locals.ask ? "inline-block" : "none";
+    superPanel += `
+    <div id='ask-container' style='display: ${askDisplay};'>
+      <ask-me></ask-me>
+    </div>`;
+
     // }
     // if (locals.openIn) {
     const openInDisplay = locals.openIn ? "inline-block" : "none";
@@ -249,12 +268,6 @@ class JavaScriptSSR extends CodeSSR {
         </select>
       </form>`;
     // }
-
-    const askDisplay = locals.ask ? "inline-block" : "none";
-    superPanel += `
-    <div id='ask-container' style='display: ${askDisplay};'>
-      <ask-me></ask-me>
-    </div>`;
 
     const p5Display = locals.p5 ? "inline-block" : "none";
     superPanel += `

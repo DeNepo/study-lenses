@@ -37,41 +37,53 @@ const parsonsLense = ({ resource, config }) => {
 
   let frontendConfig = { ext };
 
-  if (config.queryValue.hasOwnProperty("eval")) {
+  if (config.queryValue.eval !== undefined) {
     frontendConfig.eval = config.queryValue.eval;
   } else {
     frontendConfig.eval = config.locals.eval;
   }
-  if (config.queryValue.hasOwnProperty("run")) {
+  if (config.queryValue.run !== undefined) {
     frontendConfig.run = config.queryValue.run;
   } else {
     frontendConfig.run = config.locals.run;
   }
 
-  if (config.queryValue.hasOwnProperty("trace")) {
+  if (config.queryValue.study !== undefined) {
+    frontendConfig.study = config.queryValue.study;
+  } else {
+    frontendConfig.study = config.locals.study;
+  }
+
+  if (config.queryValue.table !== undefined) {
+    frontendConfig.table = config.queryValue.table;
+  } else {
+    frontendConfig.table = config.locals.table;
+  }
+
+  if (config.queryValue.trace !== undefined) {
     frontendConfig.trace = config.queryValue.trace;
   } else {
     frontendConfig.trace = config.locals.trace;
   }
-  if (config.queryValue.hasOwnProperty("debug")) {
+  if (config.queryValue.debug !== undefined) {
     frontendConfig.debug = config.queryValue.debug;
   } else {
     frontendConfig.debug = config.locals.debug;
   }
 
-  if (config.queryValue.hasOwnProperty("openIn")) {
+  if (config.queryValue.openIn !== undefined) {
     frontendConfig.openIn = config.queryValue.openIn;
   } else {
     frontendConfig.openIn = config.locals.openIn;
   }
 
-  if (config.queryValue.hasOwnProperty("flowchart")) {
+  if (config.queryValue.flowchart !== undefined) {
     frontendConfig.flowchart = config.queryValue.flowchart;
   } else {
     frontendConfig.flowchart = config.locals.flowchart;
   }
 
-  if (config.queryValue.hasOwnProperty("loopGuard")) {
+  if (config.queryValue.loopGuard !== undefined) {
     frontendConfig.loopGuard = config.queryValue.loopGuard;
   } else {
     frontendConfig.loopGuard = config.locals.loopGuard;
@@ -105,6 +117,10 @@ const parsonsLense = ({ resource, config }) => {
   <link rel="stylesheet" href="${config.sharedStatic}/prism/style.css">
   <link rel="stylesheet" href="${config.sharedStatic}/parsonizer/parsons.css">
 
+    <script src='${
+      config.sharedStatic
+    }/wc-trace-table/configurable-button.js' type='module'></script>
+
 
 </head>
 
@@ -137,8 +153,8 @@ const parsonsLense = ({ resource, config }) => {
   </script>
 
 
-    <script src='${config.sharedStatic}/trace/aran-build.js'></script>
-    <script src='${config.sharedStatic}/trace/index.js' type='module'></script>
+  <script src='${config.sharedStatic}/trace/aran-build.js'></script>
+  <script src='${config.sharedStatic}/trace/index.js' type='module'></script>
 
 
 

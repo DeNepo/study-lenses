@@ -11,26 +11,14 @@ import { print } from "./lib/trace-log.js";
 
 window.trace = (code) => {
   const iframe = document.createElement("iframe");
+  iframe.style.display = "none";
   iframe.onload = () => {
     iframe.contentWindow.ADVICE = ADVICE;
 
     iframe.contentWindow.aran = Aran({ namespace: "ADVICE" });
     const aran = iframe.contentWindow.aran;
     state.aran = iframe.contentWindow.aran;
-    // iframe.contentWindow = new Proxy(iframe.contentWindow, {
-    //   set: function (obj, prop, value) {
-    //     console.log("set", prop);
-    //     // The default behavior to store the value
-    //     obj[prop] = value;
 
-    //     // Indicate success
-    //     return true;
-    //   },
-    //   get: function (obj, prop) {
-    //     console.log("get", prop);
-    //     return obj[prop];
-    //   },
-    // });
     state.window = iframe.contentWindow;
     // state.console = iframe.contentWindow.console;
 
@@ -49,52 +37,8 @@ window.trace = (code) => {
     }
 
     iframe.contentWindow.ADVICE.builtins.global.console = console;
-    state.initialGlobals = Object.entries(
-      iframe.contentWindow.ADVICE.builtins.global
-    );
-    // iframe.contentWindow.ADVICE.builtins.global = new Proxy(
-    //   iframe.contentWindow.ADVICE.builtins.global,
-    //   {
-    //     set: function (obj, prop, value) {
-    //       // if (
-    //       //   !state.initialGlobals.find(
-    //       //     (entry) => entry[0] === prop && Object.is(entry[1], value)
-    //       //   )
-    //       // ) {
-    //       // const line = state.node.loc.start.line;
-    //       // const col = state.node.loc.start.column;
-    //       print({
-    //         prefix: "",
-    //         logs: [
-    //           // (state.node.left ? state.node.left.name : variable) +
-    //           "window." + prop + " (assign):",
-    //           value,
-    //         ],
-    //       });
-    //       // }
-    //       // The default behavior to store the value
-    //       obj[prop] = value;
-
-    //       // Indicate success
-    //       return true;
-    //     },
-    //     get: function (obj, prop) {
-    //       const value = obj[prop];
-    //       // if (!state.initialGlobals.find((entry) => entry[0] === prop)) {
-    //       // const line = state.node.loc.start.line;
-    //       // const col = state.node.loc.start.column;
-    //       print({
-    //         prefix: "",
-    //         logs: [
-    //           // (state.node.left ? state.node.left.name : variable) +
-    //           "window." + prop + " (read):",
-    //           value,
-    //         ],
-    //       });
-    //       // }
-    //       return value;
-    //     },
-    //   }
+    // state.initialGlobals = Object.entries(
+    //   iframe.contentWindow.ADVICE.builtins.global
     // );
 
     iframe.contentWindow.trace = (code) => {
@@ -109,14 +53,18 @@ window.trace = (code) => {
       try {
         // estree1 = Acorn.parse("(() => {" + code + "})()", { locations: true });
         estree1 = Acorn.parse(code, { locations: true });
-      } catch (err) {
-        console.log(
-          "%c" + err.name + ": ",
-          "color:red; font-weight: bold;",
-          err.message
-        );
-        console.log("-> creation phase");
+      } catch (_) {
+        // console.log(
+        //   "%c" + err.name + ": ",
+        //   "color:red; font-weight: bold;",
+        //   err.message
+        // );
+        console.log("%c-> creation phase error:", "font-weight:bold;");
+
         parentDocument.body.removeChild(iframe);
+
+        eval(code);
+
         return;
       }
       // console.log(estree1);
@@ -174,8 +122,6 @@ window.trace = (code) => {
       } catch (o_0) {
         // console.error(o_0);
       }
-
-      parentDocument.body.removeChild(iframe);
 
       // }
     };

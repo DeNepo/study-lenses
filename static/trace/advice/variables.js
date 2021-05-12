@@ -74,12 +74,13 @@ export default {
     if (!isInRange(state.node)) {
       return value;
     }
-
+    // console.log(1);
     // console.log(state.node);
 
     if (!config.variablesRead) {
       return value;
     }
+    // console.log(2);
     if (
       config.variablesList.length !== 0 &&
       // !config.variablesList.find((query) => new RegExp(query).test(variable))
@@ -87,10 +88,12 @@ export default {
     ) {
       return value;
     }
+    // console.log(3);
     // because aran encodes generated variables as number strings
     if (!isNaN(variable)) {
       return value;
     }
+    // console.log(4);
     const line = state.node.loc.start.line;
     const col = state.node.loc.start.column;
     print({
@@ -163,7 +166,6 @@ export default {
               " (" +
               (state.node.kind === "var" ? "assign" : "initialize") +
               "):",
-            ,
             value,
           ],
         });

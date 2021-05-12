@@ -244,6 +244,18 @@ export class JavaScriptFE extends CodeFE {
       }
     });
 
+    const tableContainer = document.getElementById("table-container");
+    document
+      .getElementById("table-input")
+      .addEventListener("change", (event) => {
+        this.config.locals.table = !this.config.locals.table;
+        if (event.target.checked) {
+          tableContainer.style = "display: inline-block;";
+        } else {
+          tableContainer.style = "display: none;";
+        }
+      });
+
     const debugContainer = document.getElementById("debug-container");
     document
       .getElementById("debug-input")

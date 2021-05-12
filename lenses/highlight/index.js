@@ -8,6 +8,16 @@ const highlightLense = async ({ resource, config }) => {
     <script type='module' src='${
       config.sharedStatic
     }/ask/component/ask-me.js'></script>
+
+    <script src='${
+      config.sharedStatic
+    }/wc-open-in/index.js' type='module'></script>
+
+    <script src='${config.sharedStatic}/parsonizer/jquery.min.js'></script>
+    <script src='${config.sharedStatic}/parsonizer/jquery-ui.min.js'></script>
+    <script src='${
+      config.sharedStatic
+    }/wc-trace-table/configurable-button.js' type='module'></script>
   </head>
   <body>
 
@@ -85,6 +95,17 @@ const highlightLense = async ({ resource, config }) => {
         ? `<button><ask-me style=''></ask-me></button>`
         : ""
     }
+
+
+    ${
+      config.locals.table
+        ? `<button><trace-table-button></trace-table-button></button>`
+        : ""
+    }
+
+
+    ${config.locals.openIn ? `<button><open-in></open-in></button>` : ""}
+
 
     <div id="container">
       ${

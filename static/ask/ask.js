@@ -2,10 +2,18 @@ import { state } from "./state.js";
 import { sortNodes } from "./walking.js";
 import { walk } from "../estree-walker/index.js";
 import { config } from "./config.js";
-import { randomQuestion } from "./random-question.js";
+import { randomQuestion } from "./random-question/index.js";
 
 const ask = (code) => {
-  state.program = Acorn.parse(code, { locations: true });
+  state.code = code;
+
+  try {
+    state.program = Acorn.parse(code, { locations: true });
+  } catch (_) {
+    console.log("%c-> creation phase error:", "font-weight:bold;");
+    eval(code);
+    return;
+  }
 
   state.nodes = {};
   walk(state.program, { leave: sortNodes(state.nodes) });
@@ -19,7 +27,7 @@ const ask = (code) => {
   }
   // console.log(state.nodes);
 
-  const question = randomQuestion(state);
+  const question = randomQuestion(config, state);
 
   return question;
 };

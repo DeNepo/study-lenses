@@ -42,17 +42,17 @@ window.addEventListener("DOMContentLoaded", () => {
                 <input id='variablesRead' type='checkbox' /> <label for='variablesRead'>read</label> <br>
                 <input id='variablesAssign' type='checkbox' /> <label for='variablesAssign'>assign</label> <br>
                 <hr>
-                <input id='operators' type='checkbox' /> <label for='operators'>operators</label> <br>
+                <input id='operators' type='checkbox' /> <label for='operators'>operators:</label> <br>
                 <input id='operatorsList' type='text' />  <br>
                 <hr>
-                control flow:
+                <input id='controlFlow' type='checkbox'  /> <label for='controlFlow'>control flow:</label>
                 <input id='controlFlowList' type='text' />  <br>
-                <input id='controlFlow' type='checkbox'  /> <label for='controlFlow'>checks</label> <br>
-                <input id='errorHandling' type='checkbox'  /> <label for='errorHandling'>error handling</label>
+                <!-- <input id='controlFlow' type='checkbox'  /> <label for='controlFlow'>checks</label> <br> -->
+                <input id='controlFlowErrorHandling' type='checkbox'  /> <label for='controlFlowErrorHandling'>error handling</label>
                 <hr>
-                functions: <input id='functionsList' type='text' />  <br>
-                <input id='functions' type='checkbox'  /> <label for='functions'>function calls</label> <br>
-                <input id='functionDeclarations' type='checkbox'  /> <label for='functionDeclarations'>declarations</label> <br>
+                <input id='functions' type='checkbox'  /> <label for='functions'>function calls:</label> <input id='functionsList' type='text' />  <br>
+                <!-- <input id='functions' type='checkbox'  /> <label for='functions'>function calls</label> <br>
+                <input id='functionDeclarations' type='checkbox'  /> <label for='functionDeclarations'>declarations</label> <br> -->
                 <input id='this' type='checkbox'  /> <label for='this'>this</label> <br>
                 <hr>
                 from  <input id='rangeStart' style="width: 25%;" min="1" type='number' />  to <input id='rangeEnd' style="width: 25%;" min="1" type='number' /> <br>

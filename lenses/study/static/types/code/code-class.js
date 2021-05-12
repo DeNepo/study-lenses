@@ -305,6 +305,7 @@ export class CodeFE {
         ? `?${queryKey}&--resource=${stringifiedResource}`
         : `?${queryKey}=${queryValue}&--resource=${stringifiedResource}`);
     if (typeof cb === "function") {
+      console.log(url);
       cb(url);
     } else {
       window.open(url, "_blank");

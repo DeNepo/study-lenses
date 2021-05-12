@@ -11,5 +11,6 @@ export const config = {
   functions: { ask: true },
   operators: { ask: true },
   variables: { ask: true },
-  level: 5,
+  generic: { ask: true },
+  levels: [1, 2, 3, 4, 5],
 };

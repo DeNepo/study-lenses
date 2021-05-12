@@ -43,8 +43,37 @@ const flowchartLense = async ({ responseData, resource, config }) => {
     .join("\n");
 
   try {
-    resource.content = convertCodeToSvg(code);
-    resource.info.ext = ".svg";
+    const svg = convertCodeToSvg(code);
+    resource.content = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+  </head>
+
+  <body>
+    <link rel="stylesheet" href="${config.ownStatic}/sketch-style.css">
+    <button id="clear">Clear canvas</button>
+    <button id="undo">Undo</button>
+    <button id="redo">Redo</button>
+    <br />
+    <button id="white" class="color">White</button>
+    <button id="red" class="color">Red</button>
+    <button id="green" class="color">Green</button>
+    <button id="blue" class="color">Blue</button>
+    <button id="orange" class="color">Orange</button>
+    <button id="black" class="color">Black</button>
+    <br>
+    <div id="container">
+      <div id="code-container" class="stacked">
+        ${svg}
+      </div>
+      <div id="canvas-container" class="stacked"><canvas id="cfd"></canvas></div>
+    </div>
+    <script src="${config.ownStatic}/cfd.js"></script>
+    <script src="${config.ownStatic}/sketch-script.js"></script>
+  </body>
+</html>`;
+    resource.info.ext = ".html";
   } catch (err) {
     resource.content =
       err.name +

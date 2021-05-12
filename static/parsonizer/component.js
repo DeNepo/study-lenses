@@ -298,11 +298,23 @@ const renderStudyButtons = (container, config, editor) => {
     container.appendChild(consoleButton);
   }
 
+  if (config.study) {
+    const studyButton = document.createElement("button");
+    studyButton.innerHTML = "study";
+    studyButton.onclick = () => studyWith["study"];
+    container.appendChild(studyButton);
+  }
+
   if (config.trace) {
     const traceButton = document.createElement("button");
     traceButton.innerHTML = "trace";
     traceButton.onclick = () => studyWith["trace"];
     container.appendChild(traceButton);
+  }
+
+  if (config.table) {
+    const traceTableEl = document.createElement("trace-table-button");
+    container.appendChild(traceTableEl);
   }
 
   if (config.eval || config.debug) {
@@ -391,19 +403,50 @@ const renderStudyButtons = (container, config, editor) => {
 
   const studyWith = new Proxy(
     {
-      console: function (code) {
+      study(code) {
+        const pseudoResource = {
+          resource: {
+            content: code,
+            info: { ext: ".js" }, // hard-code for now, whatevs
+          },
+        };
+        // console.log(pseudoResource);
+
+        const stringifiedResource = encodeURIComponent(
+          JSON.stringify(pseudoResource)
+        );
+
+        const baseConfig = {
+          code,
+          ext: ".js", // hard-code for now, whatevs
+        };
+        // const queryValue = encodeURIComponent(JSON.stringify(baseConfig));
+        const finalConfig = Object.assign(baseConfig, config);
+        const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
+        // if the full file is used, open lense with local configs from exercise
+        //  otherwise don't, because anything syntax/runtime based will probably break for selections
+        const url =
+          window.location.origin +
+          window.location.pathname +
+          (queryValue
+            ? `?study&--resource=${stringifiedResource}`
+            : `?study=${queryValue}&--resource=${stringifiedResource}`);
+
+        window.open(url, "_blank");
+      },
+      console(code) {
         const execute = eval;
         const stricted = "'use strict'; // in case you forgot ;) \n\n" + code;
         execute(stricted);
       },
       trace: (code) => trace(code),
-      debugger: function (code) {
+      debugger(code) {
         const stepThrough = eval;
         const debuggered =
           "debugger;\n\n'use strict'; // in case you forgot ;) \n\n" + code;
         stepThrough(debuggered);
       },
-      jsTutor: function (code) {
+      jsTutor(code) {
         const encodedJST = encodeURIComponent(code);
         const sanitizedJST = this.utils.sanitize(encodedJST);
         const jsTutorURL =
@@ -412,22 +455,22 @@ const renderStudyButtons = (container, config, editor) => {
           "&cumulative=false&curInstr=2&heapPrimitives=false&mode=display&origin=opt-live.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false";
         window.open(jsTutorURL, "_blank");
       },
-      loupe: function (code) {
+      loupe(code) {
         const encoded = encodeURIComponent(btoa(code));
         const loupeURL = "http://latentflip.com/loupe/?code=" + encoded + "!!!";
         window.open(loupeURL, "_blank");
       },
-      promisees: function (code) {
+      promisees(code) {
         const encoded = encodeURIComponent(code).replace(/%20/g, "+");
         const URL = "https://bevacqua.github.io/promisees/#code=" + encoded;
         window.open(URL, "_blank");
       },
-      esprima: function (code) {
+      esprima(code) {
         const encoded = encodeURIComponent(code);
         const URL = "https://esprima.org/demo/parse.html?code=" + encoded;
         window.open(URL, "_blank");
       },
-      flowchart: function (code) {
+      flowchart(code) {
         const lenseConfig = {
           code,
           ext: ".js",
