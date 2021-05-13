@@ -138,5 +138,9 @@ const init = (() => {
     .getElementById("highlight-button")
     .addEventListener("click", () => openWith(config.code, "highlight"));
 
+  document
+    .getElementById("study-button")
+    .addEventListener("click", () => openWith(config.code, "study"));
+
   return init;
 })();

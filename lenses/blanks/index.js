@@ -97,6 +97,7 @@ const blanksLens = ({ config, resource }) => {
     <button id='flowchart-button'>flowchart</button>
     <ask-me alert></ask-me>
     <trace-table-button></trace-table-button>
+    <button id='study-button'>study</button>
   </div>
 
   <div style='display: flex; flex-direction: row;'>
