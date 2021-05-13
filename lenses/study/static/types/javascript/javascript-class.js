@@ -174,6 +174,18 @@ export class JavaScriptFE extends CodeFE {
       this.studyWith("variables")
     );
 
+    const blanksButton = document.getElementById("blanks-button");
+    document
+      .getElementById("blanks-input")
+      .addEventListener("change", (event) => {
+        if (event.target.checked) {
+          blanksButton.style = "display: inline-block;";
+        } else {
+          blanksButton.style = "display: none;";
+        }
+      });
+    blanksButton.addEventListener("click", () => this.studyWith("blanks"));
+
     const astButton = document.getElementById("ast-button");
     document.getElementById("ast-input").addEventListener("change", (event) => {
       if (event.target.checked) {

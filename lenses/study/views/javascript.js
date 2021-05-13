@@ -80,11 +80,6 @@ class JavaScriptSSR extends CodeSSR {
       } /> <label for='ask-input'>ask me</label>
     </form>
     <form>
-      <input id='p5-input' type='checkbox' ${
-        this.config.locals.p5 ? "checked" : ""
-      } /> <label for='p5-input'>p5</label>
-    </form>
-    <form>
       <input id='loop-guard-input' type='checkbox' ${
         this.config.locals.loopGuard ? "checked" : ""
       } /> <label for='loop-guard-input'>loop guard</label>
@@ -98,6 +93,11 @@ class JavaScriptSSR extends CodeSSR {
       <input id='clear-scheduled-input' type='checkbox' ${
         this.config.locals.clearScheduled ? "checked" : ""
       } /> <label for='clear-scheduled-input'>clear scheduled</label>
+    </form>
+    <form>
+      <input id='p5-input' type='checkbox' ${
+        this.config.locals.p5 ? "checked" : ""
+      } /> <label for='p5-input'>p5</label>
     </form>
     <form>
       <input id='ast-input' type='checkbox' ${
@@ -119,6 +119,11 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.eslint ? "checked" : ""
       } /> <label for='eslint-input'>eslint</label>
     </form>
+    <form>
+      <input id='blanks-input' type='checkbox' ${
+        this.config.locals.blanks ? "checked" : ""
+      } /> <label for='blanks-input'>blanks</label>
+    </form>
     ` + superConfigOptions
     );
   }
@@ -139,6 +144,12 @@ class JavaScriptSSR extends CodeSSR {
     const variablesDisplay = locals.variables ? "inline-block" : "none";
     superPanel += `
       <button id='variables-button' style='display: ${variablesDisplay};'>variables</button>`;
+
+    const blanksDisplay = locals.blanks ? "inline-block" : "none";
+    superPanel += `
+    <div id='blanks-container' style='display: ${blanksDisplay};'>
+      <button id='blanks-button'>blanks</button>
+    </div>`;
 
     const astDisplay = locals.ast ? "inline-block" : "none";
     superPanel += `

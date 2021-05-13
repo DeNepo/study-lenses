@@ -82,13 +82,19 @@ window.addEventListener("DOMContentLoaded", () => {
         // console.error(err);
       }
 
+      const alertQuestion = this.hasAttribute("alert");
+
       shadow.getElementById("ask-button").addEventListener("click", (event) => {
         const questionObj = ask(editor.getValue());
-        console.log(
-          "\n--- --- --- --- --- --- ---\n\n" +
-            questionObj.question +
-            "\n\n--- --- --- --- --- --- ---"
-        );
+        if (alertQuestion) {
+          alert(questionObj.question);
+        } else {
+          console.log(
+            "\n--- --- --- --- --- --- ---\n\n" +
+              questionObj.question +
+              "\n\n--- --- --- --- --- --- ---"
+          );
+        }
         event.preventDefault();
       });
 

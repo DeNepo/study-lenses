@@ -38,7 +38,6 @@ class CodeSSR {
         : ""
     }
     <br><br>
-    selection:
     <button id='highlight-selection-button'>highlight</button>
     <button id='parsonize-selection-button' style='display: ${
       this.config.locals.parsons === false ? "none" : "inline-block"
