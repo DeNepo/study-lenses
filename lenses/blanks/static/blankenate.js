@@ -10,12 +10,13 @@ const blankenate = (code, probability = 0.2) => {
 
   const declaredVariables = new Set();
 
-  const _ = (start, end) => {
-    const identifierNode = Acorn.parse("let _").body[0].declarations[0].id;
-    delete identifierNode.loc;
-    identifierNode.start = start;
-    identifierNode.end = end;
-    return identifierNode;
+  const _ = (oldNode) => {
+    const _node = Acorn.parse("let _; _;").body[1];
+    delete _node.loc;
+    _node.start = oldNode.start;
+    _node.end = oldNode.end;
+    _node.expression.loc = oldNode.loc;
+    return _node;
   };
 
   walk(tree, {
