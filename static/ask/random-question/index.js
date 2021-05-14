@@ -32,6 +32,7 @@ export const randomQuestion = (config, { nodes, program, code, type }) => {
   // get all the node types present in this program
   const presentNodeTypes = Object.keys(nodes);
 
+  let filtered = null;
   // now that possible questions are shuffled
   //  can just use the first one that addresses present node types
   const questionObj = shuffledQuestions.find((question) => {
@@ -45,7 +46,11 @@ export const randomQuestion = (config, { nodes, program, code, type }) => {
     // has it's own decision criteria
     if (typeof question.nodeTypes === "function") {
       try {
-        return question.nodeTypes({ nodes, program, code, type });
+        const returned = question.nodeTypes({ nodes, program, code, type });
+        if (Array.isArray(returned) && returned.length !== 0) {
+          filtered = returned;
+        }
+        return returned;
       } catch (err) {
         return false;
       }
@@ -80,7 +85,14 @@ export const randomQuestion = (config, { nodes, program, code, type }) => {
   // randomly select one node of the correct type
   const node = validNodes[(validNodes.length * Math.random()) | 0] || null;
 
-  const question = questionObj.template({ node, nodes, program, code, type });
+  const question = questionObj.template({
+    node,
+    nodes,
+    program,
+    code,
+    type,
+    filtered,
+  });
 
   return {
     question,

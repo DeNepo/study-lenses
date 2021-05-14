@@ -62,6 +62,9 @@ const blanksLens = ({ config, resource }) => {
   }/ask/component/ask-me.js'></script>
 
 
+  <script src='${config.sharedStatic}/prettier/standalone.js'></script>
+  <script src='${config.sharedStatic}/prettier/parser-babel.js'></script>
+
   <script src='${config.sharedStatic}/parsonizer/jquery.min.js'></script>
   <script src='${config.sharedStatic}/parsonizer/jquery-ui.min.js'></script>
   <script src='${

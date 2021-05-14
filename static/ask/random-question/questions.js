@@ -6,7 +6,7 @@
   - alternatives
     can you think of another way to write line _ without changing it's behavior?
     could you use a different type of loop on line _?
-    
+
 
 */
 
@@ -52,7 +52,9 @@ export const questions = [
   {
     name: "where does it begin?",
     template: ({ node }) =>
-      `A control flow structure ends on line ${node.loc.end.line}. \n- What line does it start on? \n- What type of control flow is it?`,
+      `A control flow structure ends on line ${node.loc.end.line}.
+- What line does it start on?
+- What type of control flow is it?`,
     nodeTypes: filters.randomControlFlowNode,
     levels: [1],
     features: ["controlFlow"],
@@ -104,9 +106,9 @@ export const questions = [
   {
     name: "describe the condition",
     template: ({ node }) => {
-      return `How would you describe the condition in the '${helpers.friendlyName(
+      return `How would you describe the logic in the '${helpers.friendlyName(
         node
-      )}' on line ${node.loc.start.line}?`;
+      )}' check on line ${node.loc.start.line}?`;
     },
     nodeTypes: ["IfStatement", "WhileStatement", "ForStatement"],
     levels: [2],
@@ -124,6 +126,35 @@ export const questions = [
       `What type(s) are assigned to the variable '${node.id.name}' in this program?`,
     levels: [1],
     nodeTypes: ["VariableDeclarator"],
+    features: ["data"],
+  },
+  {
+    name: "data literals",
+    template: ({ filtered }) => {
+      const randomLiteral = filtered[(filtered.length * Math.random()) | 0];
+      const typeName =
+        typeof randomLiteral.value === "string"
+          ? "a string"
+          : typeof randomLiteral.value === "number"
+          ? "a number"
+          : typeof randomLiteral.value === "boolean"
+          ? "a boolean"
+          : randomLiteral.type === "ArrayExpression"
+          ? "an array"
+          : randomLiteral.type === "ObjectExpression"
+          ? "an object"
+          : randomLiteral.type === "TemplateLiteral"
+          ? "a string"
+          : randomLiteral.type === "Identifier"
+          ? "undefined"
+          : "null";
+      return `On line ${randomLiteral.loc.start.line} ${typeName}:
+- How is this data used?
+- What purpose does it have in the program?
+- Is it important later on in the program?`;
+    },
+    levels: [3],
+    nodeTypes: filters.dataLiterals,
     features: ["data"],
   },
 
@@ -168,7 +199,8 @@ export const questions = [
   // === variables ===
   {
     template: ({ node }) =>
-      `On which line is the variable '${node.id.name}' declared?\nIs it initialized?`,
+      `On which line is the variable '${node.id.name}' declared?
+- Is it initialized?`,
     levels: [1],
     nodeTypes: ["VariableDeclarator"],
     features: ["variables"],
@@ -196,7 +228,8 @@ export const questions = [
   },
   {
     template: ({ node }) =>
-      `Why is the variable declared on line ${node.loc.start.line} named '${node.id.name}'?\nCan you think of a better name?`,
+      `Why is the variable declared on line ${node.loc.start.line} named '${node.id.name}'?
+- Can you think of a better name?`,
     levels: [3],
     nodeTypes: ["VariableDeclarator"],
     features: ["variables"],
@@ -228,7 +261,8 @@ export const questions = [
   },
   {
     template: ({ node }) =>
-      `On line ${node.loc.start.line}, what value is assigned to '${node.left.name}'? \nWhere does this value come from?`,
+      `On line ${node.loc.start.line}, what value is assigned to '${node.left.name}'?
+- Where does this value come from?`,
     levels: [0],
     nodeTypes: ["AssignmentExpression"],
     features: ["variables"],
@@ -248,7 +282,8 @@ export const questions = [
           node.parent.type !== "VariableDeclarator" &&
           node.parent.type !== "CallExpression"
       );
-      return `On line ${identifier.loc.start.line}, how many variables are used? \nWhere were they declared? Where else are they used?`;
+      return `On line ${identifier.loc.start.line}, how many variables are used?
+- Where were they declared? Where else are they used?`;
     },
     levels: [0],
     features: ["variables"],
@@ -274,10 +309,54 @@ export const questions = [
   },
   {
     template: ({ node }) => {
-      return `What data is assigned to '${node.left.name}' on line ${node.loc.start.line}?\n- Where does this data come from?\n- What is it used for in the program?`;
+      return `What data is assigned to '${node.left.name}' on line ${node.loc.start.line}?
+- Where does this data come from?
+- What is it used for in the program?`;
     },
     levels: [3, 4],
     nodeTypes: ["AssignmentExpression"],
+    features: ["variables", "data"],
+  },
+  {
+    name: "declaration in a block",
+    template: ({ nodes }) => {
+      const nestedDeclarations = filters.declarationsInBlocks({ nodes });
+      const declaration =
+        nestedDeclarations[(nestedDeclarations.length * Math.random()) | 0];
+
+      return `On line ${declaration.loc.start.line} the variable '${declaration.id.name}' is declared inside of a block.
+- Are there any other variables in the program with the same name?
+- Is it's value ever assigned to a variable from the parent scope?`;
+    },
+    levels: [1, 3],
+    nodeTypes: filters.declarationsInBlocks,
+    features: ["variables"],
+  },
+  {
+    name: "variables in a block",
+    template: ({
+      node,
+    }) => `There is a block that ends on line ${node.loc.end.line}, where does it begin?
+- How many variables are used in this block?
+- How many of them are declared in this block?`,
+    levels: [1, 3],
+    nodeTypes: ["BlockStatement"],
+    features: ["variables"],
+  },
+  {
+    name: "assignment in a block",
+    template: ({ nodes }) => {
+      const nestedAssignments = filters.assignmentsInBlocks({ nodes });
+      const assignment =
+        nestedAssignments[(nestedAssignments.length * Math.random()) | 0];
+
+      return `On line ${assignment.loc.start.line} there is an assignment inside of a block:
+- What data is being assigned? What's it's type?
+- Where does that data come from?
+- Is that data used outside of the block later in the program?`;
+    },
+    levels: [1, 3],
+    nodeTypes: filters.assignmentsInBlocks,
     features: ["variables", "data"],
   },
 
@@ -288,7 +367,8 @@ export const questions = [
   },
   {
     template: () =>
-      `On how many lines is the user asked to input data?\nWhat are they asked to input?`,
+      `On how many lines is the user asked to input data?
+- What are they asked to input?`,
     levels: [5],
   },
   {
@@ -311,7 +391,8 @@ export const questions = [
   // === functions ===
   {
     template: ({ node }) =>
-      `There is a function call on line ${node.loc.start.line}, what is the function's name? \nWhat arguments does the function take?`,
+      `There is a function call on line ${node.loc.start.line}, what is the function's name?
+- What arguments does the function take?`,
     features: ["functions"],
     nodeTypes: ["CallExpression"],
     levels: [1],

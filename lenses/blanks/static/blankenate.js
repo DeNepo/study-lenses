@@ -59,8 +59,14 @@ const blankenate = (code, probability = 0.2) => {
   }));
 
   return {
-    blanked: Astring.generate(tree),
-    generated: Astring.generate(Acorn.parse(code)),
+    blanked: prettier.format(Astring.generate(tree), {
+      parser: "babel",
+      plugins: prettierPlugins,
+    }),
+    generated: prettier.format(Astring.generate(Acorn.parse(code)), {
+      parser: "babel",
+      plugins: prettierPlugins,
+    }),
     tokens,
   };
 };
