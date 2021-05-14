@@ -7,6 +7,8 @@ const init = (() => {
 
   let codeGenerated = "";
 
+  let theme = "vs-dark";
+
   const initEditor = (blanked) => {
     let blankedModel = null;
     if (typeof blanked === "string") {
@@ -24,7 +26,7 @@ const init = (() => {
     closedEditor = monaco.editor.create(editorContainer, {
       roundedSelection: true,
       scrollBeyondLastLine: false,
-      theme: "vs-dark",
+      theme,
       wrappingIndent: "indent",
       wordWrap: "wordWrapColumn",
       wordWrapColumn: 100,
@@ -64,7 +66,7 @@ const init = (() => {
     closedEditor = monaco.editor.createDiffEditor(diffContainer, {
       roundedSelection: true,
       scrollBeyondLastLine: false,
-      theme: "vs-dark",
+      theme,
       wrappingIndent: "indent",
       wordWrap: "wordWrapColumn",
       wordWrapColumn: 100,
@@ -141,6 +143,20 @@ const init = (() => {
   document
     .getElementById("study-button")
     .addEventListener("click", () => openWith(config.code, "study"));
+
+  document
+    .getElementById("change-theme-button")
+    .addEventListener("click", () => {
+      theme = theme === "vs-dark" ? "vs-light" : "vs-dark";
+      if (isDiff) {
+        initDiffEditor(
+          closedEditor.getOriginalEditor().getModel(),
+          codeGenerated
+        );
+      } else {
+        initEditor(closedEditor.getModel());
+      }
+    });
 
   return init;
 })();

@@ -92,6 +92,7 @@ const blanksLens = ({ config, resource }) => {
 
 
   <div style='display: flex; flex-direction: row;'>
+    <button id='change-theme-button'>change theme</button>||
     <button id='highlight-button'>highlight</button>
     <button id='variables-button'>variables</button>
     <button id='flowchart-button'>flowchart</button>

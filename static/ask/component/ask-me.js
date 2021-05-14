@@ -88,13 +88,12 @@ window.addEventListener("DOMContentLoaded", () => {
         const questionObj = ask(editor.getValue());
         if (alertQuestion) {
           alert(questionObj.question);
-        } else {
-          console.log(
-            "\n--- --- --- --- --- --- ---\n\n" +
-              questionObj.question +
-              "\n\n--- --- --- --- --- --- ---"
-          );
         }
+        console.log(
+          "\n--- --- --- --- --- --- ---\n\n" +
+            questionObj.question +
+            "\n\n--- --- --- --- --- --- ---"
+        );
         event.preventDefault();
       });
 
