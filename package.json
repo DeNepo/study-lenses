@@ -1,11 +1,10 @@
 {
   "name": "study-lenses",
-  "version": "0.0.89",
+  "version": "0.0.90",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
-    "test-content": "cd test-content && node ../bin/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test-content": "cd test-content && node ../bin/index.js"
   },
   "author": "",
   "license": "MIT",
