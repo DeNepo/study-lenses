@@ -147,9 +147,7 @@ class JavaScriptSSR extends CodeSSR {
 
     const blanksDisplay = locals.blanks ? "inline-block" : "none";
     superPanel += `
-    <div id='blanks-container' style='display: ${blanksDisplay};'>
-      <button id='blanks-button'>blanks</button>
-    </div>`;
+      <button id='blanks-button'  style='display: ${blanksDisplay};'>blanks</button>`;
 
     const astDisplay = locals.ast ? "inline-block" : "none";
     superPanel += `

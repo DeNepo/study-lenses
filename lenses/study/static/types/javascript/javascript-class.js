@@ -178,6 +178,7 @@ export class JavaScriptFE extends CodeFE {
     document
       .getElementById("blanks-input")
       .addEventListener("change", (event) => {
+        this.config.blanks = !this.config.blanks;
         if (event.target.checked) {
           blanksButton.style = "display: inline-block;";
         } else {

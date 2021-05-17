@@ -3,7 +3,10 @@ const blankenate = (code, probability = 0.2) => {
   try {
     tree = Acorn.parse(code);
   } catch (err) {
-    return err.toString();
+    document.getElementById(
+      "editor-container"
+    ).innerHTML = `<code style='color:red;'>${err.toString()}</code><br><pre>${code}</pre>`;
+    throw err;
   }
 
   const blankedTokens = [];
