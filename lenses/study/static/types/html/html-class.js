@@ -6,9 +6,7 @@ export class HtmlFE extends CodeFE {
     this.outputContainer = document.getElementById("output-container");
     this.initHtmlUi();
     this.editor.updateOptions({ readOnly: false });
-    this.editor.onDidChangeModelContent(
-      debounce(this.renderIFrame.bind(this), 500)
-    );
+
     this.renderIFrame();
   }
 
@@ -40,6 +38,42 @@ export class HtmlFE extends CodeFE {
       x.document.close();
     });
 
+    document
+      .getElementById("render-button")
+      .addEventListener("click", () => this.renderIFrame());
+
+    // https://stackoverflow.com/questions/50405510/remove-listner-from-monaco-editor
+    let disposable = {
+      dispose: () => {},
+    };
+    document.getElementById("live").addEventListener("change", (event) => {
+      const isChecked = event.target.checked;
+      if (isChecked) {
+        disposable = this.editor.onDidChangeModelContent(
+          debounce(this.renderIFrame.bind(this), 500)
+        );
+      } else {
+        disposable.dispose();
+      }
+    });
+
+    const editorContainer = document.getElementById("editor-container");
+    const renderConfig = document.getElementById("render-config");
+    document
+      .getElementById("editor-checkbox")
+      .addEventListener("change", (event) => {
+        const isChecked = event.target.checked;
+        if (isChecked) {
+          editorContainer.style.display = "block";
+          renderConfig.style.display = "block";
+          this.outputContainer.style.width = "40vw";
+        } else {
+          editorContainer.style.display = "none";
+          renderConfig.style.display = "none";
+          this.outputContainer.style.width = "100vw";
+        }
+      });
+
     // document
     //   .getElementById("loop-guard-form")
     //   .addEventListener("change", (event) => {
@@ -62,6 +96,7 @@ export class HtmlFE extends CodeFE {
       iframe.contentDocument.write(code);
       iframe.contentDocument.close();
     };
+    this.iframe = iframe;
 
     this.outputContainer.innerHTML = "";
     this.outputContainer.appendChild(iframe);

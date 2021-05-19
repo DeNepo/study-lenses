@@ -34,16 +34,15 @@ class HtmlSSR extends CodeSSr {
     return (
       superPanel +
       `<br><br>
-    <button id='new-tab-button'>open in new tab</button>`
+    <div style='display: flex; flex-direction: row;'>
+      <input id='editor-checkbox' name='editor-checkbox' type='checkbox' checked /> <label for='editor-checkbox' style='margin-right: 0.5em;'>editor</label>
+      | <div id='render-config' style='display: inline-block; display: flex; flex-direction: row; margin-right: 0.5em;'>
+        <button id='render-button' style='margin-left: 0.5em;'>re-render</button>
+        <input id='live' name='live' type='checkbox' /> <label for='live'>live reload</label>
+      </div>
+      | <button id='new-tab-button' style='margin-left: 0.5em;'>open in new tab</button>
+    </div>`
     );
-
-    // return superPanel + `<br><br>
-    // <form id='loop-guard-form' style='display: inline;'>
-    //   <input name='active' type='checkbox' ${this.config.loopGuard.active ? 'checked' : ''} />
-    //   loop guards:
-    //   <input name='max' type='number' value='${this.config.loopGuard.max}' style='width: 3em;' />
-    // </form>
-    // <button id='new-tab-button'>open in new tab</button>`
   }
 
   code() {

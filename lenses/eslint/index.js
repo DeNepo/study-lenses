@@ -16,6 +16,7 @@ const eslintLens = async ({ config, resource, requestData }) => {
   const resourceDirectory = path.dirname(
     path.join(process.cwd(), requestData.path)
   );
+
   try {
     const eslint = new ESLint({
       cwd: resourceDirectory,

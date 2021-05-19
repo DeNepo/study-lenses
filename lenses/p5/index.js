@@ -53,9 +53,16 @@ const p5lense = async ({ resource, config }) => {
   </head>
   <body>
     <br>
-    <button id='restart-button'>restart</button>
-    <button id='debug-button'>debug</button>
-    | <input id='loop-checkbox' type='checkbox' checked /> loop
+    <form id='controls'>
+      <button id='restart-button'>run</button>
+      | <input id='loop' name='how' value='loop' type='radio' checked /> <label for='loop'>play</label>
+      <input id='pause' name='how' value='pause' type='radio' /> <label for='pause'>pause</label>
+      | <input id='slow' name='how' value='slow' type='radio' /> <label for='slow'>frame rate</label>
+      <input id='slow-input' style='width: 7em;' type='range' />
+      | <input id='step' name='how' value='step' type='radio' /> <label for='step'>step</label>
+      <input id='delay-input' style='width: 7em;' type='range' />
+      || <button id='debug-button'>debug</button>
+    </form>
     <hr>
 
     <script src="${config.ownStatic}/index.js"></script>
