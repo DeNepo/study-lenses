@@ -30,9 +30,7 @@ If you would like to this server with files from your computer that are not in `
 2. `cd study-lenses` into repo
 3. `npm install -g .`
    - installing this repository as a global dependency will let you test your changes in realtime
-4. study any directory or file
-   - `cd anywhere`: opens the directory of test files
-   - `study`: opens the selected directory in your browser, ready for study
+4. `npm run test-content`
 
 ---
 
@@ -40,9 +38,9 @@ If you would like to this server with files from your computer that are not in `
 
 This tool has a URL Parameter Interface, the student controls how they view and study their code by modifying the URL parameters when requesting a resource. At it's base, this is just a static server. requesting a path inside the folder you have `study`ed will send the raw content. however ...
 
-URL params can be used to modify the resource before it is sent. once you have `/test-content` open in your browser using `$ study`, navigate a file and add `?hello-world` to the end of the URL and refreshing. T can find the source code for this lens in [./src/lenses/hello-world](./src/lenses/hello-world). (This is a [Lens](#lens). There is another type of URL parameter called an [Option](#option) that will be covered in more detail later.)
+URL params can be used to modify the resource before it is sent. once you have a directory open in your browser using `$ study`, navigate to a file and add `?hello-world` to the end of the URL and refreshing. You can find the source code for this lens in [./src/lenses/hello-world](./src/lenses/hello-world). (This is a [Lens](#lens). There is another type of URL parameter called an [Option](#option) that will be covered in more detail later.)
 
-To see lenses in action, open the `/test-content` directory as indicated in **Getting Started** and try pasting in these url extensions and refreshing:
+To see lenses in action, open the `/test-content` (`$ npm run test-content`) directory as indicated in **Getting Started** and try pasting in these url extensions and refreshing:
 
 - `/README.md`
   - `/README.md` - no lens, the markdown source is returned as-is
@@ -61,20 +59,14 @@ To see lenses in action, open the `/test-content` directory as indicated in **Ge
   - `/languages/file.js?highlight`
   - `/languages/file.js?flowchart`
   - `/languages/file.js?review`
-- `/simplit/file.js.md`
-  - `/simplit/file.js.md?render`
-  - `/simplit/file.js.md?highlight`
-  - `/simplit/file.js.md?simplit&flowchart`
-  - `/simplit/file.js.md?simplit&highlight`
-  - `/simplit/file.js.md?simplit&format`
-  - `/simplit/file.js.md?simplit&format&highlight`
+  - `/languages/file.js?study`
 
 There are a lot of different lenses, and they sometimes will compose in unhelpful or unexpected ways. it's also not very student-friendly to be adjusting params all the time. so ...
 
 The server comes with a default lenses `?hyf` that opens a directory as a navigable folder structure. Each subdirectory and file is a link that opens with a sane default lens so students won't need to understand how to use params or read lens guides to get started. Here are a few of the defaults:
 
 - `.html` files will open without a lens, as a live website (`study` is just an augmented static server. `import`/`export`, local `fetch` calls, it all works! )
-- `.js` files open up in a monaco editor with built-in parsonizer and diff-editor. Students will have the option to enable an `eval` button & other study tools
+- `.js` files open up in a monaco editor with configurable study options.
 - `.json` files open as colored and collapsible data
 - ...
 
