@@ -94,7 +94,9 @@ export const randomQuestion = (config, { nodes, program, code, type }) => {
     filtered,
   });
 
-  return {
-    question,
-  };
+  return typeof question === "string"
+    ? {
+        question,
+      }
+    : question;
 };

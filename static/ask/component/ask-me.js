@@ -89,11 +89,20 @@ window.addEventListener("DOMContentLoaded", () => {
         if (alertQuestion) {
           alert(questionObj.question);
         }
-        console.log(
-          "\n--- --- --- --- --- --- ---\n\n" +
-            questionObj.question +
-            "\n\n--- --- --- --- --- --- ---"
-        );
+        console.log("--- --- --- --- --- --- ---");
+
+        if (Array.isArray(questionObj.hints) && questionObj.hints.length > 0) {
+          console.groupCollapsed(
+            // questionObj.hints.length > 1 ? "hints" : "hint"
+            questionObj.question
+          );
+          questionObj.hints.forEach((hint) => console.log("-", hint));
+          console.groupEnd();
+        } else {
+          console.log(questionObj.question);
+        }
+        console.log("--- --- --- --- --- --- ---");
+
         event.preventDefault();
       });
 

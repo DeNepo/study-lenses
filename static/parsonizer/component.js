@@ -46,41 +46,6 @@ class JSParsons extends HTMLElement {
       }
     }
 
-    if (this.blockComments) {
-      const blockCommentContainer = document.createElement("div");
-      this.appendChild(blockCommentContainer);
-      for (const blockComment of this.blockComments) {
-        if (!blockComment) {
-          continue;
-        }
-
-        const commentPre = document.createElement("pre");
-
-        const toCollapse = blockComment.match(/parsons\-collapse\:.*/gim);
-        if (toCollapse) {
-          const summaryText = toCollapse[0].replace(
-            /parsons\-collapse\:/gim,
-            ""
-          );
-          const summaryEl = document.createElement("summary");
-          summaryEl.innerHTML = summaryText;
-
-          const preText = blockComment.replace(toCollapse[0], "");
-          const preEl = document.createElement("pre");
-          preEl.innerHTML = preText;
-
-          const details = document.createElement("details");
-          details.appendChild(summaryEl);
-          details.appendChild(preEl);
-
-          blockCommentContainer.appendChild(details);
-        } else {
-          commentPre.innerHTML = blockComment;
-          blockCommentContainer.appendChild(commentPre);
-        }
-      }
-    }
-
     const buttonsContainer = document.createElement("div");
     buttonsContainer.style =
       "display: flex; flex-direction: row; justify-content: space-evenly;";

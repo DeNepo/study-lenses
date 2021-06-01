@@ -16,18 +16,7 @@ export class JavaScriptFE extends CodeFE {
       this.config.locals.tests = true;
     }
 
-    // if (this.config.locals.trace) {
-    //   for (const key in this.config.locals.trace) {
-    //     if (typeof this.config.locals.trace[key] === "boolean") {
-    //       trace.config[key] = this.config.locals.trace[key];
-    //     }
-    //   }
-    // }
-
     window.editor = this.editor;
-    // trace.editor = {
-    //   getValue: this.getSelection.bind(this),
-    // };
 
     this.initJsUi();
   }
@@ -314,8 +303,37 @@ export class JavaScriptFE extends CodeFE {
         event.preventDefault();
       });
     // }
+
+    if (this.config.locals.steamroll) {
+      import("./static/steamroll.js")
+        .then((e) => e.steamroll)
+        .then((steamroll) => {
+          document
+            .getElementById("steamroll-it")
+            .addEventListener("click", () => {
+              let code = this.editor.getValue();
+              if (
+                this.config.locals.loopGuard &&
+                this.config.locals.loopGuard.active
+              ) {
+                try {
+                  const loopGuarded = JavaScriptFE.insertLoopGuards(
+                    this.editor.getValue(),
+                    this.config.locals.loopGuard.max || 20
+                  );
+                  code = this.prettierFormat(loopGuarded);
+                } catch (err) {
+                  // don't log the acorn error, let it be an eval error in the study type
+                }
+              }
+              console.log("> steamrolled:", steamroll(code));
+            });
+        })
+        .catch((err) => console.error(err));
+    }
   }
 
+  // // previous version using regex
   // static insertLoopGuards = (evalCode, maxIterations) => {
   //   let loopNum = 0;
   //   const loopHeadRegex = /(for|while)([\s]*)\(([^\{]*)\)([\s]*)\{|do([\s]*)\{/gm;

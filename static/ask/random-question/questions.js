@@ -42,9 +42,9 @@ export const questions = [
   {
     name: "begin and end of a control flow",
     template: ({ node }) =>
-      `On line ${node.loc.start.line} there is a ${helpers.friendlyName(
+      `On line ${node.loc.start.line} there is a '${helpers.friendlyName(
         node
-      )}, what is it's purpose in the program?`,
+      )}' statement, what is it's purpose in the program?`,
     nodeTypes: filters.randomControlFlowNode,
     levels: [3],
     features: ["controlFlow"],
@@ -65,7 +65,10 @@ export const questions = [
       const validNodes = filters.firstIfNodes({ nodes });
 
       const randomIf = validNodes[(validNodes.length * Math.random()) | 0];
-      return `Describe the execution paths of the conditional that starts on line ${randomIf.loc.start.line}`;
+      return {
+        question: `Describe the execution paths of the conditional that starts on line ${randomIf.loc.start.line}`,
+        hints: ["the flowchart lens might be helpful"],
+      };
     },
     nodeTypes: filters.firstIfNodes,
     levels: [2],
@@ -74,11 +77,11 @@ export const questions = [
   {
     name: "goal of control flow",
     template: ({ node }) =>
-      `What is the goal of the ${helpers.friendlyName(
+      `What is the goal of the '${helpers.friendlyName(
         node
-      )} that begins on line ${node.loc.start.line} and ends on line ${
-        node.loc.end.line
-      }?`,
+      )}' statement that begins on line ${
+        node.loc.start.line
+      } and ends on line ${node.loc.end.line}?`,
     nodeTypes: filters.randomControlFlowNode,
     levels: [4],
     features: ["controlFlow"],
@@ -94,7 +97,13 @@ export const questions = [
   {
     name: "next lines",
     template: ({ node }) => {
-      return `Which lines can happen after line ${node.loc.start.line}?`;
+      return {
+        question: `Which lines can happen after line ${node.loc.start.line}?`,
+        hints: [
+          "try tracing the program a few times with different inputs",
+          "also a flowchart might help",
+        ],
+      };
     },
     nodeTypes: [
       ...collections.controlFlowNodeTypes,
@@ -122,8 +131,10 @@ export const questions = [
     features: ["data"],
   },
   {
-    template: ({ node }) =>
-      `What type(s) are assigned to the variable '${node.id.name}' in this program?`,
+    template: ({ node }) => ({
+      question: `What type(s) are assigned to the variable '${node.id.name}' in this program?`,
+      hints: ['the "variables" lens can help to find all the assignments'],
+    }),
     levels: [1],
     nodeTypes: ["VariableDeclarator"],
     features: ["data"],
@@ -148,10 +159,15 @@ export const questions = [
           : randomLiteral.type === "Identifier"
           ? "undefined"
           : "null";
-      return `On line ${randomLiteral.loc.start.line} ${typeName}:
+      return {
+        question: `On line ${randomLiteral.loc.start.line} there is a ${typeName}:
 - How is this data used?
 - What purpose does it have in the program?
-- Is it important later on in the program?`;
+- Is it important later on in the program?`,
+        hints: [
+          'the "variables" lens is helpful if the data is assigned to a variable',
+        ],
+      };
     },
     levels: [3],
     nodeTypes: filters.dataLiterals,
@@ -166,7 +182,10 @@ export const questions = [
         ...new Set(filters.operatorNodes({ nodes }).map((n) => n.operator)),
       ];
       const randomOperator = operators[(operators.length * Math.random()) | 0];
-      return `How many times is the '${randomOperator}' operator used in this program?`;
+      return {
+        question: `How many times is the '${randomOperator}' operator used in this program?`,
+        hints: ["you can use control-f in the editor to search the code"],
+      };
     },
     nodeTypes: filters.randomOperatorNode,
     levels: [1],
@@ -189,7 +208,12 @@ export const questions = [
         ...new Set(filters.operatorNodes({ nodes }).map((n) => n.operator)),
       ];
       const randomOperator = operators[(operators.length * Math.random()) | 0];
-      return `What do you call the '${randomOperator}' operator? What does it do?`;
+      return {
+        question: `What do you call the '${randomOperator}' operator? What does it do?`,
+        hints: [
+          "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators",
+        ],
+      };
     },
     nodeTypes: filters.randomOperatorNode,
     levels: [1],
@@ -198,30 +222,42 @@ export const questions = [
 
   // === variables ===
   {
-    template: ({ node }) =>
-      `On which line is the variable '${node.id.name}' declared?
+    template: ({ node }) => ({
+      question: `On which line is the variable '${node.id.name}' declared?
 - Is it initialized?`,
+      hints: ['this question can be answered using the "trace" button'],
+    }),
     levels: [1],
     nodeTypes: ["VariableDeclarator"],
     features: ["variables"],
   },
   {
-    template: ({ node }) =>
-      `On how many lines is the variable '${node.id.name}' assigned a value?`,
+    template: ({ node }) => ({
+      question: `On how many lines is the variable '${node.id.name}' assigned a value?`,
+      hints: ['the "variables" lens is helpful'],
+    }),
     levels: [1],
     nodeTypes: ["VariableDeclarator"],
     features: ["variables"],
   },
   {
-    template: ({ node }) =>
-      `On how many lines is the variable '${node.id.name}' read?`,
+    template: ({ node }) => ({
+      question: `On how many lines is the variable '${node.id.name}' read?`,
+      hints: ['the "variables" lens is helpful'],
+    }),
     levels: [1],
     nodeTypes: ["VariableDeclarator"],
     features: ["variables"],
   },
   {
-    template: ({ node }) =>
-      `What is the role of the variable '${node.id.name}' in this program?`,
+    template: ({ node }) => ({
+      question: `What is the role of the variable '${node.id.name}' in this program?`,
+      hints: [
+        "https://en.wikibooks.org/wiki/A-level_Computing/AQA/Problem_Solving,_Programming,_Data_Representation_and_Practical_Exercise/Fundamentals_of_Programming/The_Role_of_Variables",
+        "https://quizlet.com/82821321/variable-roles-flash-cards/",
+        "http://saja.kapsi.fi/var_roles/role_intro.html",
+      ],
+    }),
     levels: [4],
     nodeTypes: ["VariableDeclarator"],
     features: ["variables"],
@@ -253,7 +289,7 @@ export const questions = [
       });
       const node =
         uniqueIdentifiers[(uniqueIdentifiers.length * Math.random()) | 0];
-      return `Is the name '${node.name}' built into JS, or did the developer write it?`;
+      return `Is the name '${node.name}' built into JS, or did the author write it?`;
     },
     levels: [1],
     nodeTypes: ["Identifier"],
@@ -372,8 +408,11 @@ export const questions = [
     levels: [5],
   },
   {
-    template: () => `How many paths are there to the user journey?`,
-    levels: [5],
+    template: () => ({
+      question: `How many paths are there through this program?`,
+      hints: ["the flowchart lens might be helpful"],
+    }),
+    levels: [3],
   },
 
   {
@@ -383,7 +422,14 @@ export const questions = [
         .map((code, number) => ({ code, number }))
         .filter((line) => line.code.length !== 0);
       const randomLine = codeLines[(codeLines.length * Math.random()) | 0];
-      return `How would you read line ${randomLine.number} out loud?`;
+      return {
+        question: `How would you read line ${randomLine.number} out loud?`,
+        hints: [
+          "https://blog.codinghorror.com/ascii-pronunciation-rules-for-programmers/",
+          "https://cogent.co/blog/the-importance-of-learning-to-read-code/",
+          "https://code-reading.org/",
+        ],
+      };
     },
     levels: [1],
   },

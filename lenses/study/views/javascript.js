@@ -286,6 +286,10 @@ class JavaScriptSSR extends CodeSSR {
 
     superPanel += "</div>";
 
+    if (locals.steamroll) {
+      superPanel += `<button id='steamroll-it'>steamroll</button>`;
+    }
+
     return superPanel;
   }
 
