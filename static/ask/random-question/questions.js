@@ -65,9 +65,13 @@ export const questions = [
       const validNodes = filters.firstIfNodes({ nodes });
 
       const randomIf = validNodes[(validNodes.length * Math.random()) | 0];
+
       return {
         question: `Describe the execution paths of the conditional that starts on line ${randomIf.loc.start.line}`,
-        hints: ["the flowchart lens might be helpful"],
+        hints: [
+          "the flowchart lens might be helpful",
+          "https://www.programiz.com/javascript/if-else",
+        ],
       };
     },
     nodeTypes: filters.firstIfNodes,
@@ -97,12 +101,26 @@ export const questions = [
   {
     name: "next lines",
     template: ({ node }) => {
+      const hints = [
+        "try tracing the program a few times with different inputs",
+        "a flowchart might help",
+      ];
+      if (node.type === "WhileStatement") {
+        hints.push("https://www.programiz.com/javascript/while-loop");
+      } else if (node.type === "ForStatement") {
+        hints.push("https://www.programiz.com/javascript/for-loop");
+      } else if (node.type === "IfStatement") {
+        hints.push("https://www.programiz.com/javascript/if-else");
+      } else if (node.type === "ForOfStatement") {
+        hints.push("https://www.programiz.com/javascript/if-else");
+      } else if (node.type === "BreakStatement") {
+        hints.push("https://www.programiz.com/javascript/break-statement");
+      } else if (node.type === "ContinueStatement") {
+        hints.push("https://www.programiz.com/javascript/continue-statement");
+      }
       return {
         question: `Which lines can happen after line ${node.loc.start.line}?`,
-        hints: [
-          "try tracing the program a few times with different inputs",
-          "also a flowchart might help",
-        ],
+        hints,
       };
     },
     nodeTypes: [
