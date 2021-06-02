@@ -42,13 +42,35 @@ class JavaScriptSSR extends CodeSSR {
 
   configOptions() {
     const superConfigOptions = super.configOptions();
-    return (
-      `
+    return `
+    -- static --
     <form>
-      <input id='environment-input' type='checkbox' ${
-        this.config.locals.environment ? "checked" : ""
-      } /> <label for='environment-input'>environment</label>
+      <input id='variables-input' type='checkbox' ${
+        this.config.locals.variables ? "checked" : ""
+      } /> <label for='variables-input'>variables</label>
     </form>
+    <form>
+      <input id='flowchart-input' type='checkbox' ${
+        this.config.locals.flowchart ? "checked" : ""
+      } /> <label for='flowchart-input'>flowchart</label>
+    </form>
+    <form>
+      <input id='blanks-input' type='checkbox' ${
+        this.config.locals.blanks ? "checked" : ""
+      } /> <label for='blanks-input'>blanks</label>
+    </form>
+    ${superConfigOptions}
+    <form>
+      <input id='eslint-input' type='checkbox' ${
+        this.config.locals.eslint ? "checked" : ""
+      } /> <label for='eslint-input'>eslint</label>
+    </form>
+    <form>
+      <input id='ast-input' type='checkbox' ${
+        this.config.locals.ast ? "checked" : ""
+      } /> <label for='ast-input'>syntax tree</label>
+    </form>
+    -- dynamic --
     <form>
       <input id='run-input' type='checkbox' ${
         this.config.locals.run || this.config.locals.eval ? "checked" : ""
@@ -65,14 +87,20 @@ class JavaScriptSSR extends CodeSSR {
       } /> <label for='trace-input'>trace</label>
     </form>
     <form>
-      <input id='table-input' type='checkbox' ${
-        this.config.locals.table ? "checked" : ""
-      } /> <label for='table-input'>trace table</label>
-    </form>
-    <form>
       <input id='open-in-input' type='checkbox' ${
         this.config.locals.openIn ? "checked" : ""
       } /> <label for='open-in-input'>open in ...</label>
+    </form>
+    <form>
+      <input id='p5-input' type='checkbox' ${
+        this.config.locals.p5 ? "checked" : ""
+      } /> <label for='p5-input'>p5</label>
+    </form>
+    -- helpful things --
+    <form>
+      <input id='table-input' type='checkbox' ${
+        this.config.locals.table ? "checked" : ""
+      } /> <label for='table-input'>trace table</label>
     </form>
     <form>
       <input id='ask-input' type='checkbox' ${
@@ -85,6 +113,11 @@ class JavaScriptSSR extends CodeSSR {
       } /> <label for='loop-guard-input'>loop guard</label>
     </form>
     <form>
+      <input id='environment-input' type='checkbox' ${
+        this.config.locals.environment ? "checked" : ""
+      } /> <label for='environment-input'>environment</label>
+    </form>
+    <form>
       <input id='tests-input' type='checkbox' ${
         this.config.locals.tests ? "checked" : ""
       } /> <label for='tests-input'>tests</label>
@@ -94,38 +127,7 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.clearScheduled ? "checked" : ""
       } /> <label for='clear-scheduled-input'>clear scheduled</label>
     </form>
-    <form>
-      <input id='p5-input' type='checkbox' ${
-        this.config.locals.p5 ? "checked" : ""
-      } /> <label for='p5-input'>p5</label>
-    </form>
-    <form>
-      <input id='ast-input' type='checkbox' ${
-        this.config.locals.ast ? "checked" : ""
-      } /> <label for='ast-input'>syntax tree</label>
-    </form>
-    <form>
-      <input id='flowchart-input' type='checkbox' ${
-        this.config.locals.flowchart ? "checked" : ""
-      } /> <label for='flowchart-input'>flowchart</label>
-    </form>
-    <form>
-      <input id='variables-input' type='checkbox' ${
-        this.config.locals.variables ? "checked" : ""
-      } /> <label for='variables-input'>variables</label>
-    </form>
-    <form>
-      <input id='eslint-input' type='checkbox' ${
-        this.config.locals.eslint ? "checked" : ""
-      } /> <label for='eslint-input'>eslint</label>
-    </form>
-    <form>
-      <input id='blanks-input' type='checkbox' ${
-        this.config.locals.blanks ? "checked" : ""
-      } /> <label for='blanks-input'>blanks</label>
-    </form>
-    ` + superConfigOptions
-    );
+    `;
   }
 
   panel() {
@@ -195,14 +197,6 @@ class JavaScriptSSR extends CodeSSR {
       </form>`;
     // }
 
-    // if (locals.clearScheduled) {
-    const clearScheduledDisplay = locals.clearScheduled
-      ? "inline-block"
-      : "none";
-    superPanel += `
-      <button id='clear-scheduled-button' style='display: ${clearScheduledDisplay};'>clear scheduled</button>`;
-    // }
-
     const testsDisplay = locals.tests ? "inline-block" : "none";
     superPanel += `
       <form id='tests-form' style='display: ${testsDisplay};'>
@@ -212,11 +206,25 @@ class JavaScriptSSR extends CodeSSR {
         <label for='tests'>tests</label>
       </form>`;
 
+    // if (locals.clearScheduled) {
+    const clearScheduledDisplay = locals.clearScheduled
+      ? "inline-block"
+      : "none";
+    superPanel += `
+      <button id='clear-scheduled-button' style='display: ${clearScheduledDisplay};'>clear scheduled</button>`;
+    // }
+
     // if (locals.eval) {
     const eslintDisplay = locals.eslint ? "inline-block" : "none";
     superPanel += `
     <div id='eslint-container' style='display: ${eslintDisplay};'>
       <button id='eslint-button'>eslint</button>
+    </div>`;
+
+    const tableDisplay = locals.table ? "inline-block" : "none";
+    superPanel += `
+    <div id='table-container' style='display: ${tableDisplay};'>
+      <trace-table-button></trace-table-button>
     </div>`;
 
     superPanel += "</div>";
@@ -242,18 +250,6 @@ class JavaScriptSSR extends CodeSSR {
     superPanel += `
     <div id='trace-container' style='display: ${traceDisplay};'>
       <trace-it></trace-it>
-    </div>`;
-
-    const tableDisplay = locals.table ? "inline-block" : "none";
-    superPanel += `
-    <div id='table-container' style='display: ${tableDisplay};'>
-      <trace-table-button></trace-table-button>
-    </div>`;
-
-    const askDisplay = locals.ask ? "inline-block" : "none";
-    superPanel += `
-    <div id='ask-container' style='display: ${askDisplay};'>
-      <ask-me></ask-me>
     </div>`;
 
     // }
@@ -282,6 +278,12 @@ class JavaScriptSSR extends CodeSSR {
     superPanel += `
     <div id='p5-container' style='display: ${p5Display};'>
       <button id='p5-button'>p5</button>
+    </div>`;
+
+    const askDisplay = locals.ask ? "inline-block" : "none";
+    superPanel += `
+    <div id='ask-container' style='display: ${askDisplay};'>
+      <ask-me></ask-me>
     </div>`;
 
     superPanel += "</div>";

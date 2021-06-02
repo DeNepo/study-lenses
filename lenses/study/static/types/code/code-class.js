@@ -273,10 +273,7 @@ export class CodeFE {
     return selection;
   }
 
-  openSelectionWith(queryKey, code = "", cb) {
-    const selectedCode = code || getMonacoSelection(this.editor);
-    code = code || selectedCode || this.editor.getValue();
-
+  openWith(queryKey, code = "", cb) {
     const pseudoResource = {
       resource: {
         content: code,
@@ -309,5 +306,12 @@ export class CodeFE {
     } else {
       window.open(url, "_blank");
     }
+  }
+
+  openSelectionWith(queryKey, code = "", cb) {
+    const selectedCode = code || getMonacoSelection(this.editor);
+    code = code || selectedCode || this.editor.getValue();
+
+    this.openWith(queryKey, code, cb);
   }
 }

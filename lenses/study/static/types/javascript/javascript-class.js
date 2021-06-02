@@ -433,7 +433,7 @@ export class JavaScriptFE extends CodeFE {
     }
   }
 
-  studyWith(environment) {
+  studyWith(environment, selection = false) {
     if (environment === "eslint") {
       const lintCode = (url) =>
         fetch(url)
@@ -441,20 +441,29 @@ export class JavaScriptFE extends CodeFE {
           .then((lintResult) => console.log(lintResult))
           .catch((err) => console.error(err));
 
-      this.openSelectionWith(environment, this.editor.getValue(), lintCode);
+      this.openWith(environment, this.editor.getValue(), lintCode);
       return;
     }
 
     if (environment === "acorn") {
       try {
-        console.log(Acorn.parse(this.editor.getValue(), { locations: true }));
+        console.log(
+          Acorn.parse(
+            selection
+              ? getMonacoSelection(this.editor)
+              : this.editor.getValue(),
+            { locations: true }
+          )
+        );
       } catch (err) {
         console.error(err);
       }
       return;
     }
 
-    let formatted = getMonacoSelection(this.editor) || this.editor.getValue();
+    let formatted = selection
+      ? getMonacoSelection(this.editor)
+      : this.editor.getValue();
     if (
       this.config.locals.loopGuard &&
       this.config.locals.loopGuard.active &&
