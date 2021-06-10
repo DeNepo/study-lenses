@@ -43,6 +43,7 @@ class JavaScriptSSR extends CodeSSR {
   configOptions() {
     const superConfigOptions = super.configOptions();
     return `
+
     -- static --
     <form>
       <input id='variables-input' type='checkbox' ${
@@ -70,6 +71,7 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.ast ? "checked" : ""
       } /> <label for='ast-input'>syntax tree</label>
     </form>
+    <br>
     -- dynamic --
     <form>
       <input id='run-input' type='checkbox' ${
@@ -96,6 +98,7 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.p5 ? "checked" : ""
       } /> <label for='p5-input'>p5</label>
     </form>
+    <br>
     -- helpful things --
     <form>
       <input id='table-input' type='checkbox' ${
@@ -289,7 +292,11 @@ class JavaScriptSSR extends CodeSSR {
     superPanel += "</div>";
 
     if (locals.steamroll) {
-      superPanel += `<button id='steamroll-it'>steamroll</button>`;
+      superPanel += `<button id='steam-it'>steam</button><button id='roll-it'>roll</button>`;
+      //   superPanel += `  <form>
+      //   <input id='steamroll-it' type='button' value='steamroll' />
+      //   <input id='comment' type='checkbox' /> <label for='comment'>comment</label>
+      // </form>`;
     }
 
     return superPanel;

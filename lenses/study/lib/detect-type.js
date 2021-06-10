@@ -4,6 +4,9 @@ const detectType = (resource) => {
   }
 
   // to support  .re.p5.js and .p5.re.js
+  //  -- deprecating ?study support of p5 ?
+  //    ?p5 lens takes over, that's cleaner
+  //    ?study should be for languages
   if (
     resource.info.base &&
     resource.info.base.includes(".p5.") &&

@@ -21,6 +21,7 @@ const Logger = require("./lib/logger.js");
 const gitbookfiy = require("./gitbookify/index.js");
 const study = require("./study.js");
 const sandbox = require("./sandbox.js");
+const repl = require("./repl.js");
 const draw = require("./draw.js");
 // const Logger = console
 
@@ -54,6 +55,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 app.use(sandbox);
+app.use(repl);
 app.use(draw);
 
 app.use(

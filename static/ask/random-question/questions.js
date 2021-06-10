@@ -150,7 +150,8 @@ export const questions = [
   },
   {
     template: ({ node }) => ({
-      question: `What type(s) are assigned to the variable '${node.id.name}' in this program?`,
+      question: `On line ${node.loc.start.line} the variable '${node.id.name}' is declared
+-  What type(s) are assigned to it in the program?`,
       hints: ['the "variables" lens can help to find all the assignments'],
     }),
     levels: [1],
@@ -243,7 +244,7 @@ export const questions = [
     template: ({ node }) => ({
       question: `On which line is the variable '${node.id.name}' declared?
 - Is it initialized?`,
-      hints: ['this question can be answered using the "trace" button'],
+      hints: ['this "trace" button, ctr-f or ?variables can be helpful'],
     }),
     levels: [1],
     nodeTypes: ["VariableDeclarator"],
@@ -307,7 +308,7 @@ export const questions = [
       });
       const node =
         uniqueIdentifiers[(uniqueIdentifiers.length * Math.random()) | 0];
-      return `Is the name '${node.name}' built into JS, or did the author write it?`;
+      return `On line ${node.loc.start.line}, is the name '${node.name}' built into JS?`;
     },
     levels: [1],
     nodeTypes: ["Identifier"],
@@ -445,7 +446,6 @@ export const questions = [
         hints: [
           "https://blog.codinghorror.com/ascii-pronunciation-rules-for-programmers/",
           "https://cogent.co/blog/the-importance-of-learning-to-read-code/",
-          "https://code-reading.org/",
         ],
       };
     },

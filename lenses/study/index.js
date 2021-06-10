@@ -58,6 +58,7 @@ const liveStudyLense = async ({
   // console.log(1);
 
   const type = detectType(resource);
+  console.log("--------", type);
 
   let typeView = () => {};
   try {
@@ -110,10 +111,11 @@ const liveStudyLense = async ({
     <div class="dropdown">
       <code>&#187; options &#171;</code>
       <div class='dropdown-content'>
-        <a href='?--sandbox=js' target='_blank'><button>js</button></a>
+        <a href='?--help' target='_blank'><code>--help</code>!  what is this?</a> <br><br>
+        <a href='?--sandbox=js' target='_blank'><button>js editor</button></a>
+        <a href='?--repl' target='_blank'><button>js repl</button></a> <br>
         <a href='?--sandbox=html' target='_blank'><button>html</button></a>
-        <a href='?--draw' target='_blank'><button>draw</button></a> <br>
-        <a href='?--help' target='_blank'><code>--help</code>!  what is this?</a> <br>
+        <a href='?--draw' target='_blank'><button>whiteboard</button></a> <br><br>
         ${await typeView.configOptions()}
       </div>
     </div>

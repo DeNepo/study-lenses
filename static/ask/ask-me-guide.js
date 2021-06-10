@@ -35,4 +35,7 @@ Levels:
     you will need to think about user interactions, and user journey paths
     and about the data a user provides, or that a user receives
 
+Why all this practice reading programs?
+- https://trishagee.github.io/presentation/reading_code/
+- https://cogent.co/blog/the-importance-of-learning-to-read-code/
 `);

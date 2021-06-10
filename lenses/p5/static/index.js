@@ -24,7 +24,15 @@
       // console.log(o_0);
     }
     try {
-      execute(code);
+      // if (document.getElementById("debug").checked === true) {
+      execute(
+        "/* -------------------------------------- */ debugger;\n\n\n\n\n" +
+          code +
+          "\n\n\n\n\n/* -------------------------------------- */ debugger;"
+      );
+      // } else {
+      //   execute(code);
+      // }
       new p5();
       if (controls.how.value === "step") {
         stepByStep();
@@ -70,9 +78,9 @@
 
   // -------- debug ----------
 
-  document.getElementById("debug-button").addEventListener("click", () => {
-    setup("debugger;\n\n" + code);
-  });
+  // document.getElementById("debug-button").addEventListener("click", () => {
+  //   setup("debugger;\n\n" + code);
+  // });
 
   // -------- step ----------
 

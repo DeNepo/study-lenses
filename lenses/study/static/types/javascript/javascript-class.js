@@ -23,24 +23,22 @@ export class JavaScriptFE extends CodeFE {
 
   initJsUi() {
     const formatButton = document.getElementById("format-button");
-    if (formatButton === null) {
-      return;
+    if (formatButton !== null) {
+      const formatParent = formatButton.parentElement;
+      const newFormatButton = document.createElement("button");
+      newFormatButton.innerHTML = "format";
+      newFormatButton.onclick = () => {
+        // https://github.com/react-monaco-editor/react-monaco-editor/pull/212
+        this.editor.executeEdits("", [
+          {
+            range: this.editor.getModel().getFullModelRange(),
+            text: this.prettierFormat(this.editor.getValue()),
+            // forceMoveMarkers: true
+          },
+        ]);
+      };
+      formatParent.replaceChild(newFormatButton, formatButton);
     }
-
-    const formatParent = formatButton.parentElement;
-    const newFormatButton = document.createElement("button");
-    newFormatButton.innerHTML = "format";
-    newFormatButton.onclick = () => {
-      // https://github.com/react-monaco-editor/react-monaco-editor/pull/212
-      this.editor.executeEdits("", [
-        {
-          range: this.editor.getModel().getFullModelRange(),
-          text: this.prettierFormat(this.editor.getValue()),
-          // forceMoveMarkers: true
-        },
-      ]);
-    };
-    formatParent.replaceChild(newFormatButton, formatButton);
 
     const environmentForm = document.getElementById("environment-form");
     document
@@ -308,26 +306,42 @@ export class JavaScriptFE extends CodeFE {
       import("./static/steamroll.js")
         .then((e) => e.steamroll)
         .then((steamroll) => {
-          document
-            .getElementById("steamroll-it")
-            .addEventListener("click", () => {
-              let code = this.editor.getValue();
-              if (
-                this.config.locals.loopGuard &&
-                this.config.locals.loopGuard.active
-              ) {
-                try {
-                  const loopGuarded = JavaScriptFE.insertLoopGuards(
-                    this.editor.getValue(),
-                    this.config.locals.loopGuard.max || 20
-                  );
-                  code = this.prettierFormat(loopGuarded);
-                } catch (err) {
-                  // don't log the acorn error, let it be an eval error in the study type
-                }
+          document.getElementById("steam-it").addEventListener("click", () => {
+            let code = this.editor.getValue();
+            if (
+              this.config.locals.loopGuard &&
+              this.config.locals.loopGuard.active
+            ) {
+              try {
+                const loopGuarded = JavaScriptFE.insertLoopGuards(
+                  this.editor.getValue(),
+                  this.config.locals.loopGuard.max || 20
+                );
+                code = this.prettierFormat(loopGuarded);
+              } catch (err) {
+                // don't log the acorn error, let it be an eval error in the study type
               }
-              console.log("> steamrolled:", steamroll(code));
-            });
+            }
+            console.log("> steamrolled:", steamroll(code));
+          });
+          document.getElementById("roll-it").addEventListener("click", () => {
+            let code = this.editor.getValue();
+            if (
+              this.config.locals.loopGuard &&
+              this.config.locals.loopGuard.active
+            ) {
+              try {
+                const loopGuarded = JavaScriptFE.insertLoopGuards(
+                  this.editor.getValue(),
+                  this.config.locals.loopGuard.max || 20
+                );
+                code = this.prettierFormat(loopGuarded);
+              } catch (err) {
+                // don't log the acorn error, let it be an eval error in the study type
+              }
+            }
+            console.log("> steamrolled:", steamroll(code, "do it"));
+          });
         })
         .catch((err) => console.error(err));
     }
@@ -355,7 +369,7 @@ export class JavaScriptFE extends CodeFE {
       const variable = Acorn.parse(`let loopGuard_${id} = 0;`).body[0];
       variable.generated = true;
       const check = Acorn.parse(
-        `loopGuard_${id}++; if (loopGuard_${id} > ${max}) { throw new RangeError("loopGuard_${id} is greater than ${max}"); }`
+        `++loopGuard_${id}; if (loopGuard_${id} > ${max}) { throw new RangeError("loopGuard_${id} is greater than ${max}"); }`
       );
       check.generated = true;
       return {
@@ -368,6 +382,8 @@ export class JavaScriptFE extends CodeFE {
       typeof evalCode === "object"
         ? evalCode
         : Acorn.parse(evalCode, { locations: true });
+
+    let hasLoops = false;
 
     let loopNumber = 1;
 
@@ -387,6 +403,9 @@ export class JavaScriptFE extends CodeFE {
         ) {
           return;
         }
+
+        hasLoops = true;
+
         const { variable, check } = generateLoopGuard(
           loopNumber,
           maxIterations
@@ -411,8 +430,8 @@ export class JavaScriptFE extends CodeFE {
       typeof evalCode === "object"
         ? guardedTree
         : Astring.generate(guardedTree);
-
-    return guarded;
+    console.log(hasLoops);
+    return hasLoops ? guarded : evalCode;
   };
 
   prettierFormat(code = this.editor.getValue()) {

@@ -1,78 +1,42 @@
 "use strict";
 
-const p5lense = async ({ resource, config }) => {
-  if (!resource.info && !config.queryValue.code) {
-    return;
-  }
-  // console.log(resource);
+const path = require("path");
 
-  let code = resource.content;
-  let ext = resource.info.ext;
+const loadPlugins = require("../../server/load-plugins");
+const configurePlugins = require("../../server/configure-plugins");
 
-  if (typeof config.queryValue.code === "string") {
-    code = config.queryValue.code;
-    ext = config.queryValue.ext || resource.info.ext;
-  } else if (typeof resource.content !== "string") {
+const lensesPath = path.join(__dirname, "..");
+const lensesPromise = loadPlugins("lenses", lensesPath);
+
+const p5Lens = async ({ resource }) => {
+  if (resource.info.ext !== ".js") {
     return;
   }
 
-  if (ext !== ".js") {
-    return;
-  }
+  const studyLens = (await lensesPromise).find(
+    (lens) => lens.queryKey === "study"
+  );
+  studyLens.requested = true;
 
-  if (!code) {
-    return;
-  }
+  const configuredStudyLens = configurePlugins(
+    [studyLens],
+    {
+      study: {},
+    },
+    { study: "" }
+  )[0];
 
-  let start = 0;
-  let end = code.split("\n").length;
+  // because hack
+  resource.info.base = ".p5.";
 
-  if (typeof config.queryValue.start === "number") {
-    start = config.queryValue.start;
-  }
-
-  if (typeof config.queryValue.end === "number") {
-    end = config.queryValue.end;
-  }
-
-  code = code
-    .split("\n")
-    .slice(start, end + 1)
-    .join("\n");
-
-  resource.content = `
-<!DOCTYPE html>
-  <html>
-  <head>
-    <script src="${config.sharedStatic}/p5.min.js"></script>
-    <script src="${config.sharedStatic}/p5.sound.min.js"></script>
-    <script> function setup() { } </script>
-
-    <script>const code = decodeURI("${encodeURI(code)}");</script>
-
-  </head>
-  <body>
-    <br>
-    <form id='controls'>
-      <button id='restart-button'>run</button>
-      | <input id='loop' name='how' value='loop' type='radio' checked /> <label for='loop'>play</label>
-      <input id='pause' name='how' value='pause' type='radio' /> <label for='pause'>pause</label>
-      | <input id='slow' name='how' value='slow' type='radio' /> <label for='slow'>frame rate</label>
-      <input id='slow-input' style='width: 7em;' type='range' />
-      | <input id='step' name='how' value='step' type='radio' /> <label for='step'>step</label>
-      <input id='delay-input' style='width: 7em;' type='range' />
-      || <button id='debug-button'>debug</button>
-    </form>
-    <hr>
-
-    <script src="${config.ownStatic}/index.js"></script>
-  </body>
-</html>`;
-  resource.info.ext = ".html";
+  const { newResource = resource } = await configuredStudyLens.module({
+    resource,
+    config: configuredStudyLens,
+  });
 
   return {
-    resource,
+    resource: newResource,
   };
 };
 
-module.exports = p5lense;
+module.exports = p5Lens;

@@ -256,7 +256,7 @@ export class CodeFE {
       lineEntries.every((entry) => entry[1] === firstLine);
 
     if (noSelection) {
-      return "";
+      return this.editor.getValue();
     }
 
     let selection = "";

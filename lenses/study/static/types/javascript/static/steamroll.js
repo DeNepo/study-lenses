@@ -1,4 +1,4 @@
-export const steamroll = (code) => {
+export const steamroll = function steamroll(code) {
   ("use strict;");
 
   /*
@@ -18,12 +18,22 @@ export const steamroll = (code) => {
 
   */
 
+  const comment = arguments.length === 2;
+
   const fsGiven = [];
+  let improvements = 0;
 
   const isFed = (code, cesspool) =>
     function fedHandler({ lineno, error }) {
       const splitted = code.split("\n");
-      const theProblem = splitted.splice(lineno - 1, 1)[0];
+      const theProblem = splitted[lineno - 1];
+      comment
+        ? splitted.unshift(
+            `// ${++improvements}. ${error.name}: ${
+              error.message
+            }\n//    ${splitted.splice(lineno - 1, 1)}\n`
+          )
+        : splitted.splice(lineno - 1, 1);
       const nextFToGive = splitted.join("\n");
       delete fsGiven[fsGiven.length - 1].goodCode;
       fsGiven[fsGiven.length - 1].badCode = code;
@@ -36,7 +46,7 @@ export const steamroll = (code) => {
     function evalIt() {
       cesspool.contentWindow.addEventListener("error", isFed(code, cesspool));
       const fingersCrossed = document.createElement("script");
-      fingersCrossed.innerHTML = code;
+      fingersCrossed.innerHTML = `eval(decodeURI(\`${encodeURI(code)}\`))`;
       cesspool.contentDocument.body.appendChild(fingersCrossed);
     };
 
