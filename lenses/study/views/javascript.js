@@ -322,9 +322,9 @@ class JavaScriptSSR extends CodeSSR {
     //   );
     // if (isTestedFile) {
     superScriptsBody += `
-      <script src='${this.config.ownStatic}/dependencies/describe-it.js'> </script>
+      <script src='${this.config.sharedStatic}/testing/describe-it.js'> </script>
       <script src='${this.config.ownStatic}/dependencies/chai.js'> </script>
-      <script src='${this.config.ownStatic}/dependencies/jest-matchers.js'> </script>`;
+      <script src='${this.config.sharedStatic}/testing/jest-matchers.js'> </script>`;
     // }
 
     return superScriptsBody;

@@ -1,4 +1,4 @@
-let a = 0
+let a = 0;
 
 function setup() {
   background(0);

@@ -1,16 +1,10 @@
 "use strict";
 
-const parsonsTraceLens = require("./parsons-trace");
-
 // const prettier = require('prettier')
 
-const parsonsLense = ({ resource, config }) => {
+const adamLens = ({ resource, config }) => {
   if (!resource.info && !config.queryValue.code && !config.queryValue.content) {
     return;
-  }
-
-  if (config.queryValue === "trace") {
-    return parsonsTraceLens({ resource, config });
   }
 
   let code = resource.content;
@@ -133,6 +127,8 @@ const parsonsLense = ({ resource, config }) => {
 <body>
 
 
+<pre><code id='code-goes-here' class="line-numbers language-js"></code></pre>
+
   <main id='parsons-container' style='height: 100vh;'></main>
 
   <script src="${config.sharedStatic}/prism/script.js"></script>
@@ -152,17 +148,14 @@ const parsonsLense = ({ resource, config }) => {
     const config = JSON.parse(decodeURIComponent("${encodeURIComponent(
       JSON.stringify(frontendConfig)
     )}"))
-    const code = decodeURIComponent("${encodeURIComponent(code)}")
-    const parsonsComponent = new JSParsons(code, "${ext.replace(".", "")}")
-    document.getElementById('parsons-container')
-      .appendChild(parsonsComponent)
+    const raw = decodeURIComponent("${encodeURIComponent(code)}");
   </script>
 
 
   <script src='${config.sharedStatic}/trace/aran-build.js'></script>
   <script src='${config.sharedStatic}/trace/index.js' type='module'></script>
 
-
+  <script src="${config.ownStatic}/init.js"></script>
 
 </body>
 
@@ -175,4 +168,4 @@ const parsonsLense = ({ resource, config }) => {
   };
 };
 
-module.exports = parsonsLense;
+module.exports = adamLens;

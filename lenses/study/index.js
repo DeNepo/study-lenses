@@ -58,7 +58,7 @@ const liveStudyLense = async ({
   // console.log(1);
 
   const type = detectType(resource);
-  console.log("--------", type);
+  // console.log("--------", type);
 
   let typeView = () => {};
   try {
