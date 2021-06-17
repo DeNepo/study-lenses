@@ -20,7 +20,8 @@ const renderFuzzercize = async (resource, config) => {
 
   let jsDoc = `/**
  *
- */`;
+ */
+`;
   const jsDocPath = path.join(basePath, "jsdoc.js");
   if (fs.existsSync(jsDocPath)) {
     jsDoc = await readFilePromise(jsDocPath, "utf-8");
@@ -44,22 +45,23 @@ const renderFuzzercize = async (resource, config) => {
     renderedReadme = `<div class='markdown-body'>${marked(readme)}</div>`;
   }
 
-  const starters = [
-    { name: "empty", code: `const ${name} = () => {};`, fileName: "empty.js" },
-  ];
-  const startersPath = path.join(basePath, "starters");
-  if (fs.existsSync(startersPath) && fs.lstatSync(startersPath).isDirectory()) {
-    const starterFileNames = await readDirPromise(startersPath);
-    const starterCodes = await Promise.all(
-      starterFileNames.map((fileName) =>
-        readFilePromise(path.join(startersPath, fileName), "utf-8")
+  const solutions = [];
+  const solutionsPath = path.join(basePath, "solutions");
+  if (
+    fs.existsSync(solutionsPath) &&
+    fs.lstatSync(solutionsPath).isDirectory()
+  ) {
+    const solutionFileNames = await readDirPromise(solutionsPath);
+    const solutionCodes = await Promise.all(
+      solutionFileNames.map((fileName) =>
+        readFilePromise(path.join(solutionsPath, fileName), "utf-8")
       )
     );
-    starterFileNames.forEach((fileName, index) => {
-      starters.unshift({
+    solutionFileNames.forEach((fileName, index) => {
+      solutions.unshift({
         fileName,
         name,
-        code: starterCodes[index].split("__name__").join(name),
+        code: solutionCodes[index].split("__name__").join(name),
       });
     });
   }
@@ -68,8 +70,9 @@ const renderFuzzercize = async (resource, config) => {
     name,
     jsDoc,
     readme,
-    starters,
+    solutions,
     fuzz: `./${resource.info.base}/fuzz.js`.split(path.sep).join("/"),
+    locals: config.locals,
   };
 
   return `
@@ -79,36 +82,91 @@ const renderFuzzercize = async (resource, config) => {
     <link rel="stylesheet" data-name="vs/editor/editor.main" href="${
       config.sharedStatic
     }/monaco/min/vs/editor/editor.main.css">
-  </head>
+
+    <script src="${config.sharedStatic}/prettier/standalone.js"></script>
+    <script src="${config.sharedStatic}/prettier/parser-babel.js"></script>
+    <script src="${config.sharedStatic}/trace/aran-build.js"></script>
+    <script type="module">
+      import { walk } from "${config.sharedStatic}/estree-walker/index.js";
+      window.walk = walk;
+    </script>
+    <script src="${config.sharedStatic}/astravel.min.js"></script>
+
+    <script src='${config.sharedStatic}/parsonizer/jquery.min.js'></script>
+    <script src='${config.sharedStatic}/parsonizer/jquery-ui.min.js'></script>
+    <script src='${
+      config.sharedStatic
+    }/wc-trace-table/configurable-button.js' type='module'></script>
+
+    <script type='module' src='${
+      config.sharedComponents
+    }/run-it/index.js'></script>
+
+    <script type='module' src='${
+      config.sharedComponents
+    }/open-in/index.js'></script>
+
+    <script type='module' src='${
+      config.sharedComponents
+    }/lens-it/index.js'></script>
+
+    <script type='module' src='${
+      config.sharedStatic
+    }/ask/component/ask-me.js'></script>
+    </head>
+
+    <!-- <script src="${
+      config.sharedStatic
+    }/prism/script.js" data-manual></script>
+    <script src="${config.sharedStatic}/prism/toolbar.js"></script> -->
   <body>
     ${renderedReadme}
     <hr>
-    <div id='starter-buttons'>
-      ${fuzzercise.starters
-        .map(
-          (starter) =>
-            `<button class='starter-button' id='${fuzzercise.starters.indexOf(
-              starter
-            )}'>${starter.fileName
-              .split("-")
-              .join(" ")
-              .replace(".js", "")}</button>`
-        )
-        .join("")}
+    <div style='display: flex; flex-direction: row;'>
+      ${config.locals.save ? `<button id='save-button'>save</button> ||` : ""}
+      <div id='solution-buttons' style='display: flex; flex-direction: row;'>
+        ${fuzzercise.solutions
+          .map(
+            (solution) =>
+              `<button class='solution-button' id='${fuzzercise.solutions.indexOf(
+                solution
+              )}'>${solution.fileName}</button>`
+          )
+          .join("")}
+      </div>
+      <button id='new-solution-button'>+</button>
     </div>
+    <hr>
+    <div style='display: flex; flex-direction: row;'>
+      <button id='format-button'>format</button>
+      <text style='padding-left: 0.25em; padding-right: 0.25em;'>||</text>
+      <lens-it id="lens-it-el" buttons="highlight, parsons, variables, flowchart, blanks, study"></lens-it>
+    </div>
+    <div style='display: flex; flex-direction: row;'>
+      <run-it id='run-it-button'
+        ${config.locals.run.debug ? "debug" : ""}
+        ${config.locals.run.type === "module" ? "module" : ""}
+        ${config.locals.run.text ? `text="${config.locals.run.text}"` : ""}
+        ${
+          config.locals.run.loopGuard && config.locals.run.loopGuard.active
+            ? "loop-guard"
+            : ""
+        }
+      ></run-it>
+      <trace-table-button></trace-table-button>
+      <ask-me></ask-me>
+      <open-in id='open-in-button'></open-in>
+    </div>
+    <div id='docs-container'></div>
     <hr>
     <div id='editor-container' style='height: 95vh'></div>
     <script type='module'>
       window.config = JSON.parse(decodeURI("${encodeURI(
         JSON.stringify(fuzzercise)
       )}"));
-
-      Object.assign(config, await import(config.fuzz));
     </script>
 
 
-    <script src='${config.sharedStatic}/prettier/standalone.js'></script>
-    <script src='${config.sharedStatic}/prettier/parser-babel.js'></script>
 
     <script>var require = { paths: { 'vs': '${
       config.sharedStatic

@@ -68,6 +68,7 @@ const loadPlugins = async (type, pluginsPath) => {
       // these paths could be centrally configured
       ownStatic: `/own_static_resources_${type}/${nextPluginDirName}/static`,
       sharedStatic: `/shared_static_resources`,
+      sharedComponents: `/shared_components`,
       userGuide,
       docs,
       type: type.includes("lens") ? "lens" : "option",

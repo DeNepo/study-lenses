@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <style></style>
+
+    <!-- <script type="module">
+      debugger;
+      import { CodeConsumer } from "./class-code-consumer.js";
+      window.CodeConsumer = CodeConsumer;
+    </script> -->
+    <script src="./class-code-consumer.js"></script>
+  </head>
+
+  <body>
+    <code-consumer id="a" code="attribute value"></code-consumer>
+    <script>
+      // debugger;
+      const a = document.getElementById("a");
+      console.log("a:", a.code);
+    </script>
+
+    <!-- <code-consumer id="b"><pre>between tags</pre></code-consumer>
+    <script>
+      // debugger;
+      const b = document.getElementById("b");
+      console.log("b:", b.code);
+    </script> -->
+
+    <script>
+      // debugger;
+      const c = new CodeConsumer("constructor argument");
+      document.body.appendChild(c);
+      console.log("c:", c.code);
+    </script>
+
+    <script>
+      // debugger;
+      const d = new CodeConsumer();
+      d.code = "setter";
+      console.log("d:", d.code);
+    </script>
+  </body>
+</html>

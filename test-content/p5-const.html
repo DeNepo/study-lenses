@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+  </head>
+
+  <body>
+    <script src="../static/p5.min.js"></script>
+    <script src="../static/p5.sound.min.js"></script>
+    <script>
+      let a = 0;
+
+      const log = (thing) => console.log(thing);
+
+      // const setup = () => {
+      function setup() {
+        background(0);
+        noStroke();
+        fill(102);
+        log("setup");
+      }
+
+      const draw = () => {
+        // function draw() {
+        const nextA = a++;
+        const nextWidth = nextA % width;
+        rect(nextWidth, 10, 2, 80);
+        log("draw");
+      };
+
+      new p5();
+    </script>
+  </body>
+</html>

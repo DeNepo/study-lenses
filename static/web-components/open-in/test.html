@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <script type="module">
+      import { LensIt } from "./index.js";
+      window.LensIt = LensIt;
+    </script>
+  </head>
+
+  <body>
+    <lens-it></lens-it>
+
+    <lens-it ext=".js"></lens-it>
+
+    <lens-it buttons="roald"></lens-it>
+
+    <lens-it buttons="pall , till ,poar"></lens-it>
+
+    <lens-it ext=".js" buttons=""></lens-it>
+
+    <script>
+      Array.from(document.getElementsByTagName("lens-it")).forEach(
+        (el) => (el.code = "hello hello")
+      );
+    </script>
+  </body>
+</html>

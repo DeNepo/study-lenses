@@ -71,11 +71,11 @@ const blanksLens = ({ config, resource }) => {
     config.sharedStatic
   }/wc-trace-table/configurable-button.js' type='module'></script>
 
-  <script src='${config.sharedStatic}/parsonizer/jquery.min.js'></script>
+  <!-- <script src='${config.sharedStatic}/parsonizer/jquery.min.js'></script>
   <script src='${config.sharedStatic}/parsonizer/jquery-ui.min.js'></script>
   <script src='${
     config.sharedStatic
-  }/wc-trace-table/configurable-button.js' type='module'></script>
+  }/wc-trace-table/configurable-button.js' type='module'></script> -->
 
   <script src='${config.ownStatic}/open-with.js'></script>
 

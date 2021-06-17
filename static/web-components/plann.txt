@@ -1,0 +1,12 @@
+switch to a component library?
+  https://github.github.io/catalyst/guide/introduction/
+  https://github.com/lit/lit
+  https://open-wc.org/guides/community/component-libraries/
+  https://open-wc.org/guides/developing-components/code-examples/
+  https://stenciljs.com/
+
+https://github.com/webcomponents/gold-standard/wiki
+
+
+? https://harmony-docs.bit.dev/
+

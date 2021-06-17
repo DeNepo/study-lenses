@@ -1,7 +1,7 @@
 // "use strict";
 
 let evaller = null;
-const studyWithEval = (debug) => (code) => {
+const studyWithEval = (debug) => (code, tests) => {
   if (typeof code !== "string") {
     // this should never happen, but just in case ....
     throw new TypeError("code is not a string");
@@ -31,7 +31,7 @@ const studyWithEval = (debug) => (code) => {
   evaller.id = "evaller";
 
   evaller.onload = () => {
-    if (config.locals.tests) {
+    if (config.locals.tests || tests) {
       evaller.contentWindow.describe = describe;
       evaller.contentWindow.it = it;
       evaller.contentWindow.expect = expect;
@@ -46,11 +46,11 @@ const studyWithEval = (debug) => (code) => {
       script.innerHTML = `'use strict';\neval(decodeURI(\`${encodeURI(
         finalCode
       )}\`));`;
-      // script.innerHTML = "'use strict';\n\n" + finalCode;
+      script.innerHTML = "'use strict';\n\n" + finalCode;
     } else {
       // evalling in non-strict script so callstacks are consistent
       //  to avoid misconception that strict is fundamentally different
-      script.innerHTML = `\neval(decodeURI(\`${encodeURI(finalCode)}\`));`;
+      script.innerHTML = finalCode;
     }
 
     evaller.contentDocument.body.appendChild(script);

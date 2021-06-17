@@ -1,6 +1,13 @@
-"use strict";
+const fs = require("fs");
+const path = require("path");
 
 const CodeSSR = require("./code.js");
+
+const hasSpec = (info) => {
+  const absolutePath = path.join(info.root, info.dir, info.base);
+  const absoluteSpecPath = absolutePath.split(".js").join(".spec.js");
+  return fs.existsSync(absoluteSpecPath);
+};
 
 class JavaScriptSSR extends CodeSSR {
   constructor({ config, resource }) {
@@ -11,6 +18,8 @@ class JavaScriptSSR extends CodeSSR {
       this.config.locals.debug || this.config.locals.eval || false;
 
     this.config.trace = config.trace;
+
+    this.config.hasSpec = hasSpec(resource.info);
   }
 
   styles() {
@@ -163,10 +172,10 @@ class JavaScriptSSR extends CodeSSR {
     <form id='environment-form' style='display: ${
       locals.environment ? "inline-block" : "none"
     };'>
-      <input name='strict' id='strict' type='checkbox' ${
+      <!-- <input name='strict' id='strict' type='checkbox' ${
         locals.strict === true || locals.type === "module" ? "checked" : ""
       } />
-      <label for='strict'>strict</label>
+      <label for='strict'>strict</label> -->
       <input name='module' id='module' type='checkbox' ${
         locals.type === "module" ? "checked" : ""
       } />

@@ -96,20 +96,14 @@ const { describe, it, beforeEach, afterEach } = (() => {
           `%c✖ FAIL: ${description}`,
           "font-weight: bold; color: red;"
         );
-
-        const toLog =
-          thrown &&
-          typeof thrown.name === "string" &&
-          (thrown.name.includes("AssertionError") || // from the days of chai
-            (thrown.message.includes("expect(received)") &&
-              thrown.message.includes("Received:")))
-            ? thrown.message
-            : `uncaught${thrown && thrown.name ? ` ${thrown.name}` : ""}${
-                thrown && thrown.message ? `: ${thrown.message}` : ""
-              }`;
-        console.groupCollapsed(`%c${toLog}`, "font-weight: bold; color:red;");
-        console.error(thrown);
-        console.groupEnd();
+        for (let call of consoleCalls) {
+          console[call.method](...call.args);
+        }
+        if (thrown instanceof Error) {
+          console.error(`${thrown.name}: ${thrown.message}`);
+        } else {
+          console.error(thrown);
+        }
         console.groupEnd();
       } else {
         if (consoleCalls.length === 0) {

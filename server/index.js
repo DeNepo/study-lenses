@@ -74,13 +74,10 @@ app.use(
   /[\s\S]*shared_static_resources/,
   express.static(path.join(__dirname, "..", "static"))
 );
-// // broken, and not priority atm
-// if (localLensesPathIsValid) {
-//   app.use(
-//     /[\s\S]*own_static_resources_local_lenses/,
-//     express.static(localLensesPath)
-//   );
-// }
+app.use(
+  /[\s\S]*shared_components/,
+  express.static(path.join(__dirname, "..", "static", "web-components"))
+);
 
 if (config.locals.static && typeof config.locals.static === "object") {
   for (const staticPath in config.locals.static) {

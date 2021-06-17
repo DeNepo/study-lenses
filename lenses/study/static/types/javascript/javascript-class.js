@@ -7,12 +7,13 @@ export class JavaScriptFE extends CodeFE {
 
     if (
       this.config.base &&
-      Array.isArray(this.config.locals.tests) &&
-      this.config.locals.tests.find((matcher) =>
-        new RegExp(matcher, "i").test(this.config.base)
-      )
+      Array.isArray(this.config.locals.tests)
+      // &&
+      // this.config.locals.tests.find((matcher) =>
+      //   new RegExp(matcher, "i").test(this.config.base)
+      // )
     ) {
-      this.testedExtensions = this.config.locals.tests;
+      // this.testedExtensions = this.config.locals.tests;
       this.config.locals.tests = true;
     }
 
@@ -53,27 +54,38 @@ export class JavaScriptFE extends CodeFE {
         }
         event.preventDefault();
       });
-    environmentForm.addEventListener("change", (event) => {
-      const target = event.target;
-      if (target.name === "strict" && this.config.locals.type !== "module") {
-        this.config.locals.strict = !this.config.locals.strict;
-      } else if (
-        target.name === "strict" &&
-        this.config.locals.type === "module"
-      ) {
-        target.form.strict.checked = true;
+    if (environmentForm) {
+      environmentForm.addEventListener("change", (event) => {
+        const target = event.target;
+        if (target.form.module.checked === true) {
+          this.config.locals.type = "module";
+        } else {
+          this.config.locals.type = "text/javascript";
+        }
+
         event.preventDefault();
         event.stopPropagation();
-      } else {
-        if (this.config.locals.type === "module") {
-          this.config.locals.type = "text/javascript";
-          environmentForm.strict.checked = this.config.locals.strict;
-        } else {
-          this.config.locals.type = "module";
-          environmentForm.strict.checked = true;
-        }
-      }
-    });
+        // const target = event.target;
+        // if (target.name === "strict" && this.config.locals.type !== "module") {
+        //   this.config.locals.strict = !this.config.locals.strict;
+        // } else if (
+        //   target.name === "strict" &&
+        //   this.config.locals.type === "module"
+        // ) {
+        //   target.form.strict.checked = true;
+        //   event.preventDefault();
+        //   event.stopPropagation();
+        // } else {
+        //   if (this.config.locals.type === "module") {
+        //     this.config.locals.type = "text/javascript";
+        //     environmentForm.strict.checked = this.config.locals.strict;
+        //   } else {
+        //     this.config.locals.type = "module";
+        //     environmentForm.strict.checked = true;
+        //   }
+        // }
+      });
+    }
 
     // if (this.config.locals.loopGuard) {
     const loopGuardForm = document.getElementById("loop-guard-form");
@@ -91,14 +103,17 @@ export class JavaScriptFE extends CodeFE {
         }
         event.preventDefault();
       });
-    loopGuardForm.addEventListener("change", (event) => {
-      this.config.locals.loopGuard.active = event.target.form.active.checked;
-      this.config.locals.loopGuard.max = Number(event.target.form.max.value);
-    });
+    if (loopGuardForm) {
+      loopGuardForm.addEventListener("change", (event) => {
+        this.config.locals.loopGuard.active = event.target.form.active.checked;
+        this.config.locals.loopGuard.max = Number(event.target.form.max.value);
+      });
+    }
+
     // }
 
     const testsForm = document.getElementById("tests-form");
-    if (this.config.locals.tests === true) {
+    if (this.config.locals.tests === true && document.getElementById("tests")) {
       document.getElementById("tests").checked = true;
     }
     document
@@ -111,9 +126,11 @@ export class JavaScriptFE extends CodeFE {
         }
         event.preventDefault();
       });
-    testsForm.addEventListener("change", (event) => {
-      this.config.locals.tests = event.target.form.tests.checked;
-    });
+    if (testsForm) {
+      testsForm.addEventListener("change", (event) => {
+        this.config.locals.tests = event.target.form.tests.checked;
+      });
+    }
 
     // if (this.config.locals.clearScheduled) {
     const clearScheduledButton = document.getElementById(
@@ -128,7 +145,9 @@ export class JavaScriptFE extends CodeFE {
           clearScheduledButton.style = "display: none;";
         }
       });
-    clearScheduledButton.addEventListener("click", clearScheduledFactory());
+    if (clearScheduledButton) {
+      clearScheduledButton.addEventListener("click", clearScheduledFactory());
+    }
     // }
 
     // if (this.config.locals.flowchart) {
@@ -142,9 +161,11 @@ export class JavaScriptFE extends CodeFE {
           flowchartButton.style = "display: none;";
         }
       });
-    flowchartButton.addEventListener("click", () =>
-      this.studyWith("flowchart")
-    );
+    if (flowchartButton) {
+      flowchartButton.addEventListener("click", () =>
+        this.studyWith("flowchart")
+      );
+    }
     // }
 
     const variablesButton = document.getElementById("variables-button");
@@ -157,9 +178,11 @@ export class JavaScriptFE extends CodeFE {
           variablesButton.style = "display: none;";
         }
       });
-    variablesButton.addEventListener("click", () =>
-      this.studyWith("variables")
-    );
+    if (variablesButton) {
+      variablesButton.addEventListener("click", () =>
+        this.studyWith("variables")
+      );
+    }
 
     const blanksButton = document.getElementById("blanks-button");
     document
@@ -172,7 +195,9 @@ export class JavaScriptFE extends CodeFE {
           blanksButton.style = "display: none;";
         }
       });
-    blanksButton.addEventListener("click", () => this.studyWith("blanks"));
+    if (blanksButton) {
+      blanksButton.addEventListener("click", () => this.studyWith("blanks"));
+    }
 
     const astButton = document.getElementById("ast-button");
     document.getElementById("ast-input").addEventListener("change", (event) => {
@@ -182,9 +207,9 @@ export class JavaScriptFE extends CodeFE {
         astButton.style = "display: none;";
       }
     });
-    astButton.addEventListener("click", () => this.studyWith("acorn"));
-
-    // if (this.config.locals.eval) {
+    if (astButton) {
+      astButton.addEventListener("click", () => this.studyWith("acorn"));
+    }
 
     const runContainer = document.getElementById("run-container");
     document.getElementById("run-input").addEventListener("change", (event) => {
@@ -195,6 +220,78 @@ export class JavaScriptFE extends CodeFE {
         runContainer.style = "display: none;";
       }
     });
+
+    const debugContainer = document.getElementById("debug-container");
+    document
+      .getElementById("debug-input")
+      .addEventListener("change", (event) => {
+        this.config.locals.debug = !this.config.locals.debug;
+        if (event.target.checked) {
+          debugContainer.style = "display: inline-block;";
+        } else {
+          debugContainer.style = "display: none;";
+        }
+      });
+
+    if (this.config.hasSpec === true && this.config.locals.save === true) {
+      const runSpec = (debug) => async () => {
+        try {
+          // save changes
+          await fetch(
+            window.location.origin + window.location.pathname + "?study",
+            {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ text: this.editor.getValue() }),
+            }
+          )
+            .then((response) => response.text())
+            .then((message) => {
+              console.log(message);
+            })
+            .catch((err) => {
+              alert(err.name + ": " + err.message);
+              console.error("Error:", err);
+            });
+
+          // fetch spec
+          const specCode = await fetch(
+            (window.location.origin + window.location.pathname)
+              .split(".js")
+              .join(".spec.js")
+          ).then((res) => res.text());
+
+          // eval spec
+          debug
+            ? studyWith.debugger(specCode, true)
+            : studyWith.console(specCode, true);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+
+      const runButton = document.getElementById("run-button");
+      if (runButton) {
+        runButton.innerHTML = "run spec";
+        runButton.addEventListener("click", runSpec());
+      }
+
+      const debugButton = document.getElementById("debug-button");
+      if (debugButton) {
+        debugButton.innerHTML = "debug spec";
+        debugButton.addEventListener("click", runSpec(true));
+      }
+    } else {
+      document
+        .getElementById("run-button")
+        .addEventListener("click", () => this.studyWith("console"));
+      document
+        .getElementById("debug-button")
+        .addEventListener("click", () => this.studyWith("debugger"));
+    }
 
     const eslintContainer = document.getElementById("eslint-container");
     document
@@ -208,9 +305,11 @@ export class JavaScriptFE extends CodeFE {
         }
       });
 
-    document
-      .getElementById("eslint-button")
-      .addEventListener("click", () => this.studyWith("eslint"));
+    if (document.getElementById("eslint-button")) {
+      document
+        .getElementById("eslint-button")
+        .addEventListener("click", () => this.studyWith("eslint"));
+    }
 
     const p5Container = document.getElementById("p5-container");
     document.getElementById("p5-input").addEventListener("change", (event) => {
@@ -256,28 +355,12 @@ export class JavaScriptFE extends CodeFE {
         }
       });
 
-    const debugContainer = document.getElementById("debug-container");
-    document
-      .getElementById("debug-input")
-      .addEventListener("change", (event) => {
-        this.config.locals.debug = !this.config.locals.debug;
-        if (event.target.checked) {
-          debugContainer.style = "display: inline-block;";
-        } else {
-          debugContainer.style = "display: none;";
-        }
-      });
+    if (document.getElementById("p5-button")) {
+      document
+        .getElementById("p5-button")
+        .addEventListener("click", () => this.studyWith("p5"));
+    }
 
-    document
-      .getElementById("p5-button")
-      .addEventListener("click", () => this.studyWith("p5"));
-
-    document
-      .getElementById("run-button")
-      .addEventListener("click", () => this.studyWith("console"));
-    document
-      .getElementById("debug-button")
-      .addEventListener("click", () => this.studyWith("debugger"));
     // }
 
     // if (this.config.locals.openIn) {
@@ -293,13 +376,15 @@ export class JavaScriptFE extends CodeFE {
         }
       });
 
-    document
-      .getElementById("open-in-button")
-      .addEventListener("click", (event) => {
-        const thisThing = event.target.form.thisThing.value;
-        this.studyWith(thisThing);
-        event.preventDefault();
-      });
+    if (document.getElementById("open-in-button")) {
+      document
+        .getElementById("open-in-button")
+        .addEventListener("click", (event) => {
+          const thisThing = event.target.form.thisThing.value;
+          this.studyWith(thisThing);
+          event.preventDefault();
+        });
+    }
     // }
 
     if (this.config.locals.steamroll) {
@@ -430,7 +515,7 @@ export class JavaScriptFE extends CodeFE {
       typeof evalCode === "object"
         ? guardedTree
         : Astring.generate(guardedTree);
-    console.log(hasLoops);
+
     return hasLoops ? guarded : evalCode;
   };
 

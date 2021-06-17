@@ -1,6 +1,6 @@
 import chance from "./chance.js";
 
-export const testGenerator = ({ args, solution, length = 10 }) => {
+export const generateTests = (args, solution, length = 10) => {
   const tests = [];
   for (let i = 0; i < length; i++) {
     const generatedArgs = args(chance);

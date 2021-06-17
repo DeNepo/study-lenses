@@ -40,6 +40,7 @@ const renderDir = (resource, config) => {
       </ul>
       ${readmeSection}
     </div>
+
   </body>
 </html>`;
 };

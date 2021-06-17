@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title></title>
+
+    <script src="../../testing/jest-matchers.js"></script>
+    <script src="../../testing/describe-it.js"></script>
+    <script src="../../prettier/standalone.js"></script>
+    <script src="../../prettier/parser-babel.js"></script>
+    <script src="../../trace/aran-build.js"></script>
+    <script type="module">
+      import { walk } from "../../estree-walker/index.js";
+      window.walk = walk;
+    </script>
+    <script src="../../astravel.min.js"></script>
+
+    <script type="module" src="./index.js"></script>
+  </head>
+
+  <body>
+    <script>
+      const editor = {
+        getValue: () => document.getElementById("editor").value,
+      };
+    </script>
+
+    plain <run-it></run-it>
+    <br />
+    debug <run-it debug></run-it>
+    <br />
+    debug + guard (1) <run-it debug loop-guard="1"></run-it>
+    <br />
+    debug + module <run-it debug module></run-it>
+    <br />
+    debug + module + guard <run-it debug module loop-guard></run-it>
+
+    <textarea style="height: 100vh; width: 100vw" id="editor">
+'use strict';
+
+/* for loop
+
+  iterates from 0 -> 3
+
+*/
+
+for (let i = 0; i < 4; i++) {
+  // log each value of i
+  console.log(i); // 0, 1, 2, 3
+}
+    </textarea>
+  </body>
+</html>
