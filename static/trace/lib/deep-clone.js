@@ -1,4 +1,3 @@
-"use strict";
 /**
  * creates a deep clone of the most common JavaScript data types and structures
  * @param {any} src - the value to clone

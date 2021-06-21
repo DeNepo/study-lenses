@@ -88,10 +88,7 @@ window.addEventListener("DOMContentLoaded", () => {
           .addEventListener("click", (event) => {
             // trace is a global function
             // console.log(traceConfig);
-            trace(
-              (config.locals.strict ? '"use strict";' : "") +
-                trace.editor.getValue()
-            );
+            trace((config.locals.strict ? "" : "") + trace.editor.getValue());
             // shadowStateHistory(this.editor.getValue());
             event.preventDefault();
           });

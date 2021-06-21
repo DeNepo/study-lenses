@@ -190,9 +190,10 @@ export class CodeFE {
         wordWrap: "on",
         wrappingStrategy: "advanced",
         minimap: {
-          enabled: false,
+          enabled: true,
         },
         overviewRulerLanes: 0,
+        // fontSize: 13,
       },
       config
     );

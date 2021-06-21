@@ -1,5 +1,3 @@
-"use strict";
-
 const noTempValue = Symbol("no temp value");
 
 export const state = {
@@ -15,6 +13,7 @@ export const state = {
   hoisted: [],
   aran: null, // an initialized aran instance
   firstInstrumentedCall: false,
+  builtInEntryPoint: null,
 };
 
 // const e = {

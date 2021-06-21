@@ -1,5 +1,3 @@
-"use strict";
-
 /*
   boolean configs for which language features will be traced
   defaults to only:

@@ -1,5 +1,3 @@
-"use strict";
-
 import { ceskAdvice, ceskState } from "./cesk-advice.js";
 import { stepFactory } from "./step.js";
 import { deepClone } from "somewhere";

@@ -56,7 +56,8 @@ const scopeAnalysisLens = ({ resource, config }) => {
       config.sharedStatic
     }/ask/component/ask-me.js'></script>
 
-    <script src="${config.ownStatic}/js/shift-parser.js"></script>
+    <!-- <script src="${config.ownStatic}/js/shift-parser.js"></script> -->
+    <script src="${config.sharedStatic}/shift/parser.js"></script>
     <script src="${config.ownStatic}/js/shift-codegen.js"></script>
     <script src="${config.ownStatic}/js/shift-scope.js"></script>
 

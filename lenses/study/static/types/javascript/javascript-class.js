@@ -42,18 +42,20 @@ export class JavaScriptFE extends CodeFE {
     }
 
     const environmentForm = document.getElementById("environment-form");
-    document
-      .getElementById("environment-input")
-      .addEventListener("change", (event) => {
-        if (event.target.checked) {
-          this.config.locals.environment = false;
-          environmentForm.style = "display: inline-block;";
-        } else {
-          this.config.locals.environment = true;
-          environmentForm.style = "display: none;";
-        }
-        event.preventDefault();
-      });
+    if (document.getElementById("environment-input")) {
+      document
+        .getElementById("environment-input")
+        .addEventListener("change", (event) => {
+          if (event.target.checked) {
+            this.config.locals.environment = false;
+            environmentForm.style = "display: inline-block;";
+          } else {
+            this.config.locals.environment = true;
+            environmentForm.style = "display: none;";
+          }
+          event.preventDefault();
+        });
+    }
     if (environmentForm) {
       environmentForm.addEventListener("change", (event) => {
         const target = event.target;
@@ -89,7 +91,9 @@ export class JavaScriptFE extends CodeFE {
 
     // if (this.config.locals.loopGuard) {
     const loopGuardForm = document.getElementById("loop-guard-form");
-    let lastActiveValue = this.config.locals.loopGuard.active;
+    let lastActiveValue = this.config.locals.loopGuard
+      ? this.config.locals.loopGuard.active
+      : false;
     document
       .getElementById("loop-guard-input")
       .addEventListener("change", (event) => {
@@ -199,17 +203,18 @@ export class JavaScriptFE extends CodeFE {
       blanksButton.addEventListener("click", () => this.studyWith("blanks"));
     }
 
-    const astButton = document.getElementById("ast-button");
+    // const astButton = document.getElementById("ast-button");
+    const astContainer = document.getElementById("ast-container");
     document.getElementById("ast-input").addEventListener("change", (event) => {
       if (event.target.checked) {
-        astButton.style = "display: inline-block;";
+        astContainer.style = "display: inline-block;";
       } else {
-        astButton.style = "display: none;";
+        astContainer.style = "display: none;";
       }
     });
-    if (astButton) {
-      astButton.addEventListener("click", () => this.studyWith("acorn"));
-    }
+    // if (astButton) {
+    //   astButton.addEventListener("click", () => this.studyWith("acorn"));
+    // }
 
     const runContainer = document.getElementById("run-container");
     document.getElementById("run-input").addEventListener("change", (event) => {

@@ -1,5 +1,3 @@
-"use strict";
-
 // --- initialize aran ---
 
 const aran = Aran({ namespace: "something" });

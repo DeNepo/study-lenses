@@ -4,6 +4,9 @@ const path = require("path");
 const CodeSSR = require("./code.js");
 
 const hasSpec = (info) => {
+  if (!info.root || !info.dir || !info.base) {
+    return false;
+  }
   const absolutePath = path.join(info.root, info.dir, info.base);
   const absoluteSpecPath = absolutePath.split(".js").join(".spec.js");
   return fs.existsSync(absoluteSpecPath);
@@ -45,6 +48,9 @@ class JavaScriptSSR extends CodeSSR {
       <script src='${this.config.sharedStatic}/parsonizer/jquery.min.js'></script>
       <script src='${this.config.sharedStatic}/parsonizer/jquery-ui.min.js'></script>
       <script src='${this.config.sharedStatic}/wc-trace-table/configurable-button.js' type='module'></script>
+      <script src='${this.config.sharedStatic}/shift/parser.js'></script>
+      <script src='${this.config.sharedStatic}/astravel.min.js'></script>
+      <script src='${this.config.sharedStatic}/web-components/ast-it/index.js' type='module'></script>
       <!-- <script src='${this.config.sharedStatic}/trace/shadow-state.js'></script> -->`
     );
   }
@@ -164,8 +170,9 @@ class JavaScriptSSR extends CodeSSR {
       <button id='blanks-button'  style='display: ${blanksDisplay};'>blanks</button>`;
 
     const astDisplay = locals.ast ? "inline-block" : "none";
-    superPanel += `
-      <button id='ast-button' style='display: ${astDisplay};'>syntax tree</button>`;
+    superPanel += `<div id='ast-container' style='display: ${astDisplay};'>
+      <ast-it></ast-it>
+    </div>`;
 
     superPanel += `
     <br>  <div>

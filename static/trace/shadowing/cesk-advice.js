@@ -1,5 +1,3 @@
-"use strict";
-
 // waay too long signature, needs work
 const ceskAdviceSignature = (
   adviceName,

@@ -2,7 +2,7 @@ import { config } from "../data/config.js";
 import { state } from "../data/state.js";
 import { print } from "../lib/trace-log.js";
 
-import { isNative } from "../lib/is-native.js";
+import { isBuiltIn } from "../lib/is-built-in.js";
 import { isInRange } from "../lib/is-in-range.js";
 
 export default {
@@ -21,7 +21,8 @@ export default {
       xs[0] &&
       xs[0].name === "Object"
     ) {
-      return Reflect.apply(f, t, xs);
+      const result = Reflect.apply(f, t, xs);
+      return result;
     }
     // console.log(1);
 
@@ -39,7 +40,8 @@ export default {
       (state.node.callee.object.type === "Literal" || t === undefined) &&
       f.name === "Object"
     ) {
-      return Reflect.apply(f, t, xs);
+      const result = Reflect.apply(f, t, xs);
+      return result;
     }
 
     const commaSeparatedArgs = [];
@@ -63,6 +65,7 @@ export default {
             ...commaSeparatedArgs,
             ")",
           ],
+          overrideBuiltIn: true,
         });
       }
       return undefined;
@@ -75,14 +78,22 @@ export default {
     const firstAndThirdAreSame =
       (xs[0] ? xs[0].toString() : xs[0]) === (xs[2] ? xs[2].toString() : xs[2]);
     if (f.name === "get" && xs.length === 3 && firstAndThirdAreSame) {
-      return Reflect.apply(f, t, xs);
+      const result = Reflect.apply(f, t, xs);
+      // if (state.builtInEntryPoint === callSymbol) {
+      //   state.builtInEntryPoint = null;
+      // }
+      return result;
     }
 
     // console.log(3);
 
     // in case only console & not functions
     if (!config.functions || !nodeIsInRange) {
-      return Reflect.apply(f, t, xs);
+      const result = Reflect.apply(f, t, xs);
+      if (state.builtInEntryPoint === callSymbol) {
+        state.builtInEntryPoint = null;
+      }
+      return result;
     }
 
     // account for Aran implementation
@@ -102,17 +113,25 @@ export default {
       // !config.functionsList.find((query) => new RegExp(query).test(functionName))
       !config.functionsList.includes(functionName)
     ) {
-      state.scopes.push(null);
       const result = Reflect.apply(f, t, xs);
-      state.scopes.pop();
+      if (state.builtInEntryPoint === callSymbol) {
+        state.builtInEntryPoint = null;
+      }
       return result;
+      // state.scopes.push(null);
+      // const result = Reflect.apply(f, t, xs);
+      // state.scopes.pop();
+      // return result;
     }
 
     // console.log(5);
 
     print({
       prefix: [line, col],
-      logs: [functionName + " (function call):", ...commaSeparatedArgs],
+      logs: [
+        functionName + ` (call${isBuiltIn(f) ? ", built-in" : ""}):`,
+        ...commaSeparatedArgs,
+      ],
       out: console.groupCollapsed,
     });
     if (config.this) {
@@ -122,16 +141,26 @@ export default {
     }
 
     // console.log(7);
-    state.scopes.push(null);
+    const callSymbol = Symbol(f.name);
+    if (!state.builtInEntryPoint && isBuiltIn(f)) {
+      // console.log(f.name);
+      state.builtInEntryPoint = callSymbol;
+    }
+
     const x = Reflect.apply(f, t, xs);
-    state.scopes.pop();
+
+    if (state.builtInEntryPoint === callSymbol) {
+      state.builtInEntryPoint = null;
+    }
 
     print({
       prefix: "(return value):",
       logs: [x],
       style: "font-weight: bold;",
     });
-    console.groupEnd();
+    if (!state.builtInEntryPoint) {
+      console.groupEnd();
+    }
 
     return x;
   },

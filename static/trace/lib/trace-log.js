@@ -1,5 +1,3 @@
-"use strict";
-
 import { state } from "../data/state.js";
 import { config } from "../data/config.js";
 import { deepClone } from "./deep-clone.js";
@@ -34,7 +32,17 @@ const linePrefix = (line, col = null) => {
   return "%c" + prefix;
 };
 
-export const print = ({ logs = [], prefix, out = console.log, style = "" }) => {
+export const print = ({
+  logs = [],
+  prefix,
+  out = console.log,
+  style = "",
+  overrideBuiltIn,
+}) => {
+  if (state.builtInEntryPoint && !overrideBuiltIn) {
+    return;
+  }
+
   logs = logs
     .map((thing) =>
       thing &&

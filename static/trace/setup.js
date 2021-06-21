@@ -1,5 +1,3 @@
-"use strict";
-
 import { ADVICE } from "./advice/index.js";
 
 export const run = () => {
