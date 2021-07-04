@@ -1,0 +1,15 @@
+{
+  "lastStudy": "stringified date",
+  "cards": [
+    {
+      "path": "./relative/path/from/this/file.md",
+      "history": [
+        {
+          "date": "stringified date",
+          "correct": true
+        }
+      ],
+      "schedule": 1
+    }
+  ]
+}

@@ -7,13 +7,13 @@ export class JavaScriptFE extends CodeFE {
 
     if (
       this.config.base &&
-      Array.isArray(this.config.locals.tests)
-      // &&
-      // this.config.locals.tests.find((matcher) =>
-      //   new RegExp(matcher, "i").test(this.config.base)
-      // )
+      Array.isArray(this.config.locals.tests) &&
+      this.config.locals.tests.find((matcher) =>
+        new RegExp(matcher, "i").test(this.config.base)
+      )
     ) {
       // this.testedExtensions = this.config.locals.tests;
+      // console.log(3);
       this.config.locals.tests = true;
     }
 

@@ -229,10 +229,7 @@ if (config.locals.save === true) {
 
 const fileNameRegex = /^(?!.*(?:\s))[\w\d-_.]*\.js$/g;
 
-const starterCode = `/**
- *
- */
-const ${config.name} = () => {};`;
+const starterCode = `const ${config.name} = () => {};`;
 
 const createSolution = (fileName, code = starterCode) => {
   const name = fileName
@@ -257,7 +254,7 @@ newSolutionButton.addEventListener("click", (event) => {
     }
 
     if (!fileNameRegex.test(input)) {
-      alert(`"${input}" is not a valid file name`);
+      alert(`"${input}" is not a valid .js file name`);
       continue;
     }
 

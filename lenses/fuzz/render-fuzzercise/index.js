@@ -18,10 +18,7 @@ const renderFuzzercize = async (resource, config) => {
     resource.info.base
   );
 
-  let jsDoc = `/**
- *
- */
-`;
+  let jsDoc;
   const jsDocPath = path.join(basePath, "jsdoc.js");
   if (fs.existsSync(jsDocPath)) {
     jsDoc = await readFilePromise(jsDocPath, "utf-8");
