@@ -16,7 +16,6 @@ const liveStudyLense = async ({
   responseData,
   requestData,
 }) => {
-  debugger;
   if (config.locals.save === true && requestData.method === "POST") {
     try {
       const absolutePath = path.join(

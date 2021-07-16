@@ -1,0 +1,5 @@
+could become like fuzz with multiple starter solutions
+  solutions are stored as blockly .json files
+
+todo
+  decide language subset

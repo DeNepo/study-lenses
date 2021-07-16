@@ -87,9 +87,8 @@ window.addEventListener("DOMContentLoaded", () => {
           .getElementById("trace-button")
           .addEventListener("click", (event) => {
             // trace is a global function
-            // console.log(traceConfig);
-            trace((config.locals.strict ? "" : "") + trace.editor.getValue());
-            // shadowStateHistory(this.editor.getValue());
+            // console.log(trace.editor.getValue());
+            trace(trace.editor.getValue());
             event.preventDefault();
           });
 

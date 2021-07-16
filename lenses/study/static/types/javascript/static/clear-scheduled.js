@@ -14,8 +14,4 @@
 //   };
 // };
 
-const clearScheduledFactory = () => {
-  return () => {
-    document.body.removeChild(evaller);
-  };
-};
+const clearScheduledFactory = () => () => document.body.removeChild(evaller);

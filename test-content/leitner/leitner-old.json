@@ -1,0 +1,48 @@
+{
+  "cards": [
+    {
+      "path": "./functions/arguments.md",
+      "box": 5
+    },
+    {
+      "path": "./functions/parameters.md",
+      "box": 7
+    },
+    {
+      "path": "./functions/return-values.md",
+      "box": 7
+    },
+    {
+      "path": "./loops/for-in.md",
+      "box": 7
+    },
+    {
+      "path": "./loops/for.md",
+      "box": 5
+    },
+    {
+      "path": "./loops/while.md",
+      "box": 7
+    },
+    {
+      "path": "./variables/assign.md",
+      "box": 7
+    },
+    {
+      "path": "./variables/declare.md",
+      "box": 7
+    },
+    {
+      "path": "./variables/initialize.md",
+      "box": 7
+    },
+    {
+      "path": "./flashcard.md",
+      "box": 2
+    },
+    {
+      "path": "./loops/for-of.md",
+      "box": 7
+    }
+  ]
+}

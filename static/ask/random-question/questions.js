@@ -356,7 +356,10 @@ export const questions = [
       });
       const node =
         uniqueIdentifiers[(uniqueIdentifiers.length * Math.random()) | 0];
-      return `Is the name '${node.name}' built into JS, or did the developer write it?`;
+      return `Where is the name '${node.name}' defined?
+- In this file
+- In a different file
+- It is built into JavaScript`;
     },
     levels: [1],
     nodeTypes: ["Identifier"],

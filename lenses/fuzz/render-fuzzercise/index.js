@@ -178,7 +178,7 @@ const renderFuzzercize = async (resource, config) => {
 
     <script src='${config.sharedStatic}/lib/monaco-ext-to-language.js'></script>
 
-    <script src='${config.sharedStatic}/testing/describe-it.js'></script>
+    <script src='${config.ownStatic}/describe-it.js'></script>
     <script src='${config.sharedStatic}/testing/jest-matchers.js'></script>
 
 

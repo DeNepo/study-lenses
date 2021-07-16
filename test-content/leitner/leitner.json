@@ -1,15 +1,24 @@
 {
-  "lastStudy": "stringified date",
-  "cards": [
-    {
-      "path": "./relative/path/from/this/file.md",
-      "history": [
-        {
-          "date": "stringified date",
-          "correct": true
-        }
-      ],
-      "schedule": 1
-    }
-  ]
+  "boxes": {
+    "1": [
+      "./functions/parameters.md"
+    ],
+    "2": [
+      "./variables/declare.md",
+      "./functions/arguments.md"
+    ],
+    "3": [
+      "./variables/assign.md",
+      "./loops/for-of.md",
+      "./variables/initialize.md",
+      "./loops/while.md"
+    ],
+    "4": [
+      "./functions/return-values.md",
+      "./loops/for.md",
+      "./flashcard.md",
+      "./loops/for-in.md"
+    ],
+    "5": []
+  }
 }

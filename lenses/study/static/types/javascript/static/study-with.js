@@ -32,8 +32,11 @@ const studyWithEval = (debug) => (code, tests) => {
 
   evaller.onload = () => {
     if (config.locals.tests || tests) {
-      evaller.contentWindow.describe = describe;
-      evaller.contentWindow.it = it;
+      // evaller.contentWindow.describe = describe;
+      // evaller.contentWindow.it = it;
+
+      describeItify(evaller.contentWindow);
+
       evaller.contentWindow.expect = expect;
     }
 
@@ -78,6 +81,18 @@ export const studyWith = {
       sanitizedJST +
       "&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false";
     window.open(jsTutorURL, "_blank");
+  },
+  "ui.dev": function (code) {
+    const encodedJST = encodeURIComponent(code);
+    const sanitizedJST = this.utils.sanitize(encodedJST);
+    const uiDevURL =
+      "https://ui.dev/javascript-visualizer/?code=" + sanitizedJST;
+    window.open(uiDevURL, "_blank");
+  },
+  jsv9000: function (code) {
+    const encoded = encodeURIComponent(btoa(code));
+    const loupeURL = "https://www.jsv9000.app/?code=" + encoded;
+    window.open(loupeURL, "_blank");
   },
   loupe: function (code) {
     const encoded = encodeURIComponent(btoa(code));

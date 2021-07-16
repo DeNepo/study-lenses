@@ -75,6 +75,11 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.blanks ? "checked" : ""
       } /> <label for='blanks-input'>blanks</label>
     </form>
+    <form>
+      <input id='writeme-input' type='checkbox' ${
+        this.config.locals.writeme ? "checked" : ""
+      } /> <label for='writeme-input'>writeme</label>
+    </form>
     ${superConfigOptions}
     <form>
       <input id='eslint-input' type='checkbox' ${
@@ -168,6 +173,10 @@ class JavaScriptSSR extends CodeSSR {
     const blanksDisplay = locals.blanks ? "inline-block" : "none";
     superPanel += `
       <button id='blanks-button'  style='display: ${blanksDisplay};'>blanks</button>`;
+
+    const writemeDisplay = locals.writeme ? "inline-block" : "none";
+    superPanel += `
+      <button id='writeme-button'  style='display: ${writemeDisplay};'>writeme</button>`;
 
     const astDisplay = locals.ast ? "inline-block" : "none";
     superPanel += `<div id='ast-container' style='display: ${astDisplay};'>
@@ -277,8 +286,8 @@ class JavaScriptSSR extends CodeSSR {
     const openable = [
       "jsTutorLive",
       "jsTutor",
+      "jsv9000",
       "promisees",
-      "loupe",
       "esprima",
     ];
     superPanel += `<form id='open-in-container' style='display: ${openInDisplay};'>

@@ -15,6 +15,10 @@ export class JavaScriptFE extends CodeFE {
       // this.testedExtensions = this.config.locals.tests;
       // console.log(3);
       this.config.locals.tests = true;
+      config.locals.tests = true;
+    } else {
+      this.config.locals.tests = false;
+      config.locals.tests = false;
     }
 
     window.editor = this.editor;
@@ -188,6 +192,21 @@ export class JavaScriptFE extends CodeFE {
       );
     }
 
+    const writemeButton = document.getElementById("writeme-button");
+    document
+      .getElementById("writeme-input")
+      .addEventListener("change", (event) => {
+        this.config.writeme = !this.config.writeme;
+        if (event.target.checked) {
+          writemeButton.style = "display: inline-block;";
+        } else {
+          writemeButton.style = "display: none;";
+        }
+      });
+    if (writemeButton) {
+      writemeButton.addEventListener("click", () => this.studyWith("writeme"));
+    }
+
     const blanksButton = document.getElementById("blanks-button");
     document
       .getElementById("blanks-input")
@@ -290,12 +309,14 @@ export class JavaScriptFE extends CodeFE {
         debugButton.addEventListener("click", runSpec(true));
       }
     } else {
-      document
-        .getElementById("run-button")
-        .addEventListener("click", () => this.studyWith("console"));
-      document
-        .getElementById("debug-button")
-        .addEventListener("click", () => this.studyWith("debugger"));
+      try {
+        document
+          .getElementById("run-button")
+          .addEventListener("click", () => this.studyWith("console"));
+        document
+          .getElementById("debug-button")
+          .addEventListener("click", () => this.studyWith("debugger"));
+      } catch (o_0) {}
     }
 
     const eslintContainer = document.getElementById("eslint-container");
