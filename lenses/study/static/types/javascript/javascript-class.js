@@ -204,7 +204,9 @@ export class JavaScriptFE extends CodeFE {
         }
       });
     if (writemeButton) {
-      writemeButton.addEventListener("click", () => this.studyWith("writeme"));
+      writemeButton.addEventListener("click", () =>
+        this.studyWith("writeme", true)
+      );
     }
 
     const blanksButton = document.getElementById("blanks-button");
@@ -601,7 +603,8 @@ export class JavaScriptFE extends CodeFE {
       environment !== "flowchart" &&
       environment !== "diff" &&
       environment !== "highlight" &&
-      environment !== "variables"
+      environment !== "variables" &&
+      environment !== "writeme"
     ) {
       try {
         const loopGuarded = JavaScriptFE.insertLoopGuards(
