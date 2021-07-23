@@ -9,11 +9,11 @@ const describeItify = (aWindow = {}) => {
   // console output is blocked in a testing window
   //  the render functions use consoleBackup
   const consoleBackup = Object.assign({}, aWindow.console);
-  for (let key in aWindow.console) {
-    if (typeof aWindow.console[key] === "function") {
-      aWindow.console[key] = function () {};
-    }
-  }
+  // for (let key in aWindow.console) {
+  //   if (typeof aWindow.console[key] === "function") {
+  //     aWindow.console[key] = function () {};
+  //   }
+  // }
 
   const renderIt = (report) => {
     const asyncReport = report.ms !== null;
