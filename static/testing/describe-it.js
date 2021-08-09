@@ -3,6 +3,7 @@
 const describeItify = (aWindow = {}) => {
   let describeDepth = 0;
   let itDepth = 0;
+  let beforeEachCallback = null;
 
   let currentReports = [];
 
@@ -24,7 +25,7 @@ const describeItify = (aWindow = {}) => {
         }`,
         "font-weight: bold; color: red;"
       );
-      for (let call of report.consoleCalls) {
+      for (const call of report.consoleCalls) {
         consoleBackup[call.method](...call.args);
       }
       if (report.error instanceof Error) {
@@ -46,7 +47,7 @@ const describeItify = (aWindow = {}) => {
           `%c√ PASS: ${report.description}`,
           "font-weight: bold; color: green;"
         );
-        for (let call of report.consoleCalls) {
+        for (const call of report.consoleCalls) {
           consoleBackup[call.method](...call.args);
         }
         consoleBackup.groupEnd();
@@ -79,6 +80,16 @@ const describeItify = (aWindow = {}) => {
     }
 
     return resolvedReport;
+  };
+
+  // ------
+
+  const beforeEach = (callBack) => {
+    if (typeof callBack !== "function") {
+      throw new TypeError("beforeEach argument is not a function");
+    }
+
+    beforeEachCallback = callBack;
   };
 
   const describe = async (description, testFunction) => {
@@ -124,7 +135,7 @@ const describeItify = (aWindow = {}) => {
     currentReports = parentReports;
   };
 
-  const it = (description, testFunction) => {
+  const it = async (description, testFunction) => {
     // commented in favor of immediately logging free-floating `it`s
     // if (describeDepth < 1) {
     //   throw new Error("cannot call `it` outside of a `describe`");
@@ -139,6 +150,15 @@ const describeItify = (aWindow = {}) => {
       throw new TypeError("second argument must be a function");
     }
 
+    if (beforeEachCallback) {
+      try {
+        beforeEachCallback();
+      } catch (err) {
+        console.error("%cbeforeEach Error:", "font-weight: bold;");
+        throw err;
+      }
+    }
+
     itDepth++;
 
     const report = {
@@ -151,44 +171,52 @@ const describeItify = (aWindow = {}) => {
     };
 
     if (testFunction.constructor.name === "AsyncFunction") {
-      currentReports.push(
-        new Promise((res) => {
-          const now = Date.now();
-          testFunction()
-            .then(() => {
-              report.ms = Date.now() - now;
-              res(report);
-            })
-            .catch((err) => {
-              report.ms = Date.now() - now;
-              report.error = err;
-              res(report);
-            });
-        })
-      );
+      const promiseReport = new Promise((res) => {
+        const now = Date.now();
+        testFunction()
+          .then(() => {
+            report.ms = Date.now() - now;
+            res(report);
+          })
+          .catch((err) => {
+            report.ms = Date.now() - now;
+            report.error = err;
+            res(report);
+          });
+      });
+
+      // immediately log free-floating `it`s
+      if (describeDepth === 0) {
+        renderIt(await promiseReport);
+      } else {
+        currentReports.push(promiseReport);
+      }
     } else {
       try {
         testFunction();
-        currentReports.push(new Promise((res) => res(report)));
       } catch (err) {
         report.error = err;
-        currentReports.push(new Promise((res) => res(report)));
       }
-    }
-
-    // immediately log free-floating `it`s
-    if (describeDepth === 0) {
-      renderIt(report);
+      // immediately log free-floating `it`s
+      if (describeDepth === 0) {
+        renderIt(report);
+      } else {
+        currentReports.push(Promise.resolve(report));
+      }
     }
 
     itDepth--;
   };
 
-  aWindow.describe = describe;
-  aWindow.it = it;
+  // ---------
 
-  return {
+  const globals = {
     describe,
     it,
+    beforeEach,
   };
+
+  Object.assign(aWindow, globals);
+
+  return globals;
 };

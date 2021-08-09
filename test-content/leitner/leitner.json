@@ -1,12 +1,10 @@
 {
+  "schedule": {
+    "lastStudied": "date string"
+  },
   "boxes": {
-    "1": [
-      "./functions/parameters.md"
-    ],
-    "2": [
-      "./variables/declare.md",
-      "./functions/arguments.md"
-    ],
+    "1": ["./functions/parameters.md"],
+    "2": ["./variables/declare.md", "./functions/arguments.md"],
     "3": [
       "./variables/assign.md",
       "./loops/for-of.md",

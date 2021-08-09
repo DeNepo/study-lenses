@@ -24,6 +24,9 @@ module.exports = {
       "&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false";
     return jsTutorURL;
   },
+  // algoviz: (code) => {
+  //   return "https://algoviz.io/#/";
+  // },
   "ui.dev": (code) => {
     const encodedJST = encodeURIComponent(code);
     const sanitizedJST = sanitize(encodedJST);

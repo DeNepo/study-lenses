@@ -55,8 +55,8 @@ window.addEventListener("DOMContentLoaded", () => {
                 <input id='functionDeclarations' type='checkbox'  /> <label for='functionDeclarations'>declarations</label> <br> -->
                 <input id='this' type='checkbox'  /> <label for='this'>this</label> <br>
                 <hr>
-                from  <input id='rangeStart' style="width: 25%;" min="1" type='number' />  to <input id='rangeEnd' style="width: 25%;" min="1" type='number' /> <br>
-                <hr>
+                <!-- from  <input id='rangeStart' style="width: 25%;" min="1" type='number' />  to <input id='rangeEnd' style="width: 25%;" min="1" type='number' /> <br>
+                <hr> -->
                 <input id='lines' type='checkbox' /> <label for='lines'>lines</label> <br>
                 <input id='steps' type='checkbox' /> <label for='steps'>steps</label> <br>
                 <input id='console' type='checkbox' /> <label for='console'>console</label> <br>
@@ -88,6 +88,10 @@ window.addEventListener("DOMContentLoaded", () => {
           .addEventListener("click", (event) => {
             // trace is a global function
             // console.log(trace.editor.getValue());
+            const selection = editor.getSelection();
+            traceConfig.range.start = selection.startLineNumber;
+            traceConfig.range.end = selection.endLineNumber;
+            // console.log(editor.getSelection());
             trace(trace.editor.getValue());
             event.preventDefault();
           });
@@ -116,8 +120,8 @@ window.addEventListener("DOMContentLoaded", () => {
           event.preventDefault();
         });
 
-        shadow.getElementById("rangeStart").value = traceConfig.range.start;
-        shadow.getElementById("rangeEnd").value = traceConfig.range.end;
+        // shadow.getElementById("rangeStart").value = traceConfig.range.start;
+        // shadow.getElementById("rangeEnd").value = traceConfig.range.end;
 
         for (const child of traceConfigEl.children) {
           if (child.nodeName !== "INPUT") {

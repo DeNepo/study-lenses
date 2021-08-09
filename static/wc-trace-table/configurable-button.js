@@ -6,12 +6,24 @@ export class TraceTableButton extends HTMLElement {
   constructor() {
     super();
 
+    let which = "steps";
+    try {
+      which = config.locals.table;
+    } catch (_) {}
+
     const shadow = this.attachShadow({ mode: "open" });
     shadow.innerHTML = `
       <button id='table-button'>table</button>
       <select id="type">
-        <option value="steps">steps</option>
-        <option value="values">values</option>
+        <option value="steps" ${
+          which === "steps" ? "selected" : ""
+        }>variable steps</option>
+        <option value="values" ${
+          which === "values" ? "selected" : ""
+        }>variable values</option>
+        <option value="operators" ${
+          which === "operators" ? "selected" : ""
+        }>operators</option>
       </select>`;
 
     shadow.getElementById("table-button").addEventListener("click", () => {

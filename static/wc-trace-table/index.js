@@ -1,5 +1,6 @@
 import * as steps from "./steps.js";
 import * as values from "./values.js";
+import * as operators from "./operators.js";
 
 export class TraceTable extends HTMLElement {
   constructor(type) {
@@ -11,6 +12,8 @@ export class TraceTable extends HTMLElement {
 
     if (type === "steps") {
       shadow.innerHTML += steps.style;
+    } else if (type === "operators") {
+      shadow.innerHTML += operators.style;
     } else {
       shadow.innerHTML += values.style;
     }
@@ -21,6 +24,9 @@ export class TraceTable extends HTMLElement {
     if (type === "steps") {
       tableContainer.innerHTML += steps.table;
       steps.init(shadow);
+    } else if (type === "operators") {
+      tableContainer.innerHTML += operators.table;
+      operators.init(shadow);
     } else {
       tableContainer.innerHTML += values.table;
       values.init(shadow);

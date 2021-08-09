@@ -286,6 +286,7 @@ class JavaScriptSSR extends CodeSSR {
     const openable = [
       "jsTutorLive",
       "jsTutor",
+      "algoviz",
       "jsv9000",
       "promisees",
       "esprima",
