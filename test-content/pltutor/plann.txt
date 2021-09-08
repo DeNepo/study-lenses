@@ -1,0 +1,27 @@
+input:
+  code
+parsed to:
+  serialized AST
+  CEST history
+author intervention
+  annotate the steps in some editor
+  explanations/questions saved in .steps.json
+student studies
+  some visualization of execution
+  with explanations and quizzes along the way
+
+assets
+  code.js
+    the source code
+  code.ast.json
+    ast parsed to json
+    each node has an id
+  code.cesk.json
+    complete cesk history serialized (aran 2.0)
+    each state and each transition has an id
+    each transition is linked to an ast node by id
+    each state/transition has optional fields for the environment:
+      postsplanation - explain what just happened
+      explanation - explain how to understand what is
+      presplanation - explain will happen in the next cesk step
+      quiz (array) - questions that must be answered before moving on

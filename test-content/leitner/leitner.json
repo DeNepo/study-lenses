@@ -3,20 +3,27 @@
     "lastStudied": "date string"
   },
   "boxes": {
-    "1": ["./functions/parameters.md"],
-    "2": ["./variables/declare.md", "./functions/arguments.md"],
-    "3": [
-      "./variables/assign.md",
+    "1": [
+      "./loops/while.md",
       "./loops/for-of.md",
-      "./variables/initialize.md",
-      "./loops/while.md"
-    ],
-    "4": [
-      "./functions/return-values.md",
-      "./loops/for.md",
+      "./variables/declare.md",
+      "./functions/parameters.md",
       "./flashcard.md",
+      "./loops/for.md",
+      "./variables/assign.md",
+      "./functions/return-values.md",
+      "./README.md"
+    ],
+    "2": [
       "./loops/for-in.md"
     ],
-    "5": []
+    "3": [],
+    "4": [],
+    "5": [],
+    "6": [],
+    "7": [
+      "./functions/arguments.md",
+      "./variables/initialize.md"
+    ]
   }
 }

@@ -1,4 +1,13 @@
-const renderCards = ({ config, resource, leitner }) => {
+"use strict";
+
+const fs = require("fs");
+const path = require("path");
+const util = require("util");
+const readFilePromise = util.promisify(fs.readFile);
+
+const marked = require("marked");
+
+const renderCards = async ({ config, resource, leitner }) => {
   resource.info.ext = ".html";
   resource.content = `<!DOCTYPE html>
 <html>
@@ -9,7 +18,7 @@ const renderCards = ({ config, resource, leitner }) => {
     config.title || `${resource.info.dir}/${resource.info.base}`
   }</title>
   <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-
+  <link rel="stylesheet" href="${config.sharedStatic}/gh-styles.css">
 
 </head>
 
@@ -20,9 +29,31 @@ const renderCards = ({ config, resource, leitner }) => {
     study a flashcard from:
   </p>
   <div id='choose-card'>
-    <ul id='boxes'></ul>
-    <!-- old model <button id='all'>all boxes</button> -->
+    <ol id='boxes'></ol>
   </div>
+
+  ${
+    fs.existsSync(
+      path.join(
+        resource.info.root,
+        resource.info.dir,
+        resource.info.base,
+        "README.md"
+      )
+    )
+      ? `<hr> <main class="markdown-body"><div></div>${marked(
+          await readFilePromise(
+            path.join(
+              resource.info.root,
+              resource.info.dir,
+              resource.info.base,
+              "README.md"
+            ),
+            "utf-8"
+          )
+        )}</main>`
+      : ""
+  }
 
   <script>const leitner = JSON.parse(decodeURI("${encodeURI(
     JSON.stringify(leitner)

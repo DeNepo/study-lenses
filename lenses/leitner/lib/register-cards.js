@@ -24,15 +24,23 @@ const registerCards = (rootPath, boxes, subPath = "", registered = null) => {
 
   const dir = fs.readdirSync(path.join(rootPath, subPath));
   for (const item of dir) {
+    if (item.startsWith(".") || item === "node_modules") {
+      continue;
+    }
+
     const resourcePath = path.normalize(path.join(rootPath, subPath, item));
     if (fs.lstatSync(resourcePath).isDirectory()) {
-      console.log(item);
       registerCards(
         rootPath,
         boxes,
         path.normalize(path.join(subPath, item)),
         registered
       );
+      continue;
+    }
+
+    if (item.toLowerCase() === "readme.md") {
+      console.log(item.toLowerCase());
       continue;
     }
 

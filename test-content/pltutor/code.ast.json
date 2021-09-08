@@ -1,0 +1,190 @@
+{
+  "type": "Program",
+  "start": 0,
+  "end": 131,
+  "body": [
+    {
+      "type": "ExpressionStatement",
+      "start": 0,
+      "end": 13,
+      "expression": {
+        "type": "Literal",
+        "start": 0,
+        "end": 12,
+        "value": "use strict",
+        "raw": "'use strict'"
+      },
+      "directive": "use strict"
+    },
+    {
+      "type": "VariableDeclaration",
+      "start": 15,
+      "end": 36,
+      "declarations": [
+        {
+          "type": "VariableDeclarator",
+          "start": 21,
+          "end": 35,
+          "id": {
+            "type": "Identifier",
+            "start": 21,
+            "end": 31,
+            "name": "checkPoint"
+          },
+          "init": {
+            "type": "Literal",
+            "start": 34,
+            "end": 35,
+            "value": 3,
+            "raw": "3"
+          }
+        }
+      ],
+      "kind": "const"
+    },
+    {
+      "type": "ForStatement",
+      "start": 37,
+      "end": 130,
+      "init": {
+        "type": "VariableDeclaration",
+        "start": 42,
+        "end": 51,
+        "declarations": [
+          {
+            "type": "VariableDeclarator",
+            "start": 46,
+            "end": 51,
+            "id": {
+              "type": "Identifier",
+              "start": 46,
+              "end": 47,
+              "name": "i"
+            },
+            "init": {
+              "type": "Literal",
+              "start": 50,
+              "end": 51,
+              "value": 0,
+              "raw": "0"
+            }
+          }
+        ],
+        "kind": "let"
+      },
+      "test": {
+        "type": "BinaryExpression",
+        "start": 53,
+        "end": 58,
+        "left": {
+          "type": "Identifier",
+          "start": 53,
+          "end": 54,
+          "name": "i"
+        },
+        "operator": "<",
+        "right": {
+          "type": "Literal",
+          "start": 57,
+          "end": 58,
+          "value": 8,
+          "raw": "8"
+        }
+      },
+      "update": {
+        "type": "UpdateExpression",
+        "start": 60,
+        "end": 63,
+        "operator": "++",
+        "prefix": false,
+        "argument": {
+          "type": "Identifier",
+          "start": 60,
+          "end": 61,
+          "name": "i"
+        }
+      },
+      "body": {
+        "type": "BlockStatement",
+        "start": 65,
+        "end": 130,
+        "body": [
+          {
+            "type": "IfStatement",
+            "start": 69,
+            "end": 110,
+            "test": {
+              "type": "BinaryExpression",
+              "start": 73,
+              "end": 89,
+              "left": {
+                "type": "Identifier",
+                "start": 73,
+                "end": 74,
+                "name": "i"
+              },
+              "operator": "===",
+              "right": {
+                "type": "Identifier",
+                "start": 79,
+                "end": 89,
+                "name": "checkPoint"
+              }
+            },
+            "consequent": {
+              "type": "BlockStatement",
+              "start": 91,
+              "end": 110,
+              "body": [
+                {
+                  "type": "ContinueStatement",
+                  "start": 97,
+                  "end": 106,
+                  "label": null
+                }
+              ]
+            },
+            "alternate": null
+          },
+          {
+            "type": "ExpressionStatement",
+            "start": 113,
+            "end": 128,
+            "expression": {
+              "type": "CallExpression",
+              "start": 113,
+              "end": 127,
+              "callee": {
+                "type": "MemberExpression",
+                "start": 113,
+                "end": 124,
+                "object": {
+                  "type": "Identifier",
+                  "start": 113,
+                  "end": 120,
+                  "name": "console"
+                },
+                "property": {
+                  "type": "Identifier",
+                  "start": 121,
+                  "end": 124,
+                  "name": "log"
+                },
+                "computed": false
+              },
+              "arguments": [
+                {
+                  "type": "Identifier",
+                  "start": 125,
+                  "end": 126,
+                  "name": "i"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "sourceType": "script"
+}

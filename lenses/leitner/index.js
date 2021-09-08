@@ -26,15 +26,17 @@ const leitnerLens = async ({ config, resource, responseData, requestData }) => {
       );
       resource.content = ": changes were saved";
       resource.info.ext = ".txt";
+
       return {
         resource,
       };
     } catch (err) {
-      console.log(err);
+      console.error(err);
       responseData.status = 500;
       resource.content =
         "unable to save changes.  check server logs for more info";
       resource.info.ext = ".txt";
+
       return {
         resource,
         responseData,
@@ -50,7 +52,7 @@ const leitnerLens = async ({ config, resource, responseData, requestData }) => {
     return renderCard({ config, resource });
   }
 
-  if (resource.info.type !== "directory" || !fs.existsSync(leitnerPath)) {
+  if (resource.info.type !== "directory") {
     return;
   }
 
@@ -66,6 +68,8 @@ const leitnerLens = async ({ config, resource, responseData, requestData }) => {
         3: [],
         4: [],
         5: [],
+        6: [],
+        7: [],
       },
     };
   }

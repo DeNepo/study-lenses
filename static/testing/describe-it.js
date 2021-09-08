@@ -213,6 +213,7 @@ const describeItify = (aWindow = {}) => {
   const globals = {
     describe,
     it,
+    test: it,
     beforeEach,
   };
 
