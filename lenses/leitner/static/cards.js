@@ -129,9 +129,11 @@ const init = async () => {
       });
       cardTab.document.body.appendChild(gotItForm);
 
+      cardTab.document.body.appendChild(document.createElement("hr"));
+
       const iframe = document.createElement("iframe");
       iframe.style = "height: 100%; width: 100%; border:none; overflow: auto;";
-      iframe.src = `${window.location.origin}${window.location.pathname}/${card}?study`;
+      iframe.src = `${window.location.origin}${window.location.pathname}/${card}?render`;
       cardTab.document.body.appendChild(iframe);
     };
   });

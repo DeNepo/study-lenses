@@ -69,37 +69,37 @@ module.exports = registerCards;
     ]
   }
 */
-const registerCardsInArray = (rootPath, cards, subPath = "") => {
-  // keep all card entries for existing cards
-  for (let i = 0; i < cards.length; i++) {
-    const card = cards[i];
-    const absoluteCardPath = path.normalize(path.join(rootPath, card.path));
-    if (!fs.existsSync(absoluteCardPath)) {
-      cards.splice(i, 1);
-    }
-  }
+// const registerCardsInArray = (rootPath, cards, subPath = "") => {
+//   // keep all card entries for existing cards
+//   for (let i = 0; i < cards.length; i++) {
+//     const card = cards[i];
+//     const absoluteCardPath = path.normalize(path.join(rootPath, card.path));
+//     if (!fs.existsSync(absoluteCardPath)) {
+//       cards.splice(i, 1);
+//     }
+//   }
 
-  const dir = fs.readdirSync(path.join(rootPath, subPath));
-  for (const item of dir) {
-    const resourcePath = path.normalize(path.join(rootPath, subPath, item));
-    if (fs.lstatSync(resourcePath).isDirectory()) {
-      registerCards(rootPath, cards, path.normalize(path.join(subPath, item)));
-      continue;
-    }
+//   const dir = fs.readdirSync(path.join(rootPath, subPath));
+//   for (const item of dir) {
+//     const resourcePath = path.normalize(path.join(rootPath, subPath, item));
+//     if (fs.lstatSync(resourcePath).isDirectory()) {
+//       registerCards(rootPath, cards, path.normalize(path.join(subPath, item)));
+//       continue;
+//     }
 
-    if (!resourcePath.endsWith(".md")) {
-      continue;
-    }
+//     if (!resourcePath.endsWith(".md")) {
+//       continue;
+//     }
 
-    const cardIsRegistered = cards.find(
-      (card) => resourcePath === path.normalize(path.join(rootPath, card.path))
-    );
+//     const cardIsRegistered = cards.find(
+//       (card) => resourcePath === path.normalize(path.join(rootPath, card.path))
+//     );
 
-    if (!cardIsRegistered) {
-      cards.push({
-        path: "./" + path.join(subPath, item).split(path.sep).join("/"),
-        box: 1,
-      });
-    }
-  }
-};
+//     if (!cardIsRegistered) {
+//       cards.push({
+//         path: "./" + path.join(subPath, item).split(path.sep).join("/"),
+//         box: 1,
+//       });
+//     }
+//   }
+// };
