@@ -88,11 +88,23 @@ window.addEventListener("DOMContentLoaded", () => {
           .addEventListener("click", (event) => {
             // trace is a global function
             // console.log(trace.editor.getValue());
-            const selection = editor.getSelection();
-            traceConfig.range.start = selection.startLineNumber;
-            traceConfig.range.end = selection.endLineNumber;
-            // console.log(editor.getSelection());
-            trace(trace.editor.getValue());
+            const code = trace.editor.getValue();
+
+            const selection = trace.editor.getSelection();
+
+            const nothingIsHighlighted =
+              selection.startLineNumber === selection.endLineNumber &&
+              selection.startColumn === selection.endColumn;
+
+            if (nothingIsHighlighted) {
+              traceConfig.range.start = 1;
+              traceConfig.range.end = code.split("\n").length;
+            } else {
+              traceConfig.range.start = selection.startLineNumber;
+              traceConfig.range.end = selection.endLineNumber;
+            }
+
+            trace(code);
             event.preventDefault();
           });
 

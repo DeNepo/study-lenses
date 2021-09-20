@@ -7,8 +7,13 @@ export const isInRange = (node) => {
     return false;
   }
 
+  if (config.range.start === undefined || config.range.end === undefined) {
+    return true;
+  }
+
   const start = node.loc.start.line;
   const end = node.loc.end.line;
+
   const range = config.range.end - config.range.start;
 
   let itIs = false;
@@ -19,6 +24,6 @@ export const isInRange = (node) => {
   } else {
     itIs = start === config.range.start;
   }
-  // console.log(itIs, node);
+  // console.log(itIs, node, config);
   return itIs;
 };

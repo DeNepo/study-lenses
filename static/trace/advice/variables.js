@@ -71,6 +71,7 @@ let lastFuncDec = null;
 export default {
   read: (value, variable, serial) => {
     state.node = state.aran.nodes[serial];
+
     if (!isInRange(state.node)) {
       return value;
     }
@@ -110,10 +111,6 @@ export default {
     return value;
   },
   write: (value, variable, serial) => {
-    // if (variable === "p") {
-    //   debugger;
-    // }
-
     state.node = state.aran.nodes[serial];
 
     // if (state.node.type === "FunctionDeclaration") {
@@ -136,11 +133,11 @@ export default {
     ) {
       return value;
     }
+
     // because aran encodes generated variables as number strings
     if (!isNaN(variable)) {
       return value;
     }
-
     const line = state.node.loc.start.line;
     const col = state.node.loc.start.column;
 
