@@ -28,8 +28,6 @@ class MarkdownSSR extends JavaScriptSSR {
       literate: false,
     };
 
-    console.log(this.resource.info.base);
-
     marked.setOptions({
       baseUrl: "./" + this.resource.info.base, // why no work?
       langPrefix: "line-numbers language-",
@@ -96,11 +94,15 @@ class MarkdownSSR extends JavaScriptSSR {
             )
           : path.join(this.resource.info.root, this.resource.info.dir);
       // console.log(absolutePath);
-      const virtualDirectory = await resourceFromAbsolutePath({
-        absolutePath,
-        cwd: this.resource.info.root,
-        localConfigs: this.config.locals,
-      });
+      const virtualDirectory =
+        this.resource.info.type === "directory"
+          ? this.resource
+          : await resourceFromAbsolutePath({
+              absolutePath,
+              cwd: this.resource.info.root,
+              localConfigs: this.config.locals,
+            });
+
       const thisFile = path.join(
         this.resource.info.root,
         this.resource.info.dir,
@@ -117,7 +119,7 @@ class MarkdownSSR extends JavaScriptSSR {
       content = content.replace(
         // this.dirRegex,
         dirRegex,
-        `<!-- BEGIN DIR -->\n<ul style="list-style-type: none;">${dirToc}</ul>\n<!-- END DIR -->`
+        `<!-- BEGIN DIR -->\n<ul id="directory" style="list-style-type: none;">${dirToc}</ul>\n<!-- END DIR -->`
       );
     }
 

@@ -1,3 +1,3 @@
-import { MarkdownFE } from "../markdown/markdown-class.js";
+import { DirectoryFE } from "./directory-class.js";
 
-new MarkdownFE(config);
+new DirectoryFE(config);

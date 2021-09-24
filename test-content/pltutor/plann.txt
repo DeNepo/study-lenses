@@ -1,3 +1,6 @@
+- https://digital.lib.washington.edu/researchworks/bitstream/handle/1773/47433/Nelson_washington_0250E_23271.pdf?sequence=1
+
+
 input:
   code
 parsed to:

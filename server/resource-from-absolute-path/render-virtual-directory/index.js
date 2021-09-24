@@ -82,6 +82,7 @@ const renderVirtualDirectory = async ({
     });
   }
 
+  let subPathPromises = [];
   for (let nextSubPath of paths) {
     if (nextSubPath[0] === ".") {
       continue;
@@ -96,13 +97,16 @@ const renderVirtualDirectory = async ({
       continue;
     }
 
-    const nextChild = await renderVirtualDirectory({
-      absolutePath: nextAbsolutePath,
-      gitignore,
-      studyConfig,
-    });
-    virDir.children.push(nextChild);
+    subPathPromises.push(
+      renderVirtualDirectory({
+        absolutePath: nextAbsolutePath,
+        gitignore,
+        studyConfig,
+      })
+    );
   }
+
+  virDir.children.push(...(await Promise.all(subPathPromises)));
 
   deepSortChildren(virDir);
 

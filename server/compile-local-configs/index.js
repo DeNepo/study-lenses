@@ -57,7 +57,7 @@ const compileLocalConfigs = (absPath, config) => {
 
   let currentConfig = {};
   try {
-    currentConfig = require(configPath);
+    currentConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
   } catch (err) {
     console.error(err);
   }

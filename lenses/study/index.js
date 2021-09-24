@@ -5,10 +5,10 @@ const fs = require("fs");
 const util = require("util");
 const writeFilePromise = util.promisify(fs.writeFile);
 
-const detectType = require("./lib/detect-type.js");
+const detectType = require("./lib/detect-type");
 
-const renderDependencies = require("./lib/render-dependencies.js");
-const renderAppendices = require("./lib/render-appendices.js");
+const renderDependencies = require("./lib/render-dependencies");
+const renderAppendices = require("./lib/render-appendices");
 
 const liveStudyLense = async ({
   config,
@@ -108,7 +108,7 @@ const liveStudyLense = async ({
 
   <section>
     <div class="dropdown">
-      <code>&#187; options &#171;</code>
+      <strong><code>&#187; OPTIONS &#171;</code></strong>
       <div class='dropdown-content'>
         <a href='?--help' target='_blank'><code>--help</code>!  what is this?</a> <br><br>
         <a href='?--sandbox=js' target='_blank'><button>js editor</button></a>
