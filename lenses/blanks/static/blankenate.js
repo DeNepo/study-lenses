@@ -61,6 +61,17 @@ const blankenate = (code, probability = 0.2) => {
     count: blankedTokens.filter((i) => i === token).length,
   }));
 
+  tokens.sort((a, b) => {
+    if (a.name < b.name) {
+      return -1;
+    }
+    if (a.name > b.name) {
+      return 1;
+    }
+
+    return 0;
+  });
+
   return {
     blanked: prettier.format(Astring.generate(tree), {
       parser: "babel",
