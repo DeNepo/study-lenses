@@ -10,6 +10,7 @@ export class DirectoryFE extends MarkdownFE {
     const search = (event) => {
       const searchConfig = {
         searchQuery: event.target.form.search.value,
+        searchType: event.target.form.regex.checked ? "regex" : "includes",
         flags:
           (event.target.form.g.checked ? "g" : "") +
           (event.target.form.i.checked ? "i" : "") +
@@ -36,5 +37,13 @@ export class DirectoryFE extends MarkdownFE {
         }
         return false;
       });
+
+    document.getElementById("regex").addEventListener("change", (event) => {
+      if (event.target.checked) {
+        document.getElementById("flags").style.display = "inline-block";
+      } else {
+        document.getElementById("flags").style.display = "none";
+      }
+    });
   }
 }

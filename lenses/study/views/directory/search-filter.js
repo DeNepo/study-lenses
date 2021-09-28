@@ -13,7 +13,7 @@ const searchableExtensions = [
   ".yml",
 ];
 
-const searchFilter = (resource = {}, search = new RegExp("", "")) => {
+const searchFilterRegex = (resource = {}, search = new RegExp("", "")) => {
   if (resource.type === "file") {
     if (!searchableExtensions.includes(resource.ext)) {
       return null;
@@ -29,7 +29,9 @@ const searchFilter = (resource = {}, search = new RegExp("", "")) => {
     // console.log(result);
     return result;
   } else {
-    const mapped = resource.children.map((item) => searchFilter(item, search));
+    const mapped = resource.children.map((item) =>
+      searchFilterRegex(item, search)
+    );
     // console.log("mapped - ", mapped);
     const filtered = mapped.filter(
       (item) =>
@@ -42,4 +44,38 @@ const searchFilter = (resource = {}, search = new RegExp("", "")) => {
   }
 };
 
-module.exports = searchFilter;
+const searchFilterIncludes = (resource = {}, search = new RegExp("", "")) => {
+  if (resource.type === "file") {
+    if (!searchableExtensions.includes(resource.ext)) {
+      return null;
+    }
+
+    const filePath = path.join(resource.root, resource.dir, resource.base);
+    // console.log(filePath);
+    const contents = fs.readFileSync(filePath, "utf8");
+    // console.log(contents);
+    const searched = contents.includes(search);
+    // console.log(search, tested);
+    const result = searched ? resource : null;
+    // console.log(result);
+    return result;
+  } else {
+    const mapped = resource.children.map((item) =>
+      searchFilterIncludes(item, search)
+    );
+    // console.log("mapped - ", mapped);
+    const filtered = mapped.filter(
+      (item) =>
+        (item !== null && item.type === "file") ||
+        (item && item.type === "directory" && item.children.length !== 0)
+    );
+    // console.log("filtered - ", filtered);
+    resource.children = filtered;
+    return resource;
+  }
+};
+
+module.exports = {
+  searchFilterRegex,
+  searchFilterIncludes,
+};

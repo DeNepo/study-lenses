@@ -5,29 +5,37 @@ const path = require("path");
 
 const MarkdownSSR = require("../markdown/index.js");
 
-const searchFilter = require("./search-filter");
+const { searchFilterRegex, searchFilterIncludes } = require("./search-filter");
 
 let searchQuery = "";
+let searchType = "includes";
 let flags = "";
+let regexError = null;
 
 class DirectorySSR extends MarkdownSSR {
   constructor({ config, resource }) {
     searchQuery = config.queryValue.searchQuery || "";
+    searchType = config.queryValue.searchType || "includes";
     flags =
       typeof config.queryValue.flags === "string"
         ? config.queryValue.flags
         : "igm";
+    regexError = null;
 
-    if (
-      typeof searchQuery === "string" &&
-      searchQuery !== "" &&
-      typeof flags === "string"
-    ) {
-      // console.log("------ ", searchQuery, flags);
-      const searchRegex = new RegExp(searchQuery, flags);
-      // console.log(resource.content);
-      resource.content = searchFilter(resource.content, searchRegex);
-      // console.log(JSON.stringify(resource.content, null, "  "));
+    if (typeof searchQuery === "string" && searchQuery !== "") {
+      if (searchType === "regex") {
+        // console.log("------ ", searchQuery, flags);
+        try {
+          const searchRegex = new RegExp(searchQuery, flags);
+          resource.content = searchFilterRegex(resource.content, searchRegex);
+        } catch (err) {
+          regexError = err.message;
+        }
+        // console.log(resource.content);
+        // console.log(JSON.stringify(resource.content, null, "  "));
+      } else if (searchType === "includes") {
+        resource.content = searchFilterIncludes(resource.content, searchQuery);
+      }
     }
 
     // console.log(resource);
@@ -61,20 +69,28 @@ class DirectorySSR extends MarkdownSSR {
     const panel = `
     <hr>
     <form onsubmit="return false;">
-      <input id="search-button" type="button" value="search (regex):" />
+      <input id="search-button" type="button" value="search:" />
       <input name="search" id="search-input" style="width: 15em;" value="${
         searchQuery || ""
       }" />
       <input type="checkbox" ${
-        flags && flags.includes("i") ? "checked" : ""
-      } name="i" id="i" /><label for="i">i</label>
-      <input type="checkbox" ${
-        flags && flags.includes("g") ? "checked" : ""
-      } name="g" id="g" /><label for="g">g</label>
-      <input type="checkbox" ${
-        flags && flags.includes("m") ? "checked" : ""
-      } name="m" id="m" /><label for="m">m</label>
-    </input>`;
+        searchType === "regex" ? "checked" : ""
+      } name="regex" id="regex" /><label for="regex">regex</label>
+      <div id='flags' style="display: ${
+        searchType === "regex" ? "inline-block" : "none"
+      };">
+        <input type="checkbox" ${
+          flags && flags.includes("i") ? "checked" : ""
+        } name="i" id="i" /><label for="i">i</label>
+        <input type="checkbox" ${
+          flags && flags.includes("g") ? "checked" : ""
+        } name="g" id="g" /><label for="g">g</label>
+        <input type="checkbox" ${
+          flags && flags.includes("m") ? "checked" : ""
+        } name="m" id="m" /><label for="m">m</label>
+      </div>
+    </input>
+    ${regexError ? `<pre style="color: red;">${regexError}</pre>` : ""}`;
 
     return panel + "\n\n" + superPanel;
   }
