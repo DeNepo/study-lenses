@@ -32,9 +32,10 @@ class CodeSSR {
     <button id='reset-button'>reset</button>
     <button id='format-button'>format</button>
     <button id='permalink-button'>permalink</button>
+    <button id='print-selection-button'>print selection</button>
     ${
       this.config.locals.save === true
-        ? `<button id='save-button'>save changes</button>`
+        ? `<button id='save-button'>save</button>`
         : ""
     }
     <br><br>

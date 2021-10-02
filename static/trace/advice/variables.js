@@ -94,6 +94,11 @@ export default {
     if (!isNaN(variable)) {
       return value;
     }
+
+    if (state.inNativeCallstack) {
+      return value;
+    }
+
     // console.log(4);
     const line = state.node.loc.start.line;
     const col = state.node.loc.start.column;
@@ -131,6 +136,10 @@ export default {
       // !config.variablesList.find((query) => new RegExp(query).test(variable))
       !config.variablesList.includes(variable)
     ) {
+      return value;
+    }
+
+    if (state.inNativeCallstack) {
       return value;
     }
 

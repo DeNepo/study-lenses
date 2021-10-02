@@ -6,6 +6,9 @@ export default {
   failure: (value, serial) => {
     // console.error(value);
     // still figuring out aran errors
+
+    console.log("%c-> execution phase:", "font-weight: bold;");
+
     if (value.message.includes("loopGuard")) {
       console.log(
         "%c" + (value ? value.name : "failure") + ": too much iteration",
@@ -19,7 +22,6 @@ export default {
         " run or debug code for a complete error message"
       );
     }
-    console.log("-> execution phase");
 
     return value;
   },

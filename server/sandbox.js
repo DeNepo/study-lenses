@@ -2,17 +2,58 @@
 
 const path = require("path");
 
+const config = require("config");
+
 const loadPlugins = require("./load-plugins");
 const configurePlugins = require("./configure-plugins");
+const compileLocalConfigs = require("./compile-local-configs");
 
 const lensesPath = path.join(__dirname, "..", "lenses");
 const lensesPromise = loadPlugins("lenses", lensesPath);
+
+const deepMerge = require("deepmerge");
+const combineMerge = (target, source, options) => {
+  const destination = target.slice();
+
+  source.forEach((item, index) => {
+    if (typeof destination[index] === "undefined") {
+      destination[index] = options.cloneUnlessOtherwiseSpecified(item, options);
+    } else if (options.isMergeableObject(item)) {
+      const alreadyExists = destination.some((entry) =>
+        util.isDeepStrictEqual(entry, item)
+      );
+      if (!alreadyExists) {
+        destination.push(item);
+      } else {
+        destination[index] = deepMerge(target[index], item, options);
+      }
+    } else if (target.indexOf(item) === -1) {
+      destination.push(item);
+    }
+  });
+  return destination;
+};
 
 const sandbox = async (req, res, next) => {
   if (!req.query.hasOwnProperty("--sandbox")) {
     next();
     return;
   }
+
+  const absolutePath = path.join(process.cwd(), req.path);
+  const preDefaults = compileLocalConfigs(absolutePath, {
+    study: {
+      save: false,
+      eval: true,
+      flowchart: true,
+      variables: true,
+      environment: true,
+    },
+  });
+  const localConfigs = deepMerge(config.locals, preDefaults, {
+    arrayMerge: combineMerge,
+  });
+
   const studyLens = (await lensesPromise).find(
     (lens) => lens.queryKey === "study"
   );
@@ -25,19 +66,9 @@ const sandbox = async (req, res, next) => {
     ? ".js"
     : ".js";
 
-  const configuredStudyLens = configurePlugins(
-    [studyLens],
-    {
-      study: {
-        save: false,
-        eval: true,
-        flowchart: true,
-        variables: true,
-        environment: true,
-      },
-    },
-    { study: "" }
-  )[0];
+  const configuredStudyLens = configurePlugins([studyLens], localConfigs, {
+    study: "",
+  })[0];
 
   configuredStudyLens.title = ext + " sandbox";
 

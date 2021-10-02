@@ -1,6 +1,6 @@
 {
   "name": "study-lenses",
-  "version": "0.0.108",
+  "version": "0.0.109",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@gerhobbelt/gitignore-parser": "^0.2.0-8",
+    "@mapbox/node-pre-gyp": "^1.0.5",
     "acorn": "^8.0.5",
     "aran": "^3.0.9",
     "astring": "^1.6.0",
@@ -24,6 +25,7 @@
     "cookie-parser": "^1.4.5",
     "csso": "^4.2.0",
     "deepmerge": "^4.2.2",
+    "dependency-cruiser": "^10.3.1",
     "eslint": "^7.25.0",
     "eslint-plugin-jsdoc": "^33.0.0",
     "estree-walker": "^2.0.2",

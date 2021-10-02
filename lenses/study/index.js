@@ -48,6 +48,8 @@ const liveStudyLense = async ({
     resource.content = config.content || "";
     resource.info.ext = config.ext || resource.info.ext;
     resource.info.base = config.base || resource.info.base;
+
+    config.locals.save = false;
   }
   // console.log(0);
   if (resource.content === null || resource.info === null || resource.error) {

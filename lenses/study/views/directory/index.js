@@ -19,7 +19,7 @@ class DirectorySSR extends MarkdownSSR {
     flags =
       typeof config.queryValue.flags === "string"
         ? config.queryValue.flags
-        : "igm";
+        : "";
     regexError = null;
 
     if (typeof searchQuery === "string" && searchQuery !== "") {
@@ -54,7 +54,8 @@ class DirectorySSR extends MarkdownSSR {
       // console.error(o_0);
     }
 
-    const dirRegex = /(<!--[ \t]*begin[ \t]*dir[ \t]*-->)([\s\S]*)(<!--[ \t]*end[ \t]*dir[ \t]*-->)/gim;
+    const dirRegex =
+      /(<!--[ \t]*begin[ \t]*dir[ \t]*-->)([\s\S]*)(<!--[ \t]*end[ \t]*dir[ \t]*-->)/gim;
     if (!dirRegex.test(readmeContent)) {
       readmeContent =
         `<!-- BEGIN DIR --><!-- END DIR --> \n <hr> <hr> \n\n` + readmeContent;
@@ -70,24 +71,36 @@ class DirectorySSR extends MarkdownSSR {
     <hr>
     <form onsubmit="return false;">
       <input id="search-button" type="button" value="search:" />
+
       <input name="search" id="search-input" style="width: 15em;" value="${
         searchQuery || ""
       }" />
+
       <input type="checkbox" ${
         searchType === "regex" ? "checked" : ""
       } name="regex" id="regex" /><label for="regex">regex</label>
+
       <div id='flags' style="display: ${
         searchType === "regex" ? "inline-block" : "none"
       };">
         <input type="checkbox" ${
-          flags && flags.includes("i") ? "checked" : ""
-        } name="i" id="i" /><label for="i">i</label>
-        <input type="checkbox" ${
           flags && flags.includes("g") ? "checked" : ""
         } name="g" id="g" /><label for="g">g</label>
         <input type="checkbox" ${
+          flags && flags.includes("i") ? "checked" : ""
+        } name="i" id="i" /><label for="i">i</label>
+        <input type="checkbox" ${
           flags && flags.includes("m") ? "checked" : ""
         } name="m" id="m" /><label for="m">m</label>
+        <input type="checkbox" ${
+          flags && flags.includes("s") ? "checked" : ""
+        } name="s" id="s" /><label for="s">s</label>
+        <input type="checkbox" ${
+          flags && flags.includes("u") ? "checked" : ""
+        } name="u" id="u" /><label for="u">u</label>
+        <input type="checkbox" ${
+          flags && flags.includes("y") ? "checked" : ""
+        } name="y" id="y" /><label for="y">y</label>
       </div>
     </input>
     ${regexError ? `<pre style="color: red;">${regexError}</pre>` : ""}`;

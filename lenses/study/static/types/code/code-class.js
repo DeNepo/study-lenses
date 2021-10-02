@@ -48,6 +48,10 @@ export class CodeFE {
         this.editor.setValue(this.config.content || "")
       );
 
+    document
+      .getElementById("print-selection-button")
+      .addEventListener("click", () => this.openSelectionWith("print"));
+
     if (this.config.locals.save === true) {
       document.getElementById("save-button").addEventListener("click", () => {
         fetch(window.location.origin + window.location.pathname + "?study", {
@@ -278,7 +282,10 @@ export class CodeFE {
     const pseudoResource = {
       resource: {
         content: code,
-        info: { ext: this.config.ext },
+        info: {
+          ext: this.config.ext,
+          type: "file",
+        },
       },
     };
     // console.log(pseudoResource);

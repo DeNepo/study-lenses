@@ -90,7 +90,7 @@ export default {
     // in case only console & not functions
     if (!config.functions || !nodeIsInRange) {
       const result = Reflect.apply(f, t, xs);
-      if (state.builtInEntryPoint === callSymbol) {
+      if (state.builtInEntryPoint === "callSymbol") {
         state.builtInEntryPoint = null;
       }
       return result;

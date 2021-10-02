@@ -26,7 +26,7 @@ export default {
       const col = state.node.loc.start.column;
       print({
         prefix: [line, col],
-        logs: ["operation (" + operator + "):", operator, value],
+        logs: ["operation (" + operator + " _):", operator, value],
         style: "font-weight: bold;",
         out: console.groupCollapsed,
       });
@@ -56,7 +56,7 @@ export default {
       const col = state.node.loc.start.column;
       print({
         prefix: [line, col],
-        logs: ["operation (" + operator + "):", left, operator, right],
+        logs: ["operation (_ " + operator + " _):", left, operator, right],
         style: "font-weight: bold;",
         out: console.groupCollapsed,
       });
