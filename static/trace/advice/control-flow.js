@@ -50,13 +50,17 @@ export default {
       }
 
       const lineOfCode = state.code.split("\n")[line - 1];
+      // const returned = consumed ? consumed : "right side";
 
       const truthiness = consumed ? "truthy" : "falsy";
+
       print({
         prefix: [line, col],
         logs: [
-          "operator (" + state.node.operator + ", " + truthiness + "):",
+          "operator (" + truthiness + " " + state.node.operator + " _):",
           consumed,
+          state.node.operator,
+          "_",
         ],
         out: console.groupCollapsed,
       });
@@ -74,14 +78,19 @@ export default {
       }
 
       const lineOfCode = state.code.split("\n")[line - 1];
+      const returned = consumed ? "_a_" : "_b_";
 
       const truthiness = consumed ? "truthy" : "falsy";
       print({
         prefix: [line, col],
-        logs: ["operator (_?_:_, " + truthiness + "):", consumed],
+        logs: [
+          "operator (" + truthiness + " ?_a_:_b_" + "):",
+          consumed,
+          "?_:_",
+        ],
         out: console.groupCollapsed,
       });
-      print({ logs: [lineOfCode] });
+      print({ logs: [lineOfCode, "\n\n(evaluates to):", returned] });
       console.groupEnd();
       return consumed;
     }

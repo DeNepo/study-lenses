@@ -58,7 +58,12 @@ export const table = `
     </tbody>
   </table>
 
-  add step:<button id="unary">unary</button><button id="binary">binary</button><button id="ternary">ternary</button> || <button id="remove-row">remove step</button>
+  add step:
+  <button id="unary">unary</button>
+  <button id="binary">binary</button>
+  <button id="shortCircuit">short-circuit</button>
+  <button id="ternary">ternary</button>
+  || <button id="remove-row">remove step</button>
 </div>`;
 
 export const init = (shadow) => {
@@ -93,6 +98,15 @@ export const init = (shadow) => {
             </td>
             <td><input class='value-input' /></td>
           `,
+    shortCircuit: () => `
+            <td><text>${step}. </text></td>
+            <td>
+              <input placeholder='value 1' class='value' />
+              <input placeholder='op' class='operator' />
+              <input placeholder='(right side)' class='value' readonly />
+            </td>
+            <td><input class='value-input' /></td>
+          `,
   };
 
   // -- handlers --
@@ -116,6 +130,7 @@ export const init = (shadow) => {
   // -- listeners --
   shadow.getElementById("unary").addEventListener("click", addRow);
   shadow.getElementById("binary").addEventListener("click", addRow);
+  shadow.getElementById("shortCircuit").addEventListener("click", addRow);
   shadow.getElementById("ternary").addEventListener("click", addRow);
   shadow.getElementById("remove-row").addEventListener("click", removeRow);
 };

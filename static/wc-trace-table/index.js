@@ -1,6 +1,6 @@
-import * as steps from "./steps.js";
-import * as values from "./values.js";
-import * as operators from "./operators.js";
+import * as steps from "./tables/steps.js";
+import * as values from "./tables/values.js";
+import * as operators from "./tables/operators.js";
 
 export class TraceTable extends HTMLElement {
   constructor(type) {
