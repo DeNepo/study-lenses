@@ -38,11 +38,6 @@ export class OpenIn extends CodeConsumer {
         const URL = "https://bevacqua.github.io/promisees/#code=" + encoded;
         window.open(URL, "_blank");
       },
-      esprima: function (code) {
-        const encoded = encodeURIComponent(code);
-        const URL = "https://esprima.org/demo/parse.html?code=" + encoded;
-        window.open(URL, "_blank");
-      },
     },
   };
 

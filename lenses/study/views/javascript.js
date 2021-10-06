@@ -289,7 +289,7 @@ class JavaScriptSSR extends CodeSSR {
       "algoviz",
       "jsv9000",
       "promisees",
-      "esprima",
+      // "esprima",
     ];
     superPanel += `<form id='open-in-container' style='display: ${openInDisplay};'>
         <input id='open-in-button' value='open in' type='button'/>
