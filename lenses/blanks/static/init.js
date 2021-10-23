@@ -1,3 +1,5 @@
+// implement distractors
+
 const editor = {};
 
 const init = (() => {
@@ -85,7 +87,10 @@ const init = (() => {
   };
 
   const init = (probability = 0.1) => {
-    const { generated, blanked, tokens } = blankenate(config.code, probability);
+    const { generated, blanked, tokens, distractors } = blankenate(
+      config.code,
+      probability
+    );
 
     codeGenerated = generated;
     editor.getValue = () => codeGenerated;
@@ -94,7 +99,9 @@ const init = (() => {
       ? initDiffEditor(blanked, generated)
       : initEditor(blanked);
 
-    document.getElementById("tokens").innerHTML = `<ul>${tokens
+    document.getElementById("tokens").innerHTML = `
+    <code>extra tokens: ${distractors.length}</code>
+    <ul>${tokens
       .map(
         (token) =>
           `<li><code>${token.name}</code> ${Array(token.count)

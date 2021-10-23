@@ -27,10 +27,15 @@ class JSParsons extends HTMLElement {
     }
 
     //  - register all distractor lines
+    const distractorRegex =
+      /(^(?!\s*$).+\/\/[^\S\r\n]+distractor\s*$|^(?!\s*$).+\/\/+distractor\s*$)/gim;
     const distractorReplacer = "$_$_$_$_$_$_$_$_$_$_$_$";
-    const distractorReplaced = this.code
-      .replace(/\/\/[^\S\r\n]+distractor\s*$/gm, distractorReplacer)
-      .replace(/\/\/distractor\s*$/gm, distractorReplacer);
+    const distractorReplaced = this.code.replace(
+      distractorRegex,
+      distractorReplacer
+    );
+
+    this.distractors = this.code.match(distractorRegex) || [];
 
     const strippedCode = strip(distractorReplaced)
       .split(distractorReplacer)
@@ -46,8 +51,12 @@ class JSParsons extends HTMLElement {
       }
     }
 
+    const blockCommentContainer = document.createElement("div");
+    if (this.distractors.length > 0) {
+      blockCommentContainer.innerHTML += `<code>extra lines: ${this.distractors.length}</code><hr>`;
+    }
+
     if (this.blockComments) {
-      const blockCommentContainer = document.createElement("div");
       this.appendChild(blockCommentContainer);
       for (const blockComment of this.blockComments) {
         if (!blockComment) {
@@ -509,7 +518,8 @@ const renderStudyButtons = (container, config, editor) => {
         if (config.loopGuard && config.loopGuard.active) {
           const insertLoopGuards = (evalCode, maxIterations) => {
             let loopNum = 0;
-            const loopHeadRegex = /(for|while)([\s]*)\(([^\{]*)\)([\s]*)\{|do([\s]*)\{/gm;
+            const loopHeadRegex =
+              /(for|while)([\s]*)\(([^\{]*)\)([\s]*)\{|do([\s]*)\{/gm;
             return evalCode.replace(loopHeadRegex, (loopHead) => {
               const id = ++loopNum;
               return `let loopGuard_${id} = 0\n${loopHead}\nif (++loopGuard_${id} > ${maxIterations}) { throw new RangeError('loopGuard_${id} is greater than ${maxIterations}') }\n`;

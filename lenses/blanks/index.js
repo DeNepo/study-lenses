@@ -146,6 +146,7 @@ const blanksLens = ({ config, resource }) => {
   <script src='${config.sharedStatic}/trace/aran-build.js'></script>
 
 
+  <script src='${config.ownStatic}/get-distractors.js'></script>
   <script src='${config.ownStatic}/blankenate.js'></script>
 
 

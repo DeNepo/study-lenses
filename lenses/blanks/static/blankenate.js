@@ -56,10 +56,17 @@ const blankenate = (code, probability = 0.2) => {
     },
   });
 
+  const distractors = getDistractors(code);
+  const randomDistractors = Array.from(new Set(distractors))
+    .filter(() => Math.random() < probability)
+    .map((name) => ({ name, count: Math.round(Math.random() * 2) + 1 }));
+
   const tokens = Array.from(new Set(blankedTokens)).map((token) => ({
     name: token,
     count: blankedTokens.filter((i) => i === token).length,
   }));
+
+  tokens.push(...randomDistractors);
 
   tokens.sort((a, b) => {
     if (a.name < b.name) {
@@ -82,5 +89,6 @@ const blankenate = (code, probability = 0.2) => {
       plugins: prettierPlugins,
     }),
     tokens,
+    distractors: randomDistractors,
   };
 };

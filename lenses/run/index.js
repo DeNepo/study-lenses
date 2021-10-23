@@ -29,6 +29,7 @@ const runLens = async ({ resource, config, requestData }) => {
   <html>
   <head>
     <title>${requestData.path}</title>
+    <link rel="icon" href="data:image/svg+xml," type="image/svg+xml" />
   </head>
   <body>
     ${
