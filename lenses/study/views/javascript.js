@@ -80,6 +80,16 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.writeme ? "checked" : ""
       } /> <label for='writeme-input'>writeme</label>
     </form>
+    <form>
+      <input id='table-input' type='checkbox' ${
+        this.config.locals.table ? "checked" : ""
+      } /> <label for='table-input'>trace table</label>
+    </form>
+    <form>
+      <input id='ask-input' type='checkbox' ${
+        this.config.locals.ask ? "checked" : ""
+      } /> <label for='ask-input'>ask me</label>
+    </form>
     ${superConfigOptions}
     <form>
       <input id='eslint-input' type='checkbox' ${
@@ -120,16 +130,6 @@ class JavaScriptSSR extends CodeSSR {
     </form>
     <br>
     -- helpful things --
-    <form>
-      <input id='table-input' type='checkbox' ${
-        this.config.locals.table ? "checked" : ""
-      } /> <label for='table-input'>trace table</label>
-    </form>
-    <form>
-      <input id='ask-input' type='checkbox' ${
-        this.config.locals.ask ? "checked" : ""
-      } /> <label for='ask-input'>ask me</label>
-    </form>
     <form>
       <input id='loop-guard-input' type='checkbox' ${
         this.config.locals.loopGuard ? "checked" : ""
@@ -277,7 +277,7 @@ class JavaScriptSSR extends CodeSSR {
     const traceDisplay = locals.trace ? "inline-block" : "none";
     superPanel += `
     <div id='trace-container' style='display: ${traceDisplay};'>
-      <trace-it></trace-it>
+      <trace-it event></trace-it>
     </div>`;
 
     // }

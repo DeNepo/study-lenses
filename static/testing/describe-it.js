@@ -1,6 +1,6 @@
 "use strict";
 
-const describeItify = (aWindow = {}) => {
+const describeItify = (aWindow = { console }) => {
   let describeDepth = 0;
   let itDepth = 0;
   let beforeEachCallback = null;

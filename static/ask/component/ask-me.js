@@ -85,7 +85,28 @@ window.addEventListener("DOMContentLoaded", () => {
       const alertQuestion = this.hasAttribute("alert");
 
       shadow.getElementById("ask-button").addEventListener("click", (event) => {
-        const questionObj = ask(editor.getValue());
+        let code = editor.getValue();
+
+        try {
+          const selection = editor.getSelection();
+
+          const somethingIsHighlighted =
+            selection.startLineNumber !== selection.endLineNumber ||
+            selection.startColumn !== selection.endColumn;
+
+          if (somethingIsHighlighted) {
+            code =
+              "\n".repeat(selection.startLineNumber - 1) +
+              code
+                .split("\n")
+                .slice(selection.startLineNumber - 1, selection.endLineNumber)
+                .join("\n");
+          }
+        } catch (o_0) {
+          // console.log(o_0);
+        }
+
+        const questionObj = ask(code);
         if (alertQuestion) {
           alert(questionObj.question);
         }

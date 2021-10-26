@@ -37,6 +37,7 @@ window.trace = (code) => {
     }
 
     iframe.contentWindow.ADVICE.builtins.global.console = console;
+
     // state.initialGlobals = Object.entries(
     //   iframe.contentWindow.ADVICE.builtins.global
     // );

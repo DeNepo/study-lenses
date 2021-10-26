@@ -27,6 +27,20 @@ export class JavaScriptFE extends CodeFE {
   }
 
   initJsUi() {
+    window.addEventListener("study", (event) => {
+      const { selection, study } = event.detail;
+
+      const code = selection
+        ? getMonacoSelection(this.editor)
+        : this.editor.getValue();
+
+      try {
+        study(code, { ...this.config });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
     const formatButton = document.getElementById("format-button");
     if (formatButton !== null) {
       const formatParent = formatButton.parentElement;
@@ -171,7 +185,7 @@ export class JavaScriptFE extends CodeFE {
       });
     if (flowchartButton) {
       flowchartButton.addEventListener("click", () =>
-        this.studyWith("flowchart")
+        this.studyWith("flowchart", true)
       );
     }
     // }
@@ -188,7 +202,7 @@ export class JavaScriptFE extends CodeFE {
       });
     if (variablesButton) {
       variablesButton.addEventListener("click", () =>
-        this.studyWith("variables")
+        this.studyWith("variables", true)
       );
     }
 
@@ -221,7 +235,9 @@ export class JavaScriptFE extends CodeFE {
         }
       });
     if (blanksButton) {
-      blanksButton.addEventListener("click", () => this.studyWith("blanks"));
+      blanksButton.addEventListener("click", () =>
+        this.studyWith("blanks", true)
+      );
     }
 
     // const astButton = document.getElementById("ast-button");
@@ -314,10 +330,10 @@ export class JavaScriptFE extends CodeFE {
       try {
         document
           .getElementById("run-button")
-          .addEventListener("click", () => this.studyWith("console"));
+          .addEventListener("click", () => this.studyWith("console", false));
         document
           .getElementById("debug-button")
-          .addEventListener("click", () => this.studyWith("debugger"));
+          .addEventListener("click", () => this.studyWith("debugger", false));
       } catch (o_0) {}
     }
 
@@ -336,7 +352,7 @@ export class JavaScriptFE extends CodeFE {
     if (document.getElementById("eslint-button")) {
       document
         .getElementById("eslint-button")
-        .addEventListener("click", () => this.studyWith("eslint"));
+        .addEventListener("click", () => this.studyWith("eslint", true));
     }
 
     const p5Container = document.getElementById("p5-container");
@@ -409,7 +425,7 @@ export class JavaScriptFE extends CodeFE {
         .getElementById("open-in-button")
         .addEventListener("click", (event) => {
           const thisThing = event.target.form.thisThing.value;
-          this.studyWith(thisThing);
+          this.studyWith(thisThing, true);
           event.preventDefault();
         });
     }
@@ -572,18 +588,7 @@ export class JavaScriptFE extends CodeFE {
     }
   }
 
-  studyWith(environment, selection = false) {
-    if (environment === "eslint") {
-      const lintCode = (url) =>
-        fetch(url)
-          .then((res) => res.text())
-          .then((lintResult) => console.log(lintResult))
-          .catch((err) => console.error(err));
-
-      this.openWith(environment, this.editor.getValue(), lintCode);
-      return;
-    }
-
+  studyWith(environment, selection = true) {
     if (environment === "acorn") {
       try {
         console.log(
@@ -626,7 +631,16 @@ export class JavaScriptFE extends CodeFE {
       return;
     }
 
-    if (typeof studyWith[environment] === "function") {
+    if (environment === "eslint") {
+      const lintCode = (url) =>
+        fetch(url)
+          .then((res) => res.text())
+          .then((lintResult) => console.log(lintResult))
+          .catch((err) => console.error(err));
+
+      // this.openWith(environment, this.editor.getValue(), lintCode);
+      this.openWith(environment, formatted, lintCode);
+    } else if (typeof studyWith[environment] === "function") {
       studyWith[environment](formatted);
     } else {
       this.openSelectionWith(environment, formatted);

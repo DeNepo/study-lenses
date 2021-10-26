@@ -83,6 +83,9 @@ window.addEventListener("DOMContentLoaded", () => {
           // console.error(err);
         }
 
+        // hack until event is default in refactor
+        // const useEvent = this.hasAttribute("event");
+
         shadow
           .getElementById("trace-button")
           .addEventListener("click", (event) => {
@@ -104,7 +107,16 @@ window.addEventListener("DOMContentLoaded", () => {
               traceConfig.range.end = selection.endLineNumber;
             }
 
+            // if (useEvent) {
+            //   this.dispatchEvent(
+            //     new CustomEvent("study", {
+            //       bubbles: true,
+            //       detail: { selection: false, value },
+            //     })
+            //   );
+            // } else {
             trace(code);
+            // }
             event.preventDefault();
           });
 
@@ -124,9 +136,8 @@ window.addEventListener("DOMContentLoaded", () => {
                 : trimmedList;
             traceConfig[option] = newList;
           } else if (option.includes("range")) {
-            traceConfig.range[
-              option.replace("range", "").toLowerCase()
-            ] = Number(event.target.value);
+            traceConfig.range[option.replace("range", "").toLowerCase()] =
+              Number(event.target.value);
           }
 
           event.preventDefault();
