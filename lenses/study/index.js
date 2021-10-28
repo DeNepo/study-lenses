@@ -112,11 +112,13 @@ const liveStudyLense = async ({
     <div class="dropdown">
       <strong><code>&#187; OPTIONS &#171;</code></strong>
       <div class='dropdown-content'>
-        <a href='?--help' target='_blank'><code>--help</code>!  what is this?</a> <br><br>
-        <a href='?--sandbox=js' target='_blank'><button>js editor</button></a>
-        <a href='?--repl' target='_blank'><button>js repl</button></a> <br>
-        <a href='?--sandbox=html' target='_blank'><button>html</button></a>
-        <a href='?--draw' target='_blank'><button>whiteboard</button></a> <br><br>
+        <div class='selection-buttons'>
+          <a href='?--help' target='_blank'><code>--help</code>!  what is this?</a>
+          <a href='?--sandbox=js' target='_blank'><button>js editor</button></a>
+          <a href='?--repl' target='_blank'><button>js repl</button></a>
+          <a href='?--sandbox=html' target='_blank'><button>html</button></a>
+          <a href='?--draw' target='_blank'><button>whiteboard</button></a>
+        </div>
         ${await typeView.configOptions()}
       </div>
     </div>
