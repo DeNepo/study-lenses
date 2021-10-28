@@ -116,7 +116,7 @@ const liveStudyLense = async ({
           <a href='?--help' target='_blank'><code>--help</code>!  what is this?</a>
           <a href='?--sandbox=js' target='_blank'><button>js editor</button></a>
           <a href='?--repl' target='_blank'><button>js repl</button></a>
-          <a href='?--sandbox=html' target='_blank'><button>html</button></a>
+          <a href='?--sandbox=html' target='_blank'><button>html repl</button></a>
           <a href='?--draw' target='_blank'><button>whiteboard</button></a>
         </div>
         ${await typeView.configOptions()}
