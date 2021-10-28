@@ -1,5 +1,3 @@
-// implement distractors
-
 const editor = {};
 
 const init = (() => {
@@ -86,29 +84,53 @@ const init = (() => {
     closedEditor.style = "height:90vh; width:100vw;";
   };
 
+  const blankingConfig = Object.assign(
+    {},
+    {
+      keywords: true,
+      identifiers: true,
+      literals: false,
+    },
+    config.locals
+  );
+
   const init = (probability = 0.1) => {
-    const { generated, blanked, tokens, distractors } = blankenate(
-      config.code,
-      probability
-    );
+    const bestEffort = blankenate(config.code, probability, blankingConfig);
+
+    if (bestEffort === null) {
+      return;
+    }
+    const { generated, blanked, tokens, distractors } = bestEffort;
 
     codeGenerated = generated;
     editor.getValue = () => codeGenerated;
 
-    document.getElementById("show-diff").checked
-      ? initDiffEditor(blanked, generated)
-      : initEditor(blanked);
+    initDiffEditor(blanked, generated);
+    if (!document.getElementById("show-diff").checked) {
+      document.getElementsByClassName("modified")[1].style.display = "none";
+    }
+    // document.getElementById("show-diff").checked
+    //   ? initDiffEditor(blanked, generated)
+    //   : initEditor(blanked);
 
     document.getElementById("tokens").innerHTML = `
-    <code>extra tokens: ${distractors.length}</code>
-    <ul>${tokens
-      .map(
-        (token) =>
-          `<li><code>${token.name}</code> ${Array(token.count)
-            .fill("<input type='checkbox' />")
-            .join("")}</li>`
-      )
-      .join("")}</ul>`;
+    <details>
+    <summary>expand for hints</summary>
+      ${
+        distractors.length > 0
+          ? `<code>distractors: ${distractors.length}</code>`
+          : ""
+      }
+      <ul>${tokens
+        .map(
+          (token) =>
+            `<li><code>${token.name}</code> ${Array(token.count)
+              .fill("<input type='checkbox' />")
+              .join("")}</li>`
+        )
+        .join("")}</ul>
+      </details>
+      <br>`;
   };
   // console.log(config);
 
@@ -126,12 +148,23 @@ const init = (() => {
     //     // forceMoveMarkers: true
     //   },
     // ]);
-    if (isDiff) {
-      initEditor(closedEditor.getOriginalEditor().getModel());
-    } else {
-      initDiffEditor(closedEditor.getModel(), codeGenerated);
-    }
+    // if (isDiff) {
+    //   initEditor(closedEditor.getOriginalEditor().getModel());
+    // } else {
+    //   initDiffEditor(closedEditor.getModel(), codeGenerated);
+    // }
+    // isDiff = event.target.checked;
+
     isDiff = event.target.checked;
+
+    const diffEditor = document.getElementsByClassName("modified")[1];
+
+    if (isDiff) {
+      diffEditor.style.display = "inline-block";
+    } else {
+      diffEditor.style.display = "none";
+    }
+
     event.preventDefault();
   };
 
@@ -164,6 +197,24 @@ const init = (() => {
         initEditor(closedEditor.getModel());
       }
     });
+
+  const toggleBlankingConfig = (event) => {
+    const whichOne = event.target.id;
+
+    blankingConfig[whichOne] = !blankingConfig[whichOne];
+
+    document.getElementById(whichOne).checked = blankingConfig[whichOne];
+
+    init(Number(slider.value) / 100);
+  };
+  for (const key in blankingConfig) {
+    const optionEl = document.getElementById(key);
+    if (!optionEl) {
+      continue;
+    }
+    optionEl.checked = blankingConfig[key];
+    optionEl.addEventListener("change", toggleBlankingConfig);
+  }
 
   return init;
 })();

@@ -1,5 +1,11 @@
 {
   "--defaults": {
     ".js": "blanks"
+  },
+  "blanks": {
+    "identifiers": true,
+    "keywords": true,
+    "primitives": true,
+    "operators": true
   }
 }

@@ -103,12 +103,20 @@ const blanksLens = ({ config, resource }) => {
     <trace-table-button></trace-table-button>
     <button id='study-button'>study</button>
   </div>
-
+  <br>
   <div style='display: flex; flex-direction: row;'>
-    difficulty:<input style='width: 15em;' id='blankenate-variables' min='0' max='100' type='range' value='0' />
-    <form><input id='show-diff' type='checkbox'><label for='show-diff'>show diff </label> </form>
+    <form style="padding-right: 0.5em;">
+      <input id='identifiers' type='checkbox'><label for='identifiers'>identifiers</label>
+      <input id='keywords' type='checkbox'><label for='keywords'>keywords</label>
+      <input id='operators' type='checkbox'><label for='operators'>operators</label>
+      <input id='primitives' type='checkbox'><label for='primitives'>primitives</label>
+    </form>
+    ||
+    difficulty:<input style='width: 15em; margin-right: 0.5em;' id='blankenate-variables' min='0' max='100' type='range' value='0' />
+    ||
+    <form><input id='show-diff' style="padding-left: 0.5em;" type='checkbox'><label for='show-diff'>show diff </label> </form>
   </div>
-
+  <br>
   <div id='tokens'></div>
 
   <div id='editor-container' style='height: 90vh'></div>
@@ -147,6 +155,8 @@ const blanksLens = ({ config, resource }) => {
 
 
   <script src='${config.ownStatic}/get-distractors.js'></script>
+  <script src='${config.ownStatic}/blanks-generator-keywords.js'></script>
+  <script src='${config.ownStatic}/blanks-generator-operators.js'></script>
   <script src='${config.ownStatic}/blankenate.js'></script>
 
 

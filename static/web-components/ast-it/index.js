@@ -93,14 +93,34 @@ export class ASTIt extends CodeConsumer {
       if (event.target.type !== "button") {
         return;
       }
+      let code = editor.getValue();
+
+      try {
+        const selection = editor.getSelection();
+
+        const somethingIsHighlighted =
+          selection.startLineNumber !== selection.endLineNumber ||
+          selection.startColumn !== selection.endColumn;
+
+        if (somethingIsHighlighted) {
+          code =
+            "\n".repeat(selection.startLineNumber - 1) +
+            code
+              .split("\n")
+              .slice(selection.startLineNumber - 1, selection.endLineNumber)
+              .join("\n");
+        }
+      } catch (o_0) {
+        // console.log(o_0);
+      }
 
       const option = event.target.form.format.value;
       if (option === "estree (log)") {
-        this.views.estreeLog(editor.getValue());
+        this.views.estreeLog(code);
       } else if (option === "shift (log)") {
-        this.views.shiftLog(editor.getValue());
+        this.views.shiftLog(code);
       } else if (option === "astexplorer") {
-        this.views.astexplorerSite(editor.getValue());
+        this.views.astexplorerSite(code);
       }
     });
 

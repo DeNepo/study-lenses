@@ -1,17 +1,27 @@
-const blankenate = (code, probability = 0.2) => {
+const blankenate = (
+  code,
+  probability = 0.2,
+  config = {
+    keywords: true,
+    identifiers: true,
+    literals: false,
+    operators: false,
+  }
+) => {
+  const blank = "__";
+
   let tree = null;
   try {
     tree = Acorn.parse(code);
   } catch (err) {
     document.getElementById(
       "editor-container"
-    ).innerHTML = `<code style='color:red;'>${err.toString()}</code><br><pre>${code}</pre>`;
-    throw err;
+    ).innerHTML = `<code style='color:red;'>${err.toString()}</code> (see console for more details)<br><pre>${code}</pre>`;
+    eval(code);
+    return null;
   }
 
   const blankedTokens = [];
-
-  const declaredVariables = new Set();
 
   const _ = (oldNode) => {
     const _node = Acorn.parse("let _; _;").body[1];
@@ -24,34 +34,22 @@ const blankenate = (code, probability = 0.2) => {
 
   walk(tree, {
     enter(node, parent, prop, index) {
-      if (node.type === "Identifier" && Math.random() < probability) {
-        if (parent.type === "VariableDeclarator") {
-          if (!declaredVariables.has(node.name)) {
-            declaredVariables.add(node.name);
-          } else {
-            return;
-          }
-        }
+      if (
+        config.identifiers &&
+        node.type === "Identifier" &&
+        Math.random() < probability
+      ) {
         blankedTokens.push(node.name);
-        node.name = "_";
-      } else if (
-        node.type === "Literal" &&
-        (typeof node.value === "boolean" ||
-          node.value === null ||
-          typeof node.value === "number") &&
+        node.name = blank;
+      }
+
+      if (
+        config.primitives &&
+        (node.type === "Literal" || node.type === "RegExpLiteral") &&
         Math.random() < probability
       ) {
         blankedTokens.push(node.raw);
-        node.raw = "_";
-      } else if (
-        (node.type === "BreakStatement" || node.type === "ContinueStatement") &&
-        Math.random() < probability
-      ) {
-        const new_ = _(node.start, node.end);
-        this.replace(new_);
-        blankedTokens.push(
-          node.type === "BreakStatement" ? "break" : "continue"
-        );
+        node.raw = blank;
       }
     },
   });
@@ -68,6 +66,101 @@ const blankenate = (code, probability = 0.2) => {
 
   tokens.push(...randomDistractors);
 
+  tokens.add = (...toAdd) =>
+    toAdd.forEach((newToken) => {
+      const tokenEntry = tokens.find((token) => token.name === newToken);
+      if (tokenEntry) {
+        tokenEntry.count++;
+      } else {
+        tokens.push({ name: newToken, count: 1 });
+      }
+    });
+
+  let generated = "";
+  let blanked = "";
+  if (config.keywords || config.operators) {
+    const blankfiyGenerators = Object.assign({}, Astring.baseGenerator);
+
+    blankfiyGenerators.ForInStatement = function (node, state) {
+      if (config.operators || config.keywords) {
+        if (config.operators && !config.keywords) {
+          tokens.add("in");
+          state.write("for (");
+        } else if (config.keywords && !config.operators) {
+          tokens.add("for");
+          state.write(blank + " (");
+        } else if (config.keywords && config.operators) {
+          tokens.add("for", "in");
+          state.write(blank + " (");
+        }
+
+        this[node.left.type](node.left, state);
+        if (state.output[state.output.length - 1] === ";") {
+          state.output = state.output.slice(0, state.output.length - 1);
+        }
+
+        if (config.operators && !config.keywords) {
+          state.write(" " + blank + " ");
+        } else if (config.keywords && !config.operators) {
+          state.write(" in ");
+        } else if (config.keywords && config.operators) {
+          state.write(" " + blank + " ");
+        }
+
+        this[node.right.type](node.right, state);
+        state.write(") ");
+        if (node.body) {
+          this[node.body.type](node.body, state);
+        }
+      } else {
+        this[node.type](node, state);
+      }
+    };
+
+    if (config.operators) {
+      Object.assign(
+        blankfiyGenerators,
+        blanksGeneratorOperators(blank, tokens)
+      );
+    }
+    if (config.keywords) {
+      Object.assign(blankfiyGenerators, blanksGeneratorKeywords(blank, tokens));
+    }
+
+    const chancifiedBlankify = {};
+    for (const key in blankfiyGenerators) {
+      chancifiedBlankify[key] = function (node, state) {
+        if (Math.random() < probability) {
+          blankfiyGenerators[key].call(this, node, state);
+        } else if (key in Astring.baseGenerator) {
+          Astring.baseGenerator[key](node, state);
+        }
+      };
+    }
+
+    const customGenerator = Object.assign(
+      {},
+      Astring.baseGenerator,
+      chancifiedBlankify
+    );
+
+    blanked = Astring.generate(tree, {
+      generator: customGenerator,
+    });
+
+    probability = 0;
+    generated = Astring.generate(Acorn.parse(code));
+  } else {
+    blanked = prettier.format(Astring.generate(tree), {
+      parser: "babel",
+      plugins: prettierPlugins,
+    });
+    generated = prettier.format(Astring.generate(Acorn.parse(code)), {
+      parser: "babel",
+      plugins: prettierPlugins,
+    });
+  }
+
   tokens.sort((a, b) => {
     if (a.name < b.name) {
       return -1;
@@ -80,14 +173,8 @@ const blankenate = (code, probability = 0.2) => {
   });
 
   return {
-    blanked: prettier.format(Astring.generate(tree), {
-      parser: "babel",
-      plugins: prettierPlugins,
-    }),
-    generated: prettier.format(Astring.generate(Acorn.parse(code)), {
-      parser: "babel",
-      plugins: prettierPlugins,
-    }),
+    blanked,
+    generated,
     tokens,
     distractors: randomDistractors,
   };
