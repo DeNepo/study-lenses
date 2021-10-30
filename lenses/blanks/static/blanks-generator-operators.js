@@ -57,8 +57,8 @@ const blanksGeneratorOperators = (blank, tokens = []) => ({
   VariableDeclarator(node, state) {
     tokens.add("_ = _");
     this[node.id.type](node.id, state);
-    state.write(" " + blank + " ");
     if (node.init) {
+      state.write(" " + blank + " ");
       this[node.init.type](node.init, state);
     }
   },

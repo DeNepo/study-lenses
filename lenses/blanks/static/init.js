@@ -89,7 +89,8 @@ const init = (() => {
     {
       keywords: true,
       identifiers: true,
-      literals: false,
+      primitives: false,
+      operators: false,
     },
     config.locals
   );

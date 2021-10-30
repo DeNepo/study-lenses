@@ -128,7 +128,7 @@ const blankenate = (
     }
 
     const chancifiedBlankify = {};
-    for (const key in blankfiyGenerators) {
+    for (const key in Astring.baseGenerator) {
       chancifiedBlankify[key] = function (node, state) {
         if (Math.random() < probability) {
           blankfiyGenerators[key].call(this, node, state);
