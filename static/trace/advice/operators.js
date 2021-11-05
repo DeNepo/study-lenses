@@ -21,6 +21,7 @@ export default {
       return result;
     }
 
+    // if (!state.inNativeCallstack || state.inConsoleCall) {
     if (!state.inNativeCallstack) {
       const line = state.node.loc.start.line;
       const col = state.node.loc.start.column;
@@ -51,6 +52,7 @@ export default {
       return result;
     }
 
+    // if (!state.inNativeCallstack || state.inConsoleCall) {
     if (!state.inNativeCallstack) {
       const line = state.node.loc.start.line;
       const col = state.node.loc.start.column;

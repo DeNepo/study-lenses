@@ -6,7 +6,6 @@ const util = require("util");
 const writeFilePromise = util.promisify(fs.writeFile);
 const readFilePromise = util.promisify(fs.readFile);
 
-const renderCard = require("./render-card");
 const renderCards = require("./render-cards");
 const registerCards = require("./lib/register-cards");
 
@@ -60,7 +59,7 @@ const leitnerLens = async ({ config, resource, responseData, requestData }) => {
   try {
     leitner = JSON.parse(await readFilePromise(leitnerPath, "utf-8"));
   } catch (err) {
-    console.error(err);
+    // console.error(err);
     leitner = {
       boxes: {
         1: [],
@@ -74,7 +73,7 @@ const leitnerLens = async ({ config, resource, responseData, requestData }) => {
     };
   }
 
-  registerCards(dirPath, leitner.boxes);
+  await registerCards(dirPath, leitner.boxes);
 
   await writeFilePromise(leitnerPath, JSON.stringify(leitner, null, "  "));
 

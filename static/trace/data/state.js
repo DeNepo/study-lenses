@@ -14,6 +14,7 @@ export const state = {
   aran: null, // an initialized aran instance
   firstInstrumentedCall: false,
   builtInEntryPoint: null,
+  inConsoleCall: false,
 };
 
 // const e = {

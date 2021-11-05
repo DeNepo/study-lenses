@@ -24,10 +24,15 @@ const renderCards = async ({ config, resource, leitner }) => {
 
 <body>
 
+  <code>
+    how to use this: <a href="./?--help=leitner" target="blank">?--help=leitner</a>
+  </code>
+  <hr>
   <h2>Leitner box: ${resource.info.base}</h2>
   <p>
     study a flashcard from:
   </p>
+
   <div id='choose-card'>
     <ol id='boxes'></ol>
   </div>

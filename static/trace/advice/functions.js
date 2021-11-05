@@ -56,6 +56,7 @@ export default {
     // priority to console trace configuration
     const isConsoleCall = Object.values(console).includes(f) || t === console;
     if (isConsoleCall) {
+      state.inConsoleCall = true;
       if (!nodeIsInRange) {
       } else if (config.console) {
         print({
@@ -68,6 +69,7 @@ export default {
           overrideBuiltIn: true,
         });
       }
+      state.inConsoleCall = false;
       return undefined;
     }
     // console.log(2);

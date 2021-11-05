@@ -28,21 +28,18 @@ const highlightLense = async ({ resource, config }) => {
         <button id="clear">Clear canvas</button>
         <button id="undo">Undo</button>
         <button id="redo">Redo</button>
+        <input id="eraser" type="checkbox" />
+        <label for="eraser">eraser</label>
         <br />
-        <button id="white" class="color">White</button>
-        <button id="red" class="color">Red</button>
-        <button id="green" class="color">Green</button>
-        <button id="blue" class="color">Blue</button>
-        <button id="orange" class="color">Orange</button>
-        <button id="black" class="color">Black</button>
+        <button id="white" class="color">WHITE</button>
+        <button id="red" class="color">red</button>
+        <button id="green" class="color">green</button>
+        <button id="blue" class="color">blue</button>
+        <button id="orange" class="color">orange</button>
+        <button id="black" class="color">black</button>
         <br>`
     }
 
-    ${
-      false && config.locals.randomLine !== false
-        ? `<button style=";" id="random-line">random line</button>`
-        : ""
-    }
     ${
       (config.locals.run || config.locals.eval) && resource.info.ext === ".js"
         ? `
@@ -103,9 +100,11 @@ const highlightLense = async ({ resource, config }) => {
         : ""
     }
 
-
     ${config.locals.openIn ? `<button><open-in></open-in></button>` : ""}
 
+    ${`<button style="display: ${
+      config.locals.random === false ? "none" : "inline-block"
+    }" id="random-line">random line</button>`}
 
     <div id="container">
       ${
@@ -175,7 +174,7 @@ const highlightLense = async ({ resource, config }) => {
       config.sharedStatic
     }/trace/trace-init.js' type='module'></script>
 
-    <!-- <script src='${config.ownStatic}/random-line.js'></script> -->
+    <script src='${config.ownStatic}/random-line.js'></script>
 
   </body>
 </html>`;

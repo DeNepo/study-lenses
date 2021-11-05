@@ -54,6 +54,8 @@ const sandbox = async (req, res, next) => {
     arrayMerge: combineMerge,
   });
 
+  localConfigs.save = false;
+
   const studyLens = (await lensesPromise).find(
     (lens) => lens.queryKey === "study"
   );

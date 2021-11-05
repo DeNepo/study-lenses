@@ -239,6 +239,38 @@ export const questions = [
     features: ["operators"],
   },
 
+  {
+    name: "opposite comparison",
+    template: ({ nodes }) => {
+      const comparisons =
+        nodes.BinaryExpression &&
+        nodes.BinaryExpression.filter(
+          (node) =>
+            node.operator === "===" ||
+            node.operator === "!==" ||
+            node.operator === "==" ||
+            node.operator === "!="
+        );
+      const node = comparisons[(comparisons.length * Math.random()) | 0];
+      const alternateOperator =
+        node.operator === "==="
+          ? "!=="
+          : node.operator === "!=="
+          ? "==="
+          : node.operator === "=="
+          ? "!="
+          : node.operator === "!="
+          ? "=="
+          : "";
+
+      const question = `On line ${node.loc.start.line} there is a '${node.operator}' operator.
+How would the program behave if was replaced with '${alternateOperator}'?`;
+      return { question };
+    },
+    levels: [3],
+    features: ["operators"],
+  },
+
   // === variables ===
   {
     template: ({ node }) => ({
@@ -447,6 +479,7 @@ export const questions = [
       return {
         question: `How would you read line ${randomLine.number} out loud?`,
         hints: [
+          "https://en.wikipedia.org/wiki/List_of_typographical_symbols_and_punctuation_marks",
           "https://blog.codinghorror.com/ascii-pronunciation-rules-for-programmers/",
           "https://cogent.co/blog/the-importance-of-learning-to-read-code/",
         ],

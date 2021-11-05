@@ -13,4 +13,5 @@ export const config = {
   variables: { ask: true },
   generic: { ask: true },
   levels: [1, 2, 3, 4, 5],
+  alert: { ask: false },
 };

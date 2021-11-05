@@ -95,6 +95,7 @@ export default {
       return value;
     }
 
+    // if (state.inNativeCallstack && !state.inConsoleCall) {
     if (state.inNativeCallstack) {
       return value;
     }
@@ -139,6 +140,7 @@ export default {
       return value;
     }
 
+    // if (state.inNativeCallstack && !state.inConsoleCall) {
     if (state.inNativeCallstack) {
       return value;
     }

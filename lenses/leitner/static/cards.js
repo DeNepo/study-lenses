@@ -53,8 +53,8 @@ const init = async () => {
     event.cancelBubble = true;
 
     if (event.target.nodeName === "SUMMARY") {
-      leitner.boxes[event.target.dataset.box].open = !event.target.parentElement
-        .open;
+      leitner.boxes[event.target.dataset.box].open =
+        !event.target.parentElement.open;
     }
 
     if (event.target.nodeName === "A") {
@@ -114,7 +114,7 @@ const init = async () => {
         }
 
         const newBox = Number(event.target.id);
-        leitner.boxes[box].shift();
+        leitner.boxes[box].splice(leitner.boxes[box].indexOf(card), 1);
         leitner.boxes[newBox].push(card);
 
         save().then(() => {
@@ -133,7 +133,7 @@ const init = async () => {
 
       const iframe = document.createElement("iframe");
       iframe.style = "height: 100%; width: 100%; border:none; overflow: auto;";
-      iframe.src = `${window.location.origin}${window.location.pathname}/${card}?render`;
+      iframe.src = `${window.location.origin}${window.location.pathname}/${card}?study`;
       cardTab.document.body.appendChild(iframe);
     };
   });

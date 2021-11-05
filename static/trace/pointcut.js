@@ -90,7 +90,8 @@ export const pointcut = (name, node) => {
     name === "read" &&
     (node.type === "Identifier" ||
       node.type === "ExpressionStatement" ||
-      node.type === "UpdateExpression")
+      node.type === "UpdateExpression" ||
+      node.type === "UnaryExpression")
   ) {
     return true;
   } else if (

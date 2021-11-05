@@ -56,6 +56,8 @@ window.addEventListener("DOMContentLoaded", () => {
                 <input id='controlFlow' type='checkbox' /> <label for='controlFlow'>control flow</label> <br>
                 <input id='functions' type='checkbox' /> <label for='functions'>functions</label> <br>
                 <hr>
+                <input id='alert' type='checkbox' /> <label for='alert'>alert questions</label> <br>
+                <br>
                 <button id='guide'>guide</button>
               </form>
             </div>
@@ -64,17 +66,20 @@ window.addEventListener("DOMContentLoaded", () => {
         `;
 
       try {
-        config.exists;
+        window.config.exists;
         if (
-          config.locals &&
-          config.locals.ask &&
-          typeof config.locals.ask === "object"
+          window.config.locals &&
+          window.config.locals.ask &&
+          typeof window.config.locals.ask === "object"
         ) {
           for (const key in ask.config) {
-            if (key === "levels" && Array.isArray(config.locals.ask.levels)) {
-              ask.config.levels = config.locals.ask.levels;
-            } else if (typeof config.locals.ask[key] === "boolean") {
-              ask.config[key].ask = config.locals.ask[key];
+            if (
+              key === "levels" &&
+              Array.isArray(window.config.locals.ask.levels)
+            ) {
+              ask.config.levels = window.config.locals.ask.levels;
+            } else if (typeof window.config.locals.ask[key] === "boolean") {
+              ask.config[key].ask = window.config.locals.ask[key];
             }
           }
         }
@@ -82,7 +87,9 @@ window.addEventListener("DOMContentLoaded", () => {
         // console.error(err);
       }
 
-      const alertQuestion = this.hasAttribute("alert");
+      if (this.hasAttribute("alert")) {
+        ask.config.alert.ask = true;
+      }
 
       shadow.getElementById("ask-button").addEventListener("click", (event) => {
         let code = editor.getValue();
@@ -107,9 +114,7 @@ window.addEventListener("DOMContentLoaded", () => {
         }
 
         const questionObj = ask(code);
-        if (alertQuestion) {
-          alert(questionObj.question);
-        }
+
         console.log("--- --- --- --- --- --- ---");
 
         if (Array.isArray(questionObj.hints) && questionObj.hints.length > 0) {
@@ -123,6 +128,23 @@ window.addEventListener("DOMContentLoaded", () => {
           console.log(questionObj.question);
         }
         console.log("--- --- --- --- --- --- ---");
+
+        if (ask.config.alert.ask) {
+          let question = "";
+          if (
+            Array.isArray(questionObj.hints) &&
+            questionObj.hints.length > 0
+          ) {
+            question = questionObj.question + "\n\nhints:";
+
+            questionObj.hints.forEach((hint) => {
+              question += "\n- " + hint;
+            });
+          } else {
+            question = questionObj.question;
+          }
+          alert(question);
+        }
 
         event.preventDefault();
       });
@@ -154,6 +176,7 @@ window.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
       });
 
+      // initialize options panel
       for (const key in ask.config) {
         if (key === "levels") {
           for (const level of ask.config.levels) {

@@ -23,7 +23,7 @@ document.onkeydown = new Function(
 {
   // --- disable console output and interactions ---
 
-  const nope = "Nope! you're in a quiz ;)";
+  const nope = "nope! you're in a quiz ;)";
 
   const blockedGlobals = ["prompt", "alert", "confirm", "console"];
 
