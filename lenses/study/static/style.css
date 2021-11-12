@@ -1,7 +1,6 @@
 .panel-element {
-  display: inline-block
+  display: inline-block;
 }
-
 
 .dropdown {
   /* width: 100%; */
@@ -31,6 +30,17 @@
 }
 
 .selection-buttons > a > button {
-  width:100%;
+  width: 100%;
   padding: 0.25em;
+}
+
+/* for DOM view in html view */
+path {
+  fill: none;
+  /*   stroke: #2fa2ad; */
+}
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 2px;
 }

@@ -96,14 +96,23 @@ const init = async () => {
         aCardIsOpen = false;
       };
 
-      let putAwayButtons = "";
-      for (let i = 1; i <= numberOfBoxes; i++) {
-        putAwayButtons += `<input id='${i}' type='button' value='box ${i}'></input>`;
-      }
+      const putAwayButtons =
+        box === numberOfBoxes
+          ? `
+            <input id='1' type='button' value='I got it wrong'></input>
+            <input id='${box}' type='button' value='Put it back in box ${box}'></input>
+          `
+          : `
+            <input id='${
+              box + 1 > numberOfBoxes ? numberOfBoxes : box + 1
+            }' type='button' value='I got it right'></input>
+            <input id='1' type='button' value='I got it wrong'></input>
+            <input id='${box}' type='button' value='Put it back in box ${box}'></input>
+          `;
 
       const tempContainer = document.createElement("div");
       tempContainer.innerHTML = `<form>
-          <text style="margin-right: 1em;">This card is in <text style="font-weight: bold;"><strong>box ${box}</strong></text>, where would you like to put it away?</text>
+          <text style="margin-right: 1em;">Put this card away:</text>
           ${putAwayButtons}
         </form>`;
 
@@ -120,9 +129,7 @@ const init = async () => {
         save().then(() => {
           aCardIsOpen = false;
 
-          cardTab.alert(
-            `all done! putting this card in box ${newBox} for later`
-          );
+          cardTab.alert(`putting this card in box ${newBox}`);
           cardTab.close();
           init();
         });

@@ -1,13 +1,20 @@
 import { CodeFE } from "../code/code-class.js";
 
+import { domToPojo } from "./dom-to-pojo.js";
+import { renderDomTree } from "./render-dom-tree.js";
+
 export class HtmlFE extends CodeFE {
   constructor(config) {
     super(config);
-    this.outputContainer = document.getElementById("output-container");
+    this.uiContainer = document.getElementById("ui-container");
+    this.domContainer = document.getElementById("dom-container");
     this.initHtmlUi();
     this.editor.updateOptions({ readOnly: false });
 
+    this.iframe = null;
+    this.domTree = null;
     this.renderIFrame();
+    this.view = "ui";
   }
 
   initHtmlUi() {
@@ -28,14 +35,24 @@ export class HtmlFE extends CodeFE {
     formatParent.replaceChild(newFormatButton, formatButton);
 
     document.getElementById("new-tab-button").addEventListener("click", () => {
+      // would be cool if the new tab was the same iframe, then state could persist
+      // if (this.view === "ui") {
       const x = window.open();
       x.document.open();
-      if (this.config.loopGuard.active) {
-        x.document.write(this.loopGuardify(this.editor.getValue()));
-      } else {
-        x.document.write(this.editor.getValue());
-      }
+      x.document.write(this.editor.getValue());
       x.document.close();
+
+      if (document.getElementById("accessibility").checked) {
+        const tota11yScript = document.createElement("script");
+        tota11yScript.src = `${config.sharedStatic}/tota11y.min.js`;
+        x.document.body.appendChild(tota11yScript);
+      }
+      // } else {
+      //   const x = window.open();
+      //   x.document.open();
+      //   x.document.appendChild(this.domTree);
+      //   x.document.close();
+      // }
     });
 
     document
@@ -62,15 +79,40 @@ export class HtmlFE extends CodeFE {
     document
       .getElementById("editor-checkbox")
       .addEventListener("change", (event) => {
-        const isChecked = event.target.checked;
-        if (isChecked) {
+        if (event.target.checked) {
           editorContainer.style.display = "block";
           renderConfig.style.display = "block";
-          this.outputContainer.style.width = "40vw";
+          this.uiContainer.style.width = "50vw";
+          this.domContainer.style.width = "50vw";
         } else {
           editorContainer.style.display = "none";
           renderConfig.style.display = "none";
-          this.outputContainer.style.width = "100vw";
+          this.uiContainer.style.width = "100vw";
+          this.domContainer.style.width = "100vw";
+        }
+      });
+
+    document
+      .getElementById("accessibility")
+      .addEventListener("change", (event) => {
+        if (event.target.checked) {
+          this.renderIFrame();
+        }
+      });
+
+    document
+      .getElementById("output-view")
+      .addEventListener("change", (event) => {
+        const view = event.target.id;
+
+        if (view === "ui") {
+          this.view = "ui";
+          this.uiContainer.style.display = "inline-block";
+          this.domContainer.style.display = "none";
+        } else if (view === "dom") {
+          this.view = "dom";
+          this.uiContainer.style.display = "none";
+          this.domContainer.style.display = "inline-block";
         }
       });
 
@@ -82,6 +124,19 @@ export class HtmlFE extends CodeFE {
     //   });
   }
 
+  renderDomTree(element) {
+    const data = domToPojo(element);
+    // console.log("new DOM:", data);
+    this.domTree = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+    this.domTree.style = "height: 100%; width: 100%;";
+    this.domContainer.innerHTML = "";
+    this.domContainer.appendChild(this.domTree);
+    renderDomTree(data, this.domTree);
+  }
+
   renderIFrame() {
     console.clear();
 
@@ -89,17 +144,36 @@ export class HtmlFE extends CodeFE {
       ? this.loopGuardify(this.editor.getValue())
       : this.editor.getValue();
 
-    const iframe = document.createElement("iframe");
-    iframe.style = "height: 100%; width: 100%;";
-    iframe.onload = () => {
-      iframe.contentDocument.open();
-      iframe.contentDocument.write(code);
-      iframe.contentDocument.close();
-    };
-    this.iframe = iframe;
+    this.iframe = document.createElement("iframe");
+    this.iframe.id = "page-to-inspect";
+    this.iframe.style = "height: 100%; width: 100%;";
+    this.iframe.onload = () => {
+      this.iframe.contentDocument.open();
+      this.iframe.contentDocument.write(code);
+      this.iframe.contentDocument.close();
 
-    this.outputContainer.innerHTML = "";
-    this.outputContainer.appendChild(iframe);
+      if (document.getElementById("accessibility").checked) {
+        const tota11yScript = document.createElement("script");
+        tota11yScript.src = `${config.sharedStatic}/tota11y.min.js`;
+        this.iframe.contentDocument.body.appendChild(tota11yScript);
+      }
+
+      this.renderDomTree(this.iframe.contentDocument.body);
+
+      const observerOptions = {
+        childList: true,
+        attributes: true,
+        subtree: true,
+      };
+
+      const observer = new MutationObserver(() =>
+        this.renderDomTree(this.iframe.contentDocument.body)
+      );
+      observer.observe(this.iframe.contentDocument.body, observerOptions);
+    };
+
+    this.uiContainer.innerHTML = "";
+    this.uiContainer.appendChild(this.iframe);
   }
 
   static format(code) {

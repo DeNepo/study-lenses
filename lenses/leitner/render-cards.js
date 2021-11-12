@@ -24,14 +24,21 @@ const renderCards = async ({ config, resource, leitner }) => {
 
 <body>
 
-  <code>
-    how to use this: <a href="./?--help=leitner" target="blank">?--help=leitner</a>
-  </code>
-  <hr>
-  <h2>Leitner box: ${resource.info.base}</h2>
-  <p>
-    study a flashcard from:
-  </p>
+  <h2>${resource.info.base}</h2>
+  <div>
+    This page will help you study your flashcards using the <a target="_blank" href="https://www.youtube.com/watch?v=6S2LJIAydyg">Leitner system</a>.
+
+    <br>
+
+    Here's the main idea: study cards from box 1 every day, study cards from box 2 every other day, ...
+
+    <ul>
+      <li>Move a card to the next box if you guess it correctly before flipping it.</li>
+      <li>Move a card to box 1 if you get it wrong, no matter which box it was in.</li>
+    </ul>
+
+    To learn about how you can create more flashcards check out <a href="./?--help=leitner" target="blank">?--help=leitner</a>.
+  </div>
 
   <div id='choose-card'>
     <ol id='boxes'></ol>
