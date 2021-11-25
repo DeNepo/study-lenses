@@ -8,8 +8,8 @@ export const renderDomTree = (data, svgContainer) => {
   const width = 660 - margin.left - margin.right;
   const height = 500 - margin.top - margin.bottom;
 
-  const dx = 15;
-  const dy = width / 6;
+  const dx = 20;
+  const dy = width / 7;
   const tree = d3.tree().nodeSize([dx, dy]);
   const diagonal = d3
     .linkHorizontal()

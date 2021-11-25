@@ -1,5 +1,5 @@
 import * as helpers from "./helpers.js";
-import * as collections from "./node-type-collections.js";
+// import * as collections from "./node-type-collections.js";
 
 export const operatorNodes = ({ nodes }) => {
   const expressionNodes = [];
@@ -17,6 +17,16 @@ export const randomOperatorNode = ({ nodes }) => {
   );
   return filteredNodes[(filteredNodes.length * Math.random()) | 0];
 };
+
+export const equalities = ({ nodes }) =>
+  nodes.filter(
+    (node) =>
+      node.type === "BinaryExpression" &&
+      (node.operator === "===" ||
+        node.operator === "!===" ||
+        node.operator === "==" ||
+        node.operator === "!=")
+  );
 
 export const randomControlFlowNode = ({ nodes }) => {
   const controlFlows = Object.values(nodes)

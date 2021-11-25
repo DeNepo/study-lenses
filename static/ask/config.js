@@ -14,4 +14,5 @@ export const config = {
   generic: { ask: true },
   levels: [1, 2, 3, 4, 5],
   alert: { ask: false },
+  range: { start: 0, end: 0 },
 };

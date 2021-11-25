@@ -71,6 +71,7 @@ export const studyWith = {
       "http://www.pythontutor.com/live.html#code=" +
       sanitizedJST +
       "&cumulative=false&curInstr=2&heapPrimitives=false&mode=display&origin=opt-live.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false";
+
     window.open(jsTutorURL, "_blank");
   },
   jsTutor: function (code) {
@@ -139,16 +140,16 @@ export const studyWith = {
     const URL = "https://esprima.org/demo/parse.html?code=" + encoded;
     window.open(URL, "_blank");
   },
-  flowchart: function (code) {
-    const lenseConfig = {
-      code,
-      ext: ".js",
-    };
-    const queryValue = encodeURIComponent(JSON.stringify(lenseConfig));
-    const query = `?flowchart=${queryValue}`;
-    const url = window.location.origin + query;
-    window.open(url, "_blank");
-  },
+  // flowchart: function (code) {
+  //   const lenseConfig = {
+  //     code,
+  //     ext: ".js",
+  //   };
+  //   const queryValue = encodeURIComponent(JSON.stringify(lenseConfig));
+  //   const query = `?flowchart=${queryValue}`;
+  //   const url = window.location.origin + query;
+  //   window.open(url, "_blank");
+  // },
   utils: {
     sanitize: (str) =>
       str.replace(/\(/g, "%28").replace(/\)/g, "%29").replace(/%09/g, "%20%20"),

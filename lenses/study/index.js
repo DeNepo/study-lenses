@@ -63,10 +63,20 @@ const liveStudyLense = async ({
 
   let typeView = () => {};
   try {
-    typeView = new (require(`./views/${type}`))({ resource, config });
+    typeView = new (require(`./views/${type}`))({
+      resource,
+      config,
+      responseData,
+      requestData,
+    });
   } catch (o_0) {
     console.log(o_0);
-    typeView = new (require(`./views/code`))({ resource, config });
+    typeView = new (require(`./views/code`))({
+      resource,
+      config,
+      responseData,
+      requestData,
+    });
   }
 
   config.content = resource.content;

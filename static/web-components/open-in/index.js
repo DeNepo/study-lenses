@@ -14,6 +14,7 @@ export class OpenIn extends CodeConsumer {
           "http://www.pythontutor.com/live.html#code=" +
           sanitizedJST +
           "&cumulative=false&curInstr=2&heapPrimitives=false&mode=display&origin=opt-live.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false";
+
         window.open(jsTutorURL, "_blank");
       },
       jsTutor: function (code) {

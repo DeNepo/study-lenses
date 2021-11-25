@@ -72,6 +72,18 @@ export default {
       state.inConsoleCall = false;
       return undefined;
     }
+
+    const isAlertCall = f.name === "alert" && isBuiltIn(f);
+    if (isAlertCall) {
+      if (nodeIsInRange) {
+        print({
+          prefix: [line, col],
+          logs: [` alert(${xs.length > 0 ? xs[0] : ""})`],
+          overrideBuiltIn: true,
+        });
+      }
+      return undefined;
+    }
     // console.log(2);
 
     // because of instrumentation

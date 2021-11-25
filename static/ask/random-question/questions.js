@@ -267,6 +267,8 @@ export const questions = [
 How would the program behave if was replaced with '${alternateOperator}'?`;
       return { question };
     },
+    // nodeTypes: filters.equalities,
+    nodeTypes: ["BinaryExpression"],
     levels: [3],
     features: ["operators"],
   },
@@ -276,7 +278,11 @@ How would the program behave if was replaced with '${alternateOperator}'?`;
     template: ({ node }) => ({
       question: `On which line is the variable '${node.id.name}' declared?
 - Is it initialized?`,
-      hints: ['this "trace" button, ctr-f or ?variables can be helpful'],
+      hints: [
+        "ctr-f will find all the uses",
+        'the "trace" button can help',
+        "so can the ?variables lens",
+      ],
     }),
     levels: [1],
     nodeTypes: ["VariableDeclarator"],

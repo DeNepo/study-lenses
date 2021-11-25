@@ -8,14 +8,18 @@ const marked = require("marked");
 
 const JavaScriptSSR = require("../javascript");
 
-const dirRegex = /(<!--[ \t]*begin[ \t]*dir[ \t]*-->)([\s\S]*)(<!--[ \t]*end[ \t]*dir[ \t]*-->)/gim;
+const dirRegex =
+  /(<!--[ \t]*begin[ \t]*dir[ \t]*-->)([\s\S]*)(<!--[ \t]*end[ \t]*dir[ \t]*-->)/gim;
 
 class MarkdownSSR extends JavaScriptSSR {
-  constructor({
-    config,
-    resource,
-    content = "" /* used by directory subclass */,
-  }) {
+  constructor(argsObj) {
+    const {
+      config,
+      resource,
+      content = "" /* used by directory subclass */,
+      markedOptions = {},
+    } = argsObj;
+
     super({ config, resource });
 
     this.inlines = {
@@ -28,24 +32,21 @@ class MarkdownSSR extends JavaScriptSSR {
       literate: false,
     };
 
-    marked.setOptions({
-      baseUrl: "./" + this.resource.info.base, // why no work?
-      langPrefix: "line-numbers language-",
-    });
+    this.markedOptions = markedOptions;
 
     this.content = content || resource.content;
-    this.inlines.jsBlocks = /^(([ \t]*`{3,4})([js|javascript])([\s\S]+?)(^[ \t]*\2))/gim.test(
-      this.content
-    );
+    this.inlines.jsBlocks =
+      /^(([ \t]*`{3,4})([js|javascript])([\s\S]+?)(^[ \t]*\2))/gim.test(
+        this.content
+      );
 
     // // are handled by lensed iframes
     // this.inlines.jsTutor = /(<!--[ \t]*tutor[ \t]*-->)/gim.test(this.content);
     // this.inlines.parsons = /(<!--[ \t]*parsons[ \t]*-->)/gim.test(this.content);
 
     // https://github.com/regexhq/gfm-code-block-regex/blob/master/index.js
-    this.inlines.mermaid = /^(([ \t]*`{3,4})(mermaid)([\s\S]+?)(^[ \t]*\2))/gim.test(
-      this.content
-    );
+    this.inlines.mermaid =
+      /^(([ \t]*`{3,4})(mermaid)([\s\S]+?)(^[ \t]*\2))/gim.test(this.content);
     this.inlines.quiz = false; // not yet
 
     const base = this.resource.info.base.toLowerCase();
@@ -108,9 +109,10 @@ class MarkdownSSR extends JavaScriptSSR {
         this.resource.info.dir,
         this.resource.info.base
       );
-      virtualDirectory.content.children = virtualDirectory.content.children.filter(
-        (i) => path.join(i.root, i.dir, i.base) !== thisFile
-      );
+      virtualDirectory.content.children =
+        virtualDirectory.content.children.filter(
+          (i) => path.join(i.root, i.dir, i.base) !== thisFile
+        );
       const dirToc = dirContents({
         dirElement: virtualDirectory.content,
         top: true,
@@ -119,7 +121,7 @@ class MarkdownSSR extends JavaScriptSSR {
       content = content.replace(
         // this.dirRegex,
         dirRegex,
-        `<!-- BEGIN DIR -->\n<ul id="directory" style="list-style-type: none;">${dirToc}</ul>\n<!-- END DIR -->`
+        `<!-- BEGIN DIR -->\n<ul id="directory" style="list-style-type: none;"><li><a href="..?--defaults">..</a></li>${dirToc}</ul>\n<!-- END DIR -->`
       );
     }
 
@@ -130,8 +132,20 @@ class MarkdownSSR extends JavaScriptSSR {
       );
     }
 
+    const markedOptions = Object.assign(
+      {},
+      {
+        baseUrl: "./" + this.resource.info.base, // why no work?
+        langPrefix: "line-numbers language-",
+      },
+      this.markedOptions
+    );
+
     return `<hr><hr>
-    <main class="markdown-body"><div></div>${marked(content)}</main>`;
+    <main class="markdown-body"><div></div>${marked(
+      content,
+      markedOptions
+    )}</main>`;
   }
 
   scriptsBody() {

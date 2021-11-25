@@ -18,6 +18,9 @@ const highlightLense = async ({ resource, config }) => {
     <script src='${
       config.sharedStatic
     }/wc-trace-table/configurable-button.js' type='module'></script>
+
+    <script src='${config.ownStatic}/study-with.js'></script>
+
   </head>
   <body>
 
@@ -43,17 +46,13 @@ const highlightLense = async ({ resource, config }) => {
     ${
       (config.locals.run || config.locals.eval) && resource.info.ext === ".js"
         ? `
-    <button style=";" onclick="eval(decodeURIComponent(\`${encodeURIComponent(
-      resource.content
-    )}\`))">run</button>`
+    <button style=";" onclick="studyWithEval(false)(decodeURIComponent(code))">run</button>`
         : ""
     }
     ${
       (config.locals.debug || config.locals.eval) && resource.info.ext === ".js"
         ? `
-    <button style=";" onclick="eval('debugger; \\n\\n' + decodeURIComponent(\`${encodeURIComponent(
-      resource.content
-    )}\`))">debug</button>`
+    <button style=";" onclick="studyWithEval(true)(decodeURIComponent(code))">debug</button>`
         : ""
     }
     ${

@@ -47,8 +47,10 @@ const compileLocalConfigs = (absPath, config) => {
     return compileLocalConfigs(path.dirname(absPath), config);
   }
 
-  const configPath = path.join(absPath, "study.json");
-  const hasConfig = fs.existsSync(configPath);
+  const studyConfigPath = path.join(absPath, "study.json");
+  const lensesConfigPath = path.join(absPath, "lenses.json");
+  const hasLensesConfig = fs.existsSync(lensesConfigPath);
+  const hasConfig = hasLensesConfig || fs.existsSync(studyConfigPath);
 
   if (!hasConfig) {
     // console.log('no config here')
@@ -57,7 +59,12 @@ const compileLocalConfigs = (absPath, config) => {
 
   let currentConfig = {};
   try {
-    currentConfig = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+    currentConfig = JSON.parse(
+      fs.readFileSync(
+        hasLensesConfig ? lensesConfigPath : studyConfigPath,
+        "utf-8"
+      )
+    );
   } catch (err) {
     console.error(err);
   }

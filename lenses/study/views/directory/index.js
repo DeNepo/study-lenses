@@ -13,7 +13,7 @@ let flags = "";
 let regexError = null;
 
 class DirectorySSR extends MarkdownSSR {
-  constructor({ config, resource }) {
+  constructor({ config, resource, requestData }) {
     searchQuery = config.queryValue.searchQuery || "";
     searchType = config.queryValue.searchType || "includes";
     flags =
@@ -61,7 +61,14 @@ class DirectorySSR extends MarkdownSSR {
         `<!-- BEGIN DIR --><!-- END DIR --> \n <hr> <hr> \n\n` + readmeContent;
     }
 
-    super({ config, resource, content: readmeContent });
+    super({
+      config,
+      resource,
+      content: readmeContent,
+      markedOptions: {
+        //  baseUrl: `../${requestData.path}/`
+      },
+    });
   }
 
   panel() {

@@ -425,7 +425,7 @@ export class JavaScriptFE extends CodeFE {
         .getElementById("open-in-button")
         .addEventListener("click", (event) => {
           const thisThing = event.target.form.thisThing.value;
-          this.studyWith(thisThing, true);
+          this.studyWith(thisThing, false);
           event.preventDefault();
         });
     }
@@ -639,7 +639,7 @@ export class JavaScriptFE extends CodeFE {
           .catch((err) => console.error(err));
 
       // this.openWith(environment, this.editor.getValue(), lintCode);
-      this.openWith(environment, formatted, lintCode);
+      this.openWith(environment, editor.getValue(), lintCode);
     } else if (typeof studyWith[environment] === "function") {
       studyWith[environment](formatted);
     } else {

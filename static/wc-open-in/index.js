@@ -15,9 +15,9 @@ class OpenIn extends HTMLElement {
     shadow.innerHTML = `
       <form id='open-in-container'>
         <input id='open-in-button' value='open in' type='button'/>
-        <select name='thisThing'>
+        <select id='selection' name='thisThing'>
           ${openable.map((viztool) => {
-            return `<option ${
+            return `<option id='${viztool}' ${
               viztool === openIn ? "selected" : ""
             }>${viztool}</option>`;
           })}
@@ -32,6 +32,16 @@ class OpenIn extends HTMLElement {
         studyWith[thisThing](editor.getValue());
         event.preventDefault();
       });
+
+    try {
+      const siteName = config.locals.openIn;
+      const hasSiteName = shadow.getElementById(siteName);
+      if (hasSiteName) {
+        shadow.getElementById("selection").value = siteName;
+      }
+    } catch (err) {
+      // console.error(err);
+    }
   }
 }
 

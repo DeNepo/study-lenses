@@ -191,6 +191,7 @@ export class RunIt extends CodeConsumer {
       evaller.contentDocument.body.appendChild(script);
     };
 
+    // conditionally open iframe in new tab based on option
     this.config.container.appendChild(evaller);
   }
 
@@ -231,6 +232,7 @@ export class RunIt extends CodeConsumer {
               <form  id='run-it-config'>
                 <input id='debug' type='checkbox' /> <label for='debug'>debug</label> <br>
                 <input id='module' type='checkbox' /> <label for='module'>module</label> <br>
+                <!-- <input id='new-tab' type='checkbox' /> <label for='new-tab'>new tab</label> <br> -->
                 <input name='active' id='loop-guard-active' type='checkbox' /> <label for='loop-guard-active'>loop guard:</label>
                 <input id='loop-guard-max' name='max' type='number' style='width: 3em;' />
               </form>

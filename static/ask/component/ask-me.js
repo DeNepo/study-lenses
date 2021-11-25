@@ -1,6 +1,7 @@
 import { ask } from "../ask.js";
 
 import { askMeGuide } from "../ask-me-guide.js";
+import { config } from "../config.js";
 
 window.Array.prototype.poop = window.Array.prototype.pop;
 
@@ -94,6 +95,9 @@ window.addEventListener("DOMContentLoaded", () => {
       shadow.getElementById("ask-button").addEventListener("click", (event) => {
         let code = editor.getValue();
 
+        config.range.start = 0;
+        config.range.end = code.split("\n").length;
+
         try {
           const selection = editor.getSelection();
 
@@ -102,46 +106,39 @@ window.addEventListener("DOMContentLoaded", () => {
             selection.startColumn !== selection.endColumn;
 
           if (somethingIsHighlighted) {
-            code =
-              "\n".repeat(selection.startLineNumber - 1) +
-              code
-                .split("\n")
-                .slice(selection.startLineNumber - 1, selection.endLineNumber)
-                .join("\n");
+            config.range.start = selection.startLineNumber;
+            config.range.end = selection.endLineNumber;
           }
         } catch (o_0) {
           // console.log(o_0);
         }
 
-        const questionObj = ask(code);
+        const { hints, question } = ask(code);
 
         console.log("--- --- --- --- --- --- ---");
 
-        if (Array.isArray(questionObj.hints) && questionObj.hints.length > 0) {
+        if (Array.isArray(hints) && hints.length > 0) {
           console.groupCollapsed(
-            // questionObj.hints.length > 1 ? "hints" : "hint"
-            questionObj.question
+            // hints.length > 1 ? "hints" : "hint"
+            question
           );
-          questionObj.hints.forEach((hint) => console.log("-", hint));
+          hints.forEach((hint) => console.log("-", hint));
           console.groupEnd();
         } else {
-          console.log(questionObj.question);
+          console.log(question);
         }
         console.log("--- --- --- --- --- --- ---");
 
         if (ask.config.alert.ask) {
           let question = "";
-          if (
-            Array.isArray(questionObj.hints) &&
-            questionObj.hints.length > 0
-          ) {
-            question = questionObj.question + "\n\nhints:";
+          if (Array.isArray(hints) && hints.length > 0) {
+            question = question + "\n\nhints:";
 
-            questionObj.hints.forEach((hint) => {
+            hints.forEach((hint) => {
               question += "\n- " + hint;
             });
           } else {
-            question = questionObj.question;
+            question = question;
           }
           alert(question);
         }

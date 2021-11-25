@@ -1,6 +1,16 @@
+import { config } from "./config.js";
+
 export const sortNodes = (nodes) =>
   function (node, parent, prop, index) {
     node.parent = parent;
+
+    if (
+      node.loc.start.line < config.range.start ||
+      node.loc.start.line > config.range.end
+    ) {
+      return;
+    }
+
     if (Array.isArray(nodes[node.type])) {
       nodes[node.type].push(node);
     } else {

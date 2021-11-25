@@ -144,10 +144,14 @@ app.use(async (req, res, next) => {
           <link rel="stylesheet" href="shared_static_resources/prism/style.css">
         </head>
         <body>
-          <main class="markdown-body">${marked(rawMarkdown)}</main>
+          <main class="markdown-body">${marked(rawMarkdown, {
+            // baseUrl: `../${req.path}/`,
+          })}</main>
           <script src="shared_static_resources/prism/script.js"></script>
         </body>
       </html>`;
+    // in case it works by side-effect, reset for later
+
     res.set("Content-Type", "text/html");
     res.status(200);
     res.end(renderedMarkdown);

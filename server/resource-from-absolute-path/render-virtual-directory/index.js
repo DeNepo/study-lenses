@@ -84,7 +84,10 @@ const renderVirtualDirectory = async ({
 
   let subPathPromises = [];
   for (let nextSubPath of paths) {
-    if (nextSubPath[0] === ".") {
+    if (
+      nextSubPath[0] === "." &&
+      !(nextSubPath.startsWith(".study") || nextSubPath.startsWith(".lens"))
+    ) {
       continue;
     }
     // quick fix to avoid node_modules, full gitignore later

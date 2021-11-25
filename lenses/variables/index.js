@@ -216,10 +216,10 @@ const scopeAnalysisLens = ({ resource, config }) => {
             which refer to the same variable, color-coded by type:
             <span class="code-identifier var-decl">declarations</span>,
             <span class="code-identifier var-read">read&nbsp;references</span>,
-            <span class="code-identifier var-write">write&nbsp;references</span
+            <span class="code-identifier var-write">assignment&nbsp;references</span
             >,
             <span class="code-identifier var-read var-write"
-              >read-write&nbsp;references</span
+              >read-assign&nbsp;references</span
             >, and <span class="code-identifier var-delete">deletes</span>.
           </p>
 
