@@ -17,6 +17,8 @@ export class LensIt extends CodeConsumer {
       this.config.queryKeys = this.getAttribute("buttons")
         .split(",")
         .map((key) => key.trim());
+
+      this.config.queryKeys = this.config.queryKeys.filter((key) => key !== "");
     }
 
     if (this.config.queryKeys.length === 0) {

@@ -30,15 +30,6 @@ const fuzzLens = async ({ resource, config, requestData }) => {
         requestData.body.fileName
       );
 
-      const named = requestData.body.text
-        .split(
-          resource.info.base
-            .replace(/-./g, (x) => x[1].toUpperCase())
-            .split(".js")
-            .join("")
-        )
-        .join("__name__");
-
       const solutionsPath = path.join(
         resource.info.root,
         resource.info.dir,
@@ -50,7 +41,7 @@ const fuzzLens = async ({ resource, config, requestData }) => {
         await mkdirPromise(solutionsPath);
       }
 
-      await writeFilePromise(absolutePath, named, "utf-8");
+      await writeFilePromise(absolutePath, requestData.body.text, "utf-8");
       resource.content = ": changes were saved";
       // console.log(resource.content);
       resource.info.ext = ".txt";

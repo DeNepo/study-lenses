@@ -83,7 +83,7 @@ window.editor = config.editor;
 
 const runItButton = document.getElementById("run-it-button");
 
-runItButton.code = () => {
+runItButton.code = async () => {
   const activeSolution = config.solutions.find((solution) => solution.active);
 
   if (!activeSolution) {
@@ -94,6 +94,9 @@ click the [+] button to start a new solution`);
   }
 
   console.log("------------ " + activeSolution.fileName + " ------------");
+  const solution = config.editor.getValue();
+  const isExport = solution.includes("export const " + activeSolution.name);
+  // for backwards compatibility
 
   runItButton.config.globals = {
     describe,
@@ -108,18 +111,32 @@ click the [+] button to start a new solution`);
     SyntaxError,
     ReferenceError,
   };
-  const solution = config.editor.getValue();
-  const runnerCode = `import { args, solution } from './${window.location.pathname
-    .split("/")
-    .pop()}/fuzz.js';
+  const runnerCode = isExport
+    ? `import { args, solution } from './${window.location.pathname
+        .split("/")
+        .pop()}/fuzz.js';
+import { ${activeSolution.name} } from './${config.folderName}/solutions/${
+        activeSolution.fileName
+      }'
+
+const tests = generateTests(args, solution, 10);
+
+runTests(${activeSolution.name}, tests);
+`
+    : `import { args, solution } from './${window.location.pathname
+        .split("/")
+        .pop()}/fuzz.js';
 
 
 ${solution}
 
-
 const tests = generateTests(args, solution, 10);
 
-runTests(${config.name}, tests);`;
+runTests(${activeSolution.name}, tests);`;
+
+  if (isExport) {
+    await saveChanges(false)();
+  }
 
   return runnerCode;
 };
@@ -160,7 +177,10 @@ document.getElementById("lens-it-el").code = () => {
   return selection;
 };
 
-document.getElementById("open-in-button").code = () => config.editor.getValue();
+if (document.getElementById("open-in-button")) {
+  document.getElementById("open-in-button").code = () =>
+    config.editor.getValue();
+}
 
 // --- setup alternate buttons ---
 
@@ -194,8 +214,9 @@ if (solutionButtons.children[0]) {
 // --- save changes ---
 
 const saveChanges = (alertIt) => () => {
-  const solutionFileName = config.solutions.find((solution) => solution.active)
-    .fileName;
+  const solutionFileName = config.solutions.find(
+    (solution) => solution.active
+  ).fileName;
 
   fetch(window.location.origin + window.location.pathname + "?fuzz", {
     method: "POST",
@@ -229,16 +250,14 @@ if (config.locals.save === true) {
 
 const fileNameRegex = /^(?!.*(?:\s))[\w\d-_.]*\.js$/g;
 
-const starterCode = `const ${config.name} = () => {};`;
-
-const createSolution = (fileName, code = starterCode) => {
+const createSolution = (fileName) => {
   const name = fileName
     .replace(/-./g, (x) => x[1].toUpperCase())
     .split(".js")
     .join("");
 
   return {
-    code,
+    code: `export const ${name} = () => {};`,
     fileName,
     name,
   };
@@ -258,8 +277,9 @@ newSolutionButton.addEventListener("click", (event) => {
       continue;
     }
 
-    if (config.solutions.find((solution) => solution.fileName === fileName)) {
+    if (config.solutions.find((solution) => solution.fileName === input)) {
       alert(`"${input}" already exists, pick a new name`);
+      continue;
     }
 
     fileName = input;

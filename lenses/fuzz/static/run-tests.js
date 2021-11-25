@@ -2,6 +2,8 @@ import { rfdc } from "./rfdc.js";
 
 const clone = rfdc();
 
+const runItButton = document.getElementById("run-it-button");
+
 const testIt = (func, test, message) =>
   it(message, () => {
     if (test.throws) {
@@ -28,6 +30,11 @@ const testIt = (func, test, message) =>
     let actual;
     let didThrow = false;
     try {
+      if (runItButton.config.debug) {
+        // so it's easier to find the function source
+        debugger;
+      }
+      // call the function with random arguments
       actual = func(...test.args);
     } catch (thrown) {
       if (!test.throws) {

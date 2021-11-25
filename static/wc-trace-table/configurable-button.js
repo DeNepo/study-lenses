@@ -16,13 +16,15 @@ export class TraceTableButton extends HTMLElement {
       <button id='table-button'>table</button>
       <select id="type">
         <option value="steps" ${
-          which === "steps" ? "selected" : ""
+          which === "steps" || this.hasAttribute("steps") ? "selected" : ""
         }>variable steps</option>
         <option value="values" ${
-          which === "values" ? "selected" : ""
+          which === "values" || this.hasAttribute("values") ? "selected" : ""
         }>variable values</option>
         <option value="operators" ${
-          which === "operators" ? "selected" : ""
+          which === "operators" || this.hasAttribute("operators")
+            ? "selected"
+            : ""
         }>operators</option>
       </select>`;
 

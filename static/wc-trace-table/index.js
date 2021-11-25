@@ -10,9 +10,9 @@ export class TraceTable extends HTMLElement {
 
     const shadow = this.attachShadow({ mode: "open" });
 
-    if (type === "steps") {
+    if (type === "steps" || this.hasAttribute("steps")) {
       shadow.innerHTML += steps.style;
-    } else if (type === "operators") {
+    } else if (type === "operators" || this.hasAttribute("operators")) {
       shadow.innerHTML += operators.style;
     } else {
       shadow.innerHTML += values.style;
@@ -21,10 +21,10 @@ export class TraceTable extends HTMLElement {
 
     const tableContainer = document.createElement("div");
     closableDiv.appendChild(tableContainer);
-    if (type === "steps") {
+    if (type === "steps" || this.hasAttribute("steps")) {
       tableContainer.innerHTML += steps.table;
       steps.init(shadow);
-    } else if (type === "operators") {
+    } else if (type === "operators" || this.hasAttribute("operators")) {
       tableContainer.innerHTML += operators.table;
       operators.init(shadow);
     } else {

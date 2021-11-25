@@ -55,6 +55,9 @@ const renderFuzzercize = async (resource, config) => {
       )
     );
     solutionFileNames.forEach((fileName, index) => {
+      const name = fileName
+        .replace(/-./g, (x) => x[1].toUpperCase())
+        .replace(".js", "");
       solutions.unshift({
         fileName,
         name,
@@ -65,6 +68,8 @@ const renderFuzzercize = async (resource, config) => {
 
   const fuzzercise = {
     name,
+    // https://dev.to/mattkenefick/snippets-in-javascript-converting-pascalcase-to-kebab-case-36ed
+    folderName: name.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase(),
     jsDoc,
     readme,
     solutions,
@@ -137,7 +142,12 @@ const renderFuzzercize = async (resource, config) => {
     <div style='display: flex; flex-direction: row;'>
       <button id='format-button'>format</button>
       <text style='padding-left: 0.25em; padding-right: 0.25em;'>||</text>
-      <lens-it id="lens-it-el" buttons="highlight, parsons, variables, flowchart, blanks, study"></lens-it>
+      <lens-it id="lens-it-el" buttons="highlight, parsons,
+        ${config.locals.variables ? "variables, " : ""}
+        ${config.locals.flowchart ? "flowchart, " : ""}
+        ${config.locals.blanks ? "blanks, " : ""}
+        ${config.locals.study ? "study, " : ""}
+      "></lens-it>
     </div>
     <div style='display: flex; flex-direction: row;'>
       <run-it id='run-it-button'
@@ -150,9 +160,9 @@ const renderFuzzercize = async (resource, config) => {
             : ""
         }
       ></run-it>
-      <trace-table-button></trace-table-button>
-      <ask-me></ask-me>
-      <open-in id='open-in-button'></open-in>
+      <trace-table-button ${config.locals.table || ""}></trace-table-button>
+      ${config.locals.ask ? "<ask-me></ask-me>" : ""}
+      ${config.locals.openIn ? "<open-in id='open-in-button'></open-in>" : ""}
     </div>
     <div id='docs-container'></div>
     <hr>

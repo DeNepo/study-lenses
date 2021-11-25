@@ -152,7 +152,8 @@ export class RunIt extends CodeConsumer {
     return guardedCode;
   }
 
-  runIt(code = this.code) {
+  async runIt(code = this.code) {
+    code = await code;
     if (code === undefined) {
       return;
     }
