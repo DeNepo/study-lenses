@@ -29,7 +29,7 @@ const combineMerge = (target, source, options) => {
 };
 
 const compileLocalConfigs = (absPath, config) => {
-  const pastTheTop = absPath.search(process.cwd()) === -1;
+  const pastTheTop = !absPath.startsWith(process.cwd());
   if (pastTheTop) {
     // console.log('past the top')
     return config;
@@ -47,8 +47,8 @@ const compileLocalConfigs = (absPath, config) => {
     return compileLocalConfigs(path.dirname(absPath), config);
   }
 
-  const studyConfigPath = path.join(absPath, "study.json");
-  const lensesConfigPath = path.join(absPath, "lenses.json");
+  const studyConfigPath = path.normalize(path.join(absPath, "study.json"));
+  const lensesConfigPath = path.normalize(path.join(absPath, "lenses.json"));
   const hasLensesConfig = fs.existsSync(lensesConfigPath);
   const hasConfig = hasLensesConfig || fs.existsSync(studyConfigPath);
 

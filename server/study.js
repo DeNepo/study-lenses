@@ -52,14 +52,16 @@ const configurePlugins = require("./configure-plugins");
 module.exports = async (req, res, next) => {
   // if the requested resource does not exist, fall back to static serving
   const isPublicExample = /[\s\S]*study_lenses_public/.test(req.path);
-  const absolutePath = isPublicExample
-    ? path.join(
-        __dirname,
-        "..",
-        "study_lenses_public",
-        req.path.replace(/[\s\S]*study_lenses_public/, "")
-      )
-    : path.join(process.cwd(), req.path);
+  const absolutePath = path.normalize(
+    isPublicExample
+      ? path.join(
+          __dirname,
+          "..",
+          "study_lenses_public",
+          req.path.replace(/[\s\S]*study_lenses_public/, "")
+        )
+      : path.join(process.cwd(), req.path)
+  );
   if (!fs.existsSync(absolutePath)) {
     next();
     return;
@@ -223,18 +225,14 @@ module.exports = async (req, res, next) => {
     //  it will be constructed from the finalResource
   };
 
-  const {
-    finalResponseData,
-    finalResource,
-    abort,
-    error,
-  } = await changePerspective({
-    lenses,
-    options,
-    resource,
-    requestData,
-    responseData,
-  });
+  const { finalResponseData, finalResource, abort, error } =
+    await changePerspective({
+      lenses,
+      options,
+      resource,
+      requestData,
+      responseData,
+    });
 
   if (abort) {
     console.log(": aborting at " + abort);
