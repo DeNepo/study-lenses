@@ -65,8 +65,9 @@ class DirectorySSR extends MarkdownSSR {
       config,
       resource,
       content: readmeContent,
+      requestData,
       markedOptions: {
-        //  baseUrl: `../${requestData.path}/`
+        baseUrl: `/./${requestData.path}/`,
       },
     });
   }

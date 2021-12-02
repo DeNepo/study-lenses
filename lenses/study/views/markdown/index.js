@@ -16,11 +16,14 @@ class MarkdownSSR extends JavaScriptSSR {
     const {
       config,
       resource,
+      requestData,
       content = "" /* used by directory subclass */,
       markedOptions = {},
     } = argsObj;
 
-    super({ config, resource });
+    super({ config, resource, requestData });
+
+    this.requestData = requestData;
 
     this.inlines = {
       jsBlocks: false,
@@ -135,7 +138,7 @@ class MarkdownSSR extends JavaScriptSSR {
     const markedOptions = Object.assign(
       {},
       {
-        baseUrl: "./" + this.resource.info.base, // why no work?
+        baseUrl: "/../" + this.requestData.path + "/",
         langPrefix: "line-numbers language-",
       },
       this.markedOptions

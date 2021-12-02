@@ -145,7 +145,7 @@ app.use(async (req, res, next) => {
         </head>
         <body>
           <main class="markdown-body">${marked(rawMarkdown, {
-            // baseUrl: `../${req.path}/`,
+            baseUrl: `/../${req.path}/`,
           })}</main>
           <script src="shared_static_resources/prism/script.js"></script>
         </body>

@@ -56,21 +56,21 @@ export default {
     // priority to console trace configuration
     const isConsoleCall = Object.values(console).includes(f) || t === console;
     if (isConsoleCall) {
-      state.inConsoleCall = true;
-      if (!nodeIsInRange) {
-      } else if (config.console) {
-        print({
-          prefix: [line, col],
-          logs: [
-            ` console.${f ? functionName : f}(`,
-            ...commaSeparatedArgs,
-            ")",
-          ],
-          overrideBuiltIn: true,
-        });
-      }
-      state.inConsoleCall = false;
-      return undefined;
+      // state.inConsoleCall = true;
+      // if (!nodeIsInRange) {
+      // } else if (config.console) {
+      //   print({
+      //     prefix: [line, col],
+      //     logs: [
+      //       ` console.${f ? functionName : f}(`,
+      //       ...commaSeparatedArgs,
+      //       ")",
+      //     ],
+      //     overrideBuiltIn: true,
+      //   });
+      // }
+      // state.inConsoleCall = false;
+      // return undefined;
     }
 
     const isAlertCall = f.name === "alert" && isBuiltIn(f);
@@ -161,7 +161,7 @@ export default {
       state.builtInEntryPoint = callSymbol;
     }
 
-    const x = Reflect.apply(f, t, xs);
+    const x = isConsoleCall ? undefined : Reflect.apply(f, t, xs);
 
     if (state.builtInEntryPoint === callSymbol) {
       state.builtInEntryPoint = null;

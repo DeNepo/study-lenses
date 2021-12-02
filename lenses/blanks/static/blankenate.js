@@ -79,9 +79,9 @@ const blankenate = (
   let generated = "";
   let blanked = "";
   if (config.keywords || config.operators) {
-    const blankfiyGenerators = Object.assign({}, Astring.baseGenerator);
+    const blankifyGenerators = Object.assign({}, Astring.baseGenerator);
 
-    blankfiyGenerators.ForInStatement = function (node, state) {
+    blankifyGenerators.ForInStatement = function (node, state) {
       if (config.operators || config.keywords) {
         if (config.operators && !config.keywords) {
           tokens.add("in");
@@ -119,19 +119,19 @@ const blankenate = (
 
     if (config.operators) {
       Object.assign(
-        blankfiyGenerators,
+        blankifyGenerators,
         blanksGeneratorOperators(blank, tokens)
       );
     }
     if (config.keywords) {
-      Object.assign(blankfiyGenerators, blanksGeneratorKeywords(blank, tokens));
+      Object.assign(blankifyGenerators, blanksGeneratorKeywords(blank, tokens));
     }
 
     const chancifiedBlankify = {};
     for (const key in Astring.baseGenerator) {
       chancifiedBlankify[key] = function (node, state) {
         if (Math.random() < probability) {
-          blankfiyGenerators[key].call(this, node, state);
+          blankifyGenerators[key].call(this, node, state);
         } else if (key in Astring.baseGenerator) {
           Astring.baseGenerator[key](node, state);
         }
@@ -150,6 +150,7 @@ const blankenate = (
 
     probability = 0;
     generated = Astring.generate(Acorn.parse(code));
+    // generated = code;
   } else {
     blanked = prettier.format(Astring.generate(tree), {
       parser: "babel",

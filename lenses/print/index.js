@@ -24,7 +24,7 @@ const printLens = async ({ resource, config }) => {
     <div id='controls'>
       <form id='font-size' style='display: inline-block'>
         font size:
-        <input type='range' min='0.5' max='1.5' value='1' step='0.01'  />
+        <input type='range' min='0.5' max='1.5' value='1' step='0.001'  />
       </form>
       ||
       <button id='print'>print</button>
