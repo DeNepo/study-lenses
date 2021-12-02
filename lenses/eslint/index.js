@@ -13,17 +13,17 @@ const eslintLens = async ({ config, resource, requestData }) => {
 
   resource.info.ext = ".txt";
 
-  const resourceDirectory = path.dirname(
-    path.join(process.cwd(), requestData.path)
-  );
+  const resourcePath = path.join(process.cwd(), requestData.path);
 
   try {
     const eslint = new ESLint({
-      cwd: resourceDirectory,
+      cwd: path.normalize(path.join(resourcePath, "..")),
     });
 
     // 2. Lint files.
-    const results = await eslint.lintText(codeToLint);
+    const results = await eslint.lintText(codeToLint, {
+      filePath: resourcePath,
+    });
 
     // 3. Format the results.
     const formatter = await eslint.loadFormatter("codeframe");
