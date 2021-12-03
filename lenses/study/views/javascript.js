@@ -81,11 +81,6 @@ class JavaScriptSSR extends CodeSSR {
       } /> <label for='writeme-input'>writeme</label>
     </form>
     <form>
-      <input id='table-input' type='checkbox' ${
-        this.config.locals.table ? "checked" : ""
-      } /> <label for='table-input'>trace table</label>
-    </form>
-    <form>
       <input id='ask-input' type='checkbox' ${
         this.config.locals.ask ? "checked" : ""
       } /> <label for='ask-input'>ask me</label>
@@ -114,9 +109,14 @@ class JavaScriptSSR extends CodeSSR {
       } /> <label for='debug-input'>debug</label>
     </form>
     <form>
+      <input id='table-input' type='checkbox' ${
+        this.config.locals.table ? "checked" : ""
+      } /> <label for='table-input'>trace table</label>
+    </form>
+    <form>
       <input id='trace-input' type='checkbox' ${
         this.config.locals.trace ? "checked" : ""
-      } /> <label for='trace-input'>trace</label>
+      } /> <label for='trace-input'>trace button</label>
     </form>
     <form>
       <input id='open-in-input' type='checkbox' ${

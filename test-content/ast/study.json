@@ -1,8 +1,5 @@
 {
   "--defaults": {
-    ".js": "ast&json-explorer"
-  },
-  "study": {
-    "traceLog": true
+    ".js": "ast"
   }
 }
