@@ -7,6 +7,9 @@
   "hello-world": {
     "/": "chups"
   },
+  "render": {
+    "save": true
+  },
   "--lenses": "./lenses",
   "Port": 8080
 }

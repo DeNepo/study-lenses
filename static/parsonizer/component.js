@@ -41,7 +41,7 @@ class JSParsons extends HTMLElement {
       .split(distractorReplacer)
       .join("// distractor");
 
-    this.code = strippedCode.replace("\\", "\\ ");
+    this.code = strippedCode.replace("\\", "\\ ") + this.distractors.join("\n");
   }
 
   async connectedCallback() {
@@ -83,6 +83,7 @@ class JSParsons extends HTMLElement {
           details.appendChild(preEl);
 
           blockCommentContainer.appendChild(details);
+          blockCommentContainer.appendChild(document.createElement("br"));
         } else {
           commentPre.innerHTML = blockComment;
           blockCommentContainer.appendChild(commentPre);
@@ -360,7 +361,6 @@ const renderStudyButtons = (container, config, editor) => {
     container.appendChild(openInContainer);
 
     if (config.loopGuard) {
-      console.log(config.loopGuard);
       if (typeof config.loopGuard !== "object") {
         config.loopGuard = {
           active: true,
