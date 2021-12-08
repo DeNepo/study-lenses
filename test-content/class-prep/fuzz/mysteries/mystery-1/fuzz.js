@@ -1,19 +1,38 @@
-export const solution = (arr) =>
-  arr.map((entry) => Number(entry)).filter((entry) => !Number.isNaN(entry));
+/**
+ * Task description: Write a method that returns a duplicate-free array
+ * Expected Result: Duplicate-free array [1, 2, 3, 1, 2] => [1, 2, 3]
+ * Task Complexity: 2 of 5
+ *
+ * @param {string[]} array - Array of primitive data types.
+ * @returns {Array}
+ *
+ * @author https://github.com/andrewborisov/javascript-practice/blob/master/arrays/solutions/06-unique.js
+ */
+export const solution = (array) => Array.from(new Set(array));
 
 export const args = (chance) => {
-  const rando = () => {
-    const probs = Math.random();
-    return probs < 0.4
-      ? chance.word({ syllables: 3 })
-      : probs < 0.6
-      ? String(chance.floating({ min: -999999999, max: 999999999 }))
-      : String(chance.integer({ min: -999999999, max: 999999999 }));
-  };
-  const strings = [];
+  const values = [];
   const arraySize = Math.floor(Math.random() * 10);
   for (let i = 0; i < arraySize; i++) {
-    strings.push(rando());
+    const nextRando = chance.word();
+    values.push(nextRando);
+    if (Math.random() < 0.3) {
+      values.push(nextRando);
+    }
+    if (Math.random() < 0.2) {
+      values.push(nextRando);
+    }
+    if (Math.random() < 0.1) {
+      values.push(nextRando);
+    }
   }
-  return [strings];
+
+  // https://medium.com/@nitinpatel_20236/how-to-shuffle-correctly-shuffle-an-array-in-javascript-15ea3f84bfb
+  for (let i = values.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * i);
+    const temp = values[i];
+    values[i] = values[j];
+    values[j] = temp;
+  }
+  return [values];
 };

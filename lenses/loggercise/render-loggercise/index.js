@@ -9,7 +9,7 @@ const readDirPromise = util.promisify(fs.readdir);
 
 const marked = require("marked");
 
-const renderFuzzercize = async (resource, config) => {
+const renderLoggercise = async (resource, config) => {
   const name = resource.info.base.replace(/-./g, (x) => x[1].toUpperCase());
 
   const basePath = path.join(
@@ -66,14 +66,14 @@ const renderFuzzercize = async (resource, config) => {
     });
   }
 
-  const fuzzercise = {
+  const logercise = {
     name,
     // https://dev.to/mattkenefick/snippets-in-javascript-converting-pascalcase-to-kebab-case-36ed
     folderName: name.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase(),
     jsDoc,
     readme,
     solutions,
-    fuzz: `./${resource.info.base}/fuzz.js`.split(path.sep).join("/"),
+    log: `./${resource.info.base}/log.js`.split(path.sep).join("/"),
     locals: config.locals,
   };
 
@@ -87,7 +87,6 @@ const renderFuzzercize = async (resource, config) => {
 
     <script src="${config.sharedStatic}/prettier/standalone.js"></script>
     <script src="${config.sharedStatic}/prettier/parser-babel.js"></script>
-    <script src="${config.sharedStatic}/trace/aran-build.js"></script>
     <script type="module">
       import { walk } from "${config.sharedStatic}/estree-walker/index.js";
       window.walk = walk;
@@ -127,10 +126,10 @@ const renderFuzzercize = async (resource, config) => {
     <div style='display: flex; flex-direction: row;'>
       ${config.locals.save ? `<button id='save-button'>save</button> ||` : ""}
       <div id='solution-buttons' style='display: flex; flex-direction: row;'>
-        ${fuzzercise.solutions
+        ${logercise.solutions
           .map(
             (solution) =>
-              `<button class='solution-button' id='${fuzzercise.solutions.indexOf(
+              `<button class='solution-button' id='${logercise.solutions.indexOf(
                 solution
               )}'>${solution.fileName}</button>`
           )
@@ -142,17 +141,16 @@ const renderFuzzercize = async (resource, config) => {
     <div style='display: flex; flex-direction: row;'>
       <button id='format-button'>format</button>
       <text style='padding-left: 0.25em; padding-right: 0.25em;'>||</text>
-      <lens-it id="lens-it-el" buttons="highlight, parsons,
-        ${config.locals.variables ? "variables, " : ""}
-        ${config.locals.flowchart ? "flowchart, " : ""}
-        ${config.locals.blanks ? "blanks, " : ""}
-        ${config.locals.study ? "study, " : ""}
-      "></lens-it>
+      <lens-it id="lens-it-el" buttons="highlight, parsons, variables, flowchart, blanks, study"></lens-it>
     </div>
     <div style='display: flex; flex-direction: row;'>
       <run-it id='run-it-button'
         ${config.locals.run && config.locals.run.debug ? "debug" : ""}
-        module
+        ${
+          config.locals.run && config.locals.run.type === "module"
+            ? "module"
+            : ""
+        }
         ${
           config.locals.run && config.locals.run.text
             ? `text="${config.locals.run.text}"`
@@ -166,8 +164,9 @@ const renderFuzzercize = async (resource, config) => {
             : ""
         }
       ></run-it>
+      <trace-it event></trace-it>
       <trace-table-button ${config.locals.table || ""}></trace-table-button>
-      ${config.locals.ask ? "<ask-me></ask-me>" : ""}
+      <ask-me></ask-me>
       ${config.locals.openIn ? "<open-in id='open-in-button'></open-in>" : ""}
     </div>
     <div id='docs-container'></div>
@@ -175,7 +174,7 @@ const renderFuzzercize = async (resource, config) => {
     <div id='editor-container' style='height: 95vh'></div>
     <script type='module'>
       window.config = JSON.parse(decodeURI("${encodeURI(
-        JSON.stringify(fuzzercise)
+        JSON.stringify(logercise)
       )}"));
     </script>
 
@@ -197,6 +196,11 @@ const renderFuzzercize = async (resource, config) => {
     <script src='${config.ownStatic}/describe-it.js'></script>
     <script src='${config.sharedStatic}/testing/jest-matchers.js'></script>
 
+    <script src='${config.sharedStatic}/trace/aran-build.js'></script>
+    <script src='${config.sharedStatic}/trace/index.js' type='module'></script>
+    <script src='${
+      config.sharedStatic
+    }/trace/trace-init.js' type='module'></script>
 
 
     <script type='module' src='${config.ownStatic}/init.js'></script>
@@ -204,4 +208,4 @@ const renderFuzzercize = async (resource, config) => {
 </html>`;
 };
 
-module.exports = renderFuzzercize;
+module.exports = renderLoggercise;

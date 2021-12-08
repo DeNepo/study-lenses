@@ -8,19 +8,19 @@ const writeFilePromise = util.promisify(fs.writeFile);
 const mkdirPromise = util.promisify(fs.mkdir);
 
 const renderDir = require("./render-directory");
-const renderFuzzercise = require("./render-fuzzercise");
+const renderLoggercise = require("./render-Loggercise");
 
-const isFuzzercise = (resource) =>
+const isLoggercise = (resource) =>
   resource.info.type === "directory" &&
   resource.content &&
   resource.content.children.find(
-    (child) => child.base.toLowerCase() === "fuzz.js"
+    (child) => child.base.toLowerCase() === "expected-logs.js"
   )
     ? true
     : false;
 
-const fuzzLens = async ({ resource, config, requestData }) => {
-  if (requestData.method.toLowerCase() === "post") {
+const loggerciseLens = async ({ resource, config, requestData }) => {
+  if (config.locals.save === true && requestData.method === "POST") {
     try {
       const absolutePath = path.join(
         resource.info.root,
@@ -66,11 +66,11 @@ const fuzzLens = async ({ resource, config, requestData }) => {
   }
 
   resource.info.ext = ".html";
-  resource.content = isFuzzercise(resource)
-    ? await renderFuzzercise(resource, config)
+  resource.content = isLoggercise(resource)
+    ? await renderLoggercise(resource, config)
     : renderDir(resource, config);
 
   return { resource };
 };
 
-module.exports = fuzzLens;
+module.exports = loggerciseLens;

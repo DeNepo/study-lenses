@@ -66,97 +66,98 @@ window.addEventListener("DOMContentLoaded", () => {
           </div>
         </div>
         `;
+        setTimeout(() => {
+          try {
+            config.exists;
+            Object.assign(traceConfig, config.locals.trace);
+          } catch (err) {
+            // console.error(err);
+          }
+          // console.log(traceConfig);
 
-        try {
-          config.exists;
-          Object.assign(traceConfig, config.locals.trace);
-        } catch (err) {
-          // console.error(err);
-        }
-        // console.log(traceConfig);
+          try {
+            !trace.editor && typeof trace.editor.getValue !== "function";
+          } catch (err) {
+            editor.exists;
+            trace.editor = editor;
+            // console.error(err);
+          }
 
-        try {
-          !trace.editor && typeof trace.editor.getValue !== "function";
-        } catch (err) {
-          editor.exists;
-          trace.editor = editor;
-          // console.error(err);
-        }
+          // hack until event is default in refactor
+          // const useEvent = this.hasAttribute("event");
 
-        // hack until event is default in refactor
-        // const useEvent = this.hasAttribute("event");
+          shadow
+            .getElementById("trace-button")
+            .addEventListener("click", (event) => {
+              // trace is a global function
+              // console.log(trace.editor.getValue());
+              const code = trace.editor.getValue();
 
-        shadow
-          .getElementById("trace-button")
-          .addEventListener("click", (event) => {
-            // trace is a global function
-            // console.log(trace.editor.getValue());
-            const code = trace.editor.getValue();
+              const selection = trace.editor.getSelection();
 
-            const selection = trace.editor.getSelection();
+              const nothingIsHighlighted =
+                selection.startLineNumber === selection.endLineNumber &&
+                selection.startColumn === selection.endColumn;
 
-            const nothingIsHighlighted =
-              selection.startLineNumber === selection.endLineNumber &&
-              selection.startColumn === selection.endColumn;
+              if (nothingIsHighlighted) {
+                traceConfig.range.start = 1;
+                traceConfig.range.end = code.split("\n").length;
+              } else {
+                traceConfig.range.start = selection.startLineNumber;
+                traceConfig.range.end = selection.endLineNumber;
+              }
 
-            if (nothingIsHighlighted) {
-              traceConfig.range.start = 1;
-              traceConfig.range.end = code.split("\n").length;
-            } else {
-              traceConfig.range.start = selection.startLineNumber;
-              traceConfig.range.end = selection.endLineNumber;
+              // if (useEvent) {
+              //   this.dispatchEvent(
+              //     new CustomEvent("study", {
+              //       bubbles: true,
+              //       detail: { selection: false, value },
+              //     })
+              //   );
+              // } else {
+              trace(code);
+              // }
+              event.preventDefault();
+            });
+
+          const traceConfigEl = shadow.getElementById("trace-config");
+          traceConfigEl.addEventListener("change", (event) => {
+            const option = event.target.id;
+
+            if (typeof traceConfig[option] === "boolean") {
+              traceConfig[option] = !traceConfig[option];
+            } else if (option.toLowerCase().includes("list")) {
+              const trimmedList = event.target.value
+                .split(",")
+                .map((s) => s.trim());
+              const newList =
+                trimmedList.length === 1 && trimmedList[0] === ""
+                  ? []
+                  : trimmedList;
+              traceConfig[option] = newList;
+            } else if (option.includes("range")) {
+              traceConfig.range[option.replace("range", "").toLowerCase()] =
+                Number(event.target.value);
             }
 
-            // if (useEvent) {
-            //   this.dispatchEvent(
-            //     new CustomEvent("study", {
-            //       bubbles: true,
-            //       detail: { selection: false, value },
-            //     })
-            //   );
-            // } else {
-            trace(code);
-            // }
             event.preventDefault();
           });
 
-        const traceConfigEl = shadow.getElementById("trace-config");
-        traceConfigEl.addEventListener("change", (event) => {
-          const option = event.target.id;
+          // shadow.getElementById("rangeStart").value = traceConfig.range.start;
+          // shadow.getElementById("rangeEnd").value = traceConfig.range.end;
 
-          if (typeof traceConfig[option] === "boolean") {
-            traceConfig[option] = !traceConfig[option];
-          } else if (option.toLowerCase().includes("list")) {
-            const trimmedList = event.target.value
-              .split(",")
-              .map((s) => s.trim());
-            const newList =
-              trimmedList.length === 1 && trimmedList[0] === ""
-                ? []
-                : trimmedList;
-            traceConfig[option] = newList;
-          } else if (option.includes("range")) {
-            traceConfig.range[option.replace("range", "").toLowerCase()] =
-              Number(event.target.value);
+          for (const child of traceConfigEl.children) {
+            if (child.nodeName !== "INPUT") {
+              continue;
+            }
+            if (child.id.includes("List") || child.id.includes("range")) {
+              continue;
+            }
+            if (traceConfig[child.id]) {
+              child.checked = traceConfig[child.id];
+            }
           }
-
-          event.preventDefault();
-        });
-
-        // shadow.getElementById("rangeStart").value = traceConfig.range.start;
-        // shadow.getElementById("rangeEnd").value = traceConfig.range.end;
-
-        for (const child of traceConfigEl.children) {
-          if (child.nodeName !== "INPUT") {
-            continue;
-          }
-          if (child.id.includes("List") || child.id.includes("range")) {
-            continue;
-          }
-          if (traceConfig[child.id]) {
-            child.checked = traceConfig[child.id];
-          }
-        }
+        }, 500);
       }
     }
   );
