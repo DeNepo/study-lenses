@@ -88,9 +88,13 @@ click the [+] button to start a new solution`);
         );
       }
 
-      nativeLog(...args);
       if (!tooManyLogs) {
-        expect(args).toEqual(expectedLogs[actualLogs.length - 1]);
+        try {
+          expect(args).toEqual(expectedLogs[actualLogs.length - 1]);
+          nativeLog(...args);
+        } catch (err) {
+          throw err;
+        }
       }
     };
     console.log = nativeLog;
@@ -198,7 +202,7 @@ if (actualLogs.length < expectedLogs.length) {
       (solution) => solution.active
     ).fileName;
 
-    fetch(window.location.origin + window.location.pathname + "?fuzz", {
+    fetch(window.location.origin + window.location.pathname + "?loggercise", {
       method: "POST",
       headers: {
         Accept: "application/json",

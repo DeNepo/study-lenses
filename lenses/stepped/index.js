@@ -10,17 +10,7 @@ const mkdirPromise = util.promisify(fs.mkdir);
 const renderDir = require("./render-directory");
 const renderStepped = require("./render-stepped");
 
-const isStepped = (resource) =>
-  resource.info.type === "directory" &&
-  resource.content &&
-  resource.content.children.every(
-    (child) => (
-      console.log(child),
-      child.type === "directory" || child.ext === ".js" || child.ext === ".md"
-    )
-  )
-    ? true
-    : false;
+const isStepped = require("./lib/is-stepped.js");
 
 const steppedLens = async ({ resource, config, requestData }) => {
   if (config.locals.save === true && requestData.method === "POST") {

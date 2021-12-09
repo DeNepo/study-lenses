@@ -2,6 +2,8 @@
 
 const path = require("path");
 
+const isStepped = require("../lib/is-stepped.js");
+
 const dirContents = ({ dirElement, top = false, defaults = {} }) => {
   const relativePath = path.join(
     dirElement.toCwd,
@@ -17,12 +19,8 @@ const dirContents = ({ dirElement, top = false, defaults = {} }) => {
     return `<li><a href="${relativePath}?--defaults" target="_blank">${dirElement.base}</a></li>\n`;
   }
 
-  if (
-    dirElement.type === "directory" &&
-    dirElement.children.find(
-      (child) => child.base.toLowerCase() === "expected-logs.js"
-    )
-  ) {
+  console.log(dirElement);
+  if (isStepped(dirElement)) {
     return `<li><a href="${relativePath}?--defaults" target='_blank'>${dirElement.base}</a></li>`;
   }
 

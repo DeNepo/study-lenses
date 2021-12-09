@@ -52,7 +52,6 @@ const renderStepped = async (resource, config) => {
       )
     );
     stepFileNames
-      .reverse()
       .filter((fileName) => fileName.endsWith(".js"))
       .forEach((fileName, index) => {
         const name = fileName
@@ -65,6 +64,8 @@ const renderStepped = async (resource, config) => {
         });
       });
   }
+
+  steps.reverse();
 
   const steppercise = {
     name,
