@@ -8,7 +8,7 @@ const writeFilePromise = util.promisify(fs.writeFile);
 const mkdirPromise = util.promisify(fs.mkdir);
 
 const renderDir = require("./render-directory");
-const renderLoggercise = require("./render-Loggercise");
+const renderLoggercise = require("./render-loggercise");
 
 const isLoggercise = (resource) =>
   resource.info.type === "directory" &&
