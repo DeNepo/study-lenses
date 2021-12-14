@@ -85,6 +85,11 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.ask ? "checked" : ""
       } /> <label for='ask-input'>ask me</label>
     </form>
+    <form>
+      <input id='pseudo-input' type='checkbox' ${
+        this.config.locals.pseudo ? "checked" : ""
+      } /> <label for='pseudo'>pseudo code</label>
+    </form>
     ${superConfigOptions}
     <form>
       <input id='eslint-input' type='checkbox' ${
@@ -165,6 +170,10 @@ class JavaScriptSSR extends CodeSSR {
     superPanel += `
       <button id='flowchart-button' style='display: ${flowchartDisplay};'>flowchart</button>`;
     // }
+
+    const pseudoDisplay = locals.pseudo ? "inline-block" : "none";
+    superPanel += `
+      <button id='pseudo-button' style='display: ${pseudoDisplay};'>pseudo</button>`;
 
     const variablesDisplay = locals.variables ? "inline-block" : "none";
     superPanel += `

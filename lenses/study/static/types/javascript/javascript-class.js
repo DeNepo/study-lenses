@@ -188,6 +188,22 @@ export class JavaScriptFE extends CodeFE {
         this.studyWith("flowchart", true)
       );
     }
+
+    const pseudoButton = document.getElementById("pseudo-button");
+    document
+      .getElementById("pseudo-input")
+      .addEventListener("change", (event) => {
+        if (event.target.checked) {
+          pseudoButton.style = "display: inline-block;";
+        } else {
+          pseudoButton.style = "display: none;";
+        }
+      });
+    if (pseudoButton) {
+      pseudoButton.addEventListener("click", () =>
+        this.studyWith("pseudo&highlight", true)
+      );
+    }
     // }
 
     const variablesButton = document.getElementById("variables-button");
