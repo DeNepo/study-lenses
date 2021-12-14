@@ -107,7 +107,7 @@ const astLens = ({ resource, config }) => {
           9-columns-wide on large screens,
           8-columns-wide on medium screens,
           12-columns-wide on small screens  -->
-        <div class="row">
+        <div class="row" overflow="scroll">
           <div class="col s12">
             <ul class="tabs">
               <li class="tab col s3">
@@ -117,7 +117,7 @@ const astLens = ({ resource, config }) => {
               <li class="tab col s3"><a href="#test3">AST</a></li>
             </ul>
           </div>
-          <div id="test1" class="col s12"></div>
+          <div id="test1" class="col s12" style="height: 100%; width: 100%;"></div>
           <div id="test2" class="col s12"></div>
           <div id="test3" class="col s12">
             <div id="ast-wrapper" data-language="javascript"></div>

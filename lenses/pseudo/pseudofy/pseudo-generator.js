@@ -586,7 +586,7 @@ module.exports = {
     // );
     state.write(
       (node.async ? "ASYNC " : "") +
-        (node.generator ? "FUNCTION* " : "FUNCTION ") +
+        (node.generator ? "FUNC* " : "FUNC ") +
         (node.id ? node.id.name : ""),
       node
     );
@@ -594,7 +594,7 @@ module.exports = {
     state.write(" ");
     this[node.body.type](node.body, state);
 
-    state.write(":END FUNCTION");
+    state.write(":END FUNC");
   }),
   FunctionExpression: FunctionDeclaration,
   VariableDeclaration: function VariableDeclaration(node, state) {
