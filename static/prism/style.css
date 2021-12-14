@@ -88,13 +88,16 @@ pre[class*="language-"] {
   color: #a6e22e;
 }
 
-.token.operator,
 .token.entity,
 .token.url,
 .language-css .token.string,
 .style .token.string,
 .token.variable {
-  color: #f8f8f2;
+  color: #fcfcfc;
+}
+
+.token.operator {
+  color: #f89500;
 }
 
 .token.atrule,

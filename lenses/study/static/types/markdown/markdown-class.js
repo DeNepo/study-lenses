@@ -20,8 +20,9 @@ class MarkdownFE extends JavaScriptFE {
       let lenseQueries = [];
       let currentSibling = pre;
       while (true) {
-        const previousSibling = currentSibling.previousSibling;
-        if (previousSibling.nodeType === 8) {
+        const previousSibling =
+          currentSibling && currentSibling.previousSibling;
+        if (previousSibling && previousSibling.nodeType === 8) {
           const queryRegex = /(?:\?)(?<query>([a-z0-9\-&=])*)/gim;
           for (const match of previousSibling.textContent.matchAll(
             queryRegex
@@ -38,7 +39,12 @@ class MarkdownFE extends JavaScriptFE {
         } else if (previousSibling instanceof Element) {
           break;
         }
-        currentSibling = previousSibling;
+
+        if (!currentSibling && !previousSibling) {
+          break;
+        } else {
+          currentSibling = previousSibling;
+        }
       }
       if (lenseQueries.length === 0) {
         Prism.highlightAllUnder(pre);

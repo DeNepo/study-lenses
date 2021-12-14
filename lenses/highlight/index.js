@@ -112,6 +112,8 @@ const highlightLense = async ({ resource, config }) => {
           <pre><code id='code-goes-here' class="line-numbers language-${
             typeof resource.content === "object"
               ? "json"
+              : resource.info.ext.includes("pseudo")
+              ? "pseudo"
               : resource.info.ext.split(".").join("")
           }"></code></pre>
         </div>`
