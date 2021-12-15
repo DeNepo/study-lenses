@@ -470,7 +470,7 @@ module.exports = {
   },
   TryStatement: function TryStatement(node, state) {
     // state.write("try ");
-    state.write("TRY ");
+    state.write("TRY: ");
     this[node.block.type](node.block, state);
 
     if (node.handler) {
@@ -478,10 +478,10 @@ module.exports = {
 
       if (handler.param == null) {
         // state.write(" catch ");
-        state.write("CATCH ");
+        state.write("CATCH: ");
       } else {
         // state.write(" catch (");
-        state.write("CATCH ");
+        state.write("CATCH: ");
         this[handler.param.type](handler.param, state);
         // state.write(") ");
       }
@@ -491,7 +491,7 @@ module.exports = {
 
     if (node.finalizer) {
       // state.write(" finally ");
-      state.write("FINALLY ");
+      state.write("FINALLY: ");
       this[node.finalizer.type](node.finalizer, state);
     }
   },

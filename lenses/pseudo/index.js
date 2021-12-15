@@ -7,11 +7,16 @@ const pseudoLens = async ({ resource, config }) => {
     return;
   }
 
-  if (config.queryValue === "js") {
-    resource.content = pseudofy(resource.content, true);
-  } else {
-    resource.info.ext = ".pseudo.txt";
-    resource.content = pseudofy(resource.content);
+  try {
+    if (config.queryValue === "js") {
+      resource.content = pseudofy(resource.content, true);
+    } else {
+      resource.info.ext = ".pseudo.txt";
+      resource.content = pseudofy(resource.content);
+    }
+  } catch (err) {
+    resource.info.ext = ".txt";
+    resource.content = err.toString();
   }
 
   return {

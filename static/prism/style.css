@@ -59,7 +59,7 @@ pre[class*="language-"] {
 }
 
 .token.punctuation {
-  color: #f8f8f2;
+  color: firebrick;
 }
 
 .token.namespace {
@@ -97,14 +97,14 @@ pre[class*="language-"] {
 }
 
 .token.operator {
-  color: #f89500;
+  color: #f88d00;
 }
 
 .token.atrule,
 .token.attr-value,
 .token.function,
 .token.class-name {
-  color: #e6db74;
+  color: #fce93b;
 }
 
 .token.keyword {

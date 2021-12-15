@@ -88,7 +88,7 @@ class JavaScriptSSR extends CodeSSR {
     <form>
       <input id='pseudo-input' type='checkbox' ${
         this.config.locals.pseudo ? "checked" : ""
-      } /> <label for='pseudo'>pseudo code</label>
+      } /> <label for='pseudo-input'>pseudo code</label>
     </form>
     ${superConfigOptions}
     <form>

@@ -109,7 +109,7 @@ const highlightLense = async ({ resource, config }) => {
       ${
         config.locals.code !== false
           ? `<div id="code-container" class="stacked">
-          <pre><code id='code-goes-here' class="line-numbers language-${
+          <pre><code id='code-goes-here' class="line-numbers rainbow-braces language-${
             typeof resource.content === "object"
               ? "json"
               : resource.info.ext.includes("pseudo")

@@ -4602,12 +4602,12 @@ Prism.languages.pseudo = Prism.languages.extend("clike", {
   number:
     /\b(?:(?:0[xX](?:[\dA-Fa-f](?:_[\dA-Fa-f])?)+|0[bB](?:[01](?:_[01])?)+|0[oO](?:[0-7](?:_[0-7])?)+)n?|(?:\d(?:_\d)?)+n|NaN|Infinity)\b|(?:\b(?:\d(?:_\d)?)+\.?(?:\d(?:_\d)?)*|\B\.(?:\d(?:_\d)?)+)(?:[Ee][+-]?(?:\d(?:_\d)?)+)?/,
   keyword:
-    /\b(?:FOR|WHILE|END|IF|ELSE|FUNC|AWAIT|DO|WITH|SWITCH|CASE|DEFAULT|BREAK|CONTINUE|AWAIT|YIELD|RETURN|CLASS|EXTENDS|SUPER|FINALLY|TRY|CATCH|OF|IN)(?:\$|\b)/i,
+    /\b(?:FOR|WHILE|END|IF|ELSE|FUNC|AWAIT|DO|WITH|SWITCH|CASE|DEFAULT|BREAK|CONTINUE|AWAIT|YIELD|RETURN|ASYNC|CLASS|EXTENDS|SUPER|FINALLY|TRY|CATCH|OF|IN|this)(?:\$|\b)/i,
   operator:
     /--|\+\+|\*\*=?|=>|&&=?|\|\|=?|<-?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?/,
   function:
     /#?(?!\s)[_$a-zA-Z\xA0-\uFFFF](?:(?!\s)[$\w\xA0-\uFFFF])*(?=\s*(?:\.\s*(?:apply|bind|call)\s*)?\()/,
-  punctuation: /[,;:()]/,
+  punctuation: /[{}[\];(),.:]/,
 });
 
 Prism.languages.insertBefore("pseudo", "string", {

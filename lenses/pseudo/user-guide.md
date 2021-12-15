@@ -13,6 +13,8 @@ It will follow these rules when translating to pseudo code:
 - variable declarations that are not initialized will be removed
 - The assignment operator will be replaced by `<-`
   - this symbol more clearly shows the semantics of variable assignment
+- Arrow functions with a body are represented the same way as `function` functions
+- Arrow functions with an implicit return are left as arrow functions
 - All other operators will be unchanged
 - Key words will be set to UPPERCASE
 - Arrow functions with a body will be converted to function expressions
