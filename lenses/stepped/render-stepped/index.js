@@ -65,7 +65,7 @@ const renderStepped = async (resource, config) => {
       });
   }
 
-  steps.reverse();
+  steps.sort().reverse();
 
   const steppercise = {
     name,

@@ -232,6 +232,24 @@ try {
     return flowchartButton;
   });
 
+  Prism.plugins.toolbar.registerButton("pseudo", function (env) {
+    if (!config.locals.pseudo) {
+      return null;
+    }
+
+    if (env.language !== "js" && env.language !== "javascript") {
+      return null;
+    }
+
+    const pseudoButton = document.createElement("button");
+    pseudoButton.textContent = "pseudo";
+    pseudoButton.setAttribute("type", "button");
+    pseudoButton.addEventListener("click", () =>
+      openWith(env.code, "pseudo&highlight")
+    );
+    return pseudoButton;
+  });
+
   Prism.plugins.toolbar.registerButton("parsonize", function (env) {
     if (!config.locals.parsons) {
       return null;

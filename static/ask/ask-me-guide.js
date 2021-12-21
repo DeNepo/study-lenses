@@ -29,7 +29,7 @@ Levels:
     questions about important goals in the program and how it achieves them
     you will need to think of the big picture to answer these questions
     you do not need to understand every line of code to answer these questions
-    you will need to understand the data in your program, and how it used
+    you will need to understand the data in your program, and how it is used
   5. User Experience
     questions about the user's experience of this program
     you will need to think about user interactions, and user journey paths

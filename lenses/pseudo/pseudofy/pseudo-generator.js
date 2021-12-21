@@ -565,8 +565,9 @@ module.exports = {
     // state.write(") ");
     this[node.body.type](node.body, state);
 
+    const forType = node.type[3] === "I" ? "FOR-IN" : "FOR-OF";
     state.write(
-      state.lineEnd + state.indent.repeat(state.indentLevel) + ":END FOR"
+      state.lineEnd + state.indent.repeat(state.indentLevel) + ":END " + forType
     );
   }),
   ForOfStatement: ForInStatement,

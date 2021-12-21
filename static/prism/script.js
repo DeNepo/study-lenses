@@ -4602,7 +4602,7 @@ Prism.languages.pseudo = Prism.languages.extend("clike", {
   number:
     /\b(?:(?:0[xX](?:[\dA-Fa-f](?:_[\dA-Fa-f])?)+|0[bB](?:[01](?:_[01])?)+|0[oO](?:[0-7](?:_[0-7])?)+)n?|(?:\d(?:_\d)?)+n|NaN|Infinity)\b|(?:\b(?:\d(?:_\d)?)+\.?(?:\d(?:_\d)?)*|\B\.(?:\d(?:_\d)?)+)(?:[Ee][+-]?(?:\d(?:_\d)?)+)?/,
   keyword:
-    /\b(?:FOR|WHILE|END|IF|ELSE|FUNC|AWAIT|DO|WITH|SWITCH|CASE|DEFAULT|BREAK|CONTINUE|AWAIT|YIELD|RETURN|ASYNC|CLASS|EXTENDS|SUPER|FINALLY|TRY|CATCH|OF|IN|this)(?:\$|\b)/i,
+    /\b(?:FOR|WHILE|END|IF|ELSE|FUNC|AWAIT|DO|WITH|SWITCH|CASE|DEFAULT|BREAK|CONTINUE|AWAIT|YIELD|RETURN|ASYNC|CLASS|EXTENDS|SUPER|FINALLY|TRY|CATCH|OF|IN|NEW|this)(?:\$|\b)/i,
   operator:
     /--|\+\+|\*\*=?|=>|&&=?|\|\|=?|<-?|[!=]==|<<=?|>>>?=?|[-+*/%&|^!=<>]=?|\.{3}|\?\?=?|\?\.?/,
   function:

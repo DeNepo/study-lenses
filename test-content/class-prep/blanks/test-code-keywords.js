@@ -169,19 +169,27 @@ class I extends HTMLElement {
   but not priority, it's not taught in course
 */
 switch (expr) {
-  case "Oranges":
+  case 'Oranges':
     break;
     null;
-  case "Mangoes":
+  case 'Mangoes':
+    switch (expr) {
+      case 'Oranges':
+        break;
+        null;
+      case 'Mangoes':
+      default:
+        null;
+    }
   default:
     null;
 }
 if (true) {
   switch (expr) {
-    case "Oranges":
+    case 'Oranges':
       break;
       null;
-    case "Mangoes":
+    case 'Mangoes':
     default:
       null;
   }

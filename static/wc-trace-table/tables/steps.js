@@ -55,8 +55,6 @@ export const init = (shadow) => {
                 <option>declare, init</option>
                 <option>read</option>
                 <option>assign</option>
-                <option>enter scope</option>
-                <option>leave scope</option>
               </select>
             </td>
             <td><input class='value-input' /></td>

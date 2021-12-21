@@ -66,6 +66,8 @@ const renderLoggercise = async (resource, config) => {
     });
   }
 
+  solutions.reverse().sort();
+
   const logercise = {
     name,
     // https://dev.to/mattkenefick/snippets-in-javascript-converting-pascalcase-to-kebab-case-36ed
