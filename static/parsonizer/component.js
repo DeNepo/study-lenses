@@ -41,7 +41,8 @@ class JSParsons extends HTMLElement {
       .split(distractorReplacer)
       .join("// distractor");
 
-    this.code = strippedCode.replace("\\", "\\ ") + this.distractors.join("\n");
+    this.code =
+      strippedCode.replaceAll("\\", "\\ ") + "\n" + this.distractors.join("\n");
   }
 
   async connectedCallback() {
