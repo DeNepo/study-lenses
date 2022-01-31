@@ -300,6 +300,63 @@ try {
     return writemeButton;
   });
 
+  Prism.plugins.toolbar.registerButton("eslint", function (env) {
+    if (!config.locals.writeme) {
+      return null;
+    }
+    if (env.language !== "js" && env.language !== "javascript") {
+      return null;
+    }
+
+    const eslintButton = document.createElement("button");
+    eslintButton.textContent = "eslint";
+    eslintButton.setAttribute("type", "button");
+    eslintButton.addEventListener("click", () => {
+      try {
+        const code = env.code + "\n"; // hacked for formatting differences with blocks vs. files
+        const pseudoResource = {
+          resource: {
+            content: code,
+            info: {
+              ext: ".js",
+              type: "file",
+            },
+          },
+        };
+        // console.log(pseudoResource);
+
+        const stringifiedResource = encodeURIComponent(
+          JSON.stringify(pseudoResource)
+        );
+
+        const baseConfig = {
+          code,
+          ext: ".js",
+        };
+        // const queryValue = encodeURIComponent(JSON.stringify(baseConfig));
+        const finalConfig = Object.assign(baseConfig, config);
+        const queryValue = encodeURIComponent(JSON.stringify(finalConfig));
+        // if the full file is used, open lense with local configs from exercise
+        //  otherwise don't, because anything syntax/runtime based will probably break for selections
+        const url =
+          window.location.origin +
+          window.location.pathname +
+          (queryValue
+            ? `?eslint&--resource=${stringifiedResource}`
+            : `?${queryKey}=${queryValue}&--resource=${stringifiedResource}`);
+
+        fetch(url)
+          .then((res) => res.text())
+          .then((lintResult) => console.log(lintResult))
+          .catch((err) => console.error(err));
+      } catch (err) {
+        console.error(err);
+        console.log("--- eslint is not configured for this resource ---");
+      }
+    });
+    return eslintButton;
+  });
+
   Prism.plugins.toolbar.registerButton("new tab", function (env) {
     if (env.language !== "html") {
       return null;

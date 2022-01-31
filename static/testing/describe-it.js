@@ -212,12 +212,15 @@ const describeItify = (aWindow = { console }) => {
 
   const globals = {
     describe,
+    suite: describe,
     it,
     test: it,
     beforeEach,
   };
 
-  Object.assign(aWindow, globals);
+  try {
+    Object.assign(aWindow, globals);
+  } catch (_) {}
 
   return globals;
 };
