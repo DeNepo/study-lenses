@@ -17,10 +17,7 @@ const renderDir = (resource, config) => {
     "README.md"
   );
   if (fs.existsSync(readmePath)) {
-    readmeSection = `<hr><iframe src="${path.join(
-      resource.info.base,
-      "README.md"
-    )}?study" style='height: 100vh; width: 100vw;' frameBorder="0"></iframe>`;
+    readmeSection = `<hr><iframe src="./README.md?study" style='height: 100vh; width: 100vw;' frameBorder="0"></iframe>`;
   }
 
   return `

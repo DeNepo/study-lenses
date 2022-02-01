@@ -32,10 +32,12 @@ const renderStepped = async (resource, config) => {
 
   let renderedReadme = "";
   if (readme !== null) {
+    const baseUrl = `./${`${resource.info.dir}/${resource.info.base}`
+      .split(path.sep)
+      .join("/")}`;
+
     marked.setOptions({
-      baseUrl: `./${`${resource.info.dir}/${resource.info.base}`
-        .split(path.sep)
-        .join("/")}`,
+      baseUrl,
       langPrefix: "line-numbers language-",
     });
 

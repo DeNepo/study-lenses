@@ -19,7 +19,6 @@ const dirContents = ({ dirElement, top = false, defaults = {} }) => {
     return `<li><a href="${relativePath}?--defaults" target="_blank">${dirElement.base}</a></li>\n`;
   }
 
-  console.log(dirElement);
   if (isStepped(dirElement)) {
     return `<li><a href="${relativePath}?--defaults" target='_blank'>${dirElement.base}</a></li>`;
   }
