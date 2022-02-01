@@ -19,7 +19,6 @@ const steppedLens = async ({ resource, config, requestData }) => {
         resource.info.root,
         resource.info.dir,
         resource.info.base,
-        "steps",
         requestData.body.fileName
       );
 
@@ -27,7 +26,6 @@ const steppedLens = async ({ resource, config, requestData }) => {
         resource.info.root,
         resource.info.dir,
         resource.info.base
-        // "steps"
       );
 
       if (!fs.existsSync(stepsPath)) {

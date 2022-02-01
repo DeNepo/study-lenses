@@ -1,4 +1,5 @@
 import { format } from "./format.js";
+import { eslint } from "./eslint.js";
 
 const setupSolution = (step) => {
   const stepCode = format(step.code);
@@ -116,7 +117,7 @@ if (stepButtons.children[0]) {
 const saveChanges = (alertIt) => () => {
   const stepFileName = config.steps.find((step) => step.active).fileName;
 
-  fetch(window.location.origin + window.location.pathname + "?fuzz", {
+  fetch(window.location.origin + window.location.pathname + "?stepped", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -208,3 +209,7 @@ document.getElementById("format-button").addEventListener("click", () => {
     },
   ]);
 });
+
+document
+  .getElementById("eslint-button")
+  .addEventListener("click", () => eslint(config.editor.getValue()));

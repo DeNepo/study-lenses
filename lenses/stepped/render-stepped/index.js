@@ -142,6 +142,9 @@ const renderStepped = async (resource, config) => {
     <hr>
     <div style='display: flex; flex-direction: row;'>
       <button id='format-button'>format</button>
+      ${
+        config.locals.eslint ? "<button id='eslint-button'>eslint</button>" : ""
+      }
       <text style='padding-left: 0.25em; padding-right: 0.25em;'>||</text>
       <lens-it id="lens-it-el" buttons="highlight, parsons, variables, flowchart, blanks, study"></lens-it>
     </div>
