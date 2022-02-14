@@ -24,15 +24,23 @@ export class CodeFE {
     //     this.editor.updateOptions({ readOnly: this.readOnly })
     //   })
 
-    // default to editable, don't expose option for read-only
-    const themeButton = document.getElementById("theme-button");
-    themeButton.addEventListener("click", () => {
-      if (this.theme === "vs-dark") {
-        this.editor.updateOptions({ theme: "vs-light" });
-        this.theme = "vs-light";
-      } else {
+    const theme = document.getElementById("dark-checkbox");
+    theme.addEventListener("click", (event) => {
+      if (event.target.checked) {
         this.editor.updateOptions({ theme: "vs-dark" });
         this.theme = "vs-dark";
+      } else {
+        this.editor.updateOptions({ theme: "vs-light" });
+        this.theme = "vs-light";
+      }
+    });
+
+    const minimap = document.getElementById("minimap-checkbox");
+    minimap.addEventListener("click", (event) => {
+      if (event.target.checked) {
+        this.editor.updateOptions({ minimap: { enabled: true } });
+      } else {
+        this.editor.updateOptions({ minimap: { enabled: false } });
       }
     });
 
@@ -194,7 +202,7 @@ export class CodeFE {
         wordWrap: "on",
         wrappingStrategy: "advanced",
         minimap: {
-          enabled: true,
+          enabled: false,
         },
         overviewRulerLanes: 0,
         // fontSize: 13,

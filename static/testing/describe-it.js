@@ -192,13 +192,30 @@ const describeItify = (aWindow = { console }) => {
         currentReports.push(promiseReport);
       }
     } else {
+      let returned;
+      const now = Date.now();
       try {
-        testFunction();
+        returned = testFunction();
       } catch (err) {
         report.error = err;
       }
-      // immediately log free-floating `it`s
-      if (describeDepth === 0) {
+
+      if (returned && typeof returned.then === "function") {
+        currentReports.push(
+          returned
+            .then(() => {
+              report.ms = Date.now() - now;
+              return report;
+            })
+            .catch((err) => {
+              report.ms = Date.now() - now;
+              report.error = err;
+              return report;
+            })
+        );
+      }
+      // immediately log free-floating `it`s// immediately log free-floating `it`s
+      else if (describeDepth === 0) {
         renderIt(report);
       } else {
         currentReports.push(Promise.resolve(report));

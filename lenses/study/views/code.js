@@ -27,7 +27,12 @@ class CodeSSR {
 
   panel() {
     return `<!-- <input id='read-only-input' type='checkbox' checked='true' /> read-only -->
-    <button id='theme-button'>change theme</button>
+    <form style='display: inline-block'>
+      <input id='dark-checkbox' type='checkbox' checked /> <label for='dark-checkbox'>dark</label>
+    </form>
+    <form style='display: inline-block'>
+      <input id='minimap-checkbox' type='checkbox' /> <label for='minimap-checkbox'>minimap</label>
+    </form>
     ||
     <button id='reset-button'>reset</button>
     <button id='format-button'>format</button>
