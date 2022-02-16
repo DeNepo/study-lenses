@@ -49,7 +49,9 @@ class MarkdownSSR extends JavaScriptSSR {
 
     // https://github.com/regexhq/gfm-code-block-regex/blob/master/index.js
     this.inlines.mermaid =
-      /^(([ \t]*`{3,4})(mermaid)([\s\S]+?)(^[ \t]*\2))/gim.test(this.content);
+      /^(([ \t]*`{3,4})(mermaid|mmd)([\s\S]+?)(^[ \t]*\2))/gim.test(
+        this.content
+      );
     this.inlines.quiz = false; // not yet
 
     const base = this.resource.info.base.toLowerCase();
@@ -130,8 +132,8 @@ class MarkdownSSR extends JavaScriptSSR {
 
     if (this.inlines.mermaid) {
       content = content.replace(
-        /```mermaid([\s\S]*?)```/gim,
-        (_, mermaidGraph) => `<div class="mermaid">${mermaidGraph}</div>`
+        /```(mermaid|mmd)([\s\S]*?)```/gim,
+        (_, __, mermaidGraph) => `<div class="mermaid">${mermaidGraph}</div>`
       );
     }
 
