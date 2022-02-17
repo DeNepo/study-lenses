@@ -142,6 +142,7 @@ class MarkdownSSR extends JavaScriptSSR {
       {
         baseUrl: "/../" + this.requestData.path + "/",
         langPrefix: "line-numbers language-",
+        pedantic: true,
       },
       this.markedOptions
     );
