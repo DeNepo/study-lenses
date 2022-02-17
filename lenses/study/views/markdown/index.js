@@ -4,7 +4,14 @@ const resourceFromAbsolutePath = require("../../../../server/resource-from-absol
 const dirContents = require("./dir-contents");
 const path = require("path");
 
+const prettier = require("prettier");
+
 const marked = require("marked");
+// const MarkdownIt = require("../../../../node_modules/markdown-it/dist/markdown-it.js");
+// const markIt = new MarkdownIt({
+//   langPrefix: "line-numbers language-",
+//   html: true,
+// });
 
 const JavaScriptSSR = require("../javascript");
 
@@ -137,6 +144,9 @@ class MarkdownSSR extends JavaScriptSSR {
       );
     }
 
+    // return `<hr><hr>
+    // <main class="markdown-body"><div></div>${markIt.render(content)}</main>`;
+
     const markedOptions = Object.assign(
       {},
       {
@@ -149,7 +159,7 @@ class MarkdownSSR extends JavaScriptSSR {
 
     return `<hr><hr>
     <main class="markdown-body"><div></div>${marked(
-      content,
+      prettier.format(content, { parser: "markdown", proseWrap: "never" }),
       markedOptions
     )}</main>`;
   }

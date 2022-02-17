@@ -6,6 +6,7 @@ const util = require("util");
 const readFilePromise = util.promisify(fs.readFile);
 
 const marked = require("marked");
+const prettier = require("prettier");
 
 const renderCards = async ({ config, resource, leitner }) => {
   resource.info.ext = ".html";
@@ -54,14 +55,17 @@ const renderCards = async ({ config, resource, leitner }) => {
       )
     )
       ? `<hr> <main class="markdown-body"><div></div>${marked(
-          await readFilePromise(
-            path.join(
-              resource.info.root,
-              resource.info.dir,
-              resource.info.base,
-              "README.md"
+          prettier.format(
+            await readFilePromise(
+              path.join(
+                resource.info.root,
+                resource.info.dir,
+                resource.info.base,
+                "README.md"
+              ),
+              "utf-8"
             ),
-            "utf-8"
+            { parser: "markdown", proseWrap: "always" }
           )
         )}</main>`
       : ""

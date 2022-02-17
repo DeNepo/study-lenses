@@ -1,7 +1,10 @@
 const marked = require("marked");
 
+const prettier = require("prettier");
+
 marked.setOptions({
   langPrefix: "line-numbers language-",
+  gfm: true,
 });
 
 const quizLense = async ({ resource, config }) => {
@@ -22,7 +25,12 @@ const quizLense = async ({ resource, config }) => {
   <body>
     <trace-table-button></trace-table-button>
     <hr>
-    <main class="markdown-body unselectable">${marked(resource.content)}</main>
+    <main class="markdown-body unselectable">${marked(
+      prettier.format(resource.content, {
+        parser: "markdown",
+        proseWrap: "never",
+      })
+    )}</main>
 
     <script src="${config.sharedStatic}/prism/script.js"></script>
     <script src="${config.sharedStatic}/prism/toolbar.js"></script>

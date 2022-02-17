@@ -8,6 +8,7 @@ const readFilePromise = util.promisify(fs.readFile);
 const readDirPromise = util.promisify(fs.readdir);
 
 const marked = require("marked");
+const prettier = require("prettier");
 
 const renderFuzzercize = async (resource, config) => {
   const name = resource.info.base.replace(/-./g, (x) => x[1].toUpperCase());
@@ -39,7 +40,9 @@ const renderFuzzercize = async (resource, config) => {
       langPrefix: "line-numbers language-",
     });
 
-    renderedReadme = `<div class='markdown-body'>${marked(readme)}</div>`;
+    renderedReadme = `<div class='markdown-body'>${marked(
+      prettier.format(readme, { parser: "markdown", proseWrap: "never" })
+    )}</div>`;
   }
 
   const solutions = [];

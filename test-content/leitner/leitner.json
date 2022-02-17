@@ -12,7 +12,18 @@
       "./loops/for.md",
       "./variables/assign.md",
       "./functions/return-values.md",
-      "./README.md"
+      "./README.md",
+      "flashcard.md",
+      "functions/arguments.md",
+      "functions/parameters.md",
+      "functions/return-values.md",
+      "loops/for-in.md",
+      "loops/for-of.md",
+      "loops/for.md",
+      "loops/while.md",
+      "variables/assign.md",
+      "variables/declare.md",
+      "variables/initialize.md"
     ],
     "2": [
       "./loops/for-in.md"
