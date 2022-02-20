@@ -8,6 +8,7 @@ class OpenIn extends HTMLElement {
     const openable = [
       "jsTutorLive",
       "jsTutor",
+      "learnWithTrace",
       "promisees",
       "loupe",
       "esprima",

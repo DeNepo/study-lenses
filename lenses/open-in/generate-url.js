@@ -24,6 +24,11 @@ module.exports = {
       "&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false";
     return jsTutorURL;
   },
+  learnWithTrace: function (code) {
+    const mainedCode = `export const main = () => {\n\n${code}\n\n};`;
+    const lwtURL = createTracePlaygroundUrlForCode(mainedCode);
+    return lwtURL;
+  },
   // algoviz: (code) => {
   //   return "https://algoviz.io/#/";
   // },
@@ -55,3 +60,36 @@ module.exports = {
     return URL;
   },
 };
+
+// --- for learnWithTrace ---
+function createTracePlaygroundUrlForCode(code) {
+  const url = new URL("https://www.learnwithtrace.com/playground/code");
+
+  // if (options.isEmbed) {
+  url.searchParams.append("embed", "false");
+  // }
+  url.searchParams.append("files", createTraceFilesParam(code));
+  url.searchParams.append("language", "javascript");
+  url.searchParams.append("hideReadonlyFiles", "true");
+
+  return url.toString();
+}
+function createTraceFilesParam(code) {
+  const payload = {
+    version: 0,
+    files: [
+      {
+        version: 0,
+        filename: "main.js",
+        directory: "src",
+        contents: code,
+        editable: true,
+      },
+    ],
+  };
+  const stringified = JSON.stringify(payload);
+  const encoded = encodeURIComponent(
+    Buffer.from(stringified).toString("base64")
+  );
+  return encoded;
+}
