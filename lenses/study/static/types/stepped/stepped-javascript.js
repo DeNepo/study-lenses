@@ -92,7 +92,7 @@ export class SteppedJavaScriptFE extends JavaScriptFE {
       {
         language: monacoExtToLanguage[this.config.stepsExt] || "",
         roundedSelection: true,
-        scrollBeyondLastLine: false,
+        scrollBeyondLastLine: true,
         theme: this.theme,
         wrappingIndent: "indent",
         wordWrap: "wordWrapColumn",
@@ -100,7 +100,7 @@ export class SteppedJavaScriptFE extends JavaScriptFE {
         automaticLayout: true,
         readOnly,
         tabSize: 2,
-        scrollBeyondLastLine: false,
+        scrollBeyondLastLine: true,
         wordWrap: "on",
         wrappingStrategy: "advanced",
         minimap: {

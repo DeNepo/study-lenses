@@ -1,33 +1,32 @@
 const anEditor = ({
-  container = document.createElement('div'),
-  config = {}
+  container = document.createElement("div"),
+  config = {},
 }) => {
+  container.style.width = config.editorWidth || "95%";
+  container.style.overflow = "hidden";
 
-  container.style.width = config.editorWidth || '95%';
-  container.style.overflow = 'hidden';
-
-  const readOnly = typeof config.readOnly === 'boolean'
-    ? config.readOnly : true
+  const readOnly =
+    typeof config.readOnly === "boolean" ? config.readOnly : true;
 
   const options = Object.assign(
     {
-      language: monacoExtToLanguage[config.ext] || '',
+      language: monacoExtToLanguage[config.ext] || "",
       roundedSelection: true,
-      scrollBeyondLastLine: false,
+      scrollBeyondLastLine: true,
       theme: "vs-dark",
       wrappingIndent: "indent",
-      wordWrap: 'wordWrapColumn',
+      wordWrap: "wordWrapColumn",
       wordWrapColumn: 100,
       automaticLayout: true,
       readOnly,
       tabSize: 2,
-      scrollBeyondLastLine: false,
-      wordWrap: 'on',
-      wrappingStrategy: 'advanced',
+      scrollBeyondLastLine: true,
+      wordWrap: "on",
+      wrappingStrategy: "advanced",
       minimap: {
-        enabled: false
+        enabled: false,
       },
-      overviewRulerLanes: 0
+      overviewRulerLanes: 0,
     },
     config
   );
@@ -35,38 +34,34 @@ const anEditor = ({
   const editor = monaco.editor.create(container, options);
   editor.setValue(config.code);
 
-
   // https://github.com/microsoft/monaco-editor/issues/794#issuecomment-688959283
   editor.onDidChangeModelDecorations(() => {
-    updateEditorHeight() // typing
-    requestAnimationFrame(updateEditorHeight) // folding
-  })
+    updateEditorHeight(); // typing
+    requestAnimationFrame(updateEditorHeight); // folding
+  });
 
-  const lineHeight = editor.getOption(monaco.editor.EditorOption.lineHeight)
-  const lineCount = editor.getModel()?.getLineCount() || 1
-  let prevHeight = editor.getTopForLineNumber(lineCount + 1) + lineHeight
-
+  const lineHeight = editor.getOption(monaco.editor.EditorOption.lineHeight);
+  const lineCount = editor.getModel()?.getLineCount() || 1;
+  let prevHeight = editor.getTopForLineNumber(lineCount + 1) + lineHeight;
 
   const updateEditorHeight = () => {
-    const editorElement = editor.getDomNode()
+    const editorElement = editor.getDomNode();
 
     if (!editorElement) {
-      return
+      return;
     }
 
-    const lineHeight = editor.getOption(monaco.editor.EditorOption.lineHeight)
-    const lineCount = editor.getModel()?.getLineCount() || 1
-    const height = editor.getTopForLineNumber(lineCount + 1) + lineHeight
+    const lineHeight = editor.getOption(monaco.editor.EditorOption.lineHeight);
+    const lineCount = editor.getModel()?.getLineCount() || 1;
+    const height = editor.getTopForLineNumber(lineCount + 1) + lineHeight;
 
     if (prevHeight !== height) {
-      prevHeight = height
-      editorElement.style.height = `${height + 10}px`
-      editor.layout()
+      prevHeight = height;
+      editorElement.style.height = `${height + 10}px`;
+      editor.layout();
     }
-  }
+  };
   updateEditorHeight();
-
-
 
   return {
     editor,
@@ -75,9 +70,7 @@ const anEditor = ({
     handlers: {
       toggleReadOnly,
       format,
-      reset
-    }
-  }
-
+      reset,
+    },
+  };
 };
-

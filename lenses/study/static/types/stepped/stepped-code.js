@@ -95,7 +95,7 @@ export class SteppedCodeFE extends CodeFE {
       {
         language: monacoExtToLanguage[this.config.stepsExt] || "",
         roundedSelection: true,
-        scrollBeyondLastLine: false,
+        scrollBeyondLastLine: true,
         theme: this.theme,
         wrappingIndent: "indent",
         wordWrap: "wordWrapColumn",
@@ -103,7 +103,7 @@ export class SteppedCodeFE extends CodeFE {
         automaticLayout: true,
         readOnly,
         tabSize: 2,
-        scrollBeyondLastLine: false,
+        scrollBeyondLastLine: true,
         wordWrap: "on",
         wrappingStrategy: "advanced",
         minimap: {

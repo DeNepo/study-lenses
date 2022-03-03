@@ -194,7 +194,7 @@ export class CodeFE {
       {
         language: monacoExtToLanguage[config.ext] || "",
         roundedSelection: true,
-        scrollBeyondLastLine: false,
+        scrollBeyondLastLine: true,
         theme: this.theme,
         wrappingIndent: "indent",
         wordWrap: "wordWrapColumn",
@@ -202,7 +202,6 @@ export class CodeFE {
         automaticLayout: true,
         readOnly,
         tabSize: 2,
-        scrollBeyondLastLine: false,
         wordWrap: "on",
         wrappingStrategy: "advanced",
         minimap: {
