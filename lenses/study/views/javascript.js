@@ -155,6 +155,10 @@ class JavaScriptSSR extends CodeSSR {
         this.config.locals.clearScheduled ? "checked" : ""
       } /> <label for='clear-scheduled-input'>clear scheduled</label>
     </form>
+    <br>
+    -- save configs --
+    <button id='download-config'>download</button>
+    <button id='copy-config'>copy</button>
     `;
   }
 

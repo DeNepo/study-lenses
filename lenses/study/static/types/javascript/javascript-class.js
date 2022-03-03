@@ -447,6 +447,34 @@ export class JavaScriptFE extends CodeFE {
     }
     // }
 
+    const configToString = () =>
+      JSON.stringify({ study: config.locals }, null, "  ");
+
+    document.getElementById("download-config").addEventListener("click", () => {
+      const element = document.createElement("a");
+      element.setAttribute("download", "study.json");
+      element.style.display = "none";
+      element.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," +
+          encodeURIComponent(JSON.stringify(configToString(), null, "  "))
+      );
+
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    });
+    document.getElementById("copy-config").addEventListener("click", () => {
+      const configString = configToString();
+
+      navigator.clipboard.writeText(configString);
+
+      setTimeout(() => {
+        console.log(configString);
+        alert(`your configs are copied, they are also logged to the console`);
+      }, 0);
+    });
+
     if (this.config.locals.steamroll) {
       import("./static/steamroll.js")
         .then((e) => e.steamroll)
