@@ -9,10 +9,13 @@ const mkdirPromise = util.promisify(fs.mkdir);
 
 const renderDir = require("./render-directory");
 const renderStepped = require("./render-stepped");
+const isStepped = require("./lib/is-stepped");
 
-const isStepped = require("./lib/is-stepped.js");
+// const isStepped = require("./lib/is-stepped.js");
 
-const steppedLens = async ({ resource, config, requestData }) => {
+const steppedLens = async (arg = {}) => {
+  const { resource, config, requestData, lenses } = arg;
+
   if (config.locals.save === true && requestData.method === "POST") {
     try {
       const absolutePath = path.join(
@@ -36,9 +39,7 @@ const steppedLens = async ({ resource, config, requestData }) => {
       resource.content = ": changes were saved";
       // console.log(resource.content);
       resource.info.ext = ".txt";
-      return {
-        resource,
-      };
+      return { resource };
     } catch (err) {
       console.log(err);
       responseData.status = 500;
@@ -53,10 +54,21 @@ const steppedLens = async ({ resource, config, requestData }) => {
   }
 
   if (resource.info.type !== "directory" || resource.content === null) {
-    return;
+    const studyLens = lenses.find((lens) => lens.queryKey === "study");
+    if (studyLens) {
+      return await studyLens.module({ ...arg, config: studyLens });
+    } else {
+      return;
+    }
   }
 
   resource.info.ext = ".html";
+
+  if (config.locals.root === resource.info.base) {
+    resource.content = renderDir(resource, config);
+    return { resource };
+  }
+
   resource.content = isStepped(resource)
     ? await renderStepped(resource, config)
     : renderDir(resource, config);

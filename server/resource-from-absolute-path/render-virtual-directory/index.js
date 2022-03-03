@@ -62,7 +62,7 @@ const renderVirtualDirectory = async ({
         arrayMerge: combineMerge,
       });
     } catch (o_0) {
-      console.error(o_0);
+      // console.error(o_0);
     }
   }
 

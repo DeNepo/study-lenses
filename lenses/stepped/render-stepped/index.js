@@ -10,7 +10,7 @@ const readDirPromise = util.promisify(fs.readdir);
 const marked = require("marked");
 const prettier = require("prettier");
 
-const renderStepped = async (resource, config) => {
+const renderStepped = async (resource, config, ext = ".js") => {
   const name = resource.info.base.replace(/-./g, (x) => x[1].toUpperCase());
 
   const basePath = path.join(
@@ -18,12 +18,6 @@ const renderStepped = async (resource, config) => {
     resource.info.dir,
     resource.info.base
   );
-
-  let jsDoc;
-  const jsDocPath = path.join(basePath, "jsdoc.js");
-  if (fs.existsSync(jsDocPath)) {
-    jsDoc = await readFilePromise(jsDocPath, "utf-8");
-  }
 
   let readme = null;
   const readmePath = path.join(basePath, "README.md");
@@ -50,24 +44,34 @@ const renderStepped = async (resource, config) => {
   const steps = [];
   const stepsPath = path.join(basePath);
   if (fs.existsSync(stepsPath) && fs.lstatSync(stepsPath).isDirectory()) {
-    const stepFileNames = await readDirPromise(stepsPath);
-    const stepCodes = await Promise.all(
-      stepFileNames.map((fileName) =>
-        readFilePromise(path.join(stepsPath, fileName), "utf-8")
-      )
+    const stepFileNames = (await readDirPromise(stepsPath)).filter((entity) =>
+      entity.endsWith(ext)
     );
-    stepFileNames
-      .filter((fileName) => fileName.endsWith(".js"))
-      .forEach((fileName, index) => {
-        const name = fileName
-          .replace(/-./g, (x) => x[1].toUpperCase())
-          .replace(".js", "");
-        steps.unshift({
-          fileName,
-          name,
-          code: stepCodes[index].split("__name__").join(name),
-        });
+    if (stepFileNames.length === 0) {
+      steps.unshift({
+        fileName: "oops!",
+        name: "oops!",
+        code: `there are no ${ext} files in this directory!`,
       });
+    } else {
+      const stepCodes = await Promise.all(
+        stepFileNames.map((fileName) =>
+          readFilePromise(path.join(stepsPath, fileName), "utf-8")
+        )
+      );
+      stepFileNames
+        .filter((fileName) => fileName.endsWith(ext))
+        .forEach((fileName, index) => {
+          const name = fileName
+            .replace(/-./g, (x) => x[1].toUpperCase())
+            .replace(ext, "");
+          steps.unshift({
+            fileName,
+            name,
+            code: stepCodes[index].split("__name__").join(name),
+          });
+        });
+    }
   }
 
   steps.sort().reverse();
@@ -76,7 +80,6 @@ const renderStepped = async (resource, config) => {
     name,
     // https://dev.to/mattkenefick/snippets-in-javascript-converting-pascalcase-to-kebab-case-36ed
     folderName: name.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase(),
-    jsDoc,
     readme,
     steps,
     log: `./${resource.info.base}/log.js`.split(path.sep).join("/"),

@@ -61,7 +61,7 @@ export class CodeFE {
       .addEventListener("click", () => this.openSelectionWith("print"));
 
     if (this.config.locals.save === true) {
-      document.getElementById("save-button").addEventListener("click", () => {
+      window.save = () => {
         fetch(window.location.origin + window.location.pathname + "?study", {
           method: "POST",
           headers: {
@@ -79,7 +79,11 @@ export class CodeFE {
             alert(err.name + ": " + err.message);
             console.error("Error:", err);
           });
-      });
+      };
+
+      document
+        .getElementById("save-button")
+        .addEventListener("click", window.save);
     }
 
     document

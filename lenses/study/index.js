@@ -10,12 +10,7 @@ const detectType = require("./lib/detect-type");
 const renderDependencies = require("./lib/render-dependencies");
 const renderAppendices = require("./lib/render-appendices");
 
-const liveStudyLense = async ({
-  config,
-  resource,
-  responseData,
-  requestData,
-}) => {
+const studyLens = async ({ config, resource, responseData, requestData }) => {
   if (config.locals.save === true && requestData.method === "POST") {
     try {
       const absolutePath = path.join(
@@ -50,6 +45,8 @@ const liveStudyLense = async ({
     resource.info.base = config.base || resource.info.base;
 
     config.locals.save = false;
+
+    config.isPermalink = true;
   }
   // console.log(0);
   if (resource.content === null || resource.info === null || resource.error) {
@@ -61,14 +58,28 @@ const liveStudyLense = async ({
   const type = detectType(resource);
   // console.log("--------", type);
 
+  const isStepped =
+    !config.isPermalink &&
+    resource.info.type === "directory" &&
+    (config.locals.stepped || config.queryValue.includes("stepped"));
+
   let typeView = () => {};
   try {
-    typeView = new (require(`./views/${type}`))({
-      resource,
-      config,
-      responseData,
-      requestData,
-    });
+    if (isStepped) {
+      typeView = await new (require(`./views/stepped`))({
+        resource,
+        config,
+        responseData,
+        requestData,
+      });
+    } else {
+      typeView = new (require(`./views/${type}`))({
+        resource,
+        config,
+        responseData,
+        requestData,
+      });
+    }
   } catch (o_0) {
     console.log(o_0);
     typeView = new (require(`./views/code`))({
@@ -94,7 +105,9 @@ const liveStudyLense = async ({
     config.readOnly = false;
   }
 
-  config.locals = Object.assign({}, config.locals, config.queryValue);
+  if (config.queryValue && typeof config.queryValue === "object") {
+    config.locals = Object.assign({}, config.locals, config.queryValue);
+  }
 
   resource.info.ext = ".html";
   resource.content = `<!DOCTYPE html>
@@ -142,9 +155,9 @@ const liveStudyLense = async ({
 
   ${await typeView.scriptsBody()}
 
-  <script type='module' src='${
-    config.ownStatic
-  }/types/${type}/init.js'></script>
+  <script type='module' src='${config.ownStatic}/types/${
+    isStepped ? "stepped" : type
+  }/init.js'></script>
 
 
 </body>
@@ -157,4 +170,5 @@ const liveStudyLense = async ({
   };
 };
 
-module.exports = liveStudyLense;
+module.exports = studyLens;
+// module.exports = liveStudyLense;

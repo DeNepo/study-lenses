@@ -1,14 +1,15 @@
-const correctChildren = (children = []) =>
-  Array.isArray(children) &&
-  children.every((child) => child.ext === ".js" || child.ext === ".md");
+const isStepped = (resource, ext = ".js") => {
+  const correctChildren = (children = []) =>
+    Array.isArray(children) && children.some((child) => child.ext === ext);
 
-const isStepped = (resource) =>
-  ((resource.info && resource.info.type === "directory") ||
-    resource.type === "directory") &&
-  resource.content
-    ? correctChildren(resource.content.children)
-    : correctChildren(resource.children)
-    ? true
-    : false;
+  const itIs =
+    resource.info &&
+    (resource.info.type === "directory" || resource.type === "directory") &&
+    (resource.content
+      ? correctChildren(resource.content.children)
+      : correctChildren(resource.children));
+
+  return itIs;
+};
 
 module.exports = isStepped;

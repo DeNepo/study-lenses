@@ -103,9 +103,6 @@ module.exports = async (req, res, next) => {
   }
   // console.log(4);
 
-  // deeply parse any parameter configurations
-  req.query = deepParseQuery(req.query);
-
   // set defaults if requested
   if (queryKeys.includes("--defaults")) {
     const pathExt = path.extname(req.path);
@@ -124,7 +121,7 @@ module.exports = async (req, res, next) => {
       const key = param.split("=")[0];
       const value = param.split("=")[1];
       if (value) {
-        let parsedValue = value;
+        let parsedValue = value.replaceAll("+", " ");
         try {
           parsedValue = JSON.parse(value);
         } catch (o_0) {}
@@ -133,10 +130,14 @@ module.exports = async (req, res, next) => {
         return [key, ""];
       }
     });
+
     for (const paramConfig of parsedLocalDefaultsConfigs) {
       req.query[paramConfig[0]] = paramConfig[1];
     }
   }
+
+  // deeply parse any parameter configurations
+  req.query = deepParseQuery(req.query);
 
   // filter for the requested plugins (url params)
   //  configure them with local & param configurations

@@ -22,7 +22,7 @@ class JavaScriptSSR extends CodeSSR {
 
     this.config.trace = config.trace;
 
-    this.config.hasSpec = hasSpec(resource.info);
+    this.config.hasSpec = !this.config.stepsExt && hasSpec(resource.info);
   }
 
   styles() {

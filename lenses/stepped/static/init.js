@@ -210,6 +210,8 @@ document.getElementById("format-button").addEventListener("click", () => {
   ]);
 });
 
-document
-  .getElementById("eslint-button")
-  .addEventListener("click", () => eslint(config.editor.getValue()));
+if (document.getElementById("eslint-button")) {
+  document
+    .getElementById("eslint-button")
+    .addEventListener("click", () => eslint(config.editor.getValue()));
+}
