@@ -1,4 +1,5 @@
-const func1 = (x) => {
+export const func1 = (x) => {
+  "use asm";
   return x * 3;
 };
 
