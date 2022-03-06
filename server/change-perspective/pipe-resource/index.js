@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 // labeled blocks are there for readability
 //  this file is long and busy, so you can collapse them and see the label
 
-const deepClone = require("../../lib/deep-clone");
-const evaluateHooks = require("./evaluate-hooks");
+const deepClone = require('../../lib/deep-clone');
+const evaluateHooks = require('./evaluate-hooks');
 
 const pipeResource = async ({
   requestData,
@@ -14,7 +14,7 @@ const pipeResource = async ({
   options,
   hooks,
 }) => {
-  console.log(": piping request");
+  console.log(': piping request');
 
   let pipedRequestData = deepClone(requestData);
   let pipedResponseData = deepClone(responseData);
@@ -82,16 +82,23 @@ const pipeResource = async ({
     try {
       const config = Object.assign({}, lens);
       delete config.module;
-      console.log(":  " + config.queryKey);
+      console.log(':  ' + config.queryKey);
 
-      returned = await lens.module({
+      const clonedArgs = {
         config,
         requestData: deepClone(pipedRequestData),
         responseData: deepClone(pipedResponseData),
         resource: deepClone(pipedResource),
         options: deepClone(options),
         lenses: deepClone(lenses),
-      });
+      };
+
+      for (const lens of clonedArgs.lenses) {
+        lens.use = (args = {}) =>
+          lens.module(Object.assign({}, clonedArgs, { config: lens }, args));
+      }
+
+      returned = await lens.module(clonedArgs);
 
       if (returned && returned.abort === true) {
         return {
@@ -103,12 +110,12 @@ const pipeResource = async ({
       if (returned) {
         pipedRequestData = deepClone(returned.requestData || pipedRequestData);
         pipedResponseData = deepClone(
-          returned.responseData || pipedResponseData
+          returned.responseData || pipedResponseData,
         );
         pipedResource = deepClone(returned.resource || pipedResource);
       }
     } catch (error) {
-      console.log(": error in " + lens.queryKey);
+      console.log(': error in ' + lens.queryKey);
       lenseError = {
         error,
         lens,
@@ -130,9 +137,9 @@ const pipeResource = async ({
         // send no matter what, do not recover from an error in a lens
         resource.content = `an error occurred in the "${lens.queryKey}" lens.\n\nadd the --debug option to learn more\n\nor just remove it from the URL and refresh`;
         if (resource.info) {
-          resource.info.ext = ".txt";
+          resource.info.ext = '.txt';
         } else {
-          resource.info = { ext: ".txt" };
+          resource.info = { ext: '.txt' };
         }
         responseData.status = 500;
         // in case of a lens error, fall back to the original resource
