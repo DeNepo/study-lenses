@@ -5,7 +5,7 @@ const path = require('path');
 // https://stackoverflow.com/questions/60694121/use-an-es-module-package-in-a-commonjs-project
 let countThings = null;
 
-const corpusLens = async ({ resource, config, lenses }) => {
+const corpusLens = async ({ resource, config }) => {
   if (!countThings) {
     countThings = (await import('./count-things/index.mjs')).countThings;
   }
@@ -48,13 +48,6 @@ const corpusLens = async ({ resource, config, lenses }) => {
     </html>`;
 
   resource.info.ext = '.html';
-
-  // resource.content = await countThings({
-  //   path: resourcePath,
-  //   render: false,
-  //   resource,
-  // });
-  // resource.info.ext = '.json';
 
   return {
     resource,

@@ -96,6 +96,7 @@ const pipeResource = async ({
       for (const lens of clonedArgs.lenses) {
         lens.use = (args = {}) =>
           lens.module(Object.assign({}, clonedArgs, { config: lens }, args));
+        clonedArgs.lenses[lens.queryKey] = lens;
       }
 
       returned = await lens.module(clonedArgs);
