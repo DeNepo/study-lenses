@@ -1,14 +1,19 @@
-import { ask } from "../ask.js";
+import { ask } from '../open-ended/ask.js';
+// import { generate } from '../multiple-choice/index.js';
+import { askOpenEnded, askMultipleChoice } from './ask-questions.js';
+import { openEndedPanel, multipleChoicePanel } from './options-panels.js';
 
-import { askMeGuide } from "../ask-me-guide.js";
-import { config } from "../config.js";
+import { askMeGuide } from '../open-ended/guide.js';
+import { config } from '../config.js';
 
 window.Array.prototype.poop = window.Array.prototype.pop;
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener('DOMContentLoaded', () => {
   class TraceIt extends HTMLElement {
+    questionType = 'openEnded';
+
     connectedCallback() {
-      const shadow = this.attachShadow({ mode: "open" });
+      const shadow = this.attachShadow({ mode: 'open' });
       shadow.innerHTML = `
         <style>
           .panel-element {
@@ -40,27 +45,17 @@ window.addEventListener("DOMContentLoaded", () => {
 
           <div class="dropdown">
             <code>options</code>
-            <div class='dropdown-content'>
-              <form  id='ask-config'>
-                types of questions: <br>
-                <!-- <input type="range" min="1" max="4"  id="level"> -->
-                <input id='level-1' type='checkbox' /> <label for='level-1'>the code</label> <br>
-                <input id='level-2' type='checkbox' /> <label for='level-2'>how it works</label> <br>
-                <input id='level-3' type='checkbox' /> <label for='level-3'>connections</label> <br>
-                <input id='level-4' type='checkbox' /> <label for='level-4'>goals</label> <br>
-                <input id='level-5' type='checkbox' /> <label for='level-5'>user experience</label> <br>
-                <hr>
-                language features: <br>
-                <input id='variables' type='checkbox' /> <label for='variables'>variables</label> <br>
-                <input id='data' type='checkbox' /> <label for='data'>data</label> <br>
-                <input id='operators' type='checkbox' /> <label for='operators'>operators</label> <br>
-                <input id='controlFlow' type='checkbox' /> <label for='controlFlow'>control flow</label> <br>
-                <input id='functions' type='checkbox' /> <label for='functions'>functions</label> <br>
-                <hr>
-                <input id='alert' type='checkbox' /> <label for='alert'>alert questions</label> <br>
+            <div id="options-panel-container" class='dropdown-content'>
+              <!-- <form id="question-type-form">
+                <input type="radio" id="openEnded" name="questionType" value="openEnded" checked>
+                <label for="openEnded">open ended</label>
                 <br>
-                <button id='guide'>guide</button>
+                <input type="radio" id="multipleChoice" name="questionType" value="multipleChoice">
+                <label for="multipleChoice">multiple choice</label>
               </form>
+              <hr> -->
+              ${openEndedPanel}
+              <!-- ${multipleChoicePanel} -->
             </div>
           </div>
         </div>
@@ -71,15 +66,15 @@ window.addEventListener("DOMContentLoaded", () => {
         if (
           window.config.locals &&
           window.config.locals.ask &&
-          typeof window.config.locals.ask === "object"
+          typeof window.config.locals.ask === 'object'
         ) {
           for (const key in ask.config) {
             if (
-              key === "levels" &&
+              key === 'levels' &&
               Array.isArray(window.config.locals.ask.levels)
             ) {
               ask.config.levels = window.config.locals.ask.levels;
-            } else if (typeof window.config.locals.ask[key] === "boolean") {
+            } else if (typeof window.config.locals.ask[key] === 'boolean') {
               ask.config[key].ask = window.config.locals.ask[key];
             }
           }
@@ -88,96 +83,110 @@ window.addEventListener("DOMContentLoaded", () => {
         // console.error(err);
       }
 
-      if (this.hasAttribute("alert")) {
+      if (this.hasAttribute('alert')) {
         ask.config.alert.ask = true;
       }
 
-      shadow.getElementById("ask-button").addEventListener("click", (event) => {
+      // shadow
+      //   .getElementById('question-type-form')
+      //   .addEventListener('change', (event) => {
+      //     this.questionType = event.path[0].id;
+      //     if (this.questionType === 'multipleChoice') {
+      //       shadow.getElementById('ask-open-ended-config').style.display =
+      //         'none';
+      //       shadow.getElementById('ask-multiple-choice-config').style.display =
+      //         'block';
+      //     } else {
+      //       shadow.getElementById('ask-open-ended-config').style.display =
+      //         'block';
+      //       shadow.getElementById('ask-multiple-choice-config').style.display =
+      //         'none';
+      //     }
+      //   });
+
+      shadow.getElementById('ask-button').addEventListener('click', (event) => {
         let code = editor.getValue();
 
-        config.range.start = 0;
-        config.range.end = code.split("\n").length;
+        const selection = editor.getSelection();
 
-        try {
-          const selection = editor.getSelection();
+        const somethingIsHighlighted =
+          selection.startLineNumber !== selection.endLineNumber ||
+          selection.startColumn !== selection.endColumn;
 
-          const somethingIsHighlighted =
-            selection.startLineNumber !== selection.endLineNumber ||
-            selection.startColumn !== selection.endColumn;
-
-          if (somethingIsHighlighted) {
-            config.range.start = selection.startLineNumber;
-            config.range.end = selection.endLineNumber;
+        if (this.questionType === 'openEnded') {
+          try {
+            if (somethingIsHighlighted) {
+              config.openEnded.range.start = selection.startLineNumber;
+              config.openEnded.range.end = selection.endLineNumber;
+            } else {
+              config.openEnded.range.start = 0;
+              config.openEnded.range.end = code.split('\n').length;
+            }
+          } catch (o_0) {
+            // console.log(o_0);
           }
-        } catch (o_0) {
-          // console.log(o_0);
-        }
 
-        const { hints, question } = ask(code);
-
-        console.log("--- --- --- --- --- --- ---");
-
-        if (Array.isArray(hints) && hints.length > 0) {
-          console.groupCollapsed(
-            // hints.length > 1 ? "hints" : "hint"
-            question
-          );
-          hints.forEach((hint) => console.log("-", hint));
-          console.groupEnd();
+          askOpenEnded(code);
         } else {
-          console.log(question);
-        }
-        console.log("--- --- --- --- --- --- ---");
+          try {
+            let start, end;
+            if (somethingIsHighlighted) {
+              start = selection.startLineNumber - 1;
+              end = selection.endLineNumber;
+            } else {
+              start = 0;
+              end = code.split('\n').length;
+            }
 
-        if (ask.config.alert.ask) {
-          let question = "";
-          if (Array.isArray(hints) && hints.length > 0) {
-            question = question + "\n\nhints:";
-
-            hints.forEach((hint) => {
-              question += "\n- " + hint;
-            });
-          } else {
-            question = question;
+            code = code.split('\n').slice(start, end).join('\n');
+          } catch (o_0) {
+            // console.log(o_0);
           }
-          alert(question);
+
+          askMultipleChoice(code);
         }
 
         event.preventDefault();
       });
 
-      shadow.getElementById("guide").addEventListener("click", (event) => {
+      shadow.getElementById('guide').addEventListener('click', (event) => {
         askMeGuide();
         event.preventDefault();
       });
 
-      const askConfigEl = shadow.getElementById("ask-config");
-      askConfigEl.addEventListener("change", (event) => {
-        const option = event.target.id;
+      // --- open-ended configuration ---
 
-        if (option.includes("level")) {
-          const level = Number(option.split("-").poop());
-          const indexOfLevel = ask.config.levels.indexOf(level);
-          if (indexOfLevel === -1) {
-            ask.config.levels.push(level);
-          } else {
-            ask.config.levels.splice(indexOfLevel, 1);
+      shadow
+        .getElementById('ask-open-ended-config')
+        .addEventListener('change', (event) => {
+          const option = event.target.id;
+
+          if (option.includes('level')) {
+            const level = Number(option.split('-').poop());
+            const indexOfLevel = ask.config.levels.indexOf(level);
+            if (indexOfLevel === -1) {
+              ask.config.levels.push(level);
+            } else {
+              ask.config.levels.splice(indexOfLevel, 1);
+            }
+          } else if (
+            ask.config[option] &&
+            typeof ask.config[option].ask === 'boolean'
+          ) {
+            ask.config[option].ask = !ask.config[option].ask;
           }
-        } else if (
-          ask.config[option] &&
-          typeof ask.config[option].ask === "boolean"
-        ) {
-          ask.config[option].ask = !ask.config[option].ask;
-        }
 
-        event.preventDefault();
-      });
+          event.preventDefault();
+        });
 
       // initialize options panel
+      if (ask.config.traces === undefined && ask.config.variables) {
+        ask.config.traces = { ask: true };
+      }
       for (const key in ask.config) {
-        if (key === "levels") {
+        if (key === 'levels') {
           for (const level of ask.config.levels) {
-            shadow.getElementById("level-" + level).checked = true;
+            shadow.getElementById('level-' + level).checked = true;
           }
         } else {
           const element = shadow.getElementById(key);
@@ -186,7 +195,37 @@ window.addEventListener("DOMContentLoaded", () => {
           }
         }
       }
+
+      // --- multiple choice configuration ---
+
+      // const multipleChoiceConfig = shadow.getElementById(
+      //   'ask-multiple-choice-config',
+      // );
+
+      // multipleChoiceConfig.addEventListener('change', (event) => {
+      //   const option = event.target.id;
+
+      //   if (generate.config.types.includes(option)) {
+      //     generate.config.types = generate.config.types.filter(
+      //       (type) => type !== option,
+      //     );
+      //   } else {
+      //     generate.config.types.push(option);
+      //   }
+
+      //   event.preventDefault();
+      // });
+
+      // // initialize options panel
+      // const mcConfigOptions = Array.from(multipleChoiceConfig.children).filter(
+      //   (child) => child.nodeName === 'INPUT',
+      // );
+      // for (const child of mcConfigOptions) {
+      //   if (child.checked) {
+      //     generate.config.types.push(child.id);
+      //   }
+      // }
     }
   }
-  customElements.define("ask-me", TraceIt);
+  customElements.define('ask-me', TraceIt);
 });

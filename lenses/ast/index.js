@@ -1,13 +1,17 @@
-"use strict";
+'use strict';
 
-const astLens = ({ resource, config }) => {
-  if (!resource.info && !resource.info.ext === ".js") {
+const astLens = ({ resource, config, lenses }) => {
+  if (!resource.info && !resource.info.ext === '.js') {
     return;
   }
 
-  if (typeof config.queryValue.content === "string") {
+  if (typeof config.queryValue.content === 'string') {
     resource.content = config.queryValue.content;
   }
+
+  lenses['ast-explorer'].queryValue = config.queryValue;
+
+  return lenses['ast-explorer'].use();
 
   resource.content = `<!DOCTYPE html>
 <html>
@@ -32,42 +36,17 @@ const astLens = ({ resource, config }) => {
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/CodeFlask.js/0.2.0/codeflask.css"
     />
-    <style>
-      #my-code-wrapper {
-        width: 350px;
-        height: 100vh;
-        position: relative;
-      }
-
-      #ast-wrapper {
-        width: auto;
-        height: 100vh;
-        position: relative;
-      }
-
-      .node circle {
-        fill: #fff;
-        stroke: #ec6f75;
-        stroke-width: 3px;
-      }
-
-      .node text {
-        font: 12px sans-serif;
-      }
-
-      .link {
-        fill: none;
-        stroke: #ccc;
-        stroke-width: 2px;
-      }
-    </style>
+    <link
+      rel="stylesheet"
+      href="${config.ownStatic}/styles.css"
+    />
 
     <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <script>
       var defaultCode = decodeURIComponent("${encodeURIComponent(
-        resource.content
+        resource.content,
       )}");
     </script>
   </head>
@@ -117,7 +96,7 @@ const astLens = ({ resource, config }) => {
               <li class="tab col s3"><a href="#test3">AST</a></li>
             </ul>
           </div>
-          <div id="test1" class="col s12" style="height: 100%; width: 100%;"></div>
+          <div id="test1" class="col s12" style="height: 100vh; width: 100%;"></div>
           <div id="test2" class="col s12"></div>
           <div id="test3" class="col s12">
             <div id="ast-wrapper" data-language="javascript"></div>
@@ -164,7 +143,7 @@ const astLens = ({ resource, config }) => {
   </body>
 </html>
 `;
-  resource.info.ext = ".html";
+  resource.info.ext = '.html';
 
   return {
     resource,

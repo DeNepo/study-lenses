@@ -1,27 +1,27 @@
-"use strict";
+'use strict';
 
-const path = require("path");
-const fs = require("fs");
-const util = require("util");
+const path = require('path');
+const fs = require('fs');
+const util = require('util');
 const writeFilePromise = util.promisify(fs.writeFile);
 
-const detectType = require("./lib/detect-type");
+const detectType = require('./lib/detect-type');
 
-const renderDependencies = require("./lib/render-dependencies");
-const renderAppendices = require("./lib/render-appendices");
+const renderDependencies = require('./lib/render-dependencies');
+const renderAppendices = require('./lib/render-appendices');
 
 const studyLens = async ({ config, resource, responseData, requestData }) => {
-  if (config.locals.save === true && requestData.method === "POST") {
+  if (config.locals.save === true && requestData.method === 'POST') {
     try {
       const absolutePath = path.join(
         resource.info.root,
         resource.info.dir,
-        resource.info.base
+        resource.info.base,
       );
-      await writeFilePromise(absolutePath, requestData.body.text, "utf-8");
-      resource.content = ": changes were saved";
+      await writeFilePromise(absolutePath, requestData.body.text, 'utf-8');
+      resource.content = ': changes were saved';
       // console.log(resource.content);
-      resource.info.ext = ".txt";
+      resource.info.ext = '.txt';
       return {
         resource,
       };
@@ -29,8 +29,8 @@ const studyLens = async ({ config, resource, responseData, requestData }) => {
       console.log(err);
       responseData.status = 500;
       resource.content =
-        "unable to save changes.  check server logs for more info";
-      resource.info.ext = ".txt";
+        'unable to save changes.  check server logs for more info';
+      resource.info.ext = '.txt';
       return {
         resource,
         responseData,
@@ -38,9 +38,9 @@ const studyLens = async ({ config, resource, responseData, requestData }) => {
     }
   }
 
-  if (config.queryValue && typeof config.queryValue.permalink === "object") {
+  if (config.queryValue && typeof config.queryValue.permalink === 'object') {
     Object.assign(config, config.queryValue.permalink);
-    resource.content = config.content || "";
+    resource.content = config.content || '';
     resource.info.ext = config.ext || resource.info.ext;
     resource.info.base = config.base || resource.info.base;
 
@@ -55,13 +55,16 @@ const studyLens = async ({ config, resource, responseData, requestData }) => {
 
   // console.log(1);
 
-  const type = detectType(resource);
+  const type = config.queryValue === 'p5' ? 'p5' : detectType(resource);
   // console.log("--------", type);
 
   const isStepped =
     !config.isPermalink &&
-    resource.info.type === "directory" &&
-    (config.locals.stepped || config.queryValue.includes("stepped"));
+    resource.info.type === 'directory' &&
+    (config.locals.stepped ||
+      (config.queryValue &&
+        typeof config.queryValue.includes === 'function' &&
+        config.queryValue.includes('stepped')));
 
   let typeView = () => {};
   try {
@@ -95,21 +98,21 @@ const studyLens = async ({ config, resource, responseData, requestData }) => {
   if (Array.isArray(config.locals.append)) {
     config.content += await renderAppendices(
       config.locals.append,
-      requestData.path
+      requestData.path,
     );
   }
   config.ext = resource.info.ext;
   config.base = resource.info.base;
 
-  if (typeof config.readOnly !== "boolean") {
+  if (typeof config.readOnly !== 'boolean') {
     config.readOnly = false;
   }
 
-  if (config.queryValue && typeof config.queryValue === "object") {
+  if (config.queryValue && typeof config.queryValue === 'object') {
     config.locals = Object.assign({}, config.locals, config.queryValue);
   }
 
-  resource.info.ext = ".html";
+  resource.info.ext = '.html';
   resource.content = `<!DOCTYPE html>
 <html>
 
@@ -126,7 +129,6 @@ const studyLens = async ({ config, resource, responseData, requestData }) => {
 
   ${renderDependencies(config.locals.dependencies, resource)}
 
-
 </head>
 
 <body>
@@ -137,12 +139,21 @@ const studyLens = async ({ config, resource, responseData, requestData }) => {
       <div class='dropdown-content'>
         <div class='selection-buttons'>
           <a href='?--help' target='_blank'><code>--help</code>!  what is this?</a>
-          <a href='?--sandbox=js' target='_blank'><button>js editor</button></a>
-          <a href='?--repl' target='_blank'><button>js repl</button></a>
-          <a href='?--sandbox=html' target='_blank'><button>html repl</button></a>
-          <a href='?--draw' target='_blank'><button>whiteboard</button></a>
+          <a href='?--js' target='_blank'><button>javascript</button></a>
+          <a href='?--html' target='_blank'><button>html</button></a>
+          <a href='?--draw' target='_blank'><button>sketch pad</button></a>
         </div>
+        <div>
+          | <a href='https://pythontutor.com/live.html#mode=edit' target='_blank'>tutor</a>
+          | <a href='?--repl' target='_blank'>repl</a>
+          | <a href='?--turtle' target='_blank'>turtle</a>
+          | <a href='?--p5' target='_blank'>p5</a>
+          |
+        </div>
+        <br>
         ${await typeView.configOptions()}
+        <hr />
+        <a href='?--docs' target='_blank'><code>--docs</code></a>
       </div>
     </div>
     ${await typeView.panel()}
@@ -156,7 +167,7 @@ const studyLens = async ({ config, resource, responseData, requestData }) => {
   ${await typeView.scriptsBody()}
 
   <script type='module' src='${config.ownStatic}/types/${
-    isStepped ? "stepped" : type
+    isStepped ? 'stepped' : type
   }/init.js'></script>
 
 

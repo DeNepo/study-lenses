@@ -1,21 +1,21 @@
-"use strict";
+'use strict';
 
 const writemeLens = ({ config, resource }) => {
   if (!resource.info && !config.queryValue.code) {
     return;
   }
 
-  if (resource.info.ext !== ".js") {
+  if (resource.info.ext !== '.js') {
     return;
   }
 
   let code = resource.content;
   let ext = resource.info.ext;
 
-  if (typeof config.queryValue.code === "string") {
+  if (typeof config.queryValue.code === 'string') {
     code = config.queryValue.code;
-    ext = config.queryValue.ext || "";
-  } else if (typeof resource.content !== "string") {
+    ext = config.queryValue.ext || '';
+  } else if (typeof resource.content !== 'string') {
     return;
   }
 
@@ -24,25 +24,25 @@ const writemeLens = ({ config, resource }) => {
   }
 
   let start = 0;
-  let end = code.split("\n").length;
+  let end = code.split('\n').length;
 
-  if (typeof config.queryValue.start === "number") {
+  if (typeof config.queryValue.start === 'number') {
     start = config.queryValue.start;
   }
 
-  if (typeof config.queryValue.end === "number") {
+  if (typeof config.queryValue.end === 'number') {
     end = config.queryValue.end;
   }
 
   code = code
-    .split("\n")
+    .split('\n')
     .slice(start, end + 1)
-    .join("\n");
+    .join('\n');
 
   config.code = code;
   config.ext = ext;
 
-  resource.info.ext = ".html";
+  resource.info.ext = '.html';
   resource.content = `<!DOCTYPE html>
 <html>
 
@@ -118,7 +118,7 @@ const writemeLens = ({ config, resource }) => {
 
   <script>
 
-    const config = ${JSON.stringify(config, null, "  ")};
+    const config = ${JSON.stringify(config, null, '  ')};
 
   </script>
 

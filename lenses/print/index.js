@@ -1,16 +1,23 @@
-"use strict";
+'use strict';
 
 const printLens = async ({ resource, config }) => {
-  if (resource.info.type !== "file") {
+  if (resource.info.type !== 'file') {
     return;
   }
 
   // console.log(resource.content);
-  const queryValues = config.queryValue.split(" ");
+  const queryValues = config.queryValue.split(' ');
 
-  const language = queryValues.find((entry) => entry.includes("lang-"))
-    ? queryValues.find((entry) => entry.includes("lang-")).replace("lang-", "")
-    : resource.info.ext.replace(".", "");
+  const language =
+    resource.info.base && resource.info.base.includes('.pseudo')
+      ? 'js'
+      : resource.info.base && resource.info.base.includes('.lgo')
+      ? 'js'
+      : queryValues.find((entry) => entry.includes('lang-'))
+      ? queryValues
+          .find((entry) => entry.includes('lang-'))
+          .replace('lang-', '')
+      : resource.info.ext.replace('.', '');
 
   resource.content = `
 <!DOCTYPE html>
@@ -35,24 +42,24 @@ const printLens = async ({ resource, config }) => {
         config.locals.code !== false
           ? `<div id="code-container">
           <pre><code id='code-goes-here' class="${
-            queryValues.includes("nn") ? "" : "line-numbers"
+            queryValues.includes('nn') ? '' : 'line-numbers'
           } language-${
-              queryValues.includes("bw") ? "text" : language
+              queryValues.includes('bw') ? 'text' : language
             }"></code></pre>
         </div>`
-          : ""
+          : ''
       }
       <div id="canvas-container" class="stacked"><canvas id="cfd"></canvas></div>
     </div>
 
     <script>
       var code = decodeURIComponent("${encodeURIComponent(
-        typeof resource.content === "object"
-          ? JSON.stringify(resource.content, null, "  ")
-          : resource.content
+        typeof resource.content === 'object'
+          ? JSON.stringify(resource.content, null, '  ')
+          : resource.content,
       )}");
       var config = JSON.parse(decodeURIComponent("${encodeURIComponent(
-        JSON.stringify(config)
+        JSON.stringify(config),
       )}"));
     </script>
 
@@ -83,7 +90,7 @@ const printLens = async ({ resource, config }) => {
 
   </body>
 </html>`;
-  resource.info.ext = ".html";
+  resource.info.ext = '.html';
 
   return {
     resource,

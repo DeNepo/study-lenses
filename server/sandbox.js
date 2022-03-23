@@ -1,26 +1,26 @@
-"use strict";
+'use strict';
 
-const path = require("path");
+const path = require('path');
 
-const config = require("config");
+const config = require('config');
 
-const loadPlugins = require("./load-plugins");
-const configurePlugins = require("./configure-plugins");
-const compileLocalConfigs = require("./compile-local-configs");
+const loadPlugins = require('./load-plugins');
+const configurePlugins = require('./configure-plugins');
+const compileLocalConfigs = require('./compile-local-configs');
 
-const lensesPath = path.join(__dirname, "..", "lenses");
-const lensesPromise = loadPlugins("lenses", lensesPath);
+const lensesPath = path.join(__dirname, '..', 'lenses');
+const lensesPromise = loadPlugins('lenses', lensesPath);
 
-const deepMerge = require("deepmerge");
+const deepMerge = require('deepmerge');
 const combineMerge = (target, source, options) => {
   const destination = target.slice();
 
   source.forEach((item, index) => {
-    if (typeof destination[index] === "undefined") {
+    if (typeof destination[index] === 'undefined') {
       destination[index] = options.cloneUnlessOtherwiseSpecified(item, options);
     } else if (options.isMergeableObject(item)) {
       const alreadyExists = destination.some((entry) =>
-        util.isDeepStrictEqual(entry, item)
+        util.isDeepStrictEqual(entry, item),
       );
       if (!alreadyExists) {
         destination.push(item);
@@ -35,7 +35,11 @@ const combineMerge = (target, source, options) => {
 };
 
 const sandbox = async (req, res, next) => {
-  if (!req.query.hasOwnProperty("--sandbox")) {
+  if (
+    !req.query.hasOwnProperty('--sandbox') &&
+    !req.query.hasOwnProperty('--js') &&
+    !req.query.hasOwnProperty('--html')
+  ) {
     next();
     return;
   }
@@ -57,25 +61,29 @@ const sandbox = async (req, res, next) => {
   localConfigs.save = false;
 
   const studyLens = (await lensesPromise).find(
-    (lens) => lens.queryKey === "study"
+    (lens) => lens.queryKey === 'study',
   );
   studyLens.requested = true;
 
-  const sandboxQuery = req.query["--sandbox"];
-  const ext = /html/i.test(sandboxQuery)
-    ? ".html"
+  const sandboxQuery = req.query['--sandbox'];
+  const ext = req.query.hasOwnProperty('--js')
+    ? '.js'
+    : req.query.hasOwnProperty('--html')
+    ? '.html'
+    : /html/i.test(sandboxQuery)
+    ? '.html'
     : /js/i.test(sandboxQuery) || /javascript/i.test(sandboxQuery)
-    ? ".js"
-    : ".js";
+    ? '.js'
+    : '.js';
 
   const configuredStudyLens = configurePlugins([studyLens], localConfigs, {
-    study: "",
+    study: '',
   })[0];
 
-  configuredStudyLens.title = ext + " sandbox";
+  configuredStudyLens.title = ext + ' sandbox';
 
   const content =
-    ext === ".html"
+    ext === '.html'
       ? `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -92,9 +100,9 @@ const sandbox = async (req, res, next) => {
   </body>
 </html>
 `
-      : ext === ".js"
-      ? ""
-      : "";
+      : ext === '.js'
+      ? ''
+      : '';
 
   const { resource } = await configuredStudyLens.module({
     resource: {
@@ -106,7 +114,7 @@ const sandbox = async (req, res, next) => {
     config: configuredStudyLens,
   });
 
-  res.set("Content-Type", "text/html");
+  res.set('Content-Type', 'text/html');
 
   res.send(resource.content);
 };

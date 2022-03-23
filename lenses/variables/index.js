@@ -2,21 +2,21 @@ const scopeAnalysisLens = ({ resource, config }) => {
   let code = resource.content;
   let ext = resource.info.ext;
 
-  if (typeof config.queryValue.code === "string") {
+  if (typeof config.queryValue.code === 'string') {
     code = config.queryValue.code;
     ext = config.queryValue.ext || resource.info.ext;
-  } else if (typeof resource.content !== "string") {
+  } else if (typeof resource.content !== 'string') {
     return;
   }
 
-  if (ext !== ".js") {
+  if (ext !== '.js') {
     return;
   }
   if (!code) {
     return;
   }
 
-  resource.info.ext = ".html";
+  resource.info.ext = '.html';
   resource.content = `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -63,12 +63,12 @@ const scopeAnalysisLens = ({ resource, config }) => {
 
     <script>
       var code = decodeURIComponent("${encodeURIComponent(
-        typeof resource.content === "object"
-          ? JSON.stringify(resource.content, null, "  ")
-          : resource.content
+        typeof resource.content === 'object'
+          ? JSON.stringify(resource.content, null, '  ')
+          : resource.content,
       )}");
       var config = JSON.parse(decodeURIComponent("${encodeURIComponent(
-        JSON.stringify(config)
+        JSON.stringify(config),
       )}"));
     </script>
 
@@ -208,12 +208,10 @@ const scopeAnalysisLens = ({ resource, config }) => {
 
         <section id="demo">
           <!-- <h3>Demo</h3> -->
-          <h3>Scope Analysis</h3>
+          <!-- <h3>Scope Analysis</h3> -->
 
           <p>
-            The program entered on the left will be rendered on the right.
-            Mousing over any identifier will highlight all other identifiers
-            which refer to the same variable, color-coded by type:
+            Mousing over any variable will highlight all uses of that variable, color-coded:
             <span class="code-identifier var-decl">declarations</span>,
             <span class="code-identifier var-read">read&nbsp;references</span>,
             <span class="code-identifier var-write">assignment&nbsp;references</span

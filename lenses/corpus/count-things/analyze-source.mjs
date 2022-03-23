@@ -1,35 +1,35 @@
-import { parse } from "acorn";
-import { walk } from "estree-walker";
+import { parse } from 'acorn';
+import { walk } from 'estree-walker';
 
-export const analyzeSource = (code = "") => {
+export const analyzeSource = (code = '') => {
   const report = {};
 
-  const finalCode = code.startsWith("#!")
+  const finalCode = code.startsWith('#!')
     ? (() => {
-        const splitfinalCode = code.split("\n");
+        const splitfinalCode = code.split('\n');
         report.hashBang = splitfinalCode.shift();
-        return splitfinalCode.join("\n");
+        return splitfinalCode.join('\n');
       })()
     : code;
 
   const lines = {
-    total: code.split("\n").length,
+    total: code.split('\n').length,
     lengths: Object.fromEntries(
       Object.entries(
-        code.split("\n").reduce((all, next) => {
-          if (typeof all[next.length] === "number") {
+        code.split('\n').reduce((all, next) => {
+          if (typeof all[next.length] === 'number') {
             all[next.length]++;
           } else {
             all[next.length] = 1;
           }
           return all;
-        }, {})
-      ).sort((a, b) => b[1] - a[1])
+        }, {}),
+      ).sort((a, b) => b[1] - a[1]),
     ),
   };
 
   const parseConfig = {
-    sourceType: "script",
+    sourceType: 'script',
     ecmaVersion: 2021,
     onComment: [],
     allowAwaitOutsideFunction: true,
@@ -44,9 +44,9 @@ export const analyzeSource = (code = "") => {
   } catch (err) {
     // console.error(err);
 
-    if (err.message.includes("module")) {
+    if (err.message.includes('module')) {
       try {
-        parseConfig.sourceType = "module";
+        parseConfig.sourceType = 'module';
         parseConfig.onComment = [];
 
         tree = parse(finalCode, parseConfig);
@@ -54,7 +54,7 @@ export const analyzeSource = (code = "") => {
         return {
           parseError: {
             name: err.name,
-            message: err.message.replace(/\(\d+:\d+\)/, "").trim(),
+            message: err.message.replace(/\(\d+:\d+\)/, '').trim(),
             location: err.message.match(/\d+:\d+/)[0],
           },
           lines,
@@ -64,7 +64,7 @@ export const analyzeSource = (code = "") => {
       return {
         parseError: {
           name: err.name,
-          message: err.message.replace(/\(\d+:\d+\)/, "").trim(),
+          message: err.message.replace(/\(\d+:\d+\)/, '').trim(),
           location: err.message.match(/\d+:\d+/)[0],
         },
         lines,
@@ -81,36 +81,36 @@ export const analyzeSource = (code = "") => {
   const variables = {};
   walk(tree, {
     enter(node, parent, prop, index) {
-      if (typeof nodeTypes[node.type] === "number") {
+      if (typeof nodeTypes[node.type] === 'number') {
         nodeTypes[node.type]++;
       } else {
         nodeTypes[node.type] = 1;
       }
 
       if (node.directive) {
-        typeof directives[node.expression.value] === "number"
+        typeof directives[node.expression.value] === 'number'
           ? directives[node.expression.value]++
           : (directives[node.expression.value] = 1);
       }
-      if (node.type === "Identifier") {
-        typeof identifiers[node.name] === "number"
+      if (node.type === 'Identifier') {
+        typeof identifiers[node.name] === 'number'
           ? identifiers[node.name]++
           : (identifiers[node.name] = 1);
       }
-      if (node.type === "Literal") {
+      if (node.type === 'Literal') {
         const literalKey = node.regex
-          ? "regex"
+          ? 'regex'
           : node.value === null
-          ? "null"
+          ? 'null'
           : typeof node.value;
 
-        typeof literals[literalKey] === "number"
+        typeof literals[literalKey] === 'number'
           ? literals[literalKey]++
           : (literals[literalKey] = 1);
       }
-      if (node.type === "VariableDeclarator") {
+      if (node.type === 'VariableDeclarator') {
         const variableName = node.id.name;
-        typeof variables[variableName] === "number"
+        typeof variables[variableName] === 'number'
           ? variables[variableName]++
           : (variables[variableName] = 1);
       }
@@ -128,9 +128,9 @@ export const analyzeSource = (code = "") => {
       jsdoc: 0,
     };
     for (const comment of parseConfig.onComment) {
-      if (comment.type === "Line") {
+      if (comment.type === 'Line') {
         comments.line++;
-      } else if (comment.value[0] === "*") {
+      } else if (comment.value[0] === '*') {
         comments.jsdoc++;
       } else {
         comments.block++;
@@ -138,7 +138,7 @@ export const analyzeSource = (code = "") => {
     }
 
     report.comments = Object.fromEntries(
-      Object.entries(comments).filter((commentType) => commentType[1] !== 0)
+      Object.entries(comments).filter((commentType) => commentType[1] !== 0),
     );
   }
 
@@ -146,25 +146,25 @@ export const analyzeSource = (code = "") => {
 
   if (Object.keys(nodeTypes).length !== 0) {
     report.nodeTypes = Object.fromEntries(
-      Object.entries(nodeTypes).sort((a, b) => b[1] - a[1])
+      Object.entries(nodeTypes).sort((a, b) => b[1] - a[1]),
     );
   }
 
   if (Object.keys(identifiers).length !== 0) {
     report.identifiers = Object.fromEntries(
-      Object.entries(identifiers).sort((a, b) => b[1] - a[1])
+      Object.entries(identifiers).sort((a, b) => b[1] - a[1]),
     );
   }
 
   if (Object.keys(literals).length !== 0) {
     report.literals = Object.fromEntries(
-      Object.entries(literals).sort((a, b) => b[1] - a[1])
+      Object.entries(literals).sort((a, b) => b[1] - a[1]),
     );
   }
 
   if (Object.keys(variables).length !== 0) {
     report.variables = Object.fromEntries(
-      Object.entries(variables).sort((a, b) => b[1] - a[1])
+      Object.entries(variables).sort((a, b) => b[1] - a[1]),
     );
   }
 

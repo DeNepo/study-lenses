@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class CodeSSR {
   constructor({ config, resource }) {
@@ -13,14 +13,14 @@ class CodeSSR {
   }
 
   scriptsHead() {
-    return "";
+    return '';
   }
 
   configOptions() {
     return `
       <form>
         <input id='diff-input' type='checkbox' ${
-          this.config.locals.diff ? "checked" : ""
+          this.config.locals.diff ? 'checked' : ''
         } /> <label for='diff-input'>diff</label>
       </form>`;
   }
@@ -41,15 +41,15 @@ class CodeSSR {
     ${
       this.config.locals.save === true
         ? `<button id='save-button'>save</button>`
-        : ""
+        : ''
     }
     <br><br>
     <button id='highlight-selection-button'>highlight</button>
     <button id='parsonize-selection-button' style='display: ${
-      this.config.locals.parsons === false ? "none" : "inline-block"
+      this.config.locals.parsons === false ? 'none' : 'inline-block'
     };'>parsonize</button>
     <button id='diff-selection-button' style='display: ${
-      this.config.locals.diff ? "inline-block" : "none"
+      this.config.locals.diff ? 'inline-block' : 'none'
     };'>diff</button>
     <!-- <div id='buttons-panel'></div> -->`;
   }
@@ -60,8 +60,8 @@ class CodeSSR {
 
   configScript() {
     return `<script>
-    const config = JSON.parse(decodeURIComponent("${encodeURIComponent(
-      JSON.stringify(this.config)
+    var config = JSON.parse(decodeURIComponent("${encodeURIComponent(
+      JSON.stringify(this.config),
     )}"))
   </script>`;
   }

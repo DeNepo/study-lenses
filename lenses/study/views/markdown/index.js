@@ -1,19 +1,19 @@
-"use strict";
+'use strict';
 
-const resourceFromAbsolutePath = require("../../../../server/resource-from-absolute-path");
-const dirContents = require("./dir-contents");
-const path = require("path");
+const resourceFromAbsolutePath = require('../../../../server/resource-from-absolute-path');
+const dirContents = require('./dir-contents');
+const path = require('path');
 
-const prettier = require("prettier");
+const prettier = require('prettier');
 
-const marked = require("marked");
+const marked = require('marked');
 // const MarkdownIt = require("../../../../node_modules/markdown-it/dist/markdown-it.js");
 // const markIt = new MarkdownIt({
 //   langPrefix: "line-numbers language-",
 //   html: true,
 // });
 
-const JavaScriptSSR = require("../javascript");
+const JavaScriptSSR = require('../javascript');
 
 const dirRegex =
   /(<!--[ \t]*begin[ \t]*dir[ \t]*-->)([\s\S]*)(<!--[ \t]*end[ \t]*dir[ \t]*-->)/gim;
@@ -24,7 +24,7 @@ class MarkdownSSR extends JavaScriptSSR {
       config,
       resource,
       requestData,
-      content = "" /* used by directory subclass */,
+      content = '' /* used by directory subclass */,
       markedOptions = {},
     } = argsObj;
 
@@ -47,7 +47,7 @@ class MarkdownSSR extends JavaScriptSSR {
     this.content = content || resource.content;
     this.inlines.jsBlocks =
       /^(([ \t]*`{3,4})([js|javascript])([\s\S]+?)(^[ \t]*\2))/gim.test(
-        this.content
+        this.content,
       );
 
     // // are handled by lensed iframes
@@ -57,7 +57,7 @@ class MarkdownSSR extends JavaScriptSSR {
     // https://github.com/regexhq/gfm-code-block-regex/blob/master/index.js
     this.inlines.mermaid =
       /^(([ \t]*`{3,4})(mermaid|mmd)([\s\S]+?)(^[ \t]*\2))/gim.test(
-        this.content
+        this.content,
       );
     this.inlines.quiz = false; // not yet
 
@@ -90,7 +90,7 @@ class MarkdownSSR extends JavaScriptSSR {
   }
 
   panel() {
-    return "";
+    return '';
   }
 
   async code() {
@@ -99,16 +99,16 @@ class MarkdownSSR extends JavaScriptSSR {
     // if (this.dirRegex.test(content)) {
     if (dirRegex.test(content)) {
       const absolutePath =
-        this.resource.info.type === "directory"
+        this.resource.info.type === 'directory'
           ? path.join(
               this.resource.info.root,
               this.resource.info.dir,
-              this.resource.info.base
+              this.resource.info.base,
             )
           : path.join(this.resource.info.root, this.resource.info.dir);
       // console.log(absolutePath);
       const virtualDirectory =
-        this.resource.info.type === "directory"
+        this.resource.info.type === 'directory'
           ? this.resource
           : await resourceFromAbsolutePath({
               absolutePath,
@@ -119,11 +119,11 @@ class MarkdownSSR extends JavaScriptSSR {
       const thisFile = path.join(
         this.resource.info.root,
         this.resource.info.dir,
-        this.resource.info.base
+        this.resource.info.base,
       );
       virtualDirectory.content.children =
         virtualDirectory.content.children.filter(
-          (i) => path.join(i.root, i.dir, i.base) !== thisFile
+          (i) => path.join(i.root, i.dir, i.base) !== thisFile,
         );
       const dirToc = dirContents({
         dirElement: virtualDirectory.content,
@@ -133,14 +133,14 @@ class MarkdownSSR extends JavaScriptSSR {
       content = content.replace(
         // this.dirRegex,
         dirRegex,
-        `<!-- BEGIN DIR -->\n<ul id="directory" style="list-style-type: none;"><li><a href="..?--defaults">..</a></li>${dirToc}</ul>\n<!-- END DIR -->`
+        `<!-- BEGIN DIR -->\n<ul id="directory" style="list-style-type: none;"><li><a href="..?--defaults">..</a></li>${dirToc}</ul>\n<!-- END DIR -->`,
       );
     }
 
     if (this.inlines.mermaid) {
       content = content.replace(
         /```(mermaid|mmd)([\s\S]*?)```/gim,
-        (_, __, mermaidGraph) => `<div class="mermaid">${mermaidGraph}</div>`
+        (_, __, mermaidGraph) => `<div class="mermaid">${mermaidGraph}</div>`,
       );
     }
 
@@ -150,17 +150,17 @@ class MarkdownSSR extends JavaScriptSSR {
     const markedOptions = Object.assign(
       {},
       {
-        baseUrl: "/../" + this.requestData.path + "/",
-        langPrefix: "line-numbers language-",
+        baseUrl: '/../' + this.requestData.path + '/',
+        langPrefix: 'line-numbers language-',
         gfm: true,
       },
-      this.markedOptions
+      this.markedOptions,
     );
 
     return `<hr><hr>
     <main class="markdown-body"><div></div>${marked(
-      prettier.format(content, { parser: "markdown", proseWrap: "never" }),
-      markedOptions
+      prettier.format(content, { parser: 'markdown', proseWrap: 'never' }),
+      markedOptions,
     )}</main>`;
   }
 

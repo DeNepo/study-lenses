@@ -1,13 +1,13 @@
-import { config } from "../data/config.js";
-import { state } from "../data/state.js";
-import { print } from "../lib/trace-log.js";
+import { config } from '../data/config.js';
+import { state } from '../data/state.js';
+import { print } from '../lib/trace-log.js';
 
-import { isBuiltIn } from "../lib/is-built-in.js";
-import { isInRange } from "../lib/is-in-range.js";
+import { isBuiltIn } from '../lib/is-built-in.js';
+import { isInRange } from '../lib/is-in-range.js';
 
 export default {
   apply(f, t, xs, serial) {
-    if (typeof f !== "function") {
+    if (typeof f !== 'function') {
       // throw the error right away for failure advice to catch
       //  without doing any apply logging
       f();
@@ -15,18 +15,18 @@ export default {
 
     // hack, because of instrumentation
     if (
-      f.name === "Object" &&
+      f.name === 'Object' &&
       f !== Object &&
       xs.length === 1 &&
       xs[0] &&
-      xs[0].name === "Object"
+      xs[0].name === 'Object'
     ) {
       const result = Reflect.apply(f, t, xs);
       return result;
     }
     // console.log(1);
 
-    const functionName = f.name || "anonymous";
+    const functionName = f.name || 'anonymous';
 
     state.node = state.aran.nodes[serial];
     const line = state.node.loc.start.line;
@@ -37,8 +37,8 @@ export default {
     if (
       state.node.callee &&
       state.node.callee.object &&
-      (state.node.callee.object.type === "Literal" || t === undefined) &&
-      f.name === "Object"
+      (state.node.callee.object.type === 'Literal' || t === undefined) &&
+      f.name === 'Object'
     ) {
       const result = Reflect.apply(f, t, xs);
       return result;
@@ -47,7 +47,7 @@ export default {
     const commaSeparatedArgs = [];
     for (const arg of xs) {
       commaSeparatedArgs.push(arg);
-      commaSeparatedArgs.push(",");
+      commaSeparatedArgs.push(',');
     }
     commaSeparatedArgs.pop();
 
@@ -55,35 +55,18 @@ export default {
 
     // priority to console trace configuration
     const isConsoleCall = Object.values(console).includes(f) || t === console;
-    if (isConsoleCall) {
-      // state.inConsoleCall = true;
-      // if (!nodeIsInRange) {
-      // } else if (config.console) {
-      //   print({
-      //     prefix: [line, col],
-      //     logs: [
-      //       ` console.${f ? functionName : f}(`,
-      //       ...commaSeparatedArgs,
-      //       ")",
-      //     ],
-      //     overrideBuiltIn: true,
-      //   });
-      // }
-      // state.inConsoleCall = false;
-      // return undefined;
-    }
 
-    const isAlertCall = f.name === "alert" && isBuiltIn(f);
-    if (isAlertCall) {
-      if (nodeIsInRange) {
-        print({
-          prefix: [line, col],
-          logs: [` alert(${xs.length > 0 ? xs[0] : ""})`],
-          overrideBuiltIn: true,
-        });
-      }
-      return undefined;
-    }
+    // const isAlertCall = f.name === 'alert' && isBuiltIn(f);
+    // if (isAlertCall) {
+    //   if (nodeIsInRange) {
+    //     print({
+    //       prefix: [line, col],
+    //       logs: [` alert(${xs.length > 0 ? xs[0] : ''})`],
+    //       overrideBuiltIn: true,
+    //     });
+    //   }
+    //   return undefined;
+    // }
     // console.log(2);
 
     // because of instrumentation
@@ -91,7 +74,7 @@ export default {
 
     const firstAndThirdAreSame =
       (xs[0] ? xs[0].toString() : xs[0]) === (xs[2] ? xs[2].toString() : xs[2]);
-    if (f.name === "get" && xs.length === 3 && firstAndThirdAreSame) {
+    if (f.name === 'get' && xs.length === 3 && firstAndThirdAreSame) {
       const result = Reflect.apply(f, t, xs);
       // if (state.builtInEntryPoint === callSymbol) {
       //   state.builtInEntryPoint = null;
@@ -101,10 +84,14 @@ export default {
 
     // console.log(3);
 
+    if (isConsoleCall && !config.console) {
+      return undefined;
+    }
+
     // in case only console & not functions
-    if (!config.functions || !nodeIsInRange) {
+    if (!nodeIsInRange || (!config.functions && !isConsoleCall)) {
       const result = Reflect.apply(f, t, xs);
-      if (state.builtInEntryPoint === "callSymbol") {
+      if (state.builtInEntryPoint === 'callSymbol') {
         state.builtInEntryPoint = null;
       }
       return result;
@@ -113,7 +100,7 @@ export default {
     // account for Aran implementation
     //  remove when upgrading to new Aran
     else if (f === Reflect.get || f === Object) {
-      if (state.node.callee.type === "MemberExpression") {
+      if (state.node.callee.type === 'MemberExpression') {
         // let errors be handled by failure
         return Reflect.apply(f, t, xs);
       }
@@ -138,19 +125,27 @@ export default {
       // return result;
     }
 
+    // if (isConsoleCall && config.console) {
+    //   print({
+    //     prefix: [line, col],
+    //     logs: [` console.${f ? functionName : f}(`, ...commaSeparatedArgs, ')'],
+    //     overrideBuiltIn: true,
+    //   });
+    // }
+
     // console.log(5);
 
     print({
       prefix: [line, col],
       logs: [
-        functionName + ` (call${isBuiltIn(f) ? ", built-in" : ""}):`,
+        functionName + ` (call${isBuiltIn(f) ? ', built-in' : ''}):`,
         ...commaSeparatedArgs,
       ],
       out: console.groupCollapsed,
     });
     if (config.this) {
       print({
-        logs: ["%cthis:", "font-weight: bold;", t],
+        logs: ['%cthis:', 'font-weight: bold;', t],
       });
     }
 
@@ -161,16 +156,28 @@ export default {
       state.builtInEntryPoint = callSymbol;
     }
 
-    const x = isConsoleCall ? undefined : Reflect.apply(f, t, xs);
+    let x;
+    let nativeConsole = console;
+    try {
+      console = Object.keys(nativeConsole).reduce(
+        (all, next) => ({ ...all, [next]: () => {} }),
+        {},
+      );
+      x = isConsoleCall ? undefined : Reflect.apply(f, t, xs);
+    } catch (err) {
+      console = nativeConsole;
+      throw err;
+    }
+    console = nativeConsole;
 
     if (state.builtInEntryPoint === callSymbol) {
       state.builtInEntryPoint = null;
     }
 
     print({
-      prefix: "(return value):",
+      prefix: '(return value):',
       logs: [x],
-      style: "font-weight: bold;",
+      style: 'font-weight: bold;',
     });
     if (!state.builtInEntryPoint) {
       console.groupEnd();

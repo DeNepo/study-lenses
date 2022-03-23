@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const deepClone = require("../lib/deep-clone.js");
+const deepClone = require('../lib/deep-clone.js');
 
 const configurePlugins = (plugins, localConfigs, parsedQuery) => {
   if (!plugins) {
@@ -10,7 +10,9 @@ const configurePlugins = (plugins, localConfigs, parsedQuery) => {
   // change: mark as selected/unselected, don't filter
   const queryKeys = Object.keys(parsedQuery);
   const requestedPlugins = queryKeys
-    .map((queryKey) => plugins.find((plugin) => plugin.queryKey === queryKey))
+    .map((queryKey) =>
+      plugins.find((plugin) => plugin.queryKey === queryKey.toLowerCase()),
+    )
     .filter((plugin) => plugin !== undefined)
     .map((plugin) => ((plugin.requested = true), plugin));
   // const requestedPlugins = plugins
@@ -18,7 +20,12 @@ const configurePlugins = (plugins, localConfigs, parsedQuery) => {
   //   .map((plugin) => ((plugin.requested = false), plugin));
 
   const notRequestedPlugins = plugins
-    .filter((plugin) => !queryKeys.includes(plugin.queryKey))
+    .filter(
+      (plugin) =>
+        !queryKeys
+          .map((queryKey) => queryKey.toLowerCase())
+          .includes(plugin.queryKey),
+    )
     .map((plugin) => ((plugin.requested = false), plugin));
 
   // assign configurations to the plugins if any were requested

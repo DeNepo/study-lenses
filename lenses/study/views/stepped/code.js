@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
-const CodeSSR = require("../code");
+const CodeSSR = require('../code');
 
-const createSteppercise = require("./lib/create-steppercise");
+const createSteppercise = require('./lib/create-steppercise');
 
 const SteppedCodeSSR = class extends CodeSSR {
-  constructor({ config, resource, stepsExt = ".txt" }) {
+  constructor({ config, resource, stepsExt = '.txt' }) {
     super({ config, resource });
 
     config.stepsExt = stepsExt;
@@ -14,8 +14,14 @@ const SteppedCodeSSR = class extends CodeSSR {
       createSteppercise(this).then((steps) => {
         this.steps = steps;
         resolve(this);
-      })
+      }),
     );
+  }
+
+  styles() {
+    const superStyles = super.styles();
+    return `${superStyles}
+      <link href="${this.config.sharedStatic}/prism/style.css" rel="stylesheet" />`;
   }
 
   panel() {
@@ -23,18 +29,18 @@ const SteppedCodeSSR = class extends CodeSSR {
     const superPanel = super.panel();
 
     return superPanel.replace(
-      "<br><br>",
+      '<br><br>',
       `<br>
-      ${steps.renderedReadme ? steps.renderedReadme + "<hr>" : "<br>"}
+      ${steps.renderedReadme ? steps.renderedReadme + '<hr>' : '<br>'}
     <div id='steps-container'>${steps.steps
       .map(
         (step) =>
           `<button class='step-button' id='${steps.steps.indexOf(step)}'>${
             step.fileName
-          }</button>`
+          }</button>`,
       )
-      .join("")}</div>
-    <hr>`
+      .join('')}</div>
+    <hr>`,
     );
   }
 
@@ -43,9 +49,11 @@ const SteppedCodeSSR = class extends CodeSSR {
     const superScriptsBody = super.scriptsBody();
 
     return `${superScriptsBody}
+    <script src="${this.config.sharedStatic}/prism/script.js"></script>
+    <script src="${this.config.sharedStatic}/prism/toolbar.js"></script>
     <script>
       const steps = JSON.parse(decodeURI(\`${encodeURI(
-        JSON.stringify(steps)
+        JSON.stringify(steps),
       )}\`));
     </script>`;
   }

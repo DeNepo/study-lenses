@@ -1,39 +1,39 @@
-"use strict";
+'use strict';
 
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const config = require("config");
+const config = require('config');
 
-const mime = require("mime");
+const mime = require('mime');
 
-const deepClone = require("./lib/deep-clone.js");
-const deepParseQuery = require("./lib/deep-parse-query.js");
+const deepClone = require('./lib/deep-clone.js');
+const deepParseQuery = require('./lib/deep-parse-query.js');
 
-const compileLocalConfigs = require("./compile-local-configs");
-const resourceFromAbsolutePath = require("./resource-from-absolute-path");
-const changePerspective = require("./change-perspective");
-const loadPlugins = require("./load-plugins");
+const compileLocalConfigs = require('./compile-local-configs');
+const resourceFromAbsolutePath = require('./resource-from-absolute-path');
+const changePerspective = require('./change-perspective');
+const loadPlugins = require('./load-plugins');
 
-const optionsPath = path.join(__dirname, "..", "options");
-const optionsPromise = loadPlugins("options", optionsPath);
+const optionsPath = path.join(__dirname, '..', 'options');
+const optionsPromise = loadPlugins('options', optionsPath);
 
-const lensesPath = path.join(__dirname, "..", "lenses");
-const lensesPromise = loadPlugins("lenses", lensesPath);
+const lensesPath = path.join(__dirname, '..', 'lenses');
+const lensesPromise = loadPlugins('lenses', lensesPath);
 
-const localLensesPath = path.join(process.cwd(), ".study-lenses");
-const localLensesPromise = loadPlugins("local_lenses", localLensesPath);
+const localLensesPath = path.join(process.cwd(), '.study-lenses');
+const localLensesPromise = loadPlugins('local_lenses', localLensesPath);
 
-const deepMerge = require("deepmerge");
+const deepMerge = require('deepmerge');
 const combineMerge = (target, source, options) => {
   const destination = target.slice();
 
   source.forEach((item, index) => {
-    if (typeof destination[index] === "undefined") {
+    if (typeof destination[index] === 'undefined') {
       destination[index] = options.cloneUnlessOtherwiseSpecified(item, options);
     } else if (options.isMergeableObject(item)) {
       const alreadyExists = destination.some((entry) =>
-        util.isDeepStrictEqual(entry, item)
+        util.isDeepStrictEqual(entry, item),
       );
       if (!alreadyExists) {
         destination.push(item);
@@ -47,7 +47,7 @@ const combineMerge = (target, source, options) => {
   return destination;
 };
 
-const configurePlugins = require("./configure-plugins");
+const configurePlugins = require('./configure-plugins');
 
 module.exports = async (req, res, next) => {
   // if the requested resource does not exist, fall back to static serving
@@ -56,11 +56,11 @@ module.exports = async (req, res, next) => {
     isPublicExample
       ? path.join(
           __dirname,
-          "..",
-          "study_lenses_public",
-          req.path.replace(/[\s\S]*study_lenses_public/, "")
+          '..',
+          'study_lenses_public',
+          req.path.replace(/[\s\S]*study_lenses_public/, ''),
         )
-      : path.join(process.cwd(), req.path)
+      : path.join(process.cwd(), req.path),
   );
   if (!fs.existsSync(absolutePath)) {
     next();
@@ -76,7 +76,7 @@ module.exports = async (req, res, next) => {
     arrayMerge: combineMerge,
   });
   // the there is a local --ignore option, fall back to static serving
-  if (localConfigs["--ignore"]) {
+  if (localConfigs['--ignore']) {
     next();
     return;
   }
@@ -84,50 +84,50 @@ module.exports = async (req, res, next) => {
 
   // if there are no parameters and localc configs don't include --force
   //  fall back to static serving
-  if (Object.keys(req.query).length === 0 && localConfigs["--force"] !== true) {
+  if (Object.keys(req.query).length === 0 && localConfigs['--force'] !== true) {
     next();
     return;
   } else if (
-    localConfigs["--force"] === true &&
+    localConfigs['--force'] === true &&
     Object.keys(req.query).length === 0
   ) {
-    req.query["--defaults"] = "";
+    req.query['--defaults'] = '';
   }
   // console.log(3);
 
   const queryKeys = Object.keys(req.query);
   // if the 'ignore' option is set for this request, fall back to static serving
-  if (queryKeys.includes("--ignore")) {
+  if (queryKeys.includes('--ignore')) {
     next();
     return;
   }
   // console.log(4);
 
   // set defaults if requested
-  if (queryKeys.includes("--defaults")) {
+  if (queryKeys.includes('--defaults')) {
     const pathExt = path.extname(req.path);
-    let localDefaultsConfig = "";
+    let localDefaultsConfig = '';
     if (fs.lstatSync(absolutePath).isDirectory()) {
-      localDefaultsConfig = localConfigs["--defaults"].directory;
+      localDefaultsConfig = localConfigs['--defaults'].directory;
     } else {
-      localDefaultsConfig = localConfigs["--defaults"][pathExt] || "";
+      localDefaultsConfig = localConfigs['--defaults'][pathExt] || '';
     }
     if (!localDefaultsConfig) {
       next();
       return;
     }
-    const splitLocalDefaultsConfig = localDefaultsConfig.split("&");
+    const splitLocalDefaultsConfig = localDefaultsConfig.split('&');
     const parsedLocalDefaultsConfigs = splitLocalDefaultsConfig.map((param) => {
-      const key = param.split("=")[0];
-      const value = param.split("=")[1];
+      const key = param.split('=')[0];
+      const value = param.split('=')[1];
       if (value) {
-        let parsedValue = value.replaceAll("+", " ");
+        let parsedValue = value.replaceAll('+', ' ');
         try {
           parsedValue = JSON.parse(value);
         } catch (o_0) {}
         return [key, parsedValue];
       } else {
-        return [key, ""];
+        return [key, ''];
       }
     });
 
@@ -149,13 +149,13 @@ module.exports = async (req, res, next) => {
   const options = configurePlugins(
     unconfiguredOptions,
     localConfigs,
-    req.query
+    req.query,
   );
   const lenses = [];
   const builtinLenses = configurePlugins(
     unconfiguredLenses,
     localConfigs,
-    req.query
+    req.query,
   );
   if (builtinLenses) {
     lenses.push(...builtinLenses);
@@ -172,13 +172,13 @@ module.exports = async (req, res, next) => {
 
   // did the URL contain a resource?
   const resourceProvided =
-    req.query["--resource"] &&
-    req.query["--resource"].resource &&
-    typeof req.query["--resource"].resource === "object";
+    req.query['--resource'] &&
+    req.query['--resource'].resource &&
+    typeof req.query['--resource'].resource === 'object';
   // console.log(resourceProvided);
   // should it be merged with the local resource?
   const mergeWithLocalResource =
-    resourceProvided && req.query["--resource"].merge;
+    resourceProvided && req.query['--resource'].merge;
   // console.log(mergeWithLocalResource);
 
   // build the requested resource
@@ -189,12 +189,12 @@ module.exports = async (req, res, next) => {
       absolutePath,
       localConfigs,
     });
-    resource = deepMerge(localResource, req.query["--resource"].resource, {
+    resource = deepMerge(localResource, req.query['--resource'].resource, {
       arrayMerge: combineMerge,
     });
   } else if (resourceProvided && !mergeWithLocalResource) {
     // console.log("++ not merge");
-    resource = req.query["--resource"].resource;
+    resource = req.query['--resource'].resource;
   } else {
     // console.log("++ local");
     resource = await resourceFromAbsolutePath({
@@ -236,7 +236,7 @@ module.exports = async (req, res, next) => {
     });
 
   if (abort) {
-    console.log(": aborting at " + abort);
+    console.log(': aborting at ' + abort);
     next();
     return;
   }
@@ -250,8 +250,8 @@ module.exports = async (req, res, next) => {
     return;
   }
 
-  const mimeType = mime.getType(finalResource.info.ext);
-  res.set("Content-Type", mimeType);
+  const mimeType = mime.getType(finalResource.info.ext) || 'text/plain';
+  res.set('Content-Type', mimeType);
   res.status(finalResponseData.status);
 
   if (finalResponseData.headers) {

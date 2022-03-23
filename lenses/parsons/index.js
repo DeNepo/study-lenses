@@ -1,6 +1,8 @@
-"use strict";
+'use strict';
 
-const parsonsTraceLens = require("./parsons-trace");
+const parsonsTraceLens = require('./parsons-trace');
+
+const parsonsDiff = require('./parsons-diff');
 
 // const prettier = require('prettier')
 
@@ -9,20 +11,24 @@ const parsonsLense = ({ resource, config }) => {
     return;
   }
 
-  if (config.queryValue === "trace") {
+  if (config.queryValue === 'trace') {
     return parsonsTraceLens({ resource, config });
+  }
+
+  if (config.queryValue === 'diff') {
+    return parsonsDiff({ resource, config });
   }
 
   let code = resource.content;
   let ext = resource.info.ext;
 
-  if (typeof config.queryValue.code === "string") {
+  if (typeof config.queryValue.code === 'string') {
     code = config.queryValue.code;
-    ext = config.queryValue.ext || "";
-  } else if (typeof config.queryValue.content === "string") {
+    ext = config.queryValue.ext || '';
+  } else if (typeof config.queryValue.content === 'string') {
     code = config.queryValue.content;
-    ext = config.queryValue.ext || "";
-  } else if (typeof resource.content !== "string") {
+    ext = config.queryValue.ext || '';
+  } else if (typeof resource.content !== 'string') {
     return;
   }
 
@@ -31,13 +37,13 @@ const parsonsLense = ({ resource, config }) => {
   }
 
   let start = 0;
-  let end = code.split("\n").length;
+  let end = code.split('\n').length;
 
-  if (typeof config.queryValue.start === "number") {
+  if (typeof config.queryValue.start === 'number') {
     start = config.queryValue.start;
   }
 
-  if (typeof config.queryValue.end === "number") {
+  if (typeof config.queryValue.end === 'number') {
     end = config.queryValue.end;
   }
 
@@ -96,9 +102,9 @@ const parsonsLense = ({ resource, config }) => {
   }
 
   code = code
-    .split("\n")
+    .split('\n')
     .slice(start, end + 1)
-    .join("\n");
+    .join('\n');
 
   // // /\/\*([\S\s]*?)\*\//gm
   // const blockComments = code.match(commentRegex.block());
@@ -150,10 +156,10 @@ const parsonsLense = ({ resource, config }) => {
 
   <script>
     const config = JSON.parse(decodeURIComponent("${encodeURIComponent(
-      JSON.stringify(frontendConfig)
+      JSON.stringify(frontendConfig),
     )}"))
     const code = decodeURIComponent("${encodeURIComponent(code)}")
-    const parsonsComponent = new JSParsons(code, "${ext.replace(".", "")}")
+    const parsonsComponent = new JSParsons(code, "${ext.replace('.', '')}")
     document.getElementById('parsons-container')
       .appendChild(parsonsComponent)
   </script>
@@ -168,7 +174,7 @@ const parsonsLense = ({ resource, config }) => {
 
 </html>
 `;
-  resource.info.ext = ".html";
+  resource.info.ext = '.html';
 
   return {
     resource,

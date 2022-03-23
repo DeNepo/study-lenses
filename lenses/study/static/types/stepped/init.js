@@ -1,15 +1,17 @@
 let TypeClass = {};
-if (config.stepsExt === ".js") {
-  const { SteppedJavaScriptFE } = await import("./stepped-javascript.js");
+if (config.stepsExt === '.js') {
+  const { SteppedJavaScriptFE } = await import('./stepped-javascript.js');
   TypeClass = SteppedJavaScriptFE;
-} else if (config.stepsExt === ".html") {
-  const { SteppedHtmlFE } = await import("./stepped-html.js");
+} else if (config.stepsExt === '.html') {
+  const { SteppedHtmlFE } = await import('./stepped-html.js');
   TypeClass = SteppedHtmlFE;
 } else {
-  const { SteppedCodeFE } = await import("./stepped-code.js");
+  const { SteppedCodeFE } = await import('./stepped-code.js');
   TypeClass = SteppedCodeFE;
 }
 
 config.ext = config.stepsExt;
 
-new TypeClass(config, steps);
+try {
+  new TypeClass(config, steps);
+} catch (o_0) {}

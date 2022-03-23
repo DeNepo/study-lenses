@@ -1,7 +1,5 @@
 'use strict';
 
-const path = require('path');
-
 // https://stackoverflow.com/questions/60694121/use-an-es-module-package-in-a-commonjs-project
 let countThings = null;
 
@@ -14,12 +12,8 @@ const corpusLens = async ({ resource, config }) => {
     return;
   }
 
-  const resourcePath = path.normalize(
-    path.join(resource.info.root, resource.info.dir, resource.info.base),
-  );
-
   const renderedAnalysis = await countThings({
-    path: resourcePath,
+    path: resource.path,
     render: true,
     resource,
   });

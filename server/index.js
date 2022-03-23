@@ -1,54 +1,53 @@
-"use strict";
+'use strict';
 
 // start an express server, pretty standard stuff
 
 // dependencies & config ...
-const path = require("path");
-const fs = require("fs");
-const util = require("util");
+const path = require('path');
+const fs = require('fs');
+const util = require('util');
 const readFilePromise = util.promisify(fs.readFile);
 
-process.env["NODE_CONFIG_DIR"] = path.join(__dirname, "..", "config");
-const config = require("config");
+process.env['NODE_CONFIG_DIR'] = path.join(__dirname, '..', 'config');
+const config = require('config');
 
-const express = require("express");
-const morgan = require("morgan");
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const marked = require("marked");
+const express = require('express');
+const morgan = require('morgan');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const marked = require('marked');
 
-const Logger = require("./lib/logger.js");
-const gitbookfiy = require("./gitbookify/index.js");
-const study = require("./study.js");
-const sandbox = require("./sandbox.js");
-const repl = require("./repl.js");
-const draw = require("./draw.js");
-// const Logger = console
+const Logger = require('./lib/logger.js');
+const study = require('./study.js');
+const sandbox = require('./sandbox.js');
+const repl = require('./repl.js');
+const p5 = require('./p5.js');
+const tutor = require('./tutor.js');
 
 // error and exit handling ...
-process.on("exit", function onExit(code) {
+process.on('exit', function onExit(code) {
   Logger.info(`process.exit with code ${code}`);
 });
 
-process.on("SIGINT", function onSIGINT() {
-  Logger.info("SIGINT received, stopping server");
+process.on('SIGINT', function onSIGINT() {
+  Logger.info('SIGINT received, stopping server');
   process.exit(0);
 });
 
-process.on("uncaughtException", function onUncaughtException(e) {
-  Logger.error("uncaughtException", e);
+process.on('uncaughtException', function onUncaughtException(e) {
+  Logger.error('uncaughtException', e);
   process.exit(99);
 });
 
-process.on("unhandledRejection", function onUnhandledPromise(e) {
-  Logger.error("unhandledRejection", e);
+process.on('unhandledRejection', function onUnhandledPromise(e) {
+  Logger.error('unhandledRejection', e);
   process.exit(99);
 });
 
 // initialize express ...
 const app = express();
 
-app.use(morgan("dev"));
+app.use(morgan('dev'));
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -56,35 +55,44 @@ app.use(cookieParser());
 
 app.use(sandbox);
 app.use(repl);
-app.use(draw);
+app.use(p5);
+app.use(tutor);
 
 app.use(
   /[\s\S]*own_static_resources_lenses/,
-  express.static(path.join(__dirname, "..", "lenses"))
+  express.static(path.join(__dirname, '..', 'lenses')),
 );
 app.use(
   /[\s\S]*own_static_resources_local_lenses/,
-  express.static(path.join(process.cwd(), ".study-lenses"))
+  express.static(path.join(process.cwd(), '.study-lenses')),
 );
 app.use(
   /[\s\S]*own_static_resources_options/,
-  express.static(path.join(__dirname, "..", "options"))
+  express.static(path.join(__dirname, '..', 'options')),
 );
 app.use(
   /[\s\S]*shared_static_resources/,
-  express.static(path.join(__dirname, "..", "static"))
+  express.static(path.join(__dirname, '..', 'static')),
 );
 app.use(
   /[\s\S]*shared_components/,
-  express.static(path.join(__dirname, "..", "static", "web-components"))
+  express.static(path.join(__dirname, '..', 'static', 'web-components')),
+);
+app.use(
+  /[\s\S]*sl_web_components/,
+  express.static(path.join(__dirname, '..', 'static', 'web-components')),
+);
+app.use(
+  /[\s\S]*sl_prism/,
+  express.static(path.join(__dirname, '..', 'static', 'prism')),
 );
 
-if (config.locals.static && typeof config.locals.static === "object") {
+if (config.locals.static && typeof config.locals.static === 'object') {
   for (const staticPath in config.locals.static) {
     const actualPath = config.locals.static[staticPath];
     app.use(
       new RegExp(`[\s\S]*${staticPath}`),
-      express.static(path.join(process.cwd(), actualPath))
+      express.static(path.join(process.cwd(), actualPath)),
     );
   }
 }
@@ -93,7 +101,7 @@ app.use(study);
 
 app.use(
   /[\s\S]*study_lenses_public/,
-  express.static(path.join(__dirname, "..", "study_lenses_public"))
+  express.static(path.join(__dirname, '..', 'study_lenses_public')),
 );
 
 // if they requested a directory, send index.html or rendered README
@@ -109,33 +117,20 @@ app.use(async (req, res, next) => {
     return;
   }
 
-  // render like a gitbook if there is a Summary.md
-  const summaryMdPath = path.join(absolutePath, "summary.md");
-  if (fs.existsSync(summaryMdPath)) {
-    const readmeMdPath = path.join(absolutePath, "readme.md");
-    const readmeExists = fs.existsSync(readmeMdPath);
-    const rawMarkdown = await readFilePromise(summaryMdPath, "utf-8");
-    const renderedMarkdown = gitbookfiy(rawMarkdown, readmeExists);
-    res.set("Content-Type", "text/html");
-    res.status(200);
-    res.end(renderedMarkdown);
-    return;
-  }
-
   // send index.html if there is one
-  const indexHtmlPath = path.join(absolutePath, "index.html");
+  const indexHtmlPath = path.join(absolutePath, 'index.html');
   if (fs.existsSync(indexHtmlPath)) {
-    const indexHtml = await readFilePromise(indexHtmlPath, "utf-8");
-    res.set("Content-Type", "text/html");
+    const indexHtml = await readFilePromise(indexHtmlPath, 'utf-8');
+    res.set('Content-Type', 'text/html');
     res.status(200);
     res.send(indexHtml);
     return;
   }
 
   // render readme if there is one
-  const readmeMdPath = path.join(absolutePath, "readme.md");
+  const readmeMdPath = path.join(absolutePath, 'readme.md');
   if (fs.existsSync(readmeMdPath)) {
-    const rawMarkdown = await readFilePromise(readmeMdPath, "utf-8");
+    const rawMarkdown = await readFilePromise(readmeMdPath, 'utf-8');
     const renderedMarkdown = `
       <!DOCTYPE html>
         <html>
@@ -152,7 +147,7 @@ app.use(async (req, res, next) => {
       </html>`;
     // in case it works by side-effect, reset for later
 
-    res.set("Content-Type", "text/html");
+    res.set('Content-Type', 'text/html');
     res.status(200);
     res.end(renderedMarkdown);
     return;

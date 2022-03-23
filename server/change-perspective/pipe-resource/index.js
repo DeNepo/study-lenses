@@ -95,6 +95,8 @@ const pipeResource = async ({
 
       for (const lens of clonedArgs.lenses) {
         lens.use = (args = {}) =>
+          // todo: a deep assign from args to clonedArgs
+          //  easy for modifying ie. a single property of the config
           lens.module(Object.assign({}, clonedArgs, { config: lens }, args));
         clonedArgs.lenses[lens.queryKey] = lens;
       }

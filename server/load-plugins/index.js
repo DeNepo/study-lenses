@@ -1,12 +1,12 @@
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
-const util = require("util");
+const fs = require('fs');
+const path = require('path');
+const util = require('util');
 
 const readFilePromise = util.promisify(fs.readFile);
 
-const isItADirectory = require("../lib/is-it-a-directory.js");
+const isItADirectory = require('../lib/is-it-a-directory.js');
 
 const loadPlugins = async (type, pluginsPath) => {
   if (!fs.existsSync(pluginsPath)) {
@@ -28,10 +28,24 @@ const loadPlugins = async (type, pluginsPath) => {
 
     let module = null;
     try {
-      module = require(path.join(absolutePluginPath, "index.js"));
-      if (typeof module !== "function") {
+      const scriptPath = path.join(absolutePluginPath, 'index.js');
+      const modulePath = path.join(absolutePluginPath, 'index.mjs');
+      const pluginType = fs.existsSync(scriptPath)
+        ? 'script'
+        : fs.existsSync(modulePath)
+        ? 'module'
+        : 'no index file for this plugin';
+
+      module =
+        pluginType === 'script'
+          ? require(scriptPath)
+          : pluginType === 'module'
+          ? (await import(modulePath)).default
+          : pluginType;
+
+      if (typeof module !== 'function') {
         throw new Error(
-          path.basename(absolutePluginPath) + ": module is not a function"
+          path.basename(absolutePluginPath) + ': module is not a function',
         );
       }
     } catch (err) {
@@ -40,21 +54,21 @@ const loadPlugins = async (type, pluginsPath) => {
       continue;
     }
 
-    let userGuide = "";
+    let userGuide = '';
     try {
       userGuide = await readFilePromise(
-        path.join(absolutePluginPath, "user-guide.md"),
-        "utf-8"
+        path.join(absolutePluginPath, 'user-guide.md'),
+        'utf-8',
       );
     } catch (err) {
       // console.error(err)
     }
 
-    let docs = "";
+    let docs = '';
     try {
       docs = await readFilePromise(
-        path.join(absolutePluginPath, "docs.md"),
-        "utf-8"
+        path.join(absolutePluginPath, 'docs.md'),
+        'utf-8',
       );
     } catch (err) {
       // console.error(err)
@@ -64,14 +78,14 @@ const loadPlugins = async (type, pluginsPath) => {
     const nextPlugin = {
       module,
       queryKey: nextPluginDirName,
-      queryValue: "",
+      queryValue: '',
       // these paths could be centrally configured
       ownStatic: `/own_static_resources_${type}/${nextPluginDirName}/static`,
       sharedStatic: `/shared_static_resources`,
       sharedComponents: `/shared_components`,
       userGuide,
       docs,
-      type: type.includes("lens") ? "lens" : "option",
+      type: type.includes('lens') ? 'lens' : 'option',
     };
 
     plugins.push(nextPlugin);

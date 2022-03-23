@@ -1,0 +1,12 @@
+color #ffaba9
+
+repeat 42 [
+  lt 17
+  pu
+  fd 1
+  pd
+  repeat 120 [
+    fd 2
+    rt 3
+  ]
+]

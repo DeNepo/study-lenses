@@ -1,6 +1,46 @@
+import path from 'path';
+
 import { renderObject } from './render-object.mjs';
 
-import { dirLinks } from './dir-links.mjs';
+const dirLinks = ({ dirElement, top = false }) => {
+  const relativePath = path.join(
+    dirElement.toCwd,
+    dirElement.dir,
+    dirElement.base,
+  );
+
+  if (dirElement.type === 'file') {
+    return `<li><a href="${relativePath}?${
+      dirElement.ext === '.js' || dirElement.ext === '.mjs'
+        ? 'corpus'
+        : dirElement.ext === '.md'
+        ? 'render'
+        : 'highlight'
+    }" target="_blank">${dirElement.base}</a></li>\n`;
+  }
+
+  if (dirElement.type === 'directory') {
+    const subIndex = Array.isArray(dirElement.children)
+      ? dirElement.children
+          .map((child) =>
+            dirLinks({
+              dirElement: child,
+            }),
+          )
+          .join('\n')
+      : '';
+
+    return top
+      ? subIndex
+      : `<li><details style="margin-bottom: 0px;"><summary><a href="${relativePath}?corpus" target="_blank">${dirElement.base}</a></summary>\n` +
+          (subIndex
+            ? '\n<ul style="list-style-type: none;">' + subIndex + '</ul>'
+            : '') +
+          '</details></li>';
+  }
+
+  return '';
+};
 
 export const renderSourceAnalysis = (analysis, fileName = '', code = '') => {
   const title = fileName ? `<h1>${analysis.type}: ${fileName}</h1>` : '';
@@ -79,9 +119,21 @@ export const renderVirDirAnalysis = (virDir = {}, analysis = {}) => {
     top: true,
   });
 
+  if (!analysis.javascriptSummary) {
+    return `
+      ${links}
+      <hr />
+      <h1>there are no <code>.js</code> files in /${virDir.name}</h1>
+    `;
+  }
+
   const title = `<h1>/${analysis.name}</h1>`;
 
   const summary = analysis.javascriptSummary;
+
+  if (!summary) {
+    return '';
+  }
 
   const files = summary.lines
     ? renderObject(`Files: ${summary.files.total}`, summary.files)

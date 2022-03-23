@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
-const JavaScriptSSR = require("../javascript");
+const JavaScriptSSR = require('../javascript');
 
-const createSteppercise = require("./lib/create-steppercise");
+const createSteppercise = require('./lib/create-steppercise');
 
 const SteppedJavaScriptSSR = class extends JavaScriptSSR {
-  constructor({ config, resource, stepsExt = ".js" }) {
+  constructor({ config, resource, stepsExt = '.js' }) {
     super({ config, resource });
 
     config.stepsExt = stepsExt;
@@ -14,8 +14,14 @@ const SteppedJavaScriptSSR = class extends JavaScriptSSR {
       createSteppercise(this).then((steps) => {
         this.steps = steps;
         resolve(this);
-      })
+      }),
     );
+  }
+
+  styles() {
+    const superStyles = super.styles();
+    return `${superStyles}
+      <link href="${this.config.sharedStatic}/prism/style.css" rel="stylesheet" />`;
   }
 
   panel() {
@@ -23,18 +29,18 @@ const SteppedJavaScriptSSR = class extends JavaScriptSSR {
     const superPanel = super.panel();
 
     return superPanel.replace(
-      "<br><br>",
+      '<br><br>',
       `<br>
-      ${steps.renderedReadme ? steps.renderedReadme + "<hr>" : "<br>"}
+      ${steps.renderedReadme ? steps.renderedReadme + '<hr>' : '<br>'}
     <div id='steps-container'>${steps.steps
       .map(
         (step) =>
           `<button class='step-button' id='${steps.steps.indexOf(step)}'>${
             step.fileName
-          }</button>`
+          }</button>`,
       )
-      .join("")}</div>
-    <hr>`
+      .join('')}</div>
+    <hr>`,
     );
   }
 
@@ -43,9 +49,11 @@ const SteppedJavaScriptSSR = class extends JavaScriptSSR {
     const superScriptsBody = super.scriptsBody();
 
     return `${superScriptsBody}
+    <script src="${this.config.sharedStatic}/prism/script.js"></script>
+    <script src="${this.config.sharedStatic}/prism/toolbar.js"></script>
     <script>
       const steps = JSON.parse(decodeURI(\`${encodeURI(
-        JSON.stringify(steps)
+        JSON.stringify(steps),
       )}\`));
     </script>`;
   }

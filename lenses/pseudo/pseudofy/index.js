@@ -1,11 +1,11 @@
-const Acorn = require("acorn");
-const Astring = require("astring");
+const Acorn = require('acorn');
+const Astring = require('astring');
 
-const { walk } = require("./estree-walker/index.js");
+const { walk } = require('./estree-walker/index.js');
 
-const pseudoGenerator = require("./pseudo-generator");
+const pseudoGenerator = require('./pseudo-generator');
 
-module.exports = (code = "", asComments = false) => {
+module.exports = (code = '', asComments = false) => {
   let tree = null;
   const comments = [];
   try {
@@ -14,24 +14,31 @@ module.exports = (code = "", asComments = false) => {
     eval(code);
   }
 
-  let pseudoCode = "";
+  let pseudoCode = '';
 
   let isStrict = false;
 
   walk(tree, {
     enter(node, parent, prop, index) {
-      if (node.directive && node.directive === "use strict") {
+      if (node.directive && node.directive === 'use strict') {
         isStrict = true;
         this.remove();
       } else if (
-        node.type === "ExpressionStatement" &&
-        node.expression.type === "CallExpression" &&
+        node.expression &&
+        node.expression.type === 'CallExpression' &&
         node.expression.callee &&
         node.expression.callee.object &&
-        node.expression.callee.object.name === "console"
+        node.expression.callee.object.name === 'console'
       ) {
         this.remove();
-      } else if (node.type === "DebuggerStatement") {
+      } else if (
+        node.type === 'CallExpression' &&
+        node.callee &&
+        node.callee.object &&
+        node.callee.object.name === 'console'
+      ) {
+        this.remove();
+      } else if (node.type === 'DebuggerStatement') {
         this.remove();
       }
     },
@@ -40,7 +47,7 @@ module.exports = (code = "", asComments = false) => {
   const customGenerator = Object.assign(
     {},
     Astring.baseGenerator,
-    pseudoGenerator
+    pseudoGenerator,
   );
 
   pseudoCode = Astring.generate(tree, {
@@ -48,8 +55,8 @@ module.exports = (code = "", asComments = false) => {
   });
 
   const splitPseudoCode = pseudoCode
-    .split("\n")
-    .filter((line) => line.trim() !== "");
+    .split('\n')
+    .filter((line) => line.trim() !== '');
 
   const finalPseudoCodeLines = [];
   for (let i = 0; i < splitPseudoCode.length; i++) {
@@ -58,20 +65,20 @@ module.exports = (code = "", asComments = false) => {
     if (
       line &&
       nextLine &&
-      !line.startsWith(" ") &&
-      !nextLine.startsWith(" ")
+      !line.startsWith(' ') &&
+      !nextLine.startsWith(' ')
     ) {
-      finalPseudoCodeLines.push(line + "\n");
+      finalPseudoCodeLines.push(line + '\n');
     } else {
       finalPseudoCodeLines.push(line);
     }
   }
 
   return (
-    (isStrict && asComments ? "'use strict';\n\n" : "") +
+    (isStrict && asComments ? "'use strict';\n\n" : '') +
     (asComments
-      ? finalPseudoCodeLines.filter((line) => line).map((line) => "// " + line)
+      ? finalPseudoCodeLines.filter((line) => line).map((line) => '// ' + line)
       : finalPseudoCodeLines.filter((line) => line)
-    ).join("\n")
+    ).join('\n')
   );
 };

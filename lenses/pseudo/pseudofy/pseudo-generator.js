@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 // function _classCallCheck(instance, Constructor) {
 //   if (!(instance instanceof Constructor)) {
@@ -11,7 +11,7 @@ function _defineProperties(target, props) {
     var descriptor = props[i];
     descriptor.enumerable = descriptor.enumerable || false;
     descriptor.configurable = true;
-    if ("value" in descriptor) descriptor.writable = true;
+    if ('value' in descriptor) descriptor.writable = true;
     Object.defineProperty(target, descriptor.key, descriptor);
   }
 }
@@ -26,42 +26,42 @@ var stringify = JSON.stringify;
 
 if (!String.prototype.repeat) {
   throw new Error(
-    "String.prototype.repeat is undefined, see https://github.com/davidbonnet/astring#installation"
+    'String.prototype.repeat is undefined, see https://github.com/davidbonnet/astring#installation',
   );
 }
 
 if (!String.prototype.endsWith) {
   throw new Error(
-    "String.prototype.endsWith is undefined, see https://github.com/davidbonnet/astring#installation"
+    'String.prototype.endsWith is undefined, see https://github.com/davidbonnet/astring#installation',
   );
 }
 
 var OPERATOR_PRECEDENCE = {
-  "||": 3,
-  "&&": 4,
-  "|": 5,
-  "??": 5,
-  "^": 6,
-  "&": 7,
-  "==": 8,
-  "!=": 8,
-  "===": 8,
-  "!==": 8,
-  "<": 9,
-  ">": 9,
-  "<=": 9,
-  ">=": 9,
+  '||': 3,
+  '&&': 4,
+  '|': 5,
+  '??': 5,
+  '^': 6,
+  '&': 7,
+  '==': 8,
+  '!=': 8,
+  '===': 8,
+  '!==': 8,
+  '<': 9,
+  '>': 9,
+  '<=': 9,
+  '>=': 9,
   in: 9,
   instanceof: 9,
-  "<<": 10,
-  ">>": 10,
-  ">>>": 10,
-  "+": 11,
-  "-": 11,
-  "*": 12,
-  "%": 12,
-  "/": 12,
-  "**": 13,
+  '<<': 10,
+  '>>': 10,
+  '>>>': 10,
+  '+': 11,
+  '-': 11,
+  '*': 12,
+  '%': 12,
+  '/': 12,
+  '**': 13,
 };
 var NEEDS_PARENTHESES = 17;
 var EXPRESSIONS_PRECEDENCE = {
@@ -95,7 +95,7 @@ var EXPRESSIONS_PRECEDENCE = {
 
 function formatSequence(state, nodes) {
   var generator = state.generator;
-  state.write("(");
+  state.write('(');
 
   if (nodes != null && nodes.length > 0) {
     generator[nodes[0].type](nodes[0], state);
@@ -103,24 +103,24 @@ function formatSequence(state, nodes) {
 
     for (var i = 1; i < length; i++) {
       var param = nodes[i];
-      state.write(", ");
+      state.write(', ');
       generator[param.type](param, state);
     }
   }
 
-  state.write(")");
+  state.write(')');
 }
 
 function expressionNeedsParenthesis(state, node, parentNode, isRightHand) {
   var nodePrecedence = state.expressionsPrecedence[node.type];
 
-  // if (
-  // node.type === "ExpressionStatement" &&
-  // node.expression.type === "Literal"
-  // ) {
-  //   console.log(node);
-  //   return false;
-  // }
+  if (
+    node.type === 'ExpressionStatement' &&
+    node.expression.type === 'Literal'
+  ) {
+    // console.log(node);
+    return false;
+  }
 
   if (nodePrecedence === NEEDS_PARENTHESES) {
     return true;
@@ -133,7 +133,7 @@ function expressionNeedsParenthesis(state, node, parentNode, isRightHand) {
       (!isRightHand &&
         nodePrecedence === 15 &&
         parentNodePrecedence === 14 &&
-        parentNode.operator === "**") ||
+        parentNode.operator === '**') ||
       nodePrecedence < parentNodePrecedence
     );
   }
@@ -142,7 +142,7 @@ function expressionNeedsParenthesis(state, node, parentNode, isRightHand) {
     return false;
   }
 
-  if (node.operator === "**" && parentNode.operator === "**") {
+  if (node.operator === '**' && parentNode.operator === '**') {
     return !isRightHand;
   }
 
@@ -163,16 +163,16 @@ function formatExpression(state, node, parentNode, isRightHand) {
   var generator = state.generator;
 
   if (expressionNeedsParenthesis(state, node, parentNode, isRightHand)) {
-    state.write("(");
+    state.write('(');
     generator[node.type](node, state);
-    state.write(")");
+    state.write(')');
   } else {
     generator[node.type](node, state);
   }
 }
 
 function reindent(state, text, indent, lineEnd) {
-  var lines = text.split("\n");
+  var lines = text.split('\n');
   var end = lines.length - 1;
   state.write(lines[0].trim());
 
@@ -194,12 +194,12 @@ function formatComments(state, comments, indent, lineEnd) {
     var comment = comments[i];
     state.write(indent);
 
-    if (comment.type[0] === "L") {
-      state.write("// " + comment.value.trim() + "\n", comment);
+    if (comment.type[0] === 'L') {
+      state.write('// ' + comment.value.trim() + '\n', comment);
     } else {
-      state.write("/*");
+      state.write('/*');
       reindent(state, comment.value, indent, lineEnd);
-      state.write("*/" + lineEnd);
+      state.write('*/' + lineEnd);
     }
   }
 }
@@ -211,9 +211,9 @@ function hasCallExpression(node) {
     var _currentNode = currentNode,
       type = _currentNode.type;
 
-    if (type[0] === "C" && type[1] === "a") {
+    if (type[0] === 'C' && type[1] === 'a') {
       return true;
-    } else if (type[0] === "M" && type[1] === "e" && type[2] === "m") {
+    } else if (type[0] === 'M' && type[1] === 'e' && type[2] === 'm') {
       currentNode = currentNode.object;
     } else {
       return false;
@@ -231,7 +231,7 @@ function formatVariableDeclaration(state, node) {
     generator.VariableDeclarator(declarations[0], state);
 
     for (var i = 1; i < length; i++) {
-      state.write(", ");
+      state.write(', ');
       generator.VariableDeclarator(declarations[i], state);
     }
   }
@@ -320,7 +320,7 @@ module.exports = {
   ClassBody: BlockStatement,
   StaticBlock: function StaticBlock(node, state) {
     // state.write("static ");
-    state.write("STATIC ");
+    state.write('STATIC ');
     this.BlockStatement(node, state);
   },
   EmptyStatement: function EmptyStatement(node, state) {
@@ -331,11 +331,11 @@ module.exports = {
 
     if (
       precedence === NEEDS_PARENTHESES ||
-      (precedence === 3 && node.expression.left.type[0] === "O")
+      (precedence === 3 && node.expression.left.type[0] === 'O')
     ) {
-      state.write("(");
+      state.write('(');
       this[node.expression.type](node.expression, state);
-      state.write(")");
+      state.write(')');
     } else {
       this[node.expression.type](node.expression, state);
     }
@@ -344,7 +344,7 @@ module.exports = {
   },
   IfStatement: function IfStatement(node, state) {
     // state.write("if (");
-    state.write("IF: ");
+    state.write('IF: ');
     this[node.test.type](node.test, state);
     // state.write(") ");
     state.write(state.lineEnd);
@@ -354,28 +354,28 @@ module.exports = {
     if (node.alternate != null) {
       // state.write(" else ");
       state.write(
-        state.lineEnd + state.indent.repeat(state.indentLevel) + "ELSE: "
+        state.lineEnd + state.indent.repeat(state.indentLevel) + 'ELSE: ',
       );
       this[node.alternate.type](node.alternate, state);
     }
 
-    if (!state.output.endsWith(":END IF")) {
+    if (!state.output.endsWith(':END IF')) {
       state.write(
-        state.lineEnd + state.indent.repeat(state.indentLevel) + ":END IF"
+        state.lineEnd + state.indent.repeat(state.indentLevel) + ':END IF',
       );
     }
   },
   LabeledStatement: function LabeledStatement(node, state) {
     this[node.label.type](node.label, state);
-    state.write(": ");
+    state.write(': ');
     this[node.body.type](node.body, state);
   },
   BreakStatement: function BreakStatement(node, state) {
     // state.write("break");
-    state.write("BREAK");
+    state.write('BREAK');
 
     if (node.label != null) {
-      state.write(" ");
+      state.write(' ');
       this[node.label.type](node.label, state);
     }
 
@@ -383,10 +383,10 @@ module.exports = {
   },
   ContinueStatement: function ContinueStatement(node, state) {
     // state.write("continue");
-    state.write("CONTINUE");
+    state.write('CONTINUE');
 
     if (node.label != null) {
-      state.write(" ");
+      state.write(' ');
       this[node.label.type](node.label, state);
     }
 
@@ -394,7 +394,7 @@ module.exports = {
   },
   WithStatement: function WithStatement(node, state) {
     // state.write("with (");
-    state.write("WITH ");
+    state.write('WITH ');
     this[node.object.type](node.object, state);
     // state.write(") ");
     this[node.body.type](node.body, state);
@@ -407,7 +407,7 @@ module.exports = {
     var caseIndent = indent + state.indent;
     var statementIndent = caseIndent + state.indent;
     // state.write("switch (");
-    state.write("SWITCH: ");
+    state.write('SWITCH: ');
     this[node.discriminant.type](node.discriminant, state);
     // state.write(") {" + lineEnd);
     state.write(lineEnd);
@@ -423,13 +423,13 @@ module.exports = {
 
       if (occurence.test) {
         // state.write(caseIndent + "case ");
-        state.write(caseIndent + "CASE: ");
+        state.write(caseIndent + 'CASE: ');
         this[occurence.test.type](occurence.test, state);
         // state.write(":" + lineEnd);
         state.write(lineEnd);
       } else {
         // state.write(caseIndent + "default:" + lineEnd);
-        state.write(caseIndent + "DEFAULT:" + lineEnd);
+        state.write(caseIndent + 'DEFAULT:' + lineEnd);
       }
 
       var consequent = occurence.consequent;
@@ -453,10 +453,10 @@ module.exports = {
   },
   ReturnStatement: function ReturnStatement(node, state) {
     // state.write("return");
-    state.write("RETURN");
+    state.write('RETURN');
 
     if (node.argument) {
-      state.write(" ");
+      state.write(' ');
       this[node.argument.type](node.argument, state);
     }
 
@@ -464,13 +464,13 @@ module.exports = {
   },
   ThrowStatement: function ThrowStatement(node, state) {
     // state.write("throw ");
-    state.write("THROW ");
+    state.write('THROW ');
     this[node.argument.type](node.argument, state);
     // state.write(";");
   },
   TryStatement: function TryStatement(node, state) {
     // state.write("try ");
-    state.write("TRY: ");
+    state.write('TRY: ');
     this[node.block.type](node.block, state);
 
     if (node.handler) {
@@ -478,10 +478,10 @@ module.exports = {
 
       if (handler.param == null) {
         // state.write(" catch ");
-        state.write("CATCH: ");
+        state.write('CATCH: ');
       } else {
         // state.write(" catch (");
-        state.write("CATCH: ");
+        state.write('CATCH: ');
         this[handler.param.type](handler.param, state);
         // state.write(") ");
       }
@@ -491,51 +491,51 @@ module.exports = {
 
     if (node.finalizer) {
       // state.write(" finally ");
-      state.write("FINALLY: ");
+      state.write('FINALLY: ');
       this[node.finalizer.type](node.finalizer, state);
     }
   },
   WhileStatement: function WhileStatement(node, state) {
     // state.write("while (");
-    state.write("WHILE: ");
+    state.write('WHILE: ');
     this[node.test.type](node.test, state);
     // state.write(") ");
     this[node.body.type](node.body, state);
 
     state.write(
-      state.lineEnd + state.indent.repeat(state.indentLevel) + ":END WHILE"
+      state.lineEnd + state.indent.repeat(state.indentLevel) + ':END WHILE',
     );
   },
   DoWhileStatement: function DoWhileStatement(node, state) {
     // state.write("do ");
-    state.write("DO: ");
+    state.write('DO: ');
     this[node.body.type](node.body, state);
     // state.write(" while (");
-    state.write("WHILE: ");
+    state.write('WHILE: ');
     this[node.test.type](node.test, state);
     // state.write(");");
   },
   ForStatement: function ForStatement(node, state) {
     // state.write("for (");
-    state.write("FOR: ");
+    state.write('FOR: ');
 
     if (node.init != null) {
       var init = node.init;
 
-      if (init.type[0] === "V") {
+      if (init.type[0] === 'V') {
         formatVariableDeclaration(state, init);
       } else {
         this[init.type](init, state);
       }
     }
 
-    state.write("; ");
+    state.write('; ');
 
     if (node.test) {
       this[node.test.type](node.test, state);
     }
 
-    state.write("; ");
+    state.write('; ');
 
     if (node.update) {
       this[node.update.type](node.update, state);
@@ -545,39 +545,42 @@ module.exports = {
     this[node.body.type](node.body, state);
 
     state.write(
-      state.lineEnd + state.indent.repeat(state.indentLevel) + ":END FOR"
+      state.lineEnd + state.indent.repeat(state.indentLevel) + ':END FOR',
     );
   },
   ForInStatement: (ForInStatement = function ForInStatement(node, state) {
     // state.write("for ".concat(node["await"] ? "await " : "", "("));
-    state.write("FOR: ".concat(node["await"] ? "AWAIT " : "", ""));
+    state.write('FOR: '.concat(node['await'] ? 'AWAIT ' : '', ''));
     var left = node.left;
 
-    if (left.type[0] === "V") {
+    if (left.type[0] === 'V') {
       formatVariableDeclaration(state, left);
     } else {
       this[left.type](left, state);
     }
 
     // state.write(node.type[3] === "I" ? " in " : " of ");
-    state.write(node.type[3] === "I" ? " IN " : " OF ");
+    state.write(node.type[3] === 'I' ? ' IN ' : ' OF ');
     this[node.right.type](node.right, state);
     // state.write(") ");
     this[node.body.type](node.body, state);
 
-    const forType = node.type[3] === "I" ? "FOR-IN" : "FOR-OF";
+    const forType = node.type[3] === 'I' ? 'FOR-IN' : 'FOR-OF';
     state.write(
-      state.lineEnd + state.indent.repeat(state.indentLevel) + ":END " + forType
+      state.lineEnd +
+        state.indent.repeat(state.indentLevel) +
+        ':END ' +
+        forType,
     );
   }),
   ForOfStatement: ForInStatement,
   DebuggerStatement: function DebuggerStatement(node, state) {
     // state.write("debugger;", node);
-    state.write("DEBUGGER", node);
+    state.write('DEBUGGER', node);
   },
   FunctionDeclaration: (FunctionDeclaration = function FunctionDeclaration(
     node,
-    state
+    state,
   ) {
     // state.write(
     //   (node.async ? "async " : "") +
@@ -586,21 +589,21 @@ module.exports = {
     //   node
     // );
     state.write(
-      (node.async ? "ASYNC " : "") +
-        (node.generator ? "FUNC* " : "FUNC ") +
-        (node.id ? node.id.name : ""),
-      node
+      (node.async ? 'ASYNC ' : '') +
+        (node.generator ? 'FUNC* ' : 'FUNC ') +
+        (node.id ? node.id.name : ''),
+      node,
     );
     formatSequence(state, node.params);
-    state.write(" ");
+    state.write(' ');
     this[node.body.type](node.body, state);
 
-    state.write(":END FUNC");
+    state.write(':END FUNC');
   }),
   FunctionExpression: FunctionDeclaration,
   VariableDeclaration: function VariableDeclaration(node, state) {
     const initializedDeclarations = node.declarations.filter(
-      (declaration) => declaration.init
+      (declaration) => declaration.init,
     );
     if (initializedDeclarations.length === 0) {
       return;
@@ -614,41 +617,41 @@ module.exports = {
 
     if (node.init != null) {
       // state.write(" = ");
-      state.write(" <- ");
+      state.write(' <- ');
       this[node.init.type](node.init, state);
     }
   },
   ClassDeclaration: function ClassDeclaration(node, state) {
     // state.write("class " + (node.id ? "".concat(node.id.name, " ") : ""), node);
-    state.write("CLASS " + (node.id ? "".concat(node.id.name, " ") : ""), node);
+    state.write('CLASS ' + (node.id ? ''.concat(node.id.name, ' ') : ''), node);
 
     if (node.superClass) {
       // state.write("extends ");
-      state.write("EXT:ENDS ");
+      state.write('EXT:ENDS ');
       var superClass = node.superClass;
       var type = superClass.type;
       var precedence = state.expressionsPrecedence[type];
 
       if (
-        (type[0] !== "C" || type[1] !== "l" || type[5] !== "E") &&
+        (type[0] !== 'C' || type[1] !== 'l' || type[5] !== 'E') &&
         (precedence === NEEDS_PARENTHESES ||
           precedence < state.expressionsPrecedence.ClassExpression)
       ) {
-        state.write("(");
+        state.write('(');
         this[node.superClass.type](superClass, state);
-        state.write(")");
+        state.write(')');
       } else {
         this[superClass.type](superClass, state);
       }
 
-      state.write(" ");
+      state.write(' ');
     }
 
     this.ClassBody(node.body, state);
   },
   ImportDeclaration: function ImportDeclaration(node, state) {
     // state.write("import ");
-    state.write("IMPORT ");
+    state.write('IMPORT ');
     var specifiers = node.specifiers;
     var length = specifiers.length;
     var i = 0;
@@ -656,17 +659,17 @@ module.exports = {
     if (length > 0) {
       for (; i < length; ) {
         if (i > 0) {
-          state.write(", ");
+          state.write(', ');
         }
 
         var specifier = specifiers[i];
         var type = specifier.type[6];
 
-        if (type === "D") {
+        if (type === 'D') {
           state.write(specifier.local.name, specifier);
           i++;
-        } else if (type === "N") {
-          state.write("* as " + specifier.local.name, specifier);
+        } else if (type === 'N') {
+          state.write('* as ' + specifier.local.name, specifier);
           i++;
         } else {
           break;
@@ -674,7 +677,7 @@ module.exports = {
       }
 
       if (i < length) {
-        state.write("{");
+        state.write('{');
 
         for (;;) {
           var _specifier = specifiers[i];
@@ -683,21 +686,21 @@ module.exports = {
 
           if (name !== _specifier.local.name) {
             // state.write(" as " + _specifier.local.name);
-            state.write(" AS " + _specifier.local.name);
+            state.write(' AS ' + _specifier.local.name);
           }
 
           if (++i < length) {
-            state.write(", ");
+            state.write(', ');
           } else {
             break;
           }
         }
 
-        state.write("}");
+        state.write('}');
       }
 
       // state.write(" from ");
-      state.write(" FROM ");
+      state.write(' FROM ');
     }
 
     this.Literal(node.source, state);
@@ -705,30 +708,30 @@ module.exports = {
   },
   ImportExpression: function ImportExpression(node, state) {
     // state.write("import(");
-    state.write("IMPORT(");
+    state.write('IMPORT(');
     this[node.source.type](node.source, state);
-    state.write(")");
+    state.write(')');
   },
   ExportDefaultDeclaration: function ExportDefaultDeclaration(node, state) {
     // state.write("export default ");
-    state.write("EXPORT DEFAULT ");
+    state.write('EXPORT DEFAULT ');
     this[node.declaration.type](node.declaration, state);
 
     if (
       state.expressionsPrecedence[node.declaration.type] != null &&
-      node.declaration.type[0] !== "F"
+      node.declaration.type[0] !== 'F'
     ) {
       // state.write(";");
     }
   },
   ExportNamedDeclaration: function ExportNamedDeclaration(node, state) {
     // state.write("export ");
-    state.write("EXPORT ");
+    state.write('EXPORT ');
 
     if (node.declaration) {
       this[node.declaration.type](node.declaration, state);
     } else {
-      state.write("{");
+      state.write('{');
       var specifiers = node.specifiers,
         length = specifiers.length;
 
@@ -740,22 +743,22 @@ module.exports = {
 
           if (name !== specifier.exported.name) {
             // state.write(" as " + specifier.exported.name);
-            state.write(" AS " + specifier.exported.name);
+            state.write(' AS ' + specifier.exported.name);
           }
 
           if (++i < length) {
-            state.write(", ");
+            state.write(', ');
           } else {
             break;
           }
         }
       }
 
-      state.write("}");
+      state.write('}');
 
       if (node.source) {
         // state.write(" from ");
-        state.write(" FROM ");
+        state.write(' FROM ');
         this.Literal(node.source, state);
       }
 
@@ -765,123 +768,123 @@ module.exports = {
   ExportAllDeclaration: function ExportAllDeclaration(node, state) {
     if (node.exported != null) {
       // state.write("export * as " + node.exported.name + " from ");
-      state.write("EXPORT * AS " + node.exported.name + " FROM ");
+      state.write('EXPORT * AS ' + node.exported.name + ' FROM ');
     } else {
       // state.write("export * from ");
-      state.write("EXPORT * FROM ");
+      state.write('EXPORT * FROM ');
     }
 
     this.Literal(node.source, state);
     // state.write(";");
   },
   MethodDefinition: function MethodDefinition(node, state) {
-    if (node["static"]) {
+    if (node['static']) {
       // state.write("static ");
-      state.write("STATIC ");
+      state.write('STATIC ');
     }
 
     var kind = node.kind[0];
 
-    if (kind === "g" || kind === "s") {
-      state.write(node.kind + " ");
+    if (kind === 'g' || kind === 's') {
+      state.write(node.kind + ' ');
     }
 
     if (node.value.async) {
       // state.write("async ");
-      state.write("ASYNC ");
+      state.write('ASYNC ');
     }
 
     if (node.value.generator) {
-      state.write("*");
+      state.write('*');
     }
 
     if (node.computed) {
-      state.write("[");
+      state.write('[');
       this[node.key.type](node.key, state);
-      state.write("]");
+      state.write(']');
     } else {
       this[node.key.type](node.key, state);
     }
 
     formatSequence(state, node.value.params);
-    state.write(" ");
+    state.write(' ');
     this[node.value.body.type](node.value.body, state);
   },
   ClassExpression: function ClassExpression(node, state) {
     this.ClassDeclaration(node, state);
   },
   ArrowFunctionExpression: function ArrowFunctionExpression(node, state) {
-    if (node.body.type === "BlockStatement") {
+    if (node.body.type === 'BlockStatement') {
       this.FunctionExpression(node, state);
       return;
     }
 
     // state.write(node.async ? "async " : "", node);
-    state.write(node.async ? "ASYNC " : "", node);
+    state.write(node.async ? 'ASYNC ' : '', node);
     var params = node.params;
 
     if (params != null) {
-      if (params.length === 1 && params[0].type[0] === "I") {
+      if (params.length === 1 && params[0].type[0] === 'I') {
         state.write(params[0].name, params[0]);
       } else {
         formatSequence(state, node.params);
       }
     }
 
-    state.write(" => ");
+    state.write(' => ');
 
-    if (node.body.type[0] === "O") {
-      state.write("(");
+    if (node.body.type[0] === 'O') {
+      state.write('(');
       this.ObjectExpression(node.body, state);
-      state.write(")");
+      state.write(')');
     } else {
       this[node.body.type](node.body, state);
     }
   },
   ThisExpression: function ThisExpression(node, state) {
-    state.write("this", node);
+    state.write('this', node);
   },
   Super: function Super(node, state) {
     // state.write("super", node);
-    state.write("SUPER", node);
+    state.write('SUPER', node);
   },
   RestElement: (RestElement = function RestElement(node, state) {
-    state.write("...");
+    state.write('...');
     this[node.argument.type](node.argument, state);
   }),
   SpreadElement: RestElement,
   YieldExpression: function YieldExpression(node, state) {
     // state.write(node.delegate ? "yield*" : "yield");
-    state.write(node.delegate ? "YIELD*" : "YIELD");
+    state.write(node.delegate ? 'YIELD*' : 'YIELD');
 
     if (node.argument) {
-      state.write(" ");
+      state.write(' ');
       this[node.argument.type](node.argument, state);
     }
   },
   AwaitExpression: function AwaitExpression(node, state) {
     // state.write("await ", node);
-    state.write("AWAIT ", node);
+    state.write('AWAIT ', node);
     formatExpression(state, node.argument, node);
   },
   TemplateLiteral: function TemplateLiteral(node, state) {
     var quasis = node.quasis,
       expressions = node.expressions;
-    state.write("`");
+    state.write('`');
     var length = expressions.length;
 
     for (var i = 0; i < length; i++) {
       var expression = expressions[i];
       var _quasi = quasis[i];
       state.write(_quasi.value.raw, _quasi);
-      state.write("${");
+      state.write('${');
       this[expression.type](expression, state);
-      state.write("}");
+      state.write('}');
     }
 
     var quasi = quasis[quasis.length - 1];
     state.write(quasi.value.raw, quasi);
-    state.write("`");
+    state.write('`');
   },
   TemplateElement: function TemplateElement(node, state) {
     state.write(node.value.raw, node);
@@ -891,7 +894,7 @@ module.exports = {
     this[node.quasi.type](node.quasi, state);
   },
   ArrayExpression: (ArrayExpression = function ArrayExpression(node, state) {
-    state.write("[");
+    state.write('[');
 
     if (node.elements.length > 0) {
       var elements = node.elements,
@@ -905,10 +908,10 @@ module.exports = {
         }
 
         if (++i < length) {
-          state.write(", ");
+          state.write(', ');
         } else {
           if (element == null) {
-            state.write(", ");
+            state.write(', ');
           }
 
           break;
@@ -916,7 +919,7 @@ module.exports = {
       }
     }
 
-    state.write("]");
+    state.write(']');
   }),
   ArrayPattern: ArrayExpression,
   ObjectExpression: function ObjectExpression(node, state) {
@@ -924,7 +927,7 @@ module.exports = {
     var lineEnd = state.lineEnd,
       writeComments = state.writeComments;
     var propertyIndent = indent + state.indent;
-    state.write("{");
+    state.write('{');
 
     if (node.properties.length > 0) {
       state.write(lineEnd);
@@ -933,7 +936,7 @@ module.exports = {
         formatComments(state, node.comments, propertyIndent, lineEnd);
       }
 
-      var comma = "," + lineEnd;
+      var comma = ',' + lineEnd;
       var properties = node.properties,
         length = properties.length;
 
@@ -960,7 +963,7 @@ module.exports = {
         formatComments(state, node.trailingComments, propertyIndent, lineEnd);
       }
 
-      state.write(indent + "}");
+      state.write(indent + '}');
     } else if (writeComments) {
       if (node.comments != null) {
         state.write(lineEnd);
@@ -970,52 +973,52 @@ module.exports = {
           formatComments(state, node.trailingComments, propertyIndent, lineEnd);
         }
 
-        state.write(indent + "}");
+        state.write(indent + '}');
       } else if (node.trailingComments != null) {
         state.write(lineEnd);
         formatComments(state, node.trailingComments, propertyIndent, lineEnd);
-        state.write(indent + "}");
+        state.write(indent + '}');
       } else {
-        state.write("}");
+        state.write('}');
       }
     } else {
-      state.write("}");
+      state.write('}');
     }
 
     state.indentLevel--;
   },
   Property: function Property(node, state) {
-    if (node.method || node.kind[0] !== "i") {
+    if (node.method || node.kind[0] !== 'i') {
       this.MethodDefinition(node, state);
     } else {
       if (!node.shorthand) {
         if (node.computed) {
-          state.write("[");
+          state.write('[');
           this[node.key.type](node.key, state);
-          state.write("]");
+          state.write(']');
         } else {
           this[node.key.type](node.key, state);
         }
 
-        state.write(": ");
+        state.write(': ');
       }
 
       this[node.value.type](node.value, state);
     }
   },
   PropertyDefinition: function PropertyDefinition(node, state) {
-    if (node["static"]) {
+    if (node['static']) {
       // state.write("static ");
-      state.write("STATIC ");
+      state.write('STATIC ');
     }
 
     this[node.key.type](node.key, state);
     // state.write(" = ");
-    state.write(" <- ");
+    state.write(' <- ');
     this[node.value.type](node.value, state);
   },
   ObjectPattern: function ObjectPattern(node, state) {
-    state.write("{");
+    state.write('{');
 
     if (node.properties.length > 0) {
       var properties = node.properties,
@@ -1025,14 +1028,14 @@ module.exports = {
         this[properties[i].type](properties[i], state);
 
         if (++i < length) {
-          state.write(", ");
+          state.write(', ');
         } else {
           break;
         }
       }
     }
 
-    state.write("}");
+    state.write('}');
   },
   SequenceExpression: function SequenceExpression(node, state) {
     formatSequence(state, node.expressions);
@@ -1048,19 +1051,19 @@ module.exports = {
       if (
         !needsParentheses &&
         (operator.length > 1 ||
-          (type[0] === "U" &&
-            (type[1] === "n" || type[1] === "p") &&
+          (type[0] === 'U' &&
+            (type[1] === 'n' || type[1] === 'p') &&
             argument.prefix &&
             argument.operator[0] === operator &&
-            (operator === "+" || operator === "-")))
+            (operator === '+' || operator === '-')))
       ) {
-        state.write(" ");
+        state.write(' ');
       }
 
       if (needsParentheses) {
-        state.write(operator.length > 1 ? " (" : "(");
+        state.write(operator.length > 1 ? ' (' : '(');
         this[type](argument, state);
-        state.write(")");
+        state.write(')');
       } else {
         this[type](argument, state);
       }
@@ -1081,28 +1084,28 @@ module.exports = {
   AssignmentExpression: function AssignmentExpression(node, state) {
     this[node.left.type](node.left, state);
     // state.write(" " + node.operator + " ");
-    state.write(" <- ");
+    state.write(' <- ');
     this[node.right.type](node.right, state);
   },
   AssignmentPattern: function AssignmentPattern(node, state) {
     this[node.left.type](node.left, state);
     // state.write(" = ");
-    state.write(" <- ");
+    state.write(' <- ');
     this[node.right.type](node.right, state);
   },
   BinaryExpression: (BinaryExpression = function BinaryExpression(node, state) {
-    var isIn = node.operator === "in";
+    var isIn = node.operator === 'in';
 
     if (isIn) {
-      state.write("(");
+      state.write('(');
     }
 
     formatExpression(state, node.left, node, false);
-    state.write(" " + node.operator + " ");
+    state.write(' ' + node.operator + ' ');
     formatExpression(state, node.right, node, true);
 
     if (isIn) {
-      state.write(")");
+      state.write(')');
     }
   }),
   LogicalExpression: BinaryExpression,
@@ -1114,21 +1117,21 @@ module.exports = {
       precedence === NEEDS_PARENTHESES ||
       precedence <= state.expressionsPrecedence.ConditionalExpression
     ) {
-      state.write("(");
+      state.write('(');
       this[test.type](test, state);
-      state.write(")");
+      state.write(')');
     } else {
       this[test.type](test, state);
     }
 
-    state.write(" ? ");
+    state.write(' ? ');
     this[node.consequent.type](node.consequent, state);
-    state.write(" : ");
+    state.write(' : ');
     this[node.alternate.type](node.alternate, state);
   },
   NewExpression: function NewExpression(node, state) {
     // state.write("new ");
-    state.write("NEW ");
+    state.write('NEW ');
     var precedence = state.expressionsPrecedence[node.callee.type];
 
     if (
@@ -1136,14 +1139,14 @@ module.exports = {
       precedence < state.expressionsPrecedence.CallExpression ||
       hasCallExpression(node.callee)
     ) {
-      state.write("(");
+      state.write('(');
       this[node.callee.type](node.callee, state);
-      state.write(")");
+      state.write(')');
     } else {
       this[node.callee.type](node.callee, state);
     }
 
-    formatSequence(state, node["arguments"]);
+    formatSequence(state, node['arguments']);
   },
   CallExpression: function CallExpression(node, state) {
     var precedence = state.expressionsPrecedence[node.callee.type];
@@ -1152,18 +1155,18 @@ module.exports = {
       precedence === NEEDS_PARENTHESES ||
       precedence < state.expressionsPrecedence.CallExpression
     ) {
-      state.write("(");
+      state.write('(');
       this[node.callee.type](node.callee, state);
-      state.write(")");
+      state.write(')');
     } else {
       this[node.callee.type](node.callee, state);
     }
 
     if (node.optional) {
-      state.write("?.");
+      state.write('?.');
     }
 
-    formatSequence(state, node["arguments"]);
+    formatSequence(state, node['arguments']);
   },
   ChainExpression: function ChainExpression(node, state) {
     this[node.expression.type](node.expression, state);
@@ -1184,30 +1187,30 @@ module.exports = {
 
     if (node.computed) {
       if (node.optional) {
-        state.write("?.");
+        state.write('?.');
       }
 
-      state.write("[");
+      state.write('[');
       this[node.property.type](node.property, state);
-      state.write("]");
+      state.write(']');
     } else {
       if (node.optional) {
-        state.write("?.");
+        state.write('?.');
       } else {
-        state.write(".");
+        state.write('.');
       }
 
       this[node.property.type](node.property, state);
     }
   },
   MetaProperty: function MetaProperty(node, state) {
-    state.write(node.meta.name + "." + node.property.name, node);
+    state.write(node.meta.name + '.' + node.property.name, node);
   },
   Identifier: function Identifier(node, state) {
     state.write(node.name, node);
   },
   PrivateIdentifier: function PrivateIdentifier(node, state) {
-    state.write("#".concat(node.name), node);
+    state.write('#'.concat(node.name), node);
   },
   Literal: function Literal(node, state) {
     if (node.raw != null) {
@@ -1215,14 +1218,14 @@ module.exports = {
     } else if (node.regex != null) {
       this.RegExpLiteral(node, state);
     } else if (node.bigint != null) {
-      state.write(node.bigint + "n", node);
+      state.write(node.bigint + 'n', node);
     } else {
       state.write(stringify(node.value), node);
     }
   },
   RegExpLiteral: function RegExpLiteral(node, state) {
     var regex = node.regex;
-    state.write("/".concat(regex.pattern, "/").concat(regex.flags), node);
+    state.write('/'.concat(regex.pattern, '/').concat(regex.flags), node);
   },
 };
 

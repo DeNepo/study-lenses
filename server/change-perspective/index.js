@@ -1,9 +1,7 @@
-"use strict";
+'use strict';
 
-const util = require("util");
-
-const evaluateOptions = require("./evaluate-options");
-const pipeResource = require("./pipe-resource");
+const evaluateOptions = require('./evaluate-options');
+const pipeResource = require('./pipe-resource');
 
 const changePerspective = async ({
   requestData,

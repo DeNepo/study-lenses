@@ -1,0 +1,11 @@
+{
+  "outputType": "dot",
+  "doNotFollow": {
+    "path": ["node_modules"]
+  },
+  "reporterOptions": {
+    "dot": {
+      "collapsePattern": "^((node_modules)/[^/]+)"
+    }
+  }
+}

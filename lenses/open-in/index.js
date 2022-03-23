@@ -1,25 +1,25 @@
-"use strict";
+'use strict';
 
-const generateUrl = require("./generate-url.js");
+const generateUrl = require('./generate-url.js');
 
 const openInLens = async ({ resource, config }) => {
   if (!resource.info && !resource.content) {
     return;
   }
 
-  if (resource.info.ext !== ".js") {
+  if (resource.info.ext !== '.js') {
     return;
   }
 
-  if (typeof resource.content !== "string") {
+  if (typeof resource.content !== 'string') {
     return;
   }
 
-  if (!(config.queryValue in generateUrl)) {
+  if (!(config.queryValue.toLowerCase() in generateUrl)) {
     return;
   }
 
-  const URL = generateUrl[config.queryValue](resource.content);
+  const URL = generateUrl[config.queryValue.toLowerCase()](resource.content);
 
   resource.content = `
 <!DOCTYPE html>
@@ -75,7 +75,7 @@ const openInLens = async ({ resource, config }) => {
     </script>
   </body>
 </html>`;
-  resource.info.ext = ".html";
+  resource.info.ext = '.html';
 
   return {
     resource,

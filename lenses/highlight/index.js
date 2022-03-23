@@ -22,11 +22,11 @@ const highlightLense = async ({ resource, config }) => {
     <script src='${config.ownStatic}/study-with.js'></script>
 
   </head>
-  <body>
+  <body style="font-size: 0.9em;">
 
     ${
       config.locals.annotate === false
-        ? ""
+        ? ''
         : `<link rel="stylesheet" href="${config.ownStatic}/sketch-style.css">
         <button id="clear">Clear canvas</button>
         <button id="undo">Undo</button>
@@ -44,65 +44,65 @@ const highlightLense = async ({ resource, config }) => {
     }
 
     ${
-      (config.locals.run || config.locals.eval) && resource.info.ext === ".js"
+      (config.locals.run || config.locals.eval) && resource.info.ext === '.js'
         ? `
     <button style=";" onclick="studyWithEval(false)(decodeURIComponent(code))">run</button>`
-        : ""
+        : ''
     }
     ${
-      (config.locals.debug || config.locals.eval) && resource.info.ext === ".js"
+      (config.locals.debug || config.locals.eval) && resource.info.ext === '.js'
         ? `
     <button style=";" onclick="studyWithEval(true)(decodeURIComponent(code))">debug</button>`
-        : ""
+        : ''
     }
     ${
-      config.locals.flowchart && resource.info.ext === ".js"
+      config.locals.flowchart && resource.info.ext === '.js'
         ? `
     <button style=";" onclick="openWith(\`${encodeURIComponent(
-      resource.content
+      resource.content,
     )}\`, 'flowchart')">flowchart</button>`
-        : ""
+        : ''
     }
     ${
-      config.locals.diff && resource.info.ext === ".js"
+      config.locals.diff && resource.info.ext === '.js'
         ? `
     <button style=";" onclick="openWith(\`${encodeURIComponent(
-      resource.content
+      resource.content,
     )}\`, 'diff')">diff</button>`
-        : ""
+        : ''
     }
 
     ${
-      config.locals.variables && resource.info.ext === ".js"
+      config.locals.variables && resource.info.ext === '.js'
         ? `<button style=";" onclick="openWith( \`${encodeURIComponent(
-            resource.content
+            resource.content,
           )}\`, 'variables')">variables</button>`
-        : ""
+        : ''
     }
 
     ${
-      config.locals.trace && resource.info.ext === ".js"
+      config.locals.trace && resource.info.ext === '.js'
         ? `<button style=";"><trace-it></trace-it></button>`
-        : ""
+        : ''
     }
 
     ${
-      config.locals.ask && resource.info.ext === ".js"
+      config.locals.ask && resource.info.ext === '.js'
         ? `<button><ask-me style=''></ask-me></button>`
-        : ""
+        : ''
     }
 
 
     ${
       config.locals.table
         ? `<button><trace-table-button></trace-table-button></button>`
-        : ""
+        : ''
     }
 
-    ${config.locals.openIn ? `<button><open-in></open-in></button>` : ""}
+    ${config.locals.openIn ? `<button><open-in></open-in></button>` : ''}
 
     ${`<button style="display: ${
-      config.locals.random === false ? "none" : "inline-block"
+      config.locals.random === false ? 'none' : 'inline-block'
     }" id="random-line">random line</button>`}
 
     <div id="container">
@@ -110,28 +110,31 @@ const highlightLense = async ({ resource, config }) => {
         config.locals.code !== false
           ? `<div id="code-container" class="stacked">
           <pre><code id='code-goes-here' class="line-numbers rainbow-braces language-${
-            typeof resource.content === "object"
-              ? "json"
+            typeof resource.content === 'object'
+              ? 'json'
               : (resource.info.base &&
-                  resource.info.base.includes(".pseudo")) ||
-                resource.info.ext.includes(".pseudo")
-              ? "pseudo"
-              : resource.info.ext.split(".").join("")
+                  resource.info.base.includes('.pseudo')) ||
+                resource.info.ext.includes('.pseudo')
+              ? 'pseudo'
+              : (resource.info.base && resource.info.base.includes('.lgo')) ||
+                resource.info.ext.includes('.lgo')
+              ? 'js'
+              : resource.info.ext.split('.').join('')
           }"></code></pre>
         </div>`
-          : ""
+          : ''
       }
       <div id="canvas-container" class="stacked"><canvas id="cfd"></canvas></div>
     </div>
 
     <script>
       var code = decodeURIComponent("${encodeURIComponent(
-        typeof resource.content === "object"
-          ? JSON.stringify(resource.content, null, "  ")
-          : resource.content
+        typeof resource.content === 'object'
+          ? JSON.stringify(resource.content, null, '  ')
+          : resource.content,
       )}");
       var config = JSON.parse(decodeURIComponent("${encodeURIComponent(
-        JSON.stringify(config)
+        JSON.stringify(config),
       )}"));
 
 
@@ -161,7 +164,7 @@ const highlightLense = async ({ resource, config }) => {
 
     ${
       config.locals.annotate === false
-        ? ""
+        ? ''
         : `<script src="${config.ownStatic}/cfd.js"></script>
     <script src="${config.ownStatic}/sketch-script.js"></script>`
     }
@@ -181,7 +184,7 @@ const highlightLense = async ({ resource, config }) => {
 
   </body>
 </html>`;
-  resource.info.ext = ".html";
+  resource.info.ext = '.html';
 
   return {
     resource,

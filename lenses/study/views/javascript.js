@@ -1,14 +1,14 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-const CodeSSR = require("./code.js");
+const CodeSSR = require('./code.js');
 
 const hasSpec = (info) => {
   if (!info.root || !info.dir || !info.base) {
     return false;
   }
   const absolutePath = path.join(info.root, info.dir, info.base);
-  const absoluteSpecPath = absolutePath.split(".js").join(".spec.js");
+  const absoluteSpecPath = absolutePath.split('.js').join('.spec.js');
   return fs.existsSync(absoluteSpecPath);
 };
 
@@ -62,97 +62,97 @@ class JavaScriptSSR extends CodeSSR {
     -- static --
     <form>
       <input id='variables-input' type='checkbox' ${
-        this.config.locals.variables ? "checked" : ""
+        this.config.locals.variables ? 'checked' : ''
       } /> <label for='variables-input'>variables</label>
     </form>
     <form>
       <input id='flowchart-input' type='checkbox' ${
-        this.config.locals.flowchart ? "checked" : ""
+        this.config.locals.flowchart ? 'checked' : ''
       } /> <label for='flowchart-input'>flowchart</label>
     </form>
     <form>
       <input id='blanks-input' type='checkbox' ${
-        this.config.locals.blanks ? "checked" : ""
+        this.config.locals.blanks ? 'checked' : ''
       } /> <label for='blanks-input'>blanks</label>
     </form>
     <form>
       <input id='writeme-input' type='checkbox' ${
-        this.config.locals.writeme ? "checked" : ""
+        this.config.locals.writeme ? 'checked' : ''
       } /> <label for='writeme-input'>writeme</label>
     </form>
     <form>
       <input id='ask-input' type='checkbox' ${
-        this.config.locals.ask ? "checked" : ""
+        this.config.locals.ask ? 'checked' : ''
       } /> <label for='ask-input'>ask me</label>
     </form>
     <form>
       <input id='pseudo-input' type='checkbox' ${
-        this.config.locals.pseudo ? "checked" : ""
+        this.config.locals.pseudo ? 'checked' : ''
       } /> <label for='pseudo-input'>pseudo code</label>
     </form>
     ${superConfigOptions}
     <form>
       <input id='eslint-input' type='checkbox' ${
-        this.config.locals.eslint ? "checked" : ""
+        this.config.locals.eslint ? 'checked' : ''
       } /> <label for='eslint-input'>eslint</label>
     </form>
     <form>
       <input id='ast-input' type='checkbox' ${
-        this.config.locals.ast ? "checked" : ""
+        this.config.locals.ast ? 'checked' : ''
       } /> <label for='ast-input'>syntax tree</label>
     </form>
     <br>
     -- dynamic --
     <form>
       <input id='run-input' type='checkbox' ${
-        this.config.locals.run || this.config.locals.eval ? "checked" : ""
+        this.config.locals.run || this.config.locals.eval ? 'checked' : ''
       } /> <label for='run-input'>run</label>
     </form>
     <form>
       <input id='debug-input' type='checkbox' ${
-        this.config.locals.debug || this.config.locals.eval ? "checked" : ""
+        this.config.locals.debug || this.config.locals.eval ? 'checked' : ''
       } /> <label for='debug-input'>debug</label>
     </form>
     <form>
       <input id='table-input' type='checkbox' ${
-        this.config.locals.table ? "checked" : ""
+        this.config.locals.table ? 'checked' : ''
       } /> <label for='table-input'>trace table</label>
     </form>
     <form>
       <input id='trace-input' type='checkbox' ${
-        this.config.locals.trace ? "checked" : ""
+        this.config.locals.trace ? 'checked' : ''
       } /> <label for='trace-input'>trace button</label>
     </form>
     <form>
       <input id='open-in-input' type='checkbox' ${
-        this.config.locals.openIn ? "checked" : ""
+        this.config.locals.openIn ? 'checked' : ''
       } /> <label for='open-in-input'>open in ...</label>
     </form>
     <form>
       <input id='p5-input' type='checkbox' ${
-        this.config.locals.p5 ? "checked" : ""
+        this.config.locals.p5 ? 'checked' : ''
       } /> <label for='p5-input'>p5</label>
     </form>
     <br>
     -- helpful things --
     <form>
       <input id='loop-guard-input' type='checkbox' ${
-        this.config.locals.loopGuard ? "checked" : ""
+        this.config.locals.loopGuard ? 'checked' : ''
       } /> <label for='loop-guard-input'>loop guard</label>
     </form>
     <form>
       <input id='environment-input' type='checkbox' ${
-        this.config.locals.environment ? "checked" : ""
+        this.config.locals.environment ? 'checked' : ''
       } /> <label for='environment-input'>environment</label>
     </form>
     <form>
       <input id='tests-input' type='checkbox' ${
-        this.config.locals.tests ? "checked" : ""
+        this.config.locals.tests ? 'checked' : ''
       } /> <label for='tests-input'>tests</label>
     </form>
     <form>
       <input id='clear-scheduled-input' type='checkbox' ${
-        this.config.locals.clearScheduled ? "checked" : ""
+        this.config.locals.clearScheduled ? 'checked' : ''
       } /> <label for='clear-scheduled-input'>clear scheduled</label>
     </form>
     <br>
@@ -170,28 +170,28 @@ class JavaScriptSSR extends CodeSSR {
     // if (locals.loopGuard || locals.clearScheduled || locals.flowchart) {
 
     // if (locals.flowchart) {
-    const flowchartDisplay = locals.flowchart ? "inline-block" : "none";
+    const flowchartDisplay = locals.flowchart ? 'inline-block' : 'none';
     superPanel += `
       <button id='flowchart-button' style='display: ${flowchartDisplay};'>flowchart</button>`;
     // }
 
-    const pseudoDisplay = locals.pseudo ? "inline-block" : "none";
+    const pseudoDisplay = locals.pseudo ? 'inline-block' : 'none';
     superPanel += `
       <button id='pseudo-button' style='display: ${pseudoDisplay};'>pseudo</button>`;
 
-    const variablesDisplay = locals.variables ? "inline-block" : "none";
+    const variablesDisplay = locals.variables ? 'inline-block' : 'none';
     superPanel += `
       <button id='variables-button' style='display: ${variablesDisplay};'>variables</button>`;
 
-    const blanksDisplay = locals.blanks ? "inline-block" : "none";
+    const blanksDisplay = locals.blanks ? 'inline-block' : 'none';
     superPanel += `
       <button id='blanks-button'  style='display: ${blanksDisplay};'>blanks</button>`;
 
-    const writemeDisplay = locals.writeme ? "inline-block" : "none";
+    const writemeDisplay = locals.writeme ? 'inline-block' : 'none';
     superPanel += `
       <button id='writeme-button'  style='display: ${writemeDisplay};'>writeme</button>`;
 
-    const astDisplay = locals.ast ? "inline-block" : "none";
+    const astDisplay = locals.ast ? 'inline-block' : 'none';
     superPanel += `<div id='ast-container' style='display: ${astDisplay};'>
       <ast-it></ast-it>
     </div>`;
@@ -199,14 +199,14 @@ class JavaScriptSSR extends CodeSSR {
     superPanel += `
     <br>  <div>
     <form id='environment-form' style='display: ${
-      locals.environment ? "inline-block" : "none"
+      locals.environment ? 'inline-block' : 'none'
     };'>
       <!-- <input name='strict' id='strict' type='checkbox' ${
-        locals.strict === true || locals.type === "module" ? "checked" : ""
+        locals.strict === true || locals.type === 'module' ? 'checked' : ''
       } />
       <label for='strict'>strict</label> -->
       <input name='module' id='module' type='checkbox' ${
-        locals.type === "module" ? "checked" : ""
+        locals.type === 'module' ? 'checked' : ''
       } />
       <label for='module'>module</label>
     </form>`;
@@ -214,22 +214,22 @@ class JavaScriptSSR extends CodeSSR {
 
     // if (locals.loopGuard) {
 
-    const loopGuardDisplay = locals.loopGuard ? "inline-block" : "none";
-    if (!locals.loopGuard || typeof locals.loopGuard !== "object") {
+    const loopGuardDisplay = locals.loopGuard ? 'inline-block' : 'none';
+    if (!locals.loopGuard || typeof locals.loopGuard !== 'object') {
       locals.loopGuard = {};
     }
     locals.loopGuard = {
       active:
-        typeof locals.loopGuard.active === "boolean"
+        typeof locals.loopGuard.active === 'boolean'
           ? locals.loopGuard.active
           : false,
       max:
-        typeof locals.loopGuard.max === "number" ? locals.loopGuard.max : 100,
+        typeof locals.loopGuard.max === 'number' ? locals.loopGuard.max : 100,
     };
     superPanel += `
       <form id='loop-guard-form' style='display: ${loopGuardDisplay};'>
         <input name='active' id='loop-guard-active' type='checkbox' ${
-          locals.loopGuard.active ? "checked" : ""
+          locals.loopGuard.active ? 'checked' : ''
         } />
         <label for='loop-guard-active'>loop guard:</label>
         <input name='max' type='number' value='${
@@ -238,56 +238,56 @@ class JavaScriptSSR extends CodeSSR {
       </form>`;
     // }
 
-    const testsDisplay = locals.tests ? "inline-block" : "none";
+    const testsDisplay = locals.tests ? 'inline-block' : 'none';
     superPanel += `
       <form id='tests-form' style='display: ${testsDisplay};'>
         <input name='tests' id='tests' type='checkbox' ${
-          locals.loopGuard.tests ? "checked" : ""
+          locals.loopGuard.tests ? 'checked' : ''
         } />
         <label for='tests'>tests</label>
       </form>`;
 
     // if (locals.clearScheduled) {
     const clearScheduledDisplay = locals.clearScheduled
-      ? "inline-block"
-      : "none";
+      ? 'inline-block'
+      : 'none';
     superPanel += `
       <button id='clear-scheduled-button' style='display: ${clearScheduledDisplay};'>clear scheduled</button>`;
     // }
 
     // if (locals.eval) {
-    const eslintDisplay = locals.eslint ? "inline-block" : "none";
+    const eslintDisplay = locals.eslint ? 'inline-block' : 'none';
     superPanel += `
     <div id='eslint-container' style='display: ${eslintDisplay};'>
       <button id='eslint-button'>eslint</button>
     </div>`;
 
-    const tableDisplay = locals.table ? "inline-block" : "none";
+    const tableDisplay = locals.table ? 'inline-block' : 'none';
     superPanel += `
     <div id='table-container' style='display: ${tableDisplay};'>
       <trace-table-button></trace-table-button>
     </div>`;
 
-    superPanel += "</div>";
+    superPanel += '</div>';
 
     // if (locals.eval || locals.openIn) {
-    superPanel += "<div>";
+    superPanel += '<div>';
     // }
 
     // if (locals.eval) {
-    const runDisplay = locals.eval || locals.run ? "inline-block" : "none";
+    const runDisplay = locals.eval || locals.run ? 'inline-block' : 'none';
     superPanel += `
     <div id='run-container' style='display: ${runDisplay};'>
       <button id='run-button'>run</button>
     </div>`;
 
-    const debugDisplay = locals.eval || locals.debug ? "inline-block" : "none";
+    const debugDisplay = locals.eval || locals.debug ? 'inline-block' : 'none';
     superPanel += `
     <div id='debug-container' style='display: ${debugDisplay};'>
       <button id='debug-button'>debug</button>
     </div>`;
 
-    const traceDisplay = locals.trace ? "inline-block" : "none";
+    const traceDisplay = locals.trace ? 'inline-block' : 'none';
     superPanel += `
     <div id='trace-container' style='display: ${traceDisplay};'>
       <trace-it event></trace-it>
@@ -295,14 +295,14 @@ class JavaScriptSSR extends CodeSSR {
 
     // }
     // if (locals.openIn) {
-    const openInDisplay = locals.openIn ? "inline-block" : "none";
+    const openInDisplay = locals.openIn ? 'inline-block' : 'none';
     const openable = [
-      "jsTutorLive",
-      "jsTutor",
-      "learnWithTrace",
-      "algoviz",
-      "jsv9000",
-      "promisees",
+      'jsTutorLive',
+      'jsTutor',
+      'learnWithTrace',
+      'algoviz',
+      'jsv9000',
+      'promisees',
       // "esprima",
     ];
     superPanel += `<form id='open-in-container' style='display: ${openInDisplay};'>
@@ -310,26 +310,26 @@ class JavaScriptSSR extends CodeSSR {
         <select name='thisThing'>
           ${openable.map((viztool) => {
             return `<option ${
-              viztool === locals.openIn ? "selected" : ""
+              viztool === locals.openIn ? 'selected' : ''
             }>${viztool}</option>`;
           })}
         </select>
       </form>`;
     // }
 
-    const p5Display = locals.p5 ? "inline-block" : "none";
+    const p5Display = locals.p5 ? 'inline-block' : 'none';
     superPanel += `
     <div id='p5-container' style='display: ${p5Display};'>
       <button id='p5-button'>p5</button>
     </div>`;
 
-    const askDisplay = locals.ask ? "inline-block" : "none";
+    const askDisplay = locals.ask ? 'inline-block' : 'none';
     superPanel += `
     <div id='ask-container' style='display: ${askDisplay};'>
       <ask-me></ask-me>
     </div>`;
 
-    superPanel += "</div>";
+    superPanel += '</div>';
 
     if (locals.steamroll) {
       superPanel += `<button id='steam-it'>steam</button><button id='roll-it'>roll</button>`;

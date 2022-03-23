@@ -132,40 +132,60 @@ export const summarizeJsFiles = (report = {}) => {
   }
 
   // --- summarize node types ---
-  summary.nodeTypes = jsFiles
-    .filter((file) => file.nodeTypes)
-    .flatMap((file) => Object.entries(file.nodeTypes))
-    .reduce((all, next) => {
-      all[next[0]] = all[next[0]] ? all[next[0]] + next[1] : next[1];
-      return all;
-    }, {});
+  summary.nodeTypes = Object.entries(
+    jsFiles
+      .filter((file) => file.nodeTypes)
+      .flatMap((file) => Object.entries(file.nodeTypes))
+      .sort((a, b) => b[1] - a[1])
+      .reduce((all, next) => {
+        all[next[0]] = all[next[0]] ? all[next[0]] + next[1] : next[1];
+        return all;
+      }, {}),
+  )
+    .sort((a, b) => b[1] - a[1])
+    .reduce((all, next) => ({ ...all, [next[0]]: next[1] }), {});
 
   // --- summarize identifiers ---
-  summary.identifiers = jsFiles
-    .filter((file) => file.identifiers)
-    .flatMap((file) => Object.entries(file.identifiers))
-    .reduce((all, next) => {
-      all[next[0]] = all[next[0]] ? all[next[0]] + next[1] : next[1];
-      return all;
-    }, {});
+  summary.identifiers = Object.entries(
+    jsFiles
+      .filter((file) => file.identifiers)
+      .flatMap((file) => Object.entries(file.identifiers))
+      .sort((a, b) => b[1] - a[1])
+      .reduce((all, next) => {
+        all[next[0]] = all[next[0]] ? all[next[0]] + next[1] : next[1];
+        return all;
+      }, {}),
+  )
+    .sort((a, b) => b[1] - a[1])
+    .reduce((all, next) => ({ ...all, [next[0]]: next[1] }), {});
 
   // --- summarize variables ---
-  summary.variables = jsFiles
-    .filter((file) => file.variables)
-    .flatMap((file) => Object.entries(file.variables))
-    .reduce((all, next) => {
-      all[next[0]] = all[next[0]] ? all[next[0]] + next[1] : next[1];
-      return all;
-    }, {});
+  summary.variables = Object.entries(
+    jsFiles
+      .filter((file) => file.variables)
+      .flatMap((file) => Object.entries(file.variables))
+      .reduce((all, next) => {
+        all[next[0]] = all[next[0]] ? all[next[0]] + next[1] : next[1];
+        return all;
+      }, {}),
+  )
+    .sort((a, b) => a[0] - b[0])
+    .sort((a, b) => b[1] - a[1])
+    .reduce((all, next) => ({ ...all, [next[0]]: next[1] }), {});
 
   // --- summarize literals ---
-  summary.literals = jsFiles
-    .filter((file) => file.literals)
-    .flatMap((file) => Object.entries(file.literals))
-    .reduce((all, next) => {
-      all[next[0]] = all[next[0]] ? all[next[0]] + next[1] : next[1];
-      return all;
-    }, {});
+  summary.literals = Object.entries(
+    jsFiles
+      .filter((file) => file.literals)
+      .flatMap((file) => Object.entries(file.literals))
+      .sort((a, b) => b[1] - a[1])
+      .reduce((all, next) => {
+        all[next[0]] = all[next[0]] ? all[next[0]] + next[1] : next[1];
+        return all;
+      }, {}),
+  )
+    .sort((a, b) => b[1] - a[1])
+    .reduce((all, next) => ({ ...all, [next[0]]: next[1] }), {});
 
   return summary;
 };

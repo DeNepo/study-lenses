@@ -25,7 +25,8 @@
       ".mp4": "video",
       ".ogg": "video",
       ".mov": "video",
-      ".webm": "video"
+      ".webm": "video",
+      ".lgo": "logo"
     }
   },
   "ORIGIN": {

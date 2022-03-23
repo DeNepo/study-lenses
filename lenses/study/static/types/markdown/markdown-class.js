@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
 /*
   piping lenses does not work with this paradigm
 */
 
 // import { CodeFE } from "../code/code-class.js";
-import { JavaScriptFE } from "../javascript/javascript-class.js";
+import { JavaScriptFE } from '../javascript/javascript-class.js';
 
 // class MarkdownFE extends CodeFE {
 class MarkdownFE extends JavaScriptFE {
@@ -15,7 +15,20 @@ class MarkdownFE extends JavaScriptFE {
   }
 
   initMdUi() {
-    const pres = Array.from(document.getElementsByTagName("PRE"));
+    const pres = Array.from(document.getElementsByTagName('PRE'));
+
+    if (this.config.inlines.literate) {
+      const litPres = pres.filter(
+        (pre) => !Array.from(pre.classList).includes('language-'),
+      );
+
+      let previousLine = 3;
+      for (const pre of litPres) {
+        pre.dataset.start = previousLine;
+        previousLine = previousLine + pre.innerText.split('\n').length + 2;
+      }
+    }
+
     for (const pre of pres) {
       let lenseQueries = [];
       let currentSibling = pre;
@@ -25,11 +38,24 @@ class MarkdownFE extends JavaScriptFE {
         if (previousSibling && previousSibling.nodeType === 8) {
           const queryRegex = /(?:\?)(?<query>([a-z0-9\-&=])*)/gim;
           for (const match of previousSibling.textContent.matchAll(
-            queryRegex
+            queryRegex,
           )) {
-            if (match.groups.query && match.groups.query.includes("&")) {
+            if (match.groups.query && match.groups.query.includes('&')) {
               match.groups.query
-                .split("&")
+                .split('&')
+                .forEach((query) => lenseQueries.push(query));
+            } else {
+              lenseQueries.push(match.groups.query);
+            }
+          }
+
+          const lensesRegex = /(?:lenses\:)(lenses:<query>([a-z0-9\-&=])*)/gim;
+          for (const match of previousSibling.textContent.matchAll(
+            lensesRegex,
+          )) {
+            if (match.groups.query && match.groups.query.includes(' ')) {
+              match.groups.query
+                .split(' ')
                 .forEach((query) => lenseQueries.push(query));
             } else {
               lenseQueries.push(match.groups.query);
@@ -46,55 +72,56 @@ class MarkdownFE extends JavaScriptFE {
           currentSibling = previousSibling;
         }
       }
+
       if (lenseQueries.length === 0) {
         Prism.highlightAllUnder(pre);
       } else {
         const codeClassList = Array.from(pre.firstElementChild.classList);
         const languageClass = Array.from(codeClassList).find((className) =>
-          /language/i.test(className)
+          /language/i.test(className),
         );
         const language = languageClass
-          ? languageClass.replace("language-", "")
-          : ".txt";
+          ? languageClass.replace('language-', '')
+          : '.txt';
         const extMap = {
-          javascript: "js",
-          markdown: "md",
-          bash: "sh",
+          javascript: 'js',
+          markdown: 'md',
+          bash: 'sh',
         };
-        const ext = "." + (extMap[language] ? extMap[language] : language);
+        const ext = '.' + (extMap[language] ? extMap[language] : language);
 
         const code = pre.textContent;
 
         const pseudoResource = {
-          resource: { content: code, info: { ext, base: "resource" + ext } },
+          resource: { content: code, info: { ext, base: 'resource' + ext } },
         };
 
         const stringifiedResource = encodeURIComponent(
-          JSON.stringify(pseudoResource)
+          JSON.stringify(pseudoResource),
         );
 
-        let query = "--debug&--resource=" + stringifiedResource;
+        let query = '--debug&--resource=' + stringifiedResource;
 
         const stringifiedLocalConfig = encodeURIComponent(
-          JSON.stringify(this.config.locals)
+          JSON.stringify(this.config.locals),
         );
         for (const lenseQuery of lenseQueries) {
-          if (lenseQueries.includes("=")) {
-            query += lenseQuery + "&";
+          if (lenseQueries.includes('=')) {
+            query += lenseQuery + '&';
             continue;
           }
 
-          query += "&" + lenseQuery + "=" + stringifiedLocalConfig;
+          query += '&' + lenseQuery + '=' + stringifiedLocalConfig;
         }
-        const url = window.location.origin + "?" + query;
-        const lensedCode = document.createElement("iframe");
+        const url = window.location.origin + '?' + query;
+        const lensedCode = document.createElement('iframe');
         lensedCode.src = url;
-        lensedCode.width = "95%";
+        lensedCode.width = '95%';
         // smarter ways to do height that didn't quite work
         //  code length
         //  .contentDocument.scrollHeight
         // parsonsEl.setAttribute("scrolling", "no");
-        lensedCode.style = "resize: both; overflow: auto;";
+        lensedCode.style = 'resize: both; overflow: auto;';
         pre.parentElement.replaceChild(lensedCode, pre);
       }
     }

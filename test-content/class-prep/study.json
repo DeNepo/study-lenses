@@ -2,6 +2,7 @@
   "study": {
     "readOnly": false,
     "eval": true,
-    "save": true
+    "save": true,
+    "qlc": true
   }
 }

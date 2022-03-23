@@ -1,5 +1,5 @@
-import { CodeFE } from "../code/code-class.js";
-import { studyWith } from "./static/study-with.js";
+import { CodeFE } from '../code/code-class.js';
+import { studyWith } from './static/study-with.js';
 
 export class JavaScriptFE extends CodeFE {
   constructor(config) {
@@ -9,7 +9,7 @@ export class JavaScriptFE extends CodeFE {
       this.config.base &&
       Array.isArray(this.config.locals.tests) &&
       this.config.locals.tests.find((matcher) =>
-        new RegExp(matcher, "i").test(this.config.base)
+        new RegExp(matcher, 'i').test(this.config.base),
       )
     ) {
       // this.testedExtensions = this.config.locals.tests;
@@ -27,7 +27,7 @@ export class JavaScriptFE extends CodeFE {
   }
 
   initJsUi() {
-    window.addEventListener("study", (event) => {
+    window.addEventListener('study', (event) => {
       const { selection, study } = event.detail;
 
       const code = selection
@@ -41,14 +41,14 @@ export class JavaScriptFE extends CodeFE {
       }
     });
 
-    const formatButton = document.getElementById("format-button");
+    const formatButton = document.getElementById('format-button');
     if (formatButton !== null) {
       const formatParent = formatButton.parentElement;
-      const newFormatButton = document.createElement("button");
-      newFormatButton.innerHTML = "format";
+      const newFormatButton = document.createElement('button');
+      newFormatButton.innerHTML = 'format';
       newFormatButton.onclick = () => {
         // https://github.com/react-monaco-editor/react-monaco-editor/pull/212
-        this.editor.executeEdits("", [
+        this.editor.executeEdits('', [
           {
             range: this.editor.getModel().getFullModelRange(),
             text: this.prettierFormat(this.editor.getValue()),
@@ -59,28 +59,28 @@ export class JavaScriptFE extends CodeFE {
       formatParent.replaceChild(newFormatButton, formatButton);
     }
 
-    const environmentForm = document.getElementById("environment-form");
-    if (document.getElementById("environment-input")) {
+    const environmentForm = document.getElementById('environment-form');
+    if (document.getElementById('environment-input')) {
       document
-        .getElementById("environment-input")
-        .addEventListener("change", (event) => {
+        .getElementById('environment-input')
+        .addEventListener('change', (event) => {
           if (event.target.checked) {
             this.config.locals.environment = false;
-            environmentForm.style = "display: inline-block;";
+            environmentForm.style = 'display: inline-block;';
           } else {
             this.config.locals.environment = true;
-            environmentForm.style = "display: none;";
+            environmentForm.style = 'display: none;';
           }
           event.preventDefault();
         });
     }
     if (environmentForm) {
-      environmentForm.addEventListener("change", (event) => {
+      environmentForm.addEventListener('change', (event) => {
         const target = event.target;
         if (target.form.module.checked === true) {
-          this.config.locals.type = "module";
+          this.config.locals.type = 'module';
         } else {
-          this.config.locals.type = "text/javascript";
+          this.config.locals.type = 'text/javascript';
         }
 
         event.preventDefault();
@@ -108,25 +108,25 @@ export class JavaScriptFE extends CodeFE {
     }
 
     // if (this.config.locals.loopGuard) {
-    const loopGuardForm = document.getElementById("loop-guard-form");
+    const loopGuardForm = document.getElementById('loop-guard-form');
     let lastActiveValue = this.config.locals.loopGuard
       ? this.config.locals.loopGuard.active
       : false;
     document
-      .getElementById("loop-guard-input")
-      .addEventListener("change", (event) => {
+      .getElementById('loop-guard-input')
+      .addEventListener('change', (event) => {
         if (event.target.checked) {
           this.config.locals.loopGuard.active = lastActiveValue;
-          loopGuardForm.style = "display: inline-block;";
+          loopGuardForm.style = 'display: inline-block;';
         } else {
           lastActiveValue = this.config.locals.loopGuard.active;
           this.config.locals.loopGuard.active = false;
-          loopGuardForm.style = "display: none;";
+          loopGuardForm.style = 'display: none;';
         }
         event.preventDefault();
       });
     if (loopGuardForm) {
-      loopGuardForm.addEventListener("change", (event) => {
+      loopGuardForm.addEventListener('change', (event) => {
         this.config.locals.loopGuard.active = event.target.form.active.checked;
         this.config.locals.loopGuard.max = Number(event.target.form.max.value);
       });
@@ -134,160 +134,160 @@ export class JavaScriptFE extends CodeFE {
 
     // }
 
-    const testsForm = document.getElementById("tests-form");
-    if (this.config.locals.tests === true && document.getElementById("tests")) {
-      document.getElementById("tests").checked = true;
+    const testsForm = document.getElementById('tests-form');
+    if (this.config.locals.tests === true && document.getElementById('tests')) {
+      document.getElementById('tests').checked = true;
     }
     document
-      .getElementById("tests-input")
-      .addEventListener("change", (event) => {
+      .getElementById('tests-input')
+      .addEventListener('change', (event) => {
         if (event.target.checked) {
-          testsForm.style = "display: inline-block;";
+          testsForm.style = 'display: inline-block;';
         } else {
-          testsForm.style = "display: none;";
+          testsForm.style = 'display: none;';
         }
         event.preventDefault();
       });
     if (testsForm) {
-      testsForm.addEventListener("change", (event) => {
+      testsForm.addEventListener('change', (event) => {
         this.config.locals.tests = event.target.form.tests.checked;
       });
     }
 
     // if (this.config.locals.clearScheduled) {
     const clearScheduledButton = document.getElementById(
-      "clear-scheduled-button"
+      'clear-scheduled-button',
     );
     document
-      .getElementById("clear-scheduled-input")
-      .addEventListener("change", (event) => {
+      .getElementById('clear-scheduled-input')
+      .addEventListener('change', (event) => {
         if (event.target.checked) {
-          clearScheduledButton.style = "display: inline-block;";
+          clearScheduledButton.style = 'display: inline-block;';
         } else {
-          clearScheduledButton.style = "display: none;";
+          clearScheduledButton.style = 'display: none;';
         }
       });
     if (clearScheduledButton) {
-      clearScheduledButton.addEventListener("click", clearScheduledFactory());
+      clearScheduledButton.addEventListener('click', clearScheduledFactory());
     }
     // }
 
     // if (this.config.locals.flowchart) {
-    const flowchartButton = document.getElementById("flowchart-button");
+    const flowchartButton = document.getElementById('flowchart-button');
     document
-      .getElementById("flowchart-input")
-      .addEventListener("change", (event) => {
+      .getElementById('flowchart-input')
+      .addEventListener('change', (event) => {
         if (event.target.checked) {
-          flowchartButton.style = "display: inline-block;";
+          flowchartButton.style = 'display: inline-block;';
         } else {
-          flowchartButton.style = "display: none;";
+          flowchartButton.style = 'display: none;';
         }
       });
     if (flowchartButton) {
-      flowchartButton.addEventListener("click", () =>
-        this.studyWith("flowchart", true)
+      flowchartButton.addEventListener('click', () =>
+        this.studyWith('flowchart', true),
       );
     }
 
-    const pseudoButton = document.getElementById("pseudo-button");
+    const pseudoButton = document.getElementById('pseudo-button');
     document
-      .getElementById("pseudo-input")
-      .addEventListener("change", (event) => {
+      .getElementById('pseudo-input')
+      .addEventListener('change', (event) => {
         if (event.target.checked) {
-          pseudoButton.style = "display: inline-block;";
+          pseudoButton.style = 'display: inline-block;';
         } else {
-          pseudoButton.style = "display: none;";
+          pseudoButton.style = 'display: none;';
         }
       });
     if (pseudoButton) {
-      pseudoButton.addEventListener("click", () =>
-        this.studyWith("pseudo&highlight", true)
+      pseudoButton.addEventListener('click', () =>
+        this.studyWith('pseudo&highlight', true),
       );
     }
     // }
 
-    const variablesButton = document.getElementById("variables-button");
+    const variablesButton = document.getElementById('variables-button');
     document
-      .getElementById("variables-input")
-      .addEventListener("change", (event) => {
+      .getElementById('variables-input')
+      .addEventListener('change', (event) => {
         if (event.target.checked) {
-          variablesButton.style = "display: inline-block;";
+          variablesButton.style = 'display: inline-block;';
         } else {
-          variablesButton.style = "display: none;";
+          variablesButton.style = 'display: none;';
         }
       });
     if (variablesButton) {
-      variablesButton.addEventListener("click", () =>
-        this.studyWith("variables", true)
+      variablesButton.addEventListener('click', () =>
+        this.studyWith('variables', true),
       );
     }
 
-    const writemeButton = document.getElementById("writeme-button");
+    const writemeButton = document.getElementById('writeme-button');
     document
-      .getElementById("writeme-input")
-      .addEventListener("change", (event) => {
+      .getElementById('writeme-input')
+      .addEventListener('change', (event) => {
         this.config.writeme = !this.config.writeme;
         if (event.target.checked) {
-          writemeButton.style = "display: inline-block;";
+          writemeButton.style = 'display: inline-block;';
         } else {
-          writemeButton.style = "display: none;";
+          writemeButton.style = 'display: none;';
         }
       });
     if (writemeButton) {
-      writemeButton.addEventListener("click", () =>
-        this.studyWith("writeme", true)
+      writemeButton.addEventListener('click', () =>
+        this.studyWith('writeme', true),
       );
     }
 
-    const blanksButton = document.getElementById("blanks-button");
+    const blanksButton = document.getElementById('blanks-button');
     document
-      .getElementById("blanks-input")
-      .addEventListener("change", (event) => {
+      .getElementById('blanks-input')
+      .addEventListener('change', (event) => {
         this.config.blanks = !this.config.blanks;
         if (event.target.checked) {
-          blanksButton.style = "display: inline-block;";
+          blanksButton.style = 'display: inline-block;';
         } else {
-          blanksButton.style = "display: none;";
+          blanksButton.style = 'display: none;';
         }
       });
     if (blanksButton) {
-      blanksButton.addEventListener("click", () =>
-        this.studyWith("blanks", true)
+      blanksButton.addEventListener('click', () =>
+        this.studyWith('blanks', true),
       );
     }
 
     // const astButton = document.getElementById("ast-button");
-    const astContainer = document.getElementById("ast-container");
-    document.getElementById("ast-input").addEventListener("change", (event) => {
+    const astContainer = document.getElementById('ast-container');
+    document.getElementById('ast-input').addEventListener('change', (event) => {
       if (event.target.checked) {
-        astContainer.style = "display: inline-block;";
+        astContainer.style = 'display: inline-block;';
       } else {
-        astContainer.style = "display: none;";
+        astContainer.style = 'display: none;';
       }
     });
     // if (astButton) {
     //   astButton.addEventListener("click", () => this.studyWith("acorn"));
     // }
 
-    const runContainer = document.getElementById("run-container");
-    document.getElementById("run-input").addEventListener("change", (event) => {
+    const runContainer = document.getElementById('run-container');
+    document.getElementById('run-input').addEventListener('change', (event) => {
       this.config.locals.run = !this.config.locals.run;
       if (event.target.checked) {
-        runContainer.style = "display: inline-block;";
+        runContainer.style = 'display: inline-block;';
       } else {
-        runContainer.style = "display: none;";
+        runContainer.style = 'display: none;';
       }
     });
 
-    const debugContainer = document.getElementById("debug-container");
+    const debugContainer = document.getElementById('debug-container');
     document
-      .getElementById("debug-input")
-      .addEventListener("change", (event) => {
+      .getElementById('debug-input')
+      .addEventListener('change', (event) => {
         this.config.locals.debug = !this.config.locals.debug;
         if (event.target.checked) {
-          debugContainer.style = "display: inline-block;";
+          debugContainer.style = 'display: inline-block;';
         } else {
-          debugContainer.style = "display: none;";
+          debugContainer.style = 'display: none;';
         }
       });
 
@@ -296,30 +296,30 @@ export class JavaScriptFE extends CodeFE {
         try {
           // save changes
           await fetch(
-            window.location.origin + window.location.pathname + "?study",
+            window.location.origin + window.location.pathname + '?study',
             {
-              method: "POST",
+              method: 'POST',
               headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify({ text: this.editor.getValue() }),
-            }
+            },
           )
             .then((response) => response.text())
             .then((message) => {
               console.log(message);
             })
             .catch((err) => {
-              alert(err.name + ": " + err.message);
-              console.error("Error:", err);
+              alert(err.name + ': ' + err.message);
+              console.error('Error:', err);
             });
 
           // fetch spec
           const specCode = await fetch(
             (window.location.origin + window.location.pathname)
-              .split(".js")
-              .join(".spec.js")
+              .split('.js')
+              .join('.spec.js'),
           ).then((res) => res.text());
 
           // eval spec
@@ -331,115 +331,115 @@ export class JavaScriptFE extends CodeFE {
         }
       };
 
-      const runButton = document.getElementById("run-button");
+      const runButton = document.getElementById('run-button');
       if (runButton) {
-        runButton.innerHTML = "run spec";
-        runButton.addEventListener("click", runSpec());
+        runButton.innerHTML = 'run spec';
+        runButton.addEventListener('click', runSpec());
       }
 
-      const debugButton = document.getElementById("debug-button");
+      const debugButton = document.getElementById('debug-button');
       if (debugButton) {
-        debugButton.innerHTML = "debug spec";
-        debugButton.addEventListener("click", runSpec(true));
+        debugButton.innerHTML = 'debug spec';
+        debugButton.addEventListener('click', runSpec(true));
       }
     } else {
       try {
         document
-          .getElementById("run-button")
-          .addEventListener("click", () => this.studyWith("console", false));
+          .getElementById('run-button')
+          .addEventListener('click', () => this.studyWith('console', false));
         document
-          .getElementById("debug-button")
-          .addEventListener("click", () => this.studyWith("debugger", false));
+          .getElementById('debug-button')
+          .addEventListener('click', () => this.studyWith('debugger', false));
       } catch (o_0) {}
     }
 
-    const eslintContainer = document.getElementById("eslint-container");
+    const eslintContainer = document.getElementById('eslint-container');
     document
-      .getElementById("eslint-input")
-      .addEventListener("change", (event) => {
+      .getElementById('eslint-input')
+      .addEventListener('change', (event) => {
         this.config.locals.eslint = !this.config.locals.eslint;
         if (event.target.checked) {
-          eslintContainer.style = "display: inline-block;";
+          eslintContainer.style = 'display: inline-block;';
         } else {
-          eslintContainer.style = "display: none;";
+          eslintContainer.style = 'display: none;';
         }
       });
 
-    if (document.getElementById("eslint-button")) {
+    if (document.getElementById('eslint-button')) {
       document
-        .getElementById("eslint-button")
-        .addEventListener("click", () => this.studyWith("eslint", true));
+        .getElementById('eslint-button')
+        .addEventListener('click', () => this.studyWith('eslint', true));
     }
 
-    const p5Container = document.getElementById("p5-container");
-    document.getElementById("p5-input").addEventListener("change", (event) => {
+    const p5Container = document.getElementById('p5-container');
+    document.getElementById('p5-input').addEventListener('change', (event) => {
       this.config.locals.p5 = !this.config.locals.p5;
       if (event.target.checked) {
-        p5Container.style = "display: inline-block;";
+        p5Container.style = 'display: inline-block;';
       } else {
-        p5Container.style = "display: none;";
+        p5Container.style = 'display: none;';
       }
     });
 
-    const traceContainer = document.getElementById("trace-container");
+    const traceContainer = document.getElementById('trace-container');
     document
-      .getElementById("trace-input")
-      .addEventListener("change", (event) => {
+      .getElementById('trace-input')
+      .addEventListener('change', (event) => {
         this.config.locals.trace = !this.config.locals.trace;
         if (event.target.checked) {
-          traceContainer.style = "display: inline-block;";
+          traceContainer.style = 'display: inline-block;';
         } else {
-          traceContainer.style = "display: none;";
+          traceContainer.style = 'display: none;';
         }
       });
 
-    const askContainer = document.getElementById("ask-container");
-    document.getElementById("ask-input").addEventListener("change", (event) => {
+    const askContainer = document.getElementById('ask-container');
+    document.getElementById('ask-input').addEventListener('change', (event) => {
       this.config.locals.ask = !this.config.locals.ask;
       if (event.target.checked) {
-        askContainer.style = "display: inline-block;";
+        askContainer.style = 'display: inline-block;';
       } else {
-        askContainer.style = "display: none;";
+        askContainer.style = 'display: none;';
       }
     });
 
-    const tableContainer = document.getElementById("table-container");
+    const tableContainer = document.getElementById('table-container');
     document
-      .getElementById("table-input")
-      .addEventListener("change", (event) => {
+      .getElementById('table-input')
+      .addEventListener('change', (event) => {
         this.config.locals.table = !this.config.locals.table;
         if (event.target.checked) {
-          tableContainer.style = "display: inline-block;";
+          tableContainer.style = 'display: inline-block;';
         } else {
-          tableContainer.style = "display: none;";
+          tableContainer.style = 'display: none;';
         }
       });
 
-    if (document.getElementById("p5-button")) {
+    if (document.getElementById('p5-button')) {
       document
-        .getElementById("p5-button")
-        .addEventListener("click", () => this.studyWith("p5"));
+        .getElementById('p5-button')
+        .addEventListener('click', () => this.studyWith('p5'));
     }
 
     // }
 
     // if (this.config.locals.openIn) {
-    const openInContainer = document.getElementById("open-in-container");
+    const openInContainer = document.getElementById('open-in-container');
     document
-      .getElementById("open-in-input")
-      .addEventListener("change", (event) => {
+      .getElementById('open-in-input')
+      .addEventListener('change', (event) => {
         this.config.locals.openIn = !this.config.locals.openIn;
         if (event.target.checked) {
-          openInContainer.style = "display: inline-block;";
+          openInContainer.style = 'display: inline-block;';
         } else {
-          openInContainer.style = "display: none;";
+          openInContainer.style = 'display: none;';
         }
       });
 
-    if (document.getElementById("open-in-button")) {
+    if (document.getElementById('open-in-button')) {
       document
-        .getElementById("open-in-button")
-        .addEventListener("click", (event) => {
+        .getElementById('open-in-button')
+        .addEventListener('click', (event) => {
           const thisThing = event.target.form.thisThing.value;
           this.studyWith(thisThing, false);
           event.preventDefault();
@@ -448,38 +448,37 @@ export class JavaScriptFE extends CodeFE {
     // }
 
     const configToString = () =>
-      JSON.stringify({ study: config.locals }, null, "  ");
+      JSON.stringify({ study: config.locals }, null, '  ');
 
-    document.getElementById("download-config").addEventListener("click", () => {
-      const element = document.createElement("a");
-      element.setAttribute("download", "study.json");
-      element.style.display = "none";
+    document.getElementById('download-config').addEventListener('click', () => {
+      const element = document.createElement('a');
+      element.setAttribute('download', 'study.json');
+      element.style.display = 'none';
       element.setAttribute(
-        "href",
-        "data:text/plain;charset=utf-8," +
-          encodeURIComponent(JSON.stringify(configToString(), null, "  "))
+        'href',
+        'data:text/plain;charset=utf-8,' + encodeURIComponent(configToString()),
       );
 
       document.body.appendChild(element);
       element.click();
       document.body.removeChild(element);
     });
-    document.getElementById("copy-config").addEventListener("click", () => {
+    document.getElementById('copy-config').addEventListener('click', () => {
       const configString = configToString();
 
       navigator.clipboard.writeText(configString);
 
       setTimeout(() => {
-        console.log(configString);
         alert(`your configs are copied, they are also logged to the console`);
+        console.log(configToString());
       }, 0);
     });
 
     if (this.config.locals.steamroll) {
-      import("./static/steamroll.js")
+      import('./static/steamroll.js')
         .then((e) => e.steamroll)
         .then((steamroll) => {
-          document.getElementById("steam-it").addEventListener("click", () => {
+          document.getElementById('steam-it').addEventListener('click', () => {
             let code = this.editor.getValue();
             if (
               this.config.locals.loopGuard &&
@@ -488,16 +487,16 @@ export class JavaScriptFE extends CodeFE {
               try {
                 const loopGuarded = JavaScriptFE.insertLoopGuards(
                   this.editor.getValue(),
-                  this.config.locals.loopGuard.max || 20
+                  this.config.locals.loopGuard.max || 20,
                 );
                 code = this.prettierFormat(loopGuarded);
               } catch (err) {
                 // don't log the acorn error, let it be an eval error in the study type
               }
             }
-            console.log("> steamrolled:", steamroll(code));
+            console.log('> steamrolled:', steamroll(code));
           });
-          document.getElementById("roll-it").addEventListener("click", () => {
+          document.getElementById('roll-it').addEventListener('click', () => {
             let code = this.editor.getValue();
             if (
               this.config.locals.loopGuard &&
@@ -506,14 +505,14 @@ export class JavaScriptFE extends CodeFE {
               try {
                 const loopGuarded = JavaScriptFE.insertLoopGuards(
                   this.editor.getValue(),
-                  this.config.locals.loopGuard.max || 20
+                  this.config.locals.loopGuard.max || 20,
                 );
                 code = this.prettierFormat(loopGuarded);
               } catch (err) {
                 // don't log the acorn error, let it be an eval error in the study type
               }
             }
-            console.log("> steamrolled:", steamroll(code, "do it"));
+            console.log('> steamrolled:', steamroll(code, 'do it'));
           });
         })
         .catch((err) => console.error(err));
@@ -533,7 +532,7 @@ export class JavaScriptFE extends CodeFE {
 
   static insertLoopGuards = (evalCode, maxIterations) => {
     const blockify = (...body) => {
-      const blockStatement = Acorn.parse("{}").body[0];
+      const blockStatement = Acorn.parse('{}').body[0];
       blockStatement.body = body;
       return blockStatement;
     };
@@ -542,7 +541,7 @@ export class JavaScriptFE extends CodeFE {
       const variable = Acorn.parse(`let loopGuard_${id} = 0;`).body[0];
       variable.generated = true;
       const check = Acorn.parse(
-        `++loopGuard_${id}; if (loopGuard_${id} > ${max}) { throw new RangeError("loopGuard_${id} is greater than ${max}"); }`
+        `++loopGuard_${id}; if (loopGuard_${id} > ${max}) { throw new RangeError("loopGuard_${id} is greater than ${max}"); }`,
       );
       check.generated = true;
       return {
@@ -552,7 +551,7 @@ export class JavaScriptFE extends CodeFE {
     };
 
     const ast =
-      typeof evalCode === "object"
+      typeof evalCode === 'object'
         ? evalCode
         : Acorn.parse(evalCode, { locations: true });
 
@@ -568,11 +567,11 @@ export class JavaScriptFE extends CodeFE {
       },
       leave(node, parent, prop, index) {
         if (
-          node.type !== "WhileStatement" &&
-          node.type !== "ForStatement" &&
-          node.type !== "ForOfStatement" &&
-          node.type !== "ForInStatement" &&
-          node.type !== "DoWhileStatement"
+          node.type !== 'WhileStatement' &&
+          node.type !== 'ForStatement' &&
+          node.type !== 'ForOfStatement' &&
+          node.type !== 'ForInStatement' &&
+          node.type !== 'DoWhileStatement'
         ) {
           return;
         }
@@ -581,9 +580,9 @@ export class JavaScriptFE extends CodeFE {
 
         const { variable, check } = generateLoopGuard(
           loopNumber,
-          maxIterations
+          maxIterations,
         );
-        if (node.body && node.body.type !== "BlockStatement") {
+        if (node.body && node.body.type !== 'BlockStatement') {
           node.body = blockify(node.body);
         }
 
@@ -600,7 +599,7 @@ export class JavaScriptFE extends CodeFE {
     });
 
     const guarded =
-      typeof evalCode === "object"
+      typeof evalCode === 'object'
         ? guardedTree
         : Astring.generate(guardedTree);
 
@@ -608,15 +607,15 @@ export class JavaScriptFE extends CodeFE {
   };
 
   prettierFormat(code = this.editor.getValue()) {
-    let formattedCode = "";
+    let formattedCode = '';
     let noSyntaxErrors = false;
     try {
       formattedCode = prettier.format(code, {
-        parser: "babel",
+        parser: 'babel',
         plugins: prettierPlugins,
         printWidth: 80,
-        proseWrap: "always",
-        trailingComma: "all",
+        proseWrap: 'always',
+        trailingComma: 'all',
         tabWidth: 2,
         semi: true,
         bracketSpacing: true,
@@ -633,15 +632,15 @@ export class JavaScriptFE extends CodeFE {
   }
 
   studyWith(environment, selection = true) {
-    if (environment === "acorn") {
+    if (environment === 'acorn') {
       try {
         console.log(
           Acorn.parse(
             selection
               ? getMonacoSelection(this.editor)
               : this.editor.getValue(),
-            { locations: true }
-          )
+            { locations: true },
+          ),
         );
       } catch (err) {
         console.error(err);
@@ -655,17 +654,17 @@ export class JavaScriptFE extends CodeFE {
     if (
       this.config.locals.loopGuard &&
       this.config.locals.loopGuard.active &&
-      environment !== "parsons" &&
-      environment !== "flowchart" &&
-      environment !== "diff" &&
-      environment !== "highlight" &&
-      environment !== "variables" &&
-      environment !== "writeme"
+      environment !== 'parsons' &&
+      environment !== 'flowchart' &&
+      environment !== 'diff' &&
+      environment !== 'highlight' &&
+      environment !== 'variables' &&
+      environment !== 'writeme'
     ) {
       try {
         const loopGuarded = JavaScriptFE.insertLoopGuards(
           this.editor.getValue(),
-          this.config.locals.loopGuard.max || 20
+          this.config.locals.loopGuard.max || 20,
         );
         formatted = this.prettierFormat(loopGuarded);
       } catch (err) {
@@ -675,7 +674,7 @@ export class JavaScriptFE extends CodeFE {
       return;
     }
 
-    if (environment === "eslint") {
+    if (environment === 'eslint') {
       const lintCode = (url) =>
         fetch(url)
           .then((res) => res.text())
@@ -684,7 +683,7 @@ export class JavaScriptFE extends CodeFE {
 
       // this.openWith(environment, this.editor.getValue(), lintCode);
       this.openWith(environment, editor.getValue(), lintCode);
-    } else if (typeof studyWith[environment] === "function") {
+    } else if (typeof studyWith[environment] === 'function') {
       studyWith[environment](formatted);
     } else {
       this.openSelectionWith(environment, formatted);

@@ -1,21 +1,21 @@
-import { pointcut } from "./pointcut.js";
-import { state } from "./data/state.js";
+import { pointcut } from './pointcut.js';
+import { state } from './data/state.js';
 
-import { config } from "./data/config.js";
-import { ADVICE } from "./advice/index.js";
+import { config } from './data/config.js';
+import { ADVICE } from './advice/index.js';
 
-import { walk } from "../estree-walker/index.js";
-import { logHoisted } from "./lib/log-hoisted.js";
+import { walk } from '../estree-walker/index.js';
+import { logHoisted } from './lib/log-hoisted.js';
 
-import { print } from "./lib/trace-log.js";
+import { print } from './lib/trace-log.js';
 
 window.trace = (code) => {
-  const iframe = document.createElement("iframe");
-  iframe.style.display = "none";
+  const iframe = document.createElement('iframe');
+  iframe.style.display = 'none';
   iframe.onload = () => {
     iframe.contentWindow.ADVICE = ADVICE;
 
-    iframe.contentWindow.aran = Aran({ namespace: "ADVICE" });
+    iframe.contentWindow.aran = Aran({ namespace: 'ADVICE' });
     const aran = iframe.contentWindow.aran;
     state.aran = iframe.contentWindow.aran;
 
@@ -29,7 +29,7 @@ window.trace = (code) => {
     const generated = Astring.generate(settedUp);
     // console.log(generated);
     if (!iframe.contentWindow.ADVICE.builtins) {
-      const setupScript = document.createElement("script");
+      const setupScript = document.createElement('script');
       setupScript.innerHTML = generated;
       iframe.contentDocument.body.appendChild(setupScript);
 
@@ -60,7 +60,7 @@ window.trace = (code) => {
         //   "color:red; font-weight: bold;",
         //   err.message
         // );
-        console.log("%c-> creation phase error:", "font-weight:bold;");
+        console.log('%c-> creation phase error:', 'font-weight:bold;');
 
         parentDocument.body.removeChild(iframe);
 
@@ -75,11 +75,11 @@ window.trace = (code) => {
 
       const deDebuggered = walk(estree1, {
         enter(node, parent, prop, index) {
-          if (node.type === "CallExpression") {
+          if (node.type === 'CallExpression') {
             state.callExpressions.push(node);
-          } else if (node.type === "DebuggerStatement") {
+          } else if (node.type === 'DebuggerStatement') {
             // works even though null is shorter than debugger because of white-space insensitivity
-            const nullNode = Acorn.parse("null").body[0];
+            const nullNode = Acorn.parse('null').body[0];
             nullNode.start = node.start;
             nullNode.end = node.end;
             nullNode.expression.start = node.start;
@@ -99,7 +99,7 @@ window.trace = (code) => {
         if (exercise.config.locals.loopGuard.active) {
           estree2 = insertLoopGuards(
             estree2,
-            exercise.config.locals.loopGuard.max
+            exercise.config.locals.loopGuard.max,
           );
         }
         // console.log(estree2);
