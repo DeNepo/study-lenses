@@ -22,18 +22,33 @@ const slidesLens = async ({ resource, config, lenses }) => {
     }/web-components/study-lens.js"></script>
   </head>
   <body>
-    <script src="${config.ownStatic}/remark-latest.min.js">
-    </script>
-    <script>
-      const slideshow = remark.create({
-        sourceUrl: './${resource.info.base}'
-      });
-    </script>
+    <div id='sandboxes' class="dropdown">
+      <strong><code>&#187; sandboxes &#171;</code></strong>
+      <div class='dropdown-content'>
+        <div class='selection-buttons'>
+          <a href='?--js' target='_blank'><button>javascript</button></a>
+          <a href='?--html' target='_blank'><button>html</button></a>
+          <a href='?--draw' target='_blank'><button>sketch pad</button></a>
+        </div>
+      </div>
+    </div>
+
+    <script src="${config.sharedStatic}/mermaid/index.js"></script>
+
+    <script src="${config.ownStatic}/remark-latest.min.js"></script>
 
     <script>
       const config = JSON.parse(decodeURI("${encodeURI(
         JSON.stringify(config),
       )}"))
+
+      remark.create({
+        source: decodeURI("${encodeURI(resource.content)}"),
+      });
+
+      mermaid.initialize({
+        startOnLoad: false,
+      });
     </script>
 
     <script src="${config.sharedStatic}/prism/script.js"></script>

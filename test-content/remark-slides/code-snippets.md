@@ -2,6 +2,8 @@
 
 ```js
 const x = 3;
+
+const b = 1;
 ```
 
 ---
@@ -14,6 +16,16 @@ const x = 3;
 
 ```html
 <h1>h1</h1>
+```
+
+---
+
+## CSS
+
+```css
+.asdf {
+  height: 3;
+}
 ```
 
 ---

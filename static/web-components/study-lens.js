@@ -90,7 +90,7 @@ class StudyLens extends HTMLElement {
     }
   }
 
-  async resource(config = { stringify: false }) {
+  resource(config = { stringify: false }) {
     if (typeof this._code !== 'string') {
       return config.stringify ? '{}' : {};
     }
@@ -143,6 +143,18 @@ class StudyLens extends HTMLElement {
     const lensesInput = document.createElement('input');
     lensesInput.value = this.lenses.join(' ');
     lensConfig.appendChild(lensesInput);
+
+    if (!this._src) {
+      const newTabButton = document.createElement('button');
+      newTabButton.innerHTML = 'new tab';
+      const URL = `${window.location.origin}/${
+        window.location.pathname
+      }?${this.lenses.join('&')}&--resource=${this.resource({
+        stringify: true,
+      })}`;
+      newTabButton.addEventListener('click', () => window.open(URL, '_blank'));
+      lensConfig.appendChild(newTabButton);
+    }
 
     root.appendChild(lensConfig);
 
@@ -198,6 +210,12 @@ class StudyLens extends HTMLElement {
 
     // const shadow = this.attachShadow({ mode: 'closed' });
     // shadow.appendChild(root);
+  }
+
+  get url() {
+    return `${window.location.origin}/${window.location.pathname}/../${
+      this._src
+    }?${this.lenses.join('&')}`;
   }
 
   fakeLink() {
