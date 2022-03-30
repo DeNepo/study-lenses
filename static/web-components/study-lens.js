@@ -181,7 +181,6 @@ class StudyLens extends HTMLElement {
         const oldLenses = this.lenses;
         const newLenses = lensesInput.value;
         this.lenses = newLenses;
-        console.log(this._code);
         if (oldLenses.toString() !== this.lenses.toString()) {
           if (this.hasAttribute('src')) {
             iframe.src = `${this._src}?${this.lenses.join('&')}`;
@@ -189,7 +188,6 @@ class StudyLens extends HTMLElement {
             iframe.src = `?${this.lenses.join(
               '&',
             )}&--resource=${await this.resource({ stringify: true })}`;
-            console.log(iframe.src);
           }
         }
 

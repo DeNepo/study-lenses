@@ -22,6 +22,10 @@ const slidesLens = async ({ resource, config, lenses }) => {
     }/web-components/study-lens.js"></script>
   </head>
   <body>
+    <!-- <div class="help">
+      <strong><code>"h" for shortcuts</code></strong>
+    </div>
+    <br> -->
     <div id='sandboxes' class="dropdown">
       <strong><code>&#187; sandboxes &#171;</code></strong>
       <div class='dropdown-content'>
@@ -55,6 +59,13 @@ const slidesLens = async ({ resource, config, lenses }) => {
     <script src="${config.sharedStatic}/prism/toolbar.js"></script>
 
     <script type="module" src="${config.ownStatic}/init.js"></script>
+
+
+    <script src='${config.sharedStatic}/trace/aran-build.js'></script>
+    <script src='${config.sharedStatic}/trace/index.js' type='module'></script>
+    <script src='${
+      config.sharedStatic
+    }/trace/trace-init.js' type='module'></script>
   </body>
 </html>`;
   resource.info.ext = '.html';

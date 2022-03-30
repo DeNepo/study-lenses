@@ -301,6 +301,7 @@ class JavaScriptSSR extends CodeSSR {
       'jsTutor',
       'learnWithTrace',
       'algoviz',
+      'jsviz2',
       'jsv9000',
       'promisees',
       // "esprima",
@@ -352,6 +353,7 @@ class JavaScriptSSR extends CodeSSR {
 
     superScriptsBody += `
       <script src='${this.config.ownStatic}/types/javascript/static/clear-scheduled.js'></script>
+      <script src='${this.config.sharedStatic}/lz-string.min.js'></script>
       <script src='${this.config.sharedStatic}/lib/strip-comments.js'></script>`;
 
     // const base = this.resource.info.base;

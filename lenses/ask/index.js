@@ -20,7 +20,7 @@ const askLens = async ({ resource, config }) => {
       <link rel="stylesheet" href="${config.ownStatic}/style.css">
   </head>
   <body>
-    <ask-me class="studyable"></ask-me>
+    <ask-me alert class="studyable"></ask-me>
 
     <pre id="the-code" class="language-js"><code class="language-js line-numbers">${resource.content}
 </code></pre>

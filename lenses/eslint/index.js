@@ -12,7 +12,9 @@ const eslintLens = async ({ config, resource }) => {
   let lintResult = '';
   try {
     const eslint = new ESLint({
-      cwd: path.normalize(path.join(resource.path, '..')),
+      cwd: resource.path
+        ? path.normalize(path.join(resource.path, '..'))
+        : process.cwd(),
     });
 
     // 2. Lint files.

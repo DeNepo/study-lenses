@@ -29,17 +29,17 @@ export const askOpenEnded = (code = '') => {
   console.log('--- --- --- --- --- --- ---');
 
   if (ask.config.alert.ask) {
-    let question = '';
+    let toAlert = '';
     if (Array.isArray(hints) && hints.length > 0) {
-      question = question + '\n\nhints:';
+      toAlert = question + '\n\nhints:';
 
       hints.forEach((hint) => {
-        question += '\n- ' + hint;
+        toAlert = question + '\n- ' + hint;
       });
     } else {
-      question = question;
+      toAlert = question;
     }
-    alert(question);
+    alert(toAlert);
   }
 };
 
