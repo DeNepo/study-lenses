@@ -1,11 +1,11 @@
 import { debounce } from './lib/debounce.mjs';
 
 class StudyLens extends HTMLElement {
-  // class CodeConsumer extends HTMLElement {
   _code = null;
   _lenses = [];
   _src = '';
   _lang = '.txt';
+  _link = document.createElement('a');
 
   static langMap(lang) {
     const map = {
@@ -131,7 +131,12 @@ class StudyLens extends HTMLElement {
 
     const lensConfig = document.createElement('div');
     if (this._src) {
-      lensConfig.appendChild(this.fakeLink());
+      this._link.target = '_blank';
+      this._link.innerHTML = this._src;
+      this._link.href = `${window.location.origin}/${
+        window.location.pathname
+      }/../${this._src}?${this.lenses.join('&')}`;
+      lensConfig.appendChild(this._link);
       const questionMark = document.createElement('text');
       questionMark.style = 'all: initial;';
       questionMark.innerText = ' ? ';
@@ -191,6 +196,10 @@ class StudyLens extends HTMLElement {
           }
         }
 
+        this._link.href = `${window.location.origin}/${
+          window.location.pathname
+        }/../${this._src}?${this.lenses.join('&')}`;
+
         event.stopPropagation();
         event.preventDefault();
         return false;
@@ -205,32 +214,12 @@ class StudyLens extends HTMLElement {
       mainIframe.contentDocument.body.style = 'text-align: center;';
     };
     this.appendChild(mainIframe);
-
-    // const shadow = this.attachShadow({ mode: 'closed' });
-    // shadow.appendChild(root);
   }
 
   get url() {
     return `${window.location.origin}/${window.location.pathname}/../${
       this._src
     }?${this.lenses.join('&')}`;
-  }
-
-  fakeLink() {
-    const fakeLinkEl = document.createElement('text');
-    fakeLinkEl.innerHTML = this._src;
-    fakeLinkEl.style =
-      'all: initial; text-decoration: underline; color: blue; line-height: 1.5em;';
-
-    fakeLinkEl.addEventListener('click', (event) => {
-      event.preventDefault;
-      const URL = `${window.location.origin}/${window.location.pathname}/../${
-        this._src
-      }?${this.lenses.join('&')}`;
-      window.open(URL, '__blank');
-    });
-
-    return fakeLinkEl;
   }
 }
 

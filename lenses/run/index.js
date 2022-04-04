@@ -25,7 +25,7 @@ const runLens = async ({ resource, config, requestData }) => {
       ? `<script type="module">${debug ? '\ndebugger;\n\n\n' : '\n\n'}${
           resource.content
         }${debug ? '\n\ndebugger;\n' : '\n\n'}    </script>`
-      : `<script>${debug ? '\ndebugger;\n\n' : '\n\n'}${resource.content}${
+      : `<script>${debug ? '\ndebugger;\n\n\n' : '\n\n'}${resource.content}${
           debug ? '\n\n\ndebugger;\n' : '\n\n'
         }   </script>`;
 

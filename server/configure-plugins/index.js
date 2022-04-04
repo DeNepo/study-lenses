@@ -15,9 +15,6 @@ const configurePlugins = (plugins, localConfigs, parsedQuery) => {
     )
     .filter((plugin) => plugin !== undefined)
     .map((plugin) => ((plugin.requested = true), plugin));
-  // const requestedPlugins = plugins
-  //   .filter((plugin) => queryKeys.includes(plugin.queryKey))
-  //   .map((plugin) => ((plugin.requested = false), plugin));
 
   const notRequestedPlugins = plugins
     .filter(
@@ -31,7 +28,6 @@ const configurePlugins = (plugins, localConfigs, parsedQuery) => {
   // assign configurations to the plugins if any were requested
   //  keeping query configurations separate from local configurations
   //  so lenses can decide which to use
-  // for (const plugin of requestifiedPlugins) {
   for (const plugin of requestedPlugins) {
     plugin.requested = true;
     plugin.queryValue = parsedQuery[plugin.queryKey];
@@ -39,10 +35,22 @@ const configurePlugins = (plugins, localConfigs, parsedQuery) => {
     // assign local configurations
     plugin.locals = Object.assign({}, localConfigs[plugin.queryKey]);
   }
-  // console.log(JSON.stringify(localConfigs, null, '  '))
-  // console.log(requestifiedPlugins)
-  // console.log(requestedPlugins.map((plugin) => plugin.queryKey));
-  // console.log(notRequestedPlugins.map((plugin) => plugin.queryKey));
+
+  // assign other configs to a plugin according to the "--use" option
+  for (const plugin of requestedPlugins) {
+    const otherConfig = plugin.locals['--use'];
+    const otherPlugin = plugins.find(
+      (nextPlugin) => nextPlugin.queryKey === otherConfig,
+    );
+
+    if (otherConfig && otherPlugin) {
+      plugin.locals = Object.assign(
+        {},
+        localConfigs[otherPlugin.queryKey],
+        plugin.locals,
+      );
+    }
+  }
 
   return deepClone([...requestedPlugins, ...notRequestedPlugins]);
 };
