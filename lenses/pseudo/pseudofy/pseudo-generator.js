@@ -549,8 +549,10 @@ module.exports = {
     );
   },
   ForInStatement: (ForInStatement = function ForInStatement(node, state) {
-    // state.write("for ".concat(node["await"] ? "await " : "", "("));
-    state.write('FOR: '.concat(node['await'] ? 'AWAIT ' : '', ''));
+    const forType =
+      'FOR' +
+      (node.type[3] === 'I' ? '-IN' : node.type[3] === 'O' ? '-OF' : '');
+    state.write(forType + ': '.concat(node['await'] ? 'AWAIT ' : '', ''));
     var left = node.left;
 
     if (left.type[0] === 'V') {
@@ -559,13 +561,11 @@ module.exports = {
       this[left.type](left, state);
     }
 
-    // state.write(node.type[3] === "I" ? " in " : " of ");
     state.write(node.type[3] === 'I' ? ' IN ' : ' OF ');
     this[node.right.type](node.right, state);
     // state.write(") ");
     this[node.body.type](node.body, state);
 
-    const forType = node.type[3] === 'I' ? 'FOR-IN' : 'FOR-OF';
     state.write(
       state.lineEnd +
         state.indent.repeat(state.indentLevel) +

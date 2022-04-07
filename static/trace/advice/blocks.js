@@ -1,11 +1,13 @@
-import { config } from "../data/config.js";
-import { state } from "../data/state.js";
-import { print } from "../lib/trace-log.js";
+import { config } from '../data/config.js';
+import { state } from '../data/state.js';
+import { print } from '../lib/trace-log.js';
+
+const nativeConsole = console;
 
 const getRandomColor = () => {
   // https://stackoverflow.com/questions/1484506/random-color-generator
-  var letters = "0123456789ABCDEF";
-  var color = "#";
+  var letters = '0123456789ABCDEF';
+  var color = '#';
   for (var i = 0; i < 6; i++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
@@ -17,12 +19,12 @@ export default {
     // debugger;
     if (config.blockScope) {
       state.blockScopeDepth += 1;
-      console.log("enter ", state.blockScopeDepth);
+      nativeConsole.log('enter ', state.blockScopeDepth);
     }
     return;
 
     // state.node = state.aran.nodes[serial];
-    // // console.log(state.node);
+    // // nativeConsole.log(state.node);
 
     // const color = getRandomColor();
 
@@ -35,7 +37,7 @@ export default {
     //       tag +
     //       ")",
     //   ],
-    //   out: console.groupCollapsed,
+    //   out: nativeConsole.groupCollapsed,
     // });
 
     // if (labels[0]) {
@@ -48,21 +50,21 @@ export default {
     //   state.scopes.push({ type: "block", color });
     // }
 
-    // console.log(state.scopeDepth);
-    // console.log(tag, labels, variables, serial);
+    // nativeConsole.log(state.scopeDepth);
+    // nativeConsole.log(tag, labels, variables, serial);
   },
   leave: (serial) => {
     // leave trap is not triggered if returning from a block
 
     if (config.blockScope) {
       state.blockScopeDepth -= 1;
-      console.log("leave ", state.blockScopeDepth);
+      nativeConsole.log('leave ', state.blockScopeDepth);
     }
     return;
 
-    // console.groupEnd();
+    // nativeConsole.groupEnd();
     // state.node = state.aran.nodes[serial];
-    // // console.log(state.node);
+    // // nativeConsole.log(state.node);
     // const line = state.node.loc.end.line;
 
     // const block = state.scopes.pop();

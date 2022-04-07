@@ -1,7 +1,9 @@
-import { config } from "../data/config.js";
-import { state } from "../data/state.js";
-import { isInRange } from "../lib/is-in-range.js";
-import { print } from "../lib/trace-log.js";
+import { config } from '../data/config.js';
+import { state } from '../data/state.js';
+import { isInRange } from '../lib/is-in-range.js';
+import { print } from '../lib/trace-log.js';
+
+const nativeConsole = console;
 
 const breakOrContinue = (type) => (label, serial) => {
   state.node = state.aran.nodes[serial];
@@ -9,7 +11,7 @@ const breakOrContinue = (type) => (label, serial) => {
     return;
   }
 
-  // console.log(state.node);
+  // nativeConsole.log(state.node);
   const line = state.node.test
     ? state.node.test.loc.start.line
     : state.node.loc.start.line;
@@ -19,8 +21,8 @@ const breakOrContinue = (type) => (label, serial) => {
 
   print({
     prefix: (linePrefix) =>
-      linePrefix(line, col) + " " + type + " " + (label || ""),
-    style: "font-weight: bold;",
+      linePrefix(line, col) + ' ' + type + ' ' + (label || ''),
+    style: 'font-weight: bold;',
   });
 };
 
@@ -41,7 +43,7 @@ export default {
       ? state.node.test.loc.start.column
       : state.node.loc.start.column;
 
-    if (state.node.type === "LogicalExpression") {
+    if (state.node.type === 'LogicalExpression') {
       if (
         config.operatorsList.length !== 0 &&
         !config.operatorsList.includes(state.node.operator)
@@ -49,69 +51,69 @@ export default {
         return consumed;
       }
 
-      const lineOfCode = state.code.split("\n")[line - 1];
+      const lineOfCode = state.code.split('\n')[line - 1];
       // const returned = consumed ? consumed : "right side";
 
-      const truthiness = consumed ? "truthy" : "falsy";
+      const truthiness = consumed ? 'truthy' : 'falsy';
 
       print({
         prefix: [line, col],
         logs: [
-          "operator (" + truthiness + " " + state.node.operator + " _):",
+          'operator (' + truthiness + ' ' + state.node.operator + ' _):',
           consumed,
           state.node.operator,
-          "_",
+          '_',
         ],
-        out: console.groupCollapsed,
+        out: nativeConsole.groupCollapsed,
       });
       print({ logs: [lineOfCode] });
-      console.groupEnd();
+      nativeConsole.groupEnd();
       return consumed;
     }
 
-    if (state.node.type === "ConditionalExpression") {
+    if (state.node.type === 'ConditionalExpression') {
       if (
         config.operatorsList.length !== 0 &&
-        !config.operatorsList.includes("_?_:_")
+        !config.operatorsList.includes('_?_:_')
       ) {
         return consumed;
       }
 
-      const lineOfCode = state.code.split("\n")[line - 1];
-      const returned = consumed ? "_a_" : "_b_";
+      const lineOfCode = state.code.split('\n')[line - 1];
+      const returned = consumed ? '_a_' : '_b_';
 
-      const truthiness = consumed ? "truthy" : "falsy";
+      const truthiness = consumed ? 'truthy' : 'falsy';
       print({
         prefix: [line, col],
         logs: [
-          "operator (" + truthiness + " ?_a_:_b_" + "):",
+          'operator (' + truthiness + ' ?_a_:_b_' + '):',
           consumed,
-          "?_:_",
+          '?_:_',
         ],
-        out: console.groupCollapsed,
+        out: nativeConsole.groupCollapsed,
       });
-      print({ logs: [lineOfCode, "\n\n(evaluates to):", returned] });
-      console.groupEnd();
+      print({ logs: [lineOfCode, '\n\n(evaluates to):', returned] });
+      nativeConsole.groupEnd();
       return consumed;
     }
 
-    let controlName = "";
-    if (state.node.type === "IfStatement") {
-      controlName = "if";
-    } else if (state.node.type === "SwitchStatement") {
-      controlName = "switch";
-    } else if (state.node.type === "SwitchCase") {
-      controlName = "case";
-    } else if (state.node.type === "WhileStatement") {
-      controlName = "while";
-    } else if (state.node.type === "DoWhileStatement") {
-      controlName = "do-while";
-    } else if (state.node.type === "ForStatement") {
-      controlName = "for";
-    } else if (state.node.type === "ForOfStatement") {
-      controlName = "for-of";
-    } else if (state.node.type === "ForInStatement") {
-      controlName = "for-in";
+    let controlName = '';
+    if (state.node.type === 'IfStatement') {
+      controlName = 'if';
+    } else if (state.node.type === 'SwitchStatement') {
+      controlName = 'switch';
+    } else if (state.node.type === 'SwitchCase') {
+      controlName = 'case';
+    } else if (state.node.type === 'WhileStatement') {
+      controlName = 'while';
+    } else if (state.node.type === 'DoWhileStatement') {
+      controlName = 'do-while';
+    } else if (state.node.type === 'ForStatement') {
+      controlName = 'for';
+    } else if (state.node.type === 'ForOfStatement') {
+      controlName = 'for-of';
+    } else if (state.node.type === 'ForInStatement') {
+      controlName = 'for-in';
     }
 
     const isNotInList =
@@ -121,16 +123,16 @@ export default {
       return consumed;
     }
 
-    const lineOfCode = state.code.split("\n")[line - 1];
+    const lineOfCode = state.code.split('\n')[line - 1];
 
-    const truthiness = consumed ? "truthy" : "falsy";
+    const truthiness = consumed ? 'truthy' : 'falsy';
 
     if (
-      state.node.type === "ForInStatement" ||
-      state.node.type === "ForOfStatement"
+      state.node.type === 'ForInStatement' ||
+      state.node.type === 'ForOfStatement'
     ) {
-      if (state.node.type === "ForInStatement") {
-        if (typeof consumed === "object") {
+      if (state.node.type === 'ForInStatement') {
+        if (typeof consumed === 'object') {
           return consumed;
         }
 
@@ -147,25 +149,25 @@ export default {
       }
       print({
         prefix: [line, col],
-        logs: ["check (" + controlName + "):", consumed],
-        out: console.groupCollapsed,
+        logs: ['check (' + controlName + '):', consumed],
+        out: nativeConsole.groupCollapsed,
       });
-      print({ prefix: "", logs: [lineOfCode] });
-      console.groupEnd();
+      print({ prefix: '', logs: [lineOfCode] });
+      nativeConsole.groupEnd();
     } else {
       print({
         prefix: [line, col],
-        logs: ["check (" + controlName + ", " + truthiness + "):", consumed],
-        out: console.groupCollapsed,
+        logs: ['check (' + controlName + ', ' + truthiness + '):', consumed],
+        out: nativeConsole.groupCollapsed,
       });
-      print({ prefix: "", logs: [lineOfCode] });
-      console.groupEnd();
+      print({ prefix: '', logs: [lineOfCode] });
+      nativeConsole.groupEnd();
     }
 
     // }
-    // console.log(state.node);
+    // nativeConsole.log(state.node);
     return consumed;
   },
-  break: breakOrContinue("break"),
-  continue: breakOrContinue("continue"),
+  break: breakOrContinue('break'),
+  continue: breakOrContinue('continue'),
 };

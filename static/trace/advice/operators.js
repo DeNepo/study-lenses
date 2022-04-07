@@ -1,7 +1,9 @@
-import { config } from "../data/config.js";
-import { state } from "../data/state.js";
-import { isInRange } from "../lib/is-in-range.js";
-import { print } from "../lib/trace-log.js";
+import { config } from '../data/config.js';
+import { state } from '../data/state.js';
+import { isInRange } from '../lib/is-in-range.js';
+import { print } from '../lib/trace-log.js';
+
+const nativeConsole = console;
 
 export default {
   unary: (operator, value, serial) => {
@@ -27,14 +29,14 @@ export default {
       const col = state.node.loc.start.column;
       print({
         prefix: [line, col],
-        logs: ["operation (" + operator + " _):", operator, value],
-        style: "font-weight: bold;",
-        out: console.groupCollapsed,
+        logs: ['operation (' + operator + ' _):', operator, value],
+        style: 'font-weight: bold;',
+        out: nativeConsole.groupCollapsed,
       });
-      print({ logs: ["(evaluates to):", result] });
-      console.groupEnd();
+      print({ logs: ['(evaluates to):', result] });
+      nativeConsole.groupEnd();
     }
-    // console.log(state.node);
+    // nativeConsole.log(state.node);
     return result;
   },
   binary: (operator, left, right, serial) => {
@@ -58,14 +60,14 @@ export default {
       const col = state.node.loc.start.column;
       print({
         prefix: [line, col],
-        logs: ["operation (_ " + operator + " _):", left, operator, right],
-        style: "font-weight: bold;",
-        out: console.groupCollapsed,
+        logs: ['operation (_ ' + operator + ' _):', left, operator, right],
+        style: 'font-weight: bold;',
+        out: nativeConsole.groupCollapsed,
       });
-      print({ logs: ["(evaluates to):", result] });
-      console.groupEnd();
+      print({ logs: ['(evaluates to):', result] });
+      nativeConsole.groupEnd();
     }
-    // console.log(state.node);
+    // nativeConsole.log(state.node);
     return result;
   },
 };

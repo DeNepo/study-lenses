@@ -5,6 +5,8 @@ import { print } from '../lib/trace-log.js';
 import { isBuiltIn } from '../lib/is-built-in.js';
 import { isInRange } from '../lib/is-in-range.js';
 
+const nativeConsole = console;
+
 export default {
   apply(f, t, xs, serial) {
     if (typeof f !== 'function') {
@@ -12,6 +14,8 @@ export default {
       //  without doing any apply logging
       f();
     }
+
+    // console.log(0);
 
     // hack, because of instrumentation
     if (
@@ -24,7 +28,7 @@ export default {
       const result = Reflect.apply(f, t, xs);
       return result;
     }
-    // console.log(1);
+    console.log(1);
 
     const functionName = f.name || 'anonymous';
 
@@ -87,6 +91,7 @@ export default {
     if (isConsoleCall && !config.console) {
       return undefined;
     }
+    // console.log(4);
 
     // in case only console & not functions
     if (!nodeIsInRange || (!config.functions && !isConsoleCall)) {
@@ -94,6 +99,7 @@ export default {
       if (state.builtInEntryPoint === 'callSymbol') {
         state.builtInEntryPoint = null;
       }
+      // console.log('a');
       return result;
     }
 
@@ -102,6 +108,7 @@ export default {
     else if (f === Reflect.get || f === Object) {
       if (state.node.callee.type === 'MemberExpression') {
         // let errors be handled by failure
+        // console.log('b');
         return Reflect.apply(f, t, xs);
       }
     }
@@ -124,6 +131,7 @@ export default {
       // state.scopes.pop();
       // return result;
     }
+    // console.log(5);
 
     // if (isConsoleCall && config.console) {
     //   print({
@@ -133,15 +141,13 @@ export default {
     //   });
     // }
 
-    // console.log(5);
-
     print({
       prefix: [line, col],
       logs: [
         functionName + ` (call${isBuiltIn(f) ? ', built-in' : ''}):`,
         ...commaSeparatedArgs,
       ],
-      out: console.groupCollapsed,
+      out: nativeConsole.groupCollapsed,
     });
     if (config.this) {
       print({
@@ -157,7 +163,6 @@ export default {
     }
 
     let x;
-    let nativeConsole = console;
     try {
       console = Object.keys(nativeConsole).reduce(
         (all, next) => ({ ...all, [next]: () => {} }),
@@ -165,10 +170,10 @@ export default {
       );
       x = isConsoleCall ? undefined : Reflect.apply(f, t, xs);
     } catch (err) {
-      console = nativeConsole;
       throw err;
+    } finally {
+      console = nativeConsole;
     }
-    console = nativeConsole;
 
     if (state.builtInEntryPoint === callSymbol) {
       state.builtInEntryPoint = null;
@@ -180,8 +185,10 @@ export default {
       style: 'font-weight: bold;',
     });
     if (!state.builtInEntryPoint) {
-      console.groupEnd();
+      nativeConsole.groupEnd();
     }
+
+    // console.log(6);
 
     return x;
   },

@@ -68,6 +68,15 @@ module.exports = async (req, res, next) => {
   }
   // console.log(1);
 
+  // be forgiving of white space in URL lens parameters
+  for (const key in req.query) {
+    const trimmedKey = key.trim();
+    req.query[trimmedKey] = req.query[key];
+    if (trimmedKey !== key) {
+      delete req.query[key];
+    }
+  }
+
   // build the local configuration for this request path
   //  all study.json combined from the request path
   //  up to the cwd, then the module's defaults

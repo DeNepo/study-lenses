@@ -1,8 +1,10 @@
-import { config } from "../data/config.js";
-import { print } from "../lib/trace-log.js";
-import { state } from "../data/state.js";
+import { config } from '../data/config.js';
+import { print } from '../lib/trace-log.js';
+import { state } from '../data/state.js';
 
-import { isInRange } from "../lib/is-in-range.js";
+import { isInRange } from '../lib/is-in-range.js';
+
+const nativeConsole = console;
 
 /* ++, --
 
@@ -75,13 +77,13 @@ export default {
     if (!isInRange(state.node)) {
       return value;
     }
-    // console.log(1);
-    // console.log(state.node);
+    // nativeConsole.log(1);
+    // nativeConsole.log(state.node);
 
     if (!config.variablesRead) {
       return value;
     }
-    // console.log(2);
+    // nativeConsole.log(2);
     if (
       config.variablesList.length !== 0 &&
       // !config.variablesList.find((query) => new RegExp(query).test(variable))
@@ -89,7 +91,7 @@ export default {
     ) {
       return value;
     }
-    // console.log(3);
+    // nativeConsole.log(3);
     // because aran encodes generated variables as number strings
     if (!isNaN(variable)) {
       return value;
@@ -100,33 +102,33 @@ export default {
       return value;
     }
 
-    // console.log(4);
+    // nativeConsole.log(4);
     const line = state.node.loc.start.line;
     const col = state.node.loc.start.column;
     print({
       prefix: [line, col],
       logs: [
-        (state.node.left ? state.node.left.name : variable) + " (read):",
+        (state.node.left ? state.node.left.name : variable) + ' (read):',
         value,
       ],
     });
-    // console.log("value:", value);
-    // console.log("variable:", variable);
-    // console.log("serial:", serial);
-    // console.log("state.node:", state.node);
+    // nativeConsole.log("value:", value);
+    // nativeConsole.log("variable:", variable);
+    // nativeConsole.log("serial:", serial);
+    // nativeConsole.log("state.node:", state.node);
     return value;
   },
   write: (value, variable, serial) => {
     state.node = state.aran.nodes[serial];
 
     // if (state.node.type === "FunctionDeclaration") {
-    //   console.log(state.node);
+    //   nativeConsole.log(state.node);
     // }
 
     if (!isInRange(state.node)) {
       return value;
     }
-    // console.log(state.node);
+    // nativeConsole.log(state.node);
 
     if (!(config.variablesAssign || config.variablesDeclare)) {
       return value;
@@ -153,51 +155,51 @@ export default {
     const col = state.node.loc.start.column;
 
     if (
-      (state.node.type === "ForOfStatement" ||
-        state.node.type === "ForInStatement") &&
+      (state.node.type === 'ForOfStatement' ||
+        state.node.type === 'ForInStatement') &&
       config.variablesDeclare
     ) {
       const kind = state.node.left.kind;
       const focusedLine = state.node.left.loc.start.line;
       const focusedCol = state.node.left.loc.start.column;
 
-      if (kind !== "var") {
+      if (kind !== 'var') {
         print({
           prefix: [focusedLine, focusedCol],
-          logs: [variable + " (declare, " + kind + ")"],
+          logs: [variable + ' (declare, ' + kind + ')'],
         });
 
         print({
           prefix: [focusedLine, focusedCol],
           logs: [
             variable +
-              " (" +
-              (state.node.kind === "var" ? "assign" : "initialize") +
-              "):",
+              ' (' +
+              (state.node.kind === 'var' ? 'assign' : 'initialize') +
+              '):',
             value,
           ],
         });
       }
     } else if (
-      (state.node.type === "VariableDeclaration" ||
-        state.node.type === "VariableDeclarator") &&
+      (state.node.type === 'VariableDeclaration' ||
+        state.node.type === 'VariableDeclarator') &&
       // || state.node.type === "ExpressionStatement"
       config.variablesDeclare
     ) {
       // if (state.hoisted.includes(state.node)) {
       //   return value;
       // }
-      if (state.node.kind !== "var") {
+      if (state.node.kind !== 'var') {
         print({
           prefix: [line, col],
-          logs: [variable + " (declare, " + state.node.kind + ")"],
+          logs: [variable + ' (declare, ' + state.node.kind + ')'],
         });
       }
 
       const declarator = state.node.declarations.find(
-        (declarator) => declarator.id.name === variable
+        (declarator) => declarator.id.name === variable,
       );
-      // console.log(declarator);
+      // nativeConsole.log(declarator);
       if (declarator.init) {
         const line = declarator.init.loc.start.line;
         const col = declarator.init.loc.start.column;
@@ -205,9 +207,9 @@ export default {
           prefix: [line, col],
           logs: [
             variable +
-              " (" +
-              (state.node.kind === "var" ? "assign" : "initialize") +
-              "):",
+              ' (' +
+              (state.node.kind === 'var' ? 'assign' : 'initialize') +
+              '):',
             value,
           ],
         });
@@ -234,38 +236,38 @@ export default {
     // }
 
     if (
-      (state.node.type === "AssignmentExpression" ||
-        state.node.type === "UpdateExpression" ||
-        state.node.type === "ExpressionStatement") &&
+      (state.node.type === 'AssignmentExpression' ||
+        state.node.type === 'UpdateExpression' ||
+        state.node.type === 'ExpressionStatement') &&
       config.variablesAssign
     ) {
       print({
         prefix: [line, col],
-        logs: [variable + " (assign):", value],
+        logs: [variable + ' (assign):', value],
       });
     }
     return value;
   },
   enter: (tag, labels, variables, serial) => {
-    // console.log(tag, labels, variables, serial);
-    if (tag !== "loop") {
+    // nativeConsole.log(tag, labels, variables, serial);
+    if (tag !== 'loop') {
       return;
     }
 
     state.node = state.aran.nodes[serial];
-    // console.log(state.node);
+    // nativeConsole.log(state.node);
     if (!isInRange(state.node)) {
       return;
     }
 
     if (
-      state.node.type !== "ForOfStatement" &&
-      state.node.type !== "ForInStatement"
+      state.node.type !== 'ForOfStatement' &&
+      state.node.type !== 'ForInStatement'
     ) {
       return;
     }
 
-    // console.log(state.node);
+    // nativeConsole.log(state.node);
 
     if (!config.variablesDeclare) {
       return;
@@ -286,12 +288,12 @@ export default {
       }
       print({
         prefix: [line, col],
-        logs: [variable + " (declare)"],
+        logs: [variable + ' (declare)'],
       });
     }
-    // console.log("value:", value);
-    // console.log("variable:", variable);
-    // console.log("serial:", serial);
-    // console.log("state.node:", state.node);
+    // nativeConsole.log("value:", value);
+    // nativeConsole.log("variable:", variable);
+    // nativeConsole.log("serial:", serial);
+    // nativeConsole.log("state.node:", state.node);
   },
 };
