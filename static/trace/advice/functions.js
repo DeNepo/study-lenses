@@ -28,7 +28,7 @@ export default {
       const result = Reflect.apply(f, t, xs);
       return result;
     }
-    console.log(1);
+    // console.log(1);
 
     const functionName = f.name || 'anonymous';
 

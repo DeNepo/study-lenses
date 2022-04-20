@@ -150,7 +150,7 @@ class MarkdownSSR extends JavaScriptSSR {
     const markedOptions = Object.assign(
       {},
       {
-        baseUrl: '/../' + this.requestData.path + '/',
+        baseUrl: this.requestData.path + '/../',
         langPrefix: 'line-numbers language-',
         gfm: true,
       },

@@ -1,29 +1,29 @@
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
-const MarkdownSSR = require("../markdown/index.js");
+const MarkdownSSR = require('../markdown/index.js');
 
-const { searchFilterRegex, searchFilterIncludes } = require("./search-filter");
+const { searchFilterRegex, searchFilterIncludes } = require('./search-filter');
 
-let searchQuery = "";
-let searchType = "includes";
-let flags = "";
+let searchQuery = '';
+let searchType = 'includes';
+let flags = '';
 let regexError = null;
 
 class DirectorySSR extends MarkdownSSR {
   constructor({ config, resource, requestData }) {
-    searchQuery = config.queryValue.searchQuery || "";
-    searchType = config.queryValue.searchType || "includes";
+    searchQuery = config.queryValue.searchQuery || '';
+    searchType = config.queryValue.searchType || 'includes';
     flags =
-      typeof config.queryValue.flags === "string"
+      typeof config.queryValue.flags === 'string'
         ? config.queryValue.flags
-        : "";
+        : '';
     regexError = null;
 
-    if (typeof searchQuery === "string" && searchQuery !== "") {
-      if (searchType === "regex") {
+    if (typeof searchQuery === 'string' && searchQuery !== '') {
+      if (searchType === 'regex') {
         // console.log("------ ", searchQuery, flags);
         try {
           const searchRegex = new RegExp(searchQuery, flags);
@@ -33,22 +33,22 @@ class DirectorySSR extends MarkdownSSR {
         }
         // console.log(resource.content);
         // console.log(JSON.stringify(resource.content, null, "  "));
-      } else if (searchType === "includes") {
+      } else if (searchType === 'includes') {
         resource.content = searchFilterIncludes(resource.content, searchQuery);
       }
     }
 
     // console.log(resource);
-    let readmeContent = "";
+    let readmeContent = '';
     try {
       const readmePath = path.join(
         resource.info.root,
         resource.info.dir,
         resource.info.base,
-        "README.md"
+        'README.md',
       );
       // console.log(readmePath);
-      readmeContent = fs.readFileSync(readmePath, "utf-8");
+      readmeContent = fs.readFileSync(readmePath, 'utf-8');
       // console.log(content);
     } catch (o_0) {
       // console.error(o_0);
@@ -81,39 +81,39 @@ class DirectorySSR extends MarkdownSSR {
       <input id="search-button" type="button" value="search:" />
 
       <input name="search" id="search-input" style="width: 15em;" value="${
-        searchQuery || ""
+        searchQuery || ''
       }" />
 
       <input type="checkbox" ${
-        searchType === "regex" ? "checked" : ""
+        searchType === 'regex' ? 'checked' : ''
       } name="regex" id="regex" /><label for="regex">regex</label>
 
       <div id='flags' style="display: ${
-        searchType === "regex" ? "inline-block" : "none"
+        searchType === 'regex' ? 'inline-block' : 'none'
       };">
         <input type="checkbox" ${
-          flags && flags.includes("g") ? "checked" : ""
+          flags && flags.includes('g') ? 'checked' : ''
         } name="g" id="g" /><label for="g">g</label>
         <input type="checkbox" ${
-          flags && flags.includes("i") ? "checked" : ""
+          flags && flags.includes('i') ? 'checked' : ''
         } name="i" id="i" /><label for="i">i</label>
         <input type="checkbox" ${
-          flags && flags.includes("m") ? "checked" : ""
+          flags && flags.includes('m') ? 'checked' : ''
         } name="m" id="m" /><label for="m">m</label>
         <input type="checkbox" ${
-          flags && flags.includes("s") ? "checked" : ""
+          flags && flags.includes('s') ? 'checked' : ''
         } name="s" id="s" /><label for="s">s</label>
         <input type="checkbox" ${
-          flags && flags.includes("u") ? "checked" : ""
+          flags && flags.includes('u') ? 'checked' : ''
         } name="u" id="u" /><label for="u">u</label>
         <input type="checkbox" ${
-          flags && flags.includes("y") ? "checked" : ""
+          flags && flags.includes('y') ? 'checked' : ''
         } name="y" id="y" /><label for="y">y</label>
       </div>
     </input>
-    ${regexError ? `<pre style="color: red;">${regexError}</pre>` : ""}`;
+    ${regexError ? `<pre style="color: red;">${regexError}</pre>` : ''}`;
 
-    return panel + "\n\n" + superPanel;
+    return panel + '\n\n' + superPanel;
   }
 }
 

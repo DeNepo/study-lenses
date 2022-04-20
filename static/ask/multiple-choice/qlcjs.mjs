@@ -21538,7 +21538,7 @@ const texts = {
         o_name_keyword: 'No, keyword/command describes a word that is reserved for describing program structure and cannot be used as a name',
         o_name_operator: 'No, programs have typically arithmetic, comparison, and logical operators e.g. +, ===, or &&',
         o_name_parameter: 'No, parameters are used to name inputs when functions are declared',
-        q_variable_trace: (...args) => `Which is the ordered sequence of values that are assigned to variable \`${args[0]}\` while executing the program?`,
+        q_variable_trace: (...args) => `Which is the ordered sequence of values stored in variable \`${args[0]}\` while executing the program?`,
         q_variable_trace_function: (...args) => `Which is the ordered sequence of values that are assigned to variable \`${args[0]}\` while executing \`${args[1]}\`?`,
         o_trace_correct: 'Correct, step by step these values are assigned to the variable',
         o_trace_miss: 'No, this sequence is missing a value that gets assigned',

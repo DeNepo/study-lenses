@@ -31,7 +31,6 @@ export const askOpenEnded = (code = '') => {
   if (ask.config.alert.ask) {
     let toAlert = question;
     if (Array.isArray(hints) && hints.length > 0) {
-      console.log(question);
       toAlert += '\n\nhints:';
 
       hints.forEach((hint) => {
