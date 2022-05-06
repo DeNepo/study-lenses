@@ -238,7 +238,8 @@ class JavaScriptSSR extends CodeSSR {
       </form>`;
     // }
 
-    const testsDisplay = locals.tests ? 'inline-block' : 'none';
+    const testsDisplay =
+      locals.tests && this.config.hasSpec ? 'inline-block' : 'none';
     superPanel += `
       <form id='tests-form' style='display: ${testsDisplay};'>
         <input name='tests' id='tests' type='checkbox' ${

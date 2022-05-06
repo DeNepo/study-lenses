@@ -61,13 +61,13 @@ export const table = `
   add step:
   <button id="unary">unary</button>
   <button id="binary">binary</button>
-  <button id="shortCircuit">short-circuit</button>
+  <!-- <button id="shortCircuit">short-circuit</button> -->
   <button id="ternary">ternary</button>
   || <button id="remove-row">remove step</button>
 </div>`;
 
 export const init = (shadow) => {
-  const tableBody = shadow.getElementById("table-body");
+  const tableBody = shadow.getElementById('table-body');
 
   let step = 1;
 
@@ -111,7 +111,7 @@ export const init = (shadow) => {
 
   // -- handlers --
   const addRow = (event) => {
-    const tr = document.createElement("tr");
+    const tr = document.createElement('tr');
     tr.innerHTML = rows[event.target.id]();
     tableBody.appendChild(tr);
 
@@ -128,9 +128,9 @@ export const init = (shadow) => {
   };
 
   // -- listeners --
-  shadow.getElementById("unary").addEventListener("click", addRow);
-  shadow.getElementById("binary").addEventListener("click", addRow);
-  shadow.getElementById("shortCircuit").addEventListener("click", addRow);
-  shadow.getElementById("ternary").addEventListener("click", addRow);
-  shadow.getElementById("remove-row").addEventListener("click", removeRow);
+  shadow.getElementById('unary').addEventListener('click', addRow);
+  shadow.getElementById('binary').addEventListener('click', addRow);
+  // shadow.getElementById('shortCircuit').addEventListener('click', addRow);
+  shadow.getElementById('ternary').addEventListener('click', addRow);
+  shadow.getElementById('remove-row').addEventListener('click', removeRow);
 };

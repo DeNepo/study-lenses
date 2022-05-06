@@ -19,17 +19,15 @@ const cruiserOptions = JSON.parse(
 );
 
 export default async ({ resource }) => {
+  let resourcePath = resource.path;
   if (resource.info.type !== 'directory') {
-    return;
+    resourcePath = path.join(resource.path, '..');
   }
 
-  const project = {
-    path,
-    graph: cruise([resource.path], cruiserOptions).output,
-  };
+  const graph = cruise([resourcePath], cruiserOptions).output;
 
   const rendered = await renderGraphFromSource(
-    { input: project.graph },
+    { input: graph },
     { format: 'svg' },
   );
 
