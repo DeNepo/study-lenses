@@ -14,6 +14,7 @@ const dirContents = ({ dirElement, top = false, defaults = {} }) => {
       dirElement.dir,
       dirElement.base,
     );
+
     // obfuscate .js files, minify html and CSS
     return `<li><a href="${relativePath}?${
       isRe && /.js$/i.test(dirElement.base) ? 'obf&min&' : isRe ? 'min&' : ''
@@ -24,6 +25,19 @@ const dirContents = ({ dirElement, top = false, defaults = {} }) => {
     const nameElement = dirElement.base;
     const subIndex = Array.isArray(dirElement.children)
       ? dirElement.children
+          .filter((child) => {
+            const isReJS = child?.base.toLowerCase().includes('.re.js');
+            if (!isReJS) {
+              return true;
+            }
+
+            const childName = child.name.toLowerCase().replace('.re', '');
+            const hasPair = dirElement.children.find((otherChild) => {
+              return otherChild !== child && otherChild.name === childName;
+            });
+
+            return hasPair ? false : true;
+          })
           .map((child) =>
             dirContents({
               dirElement: child,

@@ -1,4 +1,4 @@
-import { JavaScriptFE } from "../javascript/javascript-class.js";
+import { JavaScriptFE } from '../javascript/javascript-class.js';
 
 export class SteppedJavaScriptFE extends JavaScriptFE {
   constructor(config, steps) {
@@ -6,29 +6,29 @@ export class SteppedJavaScriptFE extends JavaScriptFE {
     super(config);
 
     for (const step of steps.steps) {
-      const model = monaco.editor.createModel(step.code, "javascript");
+      const model = monaco.editor.createModel(step.code, 'javascript');
       model.updateOptions({ tabSize: 2 });
       step.model = model;
     }
 
-    this.initSteps("steps-container");
+    this.initSteps('steps-container');
   }
 
   initSteps(containerId) {
     const stepButtons = document.getElementById(containerId);
 
-    stepButtons.addEventListener("click", (event) => {
+    stepButtons.addEventListener('click', (event) => {
       const index = Number(event.target.id);
       const active = steps.steps[index];
       this.editor.setModel(active.model);
       Array.from(stepButtons.children).forEach((button, buttonIndex) => {
         if (buttonIndex === index) {
-          button.style.backgroundColor = "black";
-          button.style.color = "white";
+          button.style.backgroundColor = 'black';
+          button.style.color = 'white';
           steps.steps[buttonIndex].active = true;
         } else {
-          button.style.backgroundColor = "white";
-          button.style.color = "black";
+          button.style.backgroundColor = 'white';
+          button.style.color = 'black';
           steps.steps[buttonIndex].active = false;
         }
       });
@@ -50,10 +50,10 @@ export class SteppedJavaScriptFE extends JavaScriptFE {
       }/${stepFileName}?study`;
 
       fetch(savePath, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           text: this.editor.getValue(),
@@ -62,58 +62,58 @@ export class SteppedJavaScriptFE extends JavaScriptFE {
       })
         .then((response) => response.text())
         .then((message) => {
-          alertIt ? alert(stepFileName + " " + message) : null;
-          console.log(stepFileName + " " + message);
+          alertIt ? alert(stepFileName + ' ' + message) : null;
+          console.log(stepFileName + ' ' + message);
         })
         .catch((err) => {
-          alert(err.name + ": " + err.message);
-          console.error("Error:", err);
+          alert(err.name + ': ' + err.message);
+          console.error('Error:', err);
         });
     };
 
     if (config.locals.save === true) {
-      const saveButton = document.getElementById("save-button");
+      const saveButton = document.getElementById('save-button');
 
-      saveButton.removeEventListener("click", window.save);
-      saveButton.addEventListener("click", saveChanges(true));
+      saveButton.removeEventListener('click', window.save);
+      saveButton.addEventListener('click', saveChanges(true));
     }
   }
 
   initEditor() {
-    const container = document.getElementById("editor-container");
+    const container = document.getElementById('editor-container');
     if (container === null) {
       return;
     }
-    container.style.overflow = "hidden";
+    container.style.overflow = 'hidden';
     // const readOnly = typeof this.config.readOnly === 'boolean'
     //   ? this.config.readOnly : false
     const readOnly = false;
     const options = Object.assign(
       {
-        language: monacoExtToLanguage[this.config.stepsExt] || "",
+        language: monacoExtToLanguage[this.config.stepsExt] || '',
         roundedSelection: true,
         scrollBeyondLastLine: true,
         theme: this.theme,
-        wrappingIndent: "indent",
-        wordWrap: "wordWrapColumn",
+        wrappingIndent: 'indent',
+        wordWrap: 'wordWrapColumn',
         wordWrapColumn: 100,
         automaticLayout: true,
         readOnly,
         tabSize: 2,
         scrollBeyondLastLine: true,
-        wordWrap: "on",
-        wrappingStrategy: "advanced",
+        wordWrap: 'on',
+        wrappingStrategy: 'advanced',
         minimap: {
           enabled: false,
         },
         overviewRulerLanes: 0,
         // fontSize: 13,
       },
-      config
+      config,
     );
     this.editor = monaco.editor.create(container, options);
 
-    this.editor.setValue(steps.steps[0].code || "");
+    this.editor.setValue(steps.steps[0].code || '');
     this.editor.layout();
     // https://github.com/microsoft/monaco-editor/issues/794#issuecomment-688959283
     this.editor.onDidChangeModelDecorations(() => {
@@ -121,7 +121,7 @@ export class SteppedJavaScriptFE extends JavaScriptFE {
       requestAnimationFrame(updateEditorHeight); // folding
     });
     const lineHeight = this.editor.getOption(
-      monaco.editor.EditorOption.lineHeight
+      monaco.editor.EditorOption.lineHeight,
     );
     const lineCount = this.editor.getModel()?.getLineCount() || 1;
     let prevHeight =
@@ -132,7 +132,7 @@ export class SteppedJavaScriptFE extends JavaScriptFE {
         return;
       }
       const lineHeight = this.editor.getOption(
-        monaco.editor.EditorOption.lineHeight
+        monaco.editor.EditorOption.lineHeight,
       );
       const lineCount = this.editor.getModel()?.getLineCount() || 1;
       const height =

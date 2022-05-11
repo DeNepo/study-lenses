@@ -269,13 +269,17 @@ export class JavaScriptFE extends CodeFE {
     //   astButton.addEventListener("click", () => this.studyWith("acorn"));
     // }
 
+    const reContainer = document.getElementById('re-container');
+
     const runContainer = document.getElementById('run-container');
     document.getElementById('run-input').addEventListener('change', (event) => {
       this.config.locals.run = !this.config.locals.run;
       if (event.target.checked) {
         runContainer.style = 'display: inline-block;';
+        this.config.hasRe && (reContainer.style = 'display: inline-block;');
       } else {
         runContainer.style = 'display: none;';
+        this.config.hasRe && (reContainer.style = 'display: none;');
       }
     });
 
@@ -286,10 +290,24 @@ export class JavaScriptFE extends CodeFE {
         this.config.locals.debug = !this.config.locals.debug;
         if (event.target.checked) {
           debugContainer.style = 'display: inline-block;';
+          this.config.hasRe && (reContainer.style = 'display: inline-block;');
         } else {
           debugContainer.style = 'display: none;';
+          this.config.hasRe && (reContainer.style = 'display: none;');
         }
       });
+
+    const reButton = document.getElementById('re-button');
+    if (reButton && this.config.hasRe) {
+      fetch(this.config.base.replace('.js', '.re.js'))
+        .then((res) => res.text())
+        .then((solution) => {
+          document
+            .getElementById('re-button')
+            .addEventListener('click', () => studyWith.console(solution));
+        })
+        .catch((err) => console.error(err));
+    }
 
     if (this.config.hasSpec === true && this.config.locals.save === true) {
       const runSpec = (debug) => async () => {

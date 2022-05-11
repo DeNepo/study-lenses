@@ -12,6 +12,15 @@ const hasSpec = (info) => {
   return fs.existsSync(absoluteSpecPath);
 };
 
+const hasRe = (info) => {
+  if (!info.root || !info.dir || !info.base) {
+    return false;
+  }
+  const absolutePath = path.join(info.root, info.dir, info.base);
+  const absoluteSpecPath = absolutePath.split('.js').join('.re.js');
+  return fs.existsSync(absoluteSpecPath);
+};
+
 class JavaScriptSSR extends CodeSSR {
   constructor({ config, resource }) {
     super({ config, resource });
@@ -23,6 +32,8 @@ class JavaScriptSSR extends CodeSSR {
     this.config.trace = config.trace;
 
     this.config.hasSpec = !this.config.stepsExt && hasSpec(resource.info);
+
+    this.config.hasRe = hasRe(resource.info);
   }
 
   styles() {
@@ -238,8 +249,16 @@ class JavaScriptSSR extends CodeSSR {
       </form>`;
     // }
 
-    const testsDisplay =
-      locals.tests && this.config.hasSpec ? 'inline-block' : 'none';
+    const showTests =
+      this.config.hasSpec ||
+      locals.tests ||
+      Array.isArray(this.config.locals.tests)
+        ? this.config.locals.tests.some((ext) =>
+            this.resource.path.includes(ext),
+          )
+        : false;
+
+    const testsDisplay = showTests ? 'inline-block' : 'none';
     superPanel += `
       <form id='tests-form' style='display: ${testsDisplay};'>
         <input name='tests' id='tests' type='checkbox' ${
@@ -271,11 +290,17 @@ class JavaScriptSSR extends CodeSSR {
 
     superPanel += '</div>';
 
-    // if (locals.eval || locals.openIn) {
     superPanel += '<div>';
-    // }
 
-    // if (locals.eval) {
+    const reDisplay =
+      this.config.hasRe && (locals.eval || locals.debug || locals.run)
+        ? 'inline-block'
+        : 'none';
+    superPanel += `
+    <div id='re-container' style='display: ${reDisplay};'>
+      <button id='re-button'>solution</button> ||
+    </div>`;
+
     const runDisplay = locals.eval || locals.run ? 'inline-block' : 'none';
     superPanel += `
     <div id='run-container' style='display: ${runDisplay};'>
@@ -294,8 +319,6 @@ class JavaScriptSSR extends CodeSSR {
       <trace-it event></trace-it>
     </div>`;
 
-    // }
-    // if (locals.openIn) {
     const openInDisplay = locals.openIn ? 'inline-block' : 'none';
     const openable = [
       'jsTutorLive',
