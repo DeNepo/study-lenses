@@ -254,7 +254,7 @@ class JavaScriptSSR extends CodeSSR {
       locals.tests ||
       Array.isArray(this.config.locals.tests)
         ? this.config.locals.tests.some((ext) =>
-            this.resource.path.includes(ext),
+            this.resource?.path?.includes(ext),
           )
         : false;
 
