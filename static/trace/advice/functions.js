@@ -6,6 +6,7 @@ import { isBuiltIn } from '../lib/is-built-in.js';
 import { isInRange } from '../lib/is-in-range.js';
 
 const nativeConsole = console;
+let callSymbol = null;
 
 export default {
   apply(f, t, xs, serial) {
@@ -60,22 +61,8 @@ export default {
     // priority to console trace configuration
     const isConsoleCall = Object.values(console).includes(f) || t === console;
 
-    // const isAlertCall = f.name === 'alert' && isBuiltIn(f);
-    // if (isAlertCall) {
-    //   if (nodeIsInRange) {
-    //     print({
-    //       prefix: [line, col],
-    //       logs: [` alert(${xs.length > 0 ? xs[0] : ''})`],
-    //       overrideBuiltIn: true,
-    //     });
-    //   }
-    //   return undefined;
-    // }
-    // console.log(2);
-
     // because of instrumentation
     // if (f.name === "get" && xs[0] === console && xs[2] === console) {
-
     const firstAndThirdAreSame =
       (xs[0] ? xs[0].toString() : xs[0]) === (xs[2] ? xs[2].toString() : xs[2]);
     if (f.name === 'get' && xs.length === 3 && firstAndThirdAreSame) {
@@ -96,7 +83,7 @@ export default {
     // in case only console & not functions
     if (!nodeIsInRange || (!config.functions && !isConsoleCall)) {
       const result = Reflect.apply(f, t, xs);
-      if (state.builtInEntryPoint === 'callSymbol') {
+      if (state.builtInEntryPoint === callSymbol) {
         state.builtInEntryPoint = null;
       }
       // console.log('a');
@@ -156,19 +143,19 @@ export default {
     }
 
     // console.log(7);
-    const callSymbol = Symbol(f.name);
+    callSymbol = Symbol(f.name);
     if (!state.builtInEntryPoint && isBuiltIn(f)) {
       // console.log(f.name);
       state.builtInEntryPoint = callSymbol;
     }
 
-    let x;
+    let returnValue = undefined;
     try {
       console = Object.keys(nativeConsole).reduce(
         (all, next) => ({ ...all, [next]: () => {} }),
         {},
       );
-      x = isConsoleCall ? undefined : Reflect.apply(f, t, xs);
+      returnValue = isConsoleCall ? undefined : Reflect.apply(f, t, xs);
     } catch (err) {
       throw err;
     } finally {
@@ -180,9 +167,10 @@ export default {
     }
 
     print({
-      prefix: '(return value):',
-      logs: [x],
+      prefix: '(returns):',
+      logs: [returnValue],
       style: 'font-weight: bold;',
+      end: true,
     });
     if (!state.builtInEntryPoint) {
       nativeConsole.groupEnd();
@@ -190,7 +178,7 @@ export default {
 
     // console.log(6);
 
-    return x;
+    return returnValue;
   },
 
   // closure: (f, serial) => {
