@@ -27,6 +27,11 @@ class CodeSSR {
 
   panel() {
     return `<!-- <input id='read-only-input' type='checkbox' checked='true' /> read-only -->
+    ${
+      this.config.locals.save === true
+        ? `<button id='save-button' style="font-weight: bold; background-color: black; color: white;">SAVE CHANGES</button>`
+        : ''
+    }
     <form style='display: inline-block'>
       <input id='dark-checkbox' type='checkbox' checked /> <label for='dark-checkbox'>dark</label>
     </form>
@@ -38,11 +43,7 @@ class CodeSSR {
     <button id='format-button'>format</button>
     <button id='permalink-button'>permalink</button>
     <button id='print-selection-button'>print selection</button>
-    ${
-      this.config.locals.save === true
-        ? `<button id='save-button'>save</button>`
-        : ''
-    }
+
     <br><br>
     <button id='highlight-selection-button'>highlight</button>
     <button id='parsonize-selection-button' style='display: ${

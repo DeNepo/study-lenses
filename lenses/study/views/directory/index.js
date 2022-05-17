@@ -76,6 +76,9 @@ class DirectorySSR extends MarkdownSSR {
     const superPanel = super.panel();
 
     const panel = `
+    <span id='new-tab-container'>
+      <input type='checkbox' id='new-tab'></input></label for='new-tab'>open in new tab</label>
+    </span>
     <hr>
     <form onsubmit="return false;">
       <input id="search-button" type="button" value="search:" />

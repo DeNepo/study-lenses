@@ -18,7 +18,10 @@ const dirContents = ({ dirElement, top = false, defaults = {} }) => {
     // obfuscate .js files, minify html and CSS
     return `<li><a href="${relativePath}?${
       isRe && /.js$/i.test(dirElement.base) ? 'obf&min&' : isRe ? 'min&' : ''
-    }--defaults" target="_blank">${dirElement.base}</a></li>\n`;
+    }--defaults">${dirElement.base}</a></li>\n`;
+    // return `<li><a href="${relativePath}?${
+    //   isRe && /.js$/i.test(dirElement.base) ? 'obf&min&' : isRe ? 'min&' : ''
+    // }--defaults" target="_blank">${dirElement.base}</a></li>\n`;
   }
 
   if (dirElement.type === 'directory') {
