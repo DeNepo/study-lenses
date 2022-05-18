@@ -238,7 +238,8 @@ export default {
     if (
       (state.node.type === 'AssignmentExpression' ||
         state.node.type === 'UpdateExpression' ||
-        state.node.type === 'ExpressionStatement') &&
+        state.node.type === 'ExpressionStatement' ||
+        state.node.type === 'ForStatement') &&
       config.variablesAssign
     ) {
       print({
