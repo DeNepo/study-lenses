@@ -1,7 +1,7 @@
 export class CodeFE {
   config = {};
   editor = null;
-  theme = "vs-dark";
+  theme = 'vs-dark';
 
   constructor(config, editor = true) {
     this.config = config;
@@ -24,19 +24,19 @@ export class CodeFE {
     //     this.editor.updateOptions({ readOnly: this.readOnly })
     //   })
 
-    const theme = document.getElementById("dark-checkbox");
-    theme.addEventListener("click", (event) => {
+    const theme = document.getElementById('dark-checkbox');
+    theme.addEventListener('click', (event) => {
       if (event.target.checked) {
-        this.editor.updateOptions({ theme: "vs-dark" });
-        this.theme = "vs-dark";
+        this.editor.updateOptions({ theme: 'vs-dark' });
+        this.theme = 'vs-dark';
       } else {
-        this.editor.updateOptions({ theme: "vs-light" });
-        this.theme = "vs-light";
+        this.editor.updateOptions({ theme: 'vs-light' });
+        this.theme = 'vs-light';
       }
     });
 
-    const minimap = document.getElementById("minimap-checkbox");
-    minimap.addEventListener("click", (event) => {
+    const minimap = document.getElementById('minimap-checkbox');
+    minimap.addEventListener('click', (event) => {
       if (event.target.checked) {
         this.editor.updateOptions({ minimap: { enabled: true } });
       } else {
@@ -45,28 +45,28 @@ export class CodeFE {
     });
 
     document
-      .getElementById("format-button")
-      .addEventListener("click", () =>
-        this.editor.trigger("anyString", "editor.action.formatDocument")
+      .getElementById('format-button')
+      .addEventListener('click', () =>
+        this.editor.trigger('anyString', 'editor.action.formatDocument'),
       );
 
     document
-      .getElementById("reset-button")
-      .addEventListener("click", () =>
-        this.editor.setValue(this.config.content || "")
+      .getElementById('reset-button')
+      .addEventListener('click', () =>
+        this.editor.setValue(this.config.content || ''),
       );
 
     document
-      .getElementById("print-selection-button")
-      .addEventListener("click", () => this.openSelectionWith("print"));
+      .getElementById('print-selection-button')
+      .addEventListener('click', () => this.openSelectionWith('print'));
 
     if (this.config.locals.save === true) {
       window.save = () => {
-        fetch(window.location.origin + window.location.pathname + "?study", {
-          method: "POST",
+        fetch(window.location.origin + window.location.pathname + '?study', {
+          method: 'POST',
           headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ text: this.editor.getValue() }),
         })
@@ -76,35 +76,35 @@ export class CodeFE {
             console.log(message);
           })
           .catch((err) => {
-            alert(err.name + ": " + err.message);
-            console.error("Error:", err);
+            alert(err.name + ': ' + err.message);
+            console.error('Error:', err);
           });
       };
 
       document
-        .getElementById("save-button")
-        .addEventListener("click", window.save);
+        .getElementById('save-button')
+        .addEventListener('click', window.save);
     }
 
     document
-      .getElementById("permalink-button")
-      .addEventListener("click", () => {
+      .getElementById('permalink-button')
+      .addEventListener('click', () => {
         const permalinkParamObject = {
           permalink: {
             content: this.editor.getValue(),
             ext: this.config.ext,
             locals: this.config.locals,
             queryValue: this.config.queryValue,
-            base: this.config.base || "",
+            base: this.config.base || '',
           },
         };
 
         const permalinkParamEncoded = encodeURIComponent(
-          JSON.stringify(permalinkParamObject)
+          JSON.stringify(permalinkParamObject),
         );
 
         const permalink =
-          window.location.origin + "?study=" + permalinkParamEncoded;
+          window.location.origin + '?study=' + permalinkParamEncoded;
 
         if (!navigator.clipboard) {
           fallbackCopyTextToClipboard(permalink);
@@ -117,74 +117,74 @@ export class CodeFE {
           function (err) {
             // console.error('Async: Could not copy text: ', err);
             fallbackCopyTextToClipboard(permalink);
-          }
+          },
         );
 
         function fallbackCopyTextToClipboard(text) {
-          var textArea = document.createElement("textarea");
+          var textArea = document.createElement('textarea');
           textArea.value = text;
           document.body.appendChild(textArea);
           textArea.focus();
           textArea.select();
           try {
-            var successful = document.execCommand("copy");
-            var msg = successful ? "successful" : "unsuccessful";
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
             // console.log('Fallback: Copying text command was ' + msg);
           } catch (err) {
-            console.error("Fallback: Oops, unable to copy", err);
+            console.error('Fallback: Oops, unable to copy', err);
           }
 
           document.body.removeChild(textArea);
           window.scrollTo(0, 0);
         }
 
-        alert("copied permalink");
+        alert('copied permalink');
       });
 
     document
-      .getElementById("parsonize-selection-button")
-      .addEventListener("click", () => this.openSelectionWith("parsons"));
+      .getElementById('parsonize-selection-button')
+      .addEventListener('click', () => this.openSelectionWith('parsons'));
 
     document
-      .getElementById("highlight-selection-button")
-      .addEventListener("click", () => this.openSelectionWith("highlight"));
+      .getElementById('highlight-selection-button')
+      .addEventListener('click', () => this.openSelectionWith('highlight'));
 
     const diffSelectionButton = document.getElementById(
-      "diff-selection-button"
+      'diff-selection-button',
     );
-    diffSelectionButton.addEventListener("click", () =>
-      this.openSelectionWith("diff")
+    diffSelectionButton.addEventListener('click', () =>
+      this.openSelectionWith('diff'),
     );
     document
-      .getElementById("diff-input")
-      .addEventListener("change", (event) => {
+      .getElementById('diff-input')
+      .addEventListener('change', (event) => {
         if (event.target.checked) {
-          diffSelectionButton.style = "display: inline-block;";
+          diffSelectionButton.style = 'display: inline-block;';
         } else {
-          diffSelectionButton.style = "display: none;";
+          diffSelectionButton.style = 'display: none;';
         }
       });
 
     document
-      .getElementById("diff-selection-input")
-      .addEventListener("change", (event) => {
+      .getElementById('diff-selection-input')
+      .addEventListener('change', (event) => {
         this.config.locals.diff = !this.config.locals.diff;
         if (event.target.checked) {
-          diffSelectionButton.style = "display: inline-block;";
+          diffSelectionButton.style = 'display: inline-block;';
         } else {
-          diffSelectionButton.style = "display: none;";
+          diffSelectionButton.style = 'display: none;';
         }
       });
   }
 
   initEditor() {
-    const container = document.getElementById("editor-container");
+    const container = document.getElementById('editor-container');
 
     if (container === null) {
       return;
     }
 
-    container.style.overflow = "hidden";
+    container.style.overflow = 'hidden';
 
     // const readOnly = typeof this.config.readOnly === 'boolean'
     //   ? this.config.readOnly : false
@@ -192,29 +192,29 @@ export class CodeFE {
 
     const options = Object.assign(
       {
-        language: monacoExtToLanguage[config.ext] || "",
+        language: monacoExtToLanguage[config.ext] || '',
         roundedSelection: true,
         scrollBeyondLastLine: true,
         theme: this.theme,
-        wrappingIndent: "indent",
-        wordWrap: "wordWrapColumn",
+        wrappingIndent: 'indent',
+        wordWrap: 'wordWrapColumn',
         wordWrapColumn: 100,
         automaticLayout: true,
         readOnly,
         tabSize: 2,
-        wordWrap: "on",
-        wrappingStrategy: "advanced",
+        wordWrap: 'on',
+        wrappingStrategy: 'advanced',
         minimap: {
           enabled: false,
         },
         overviewRulerLanes: 0,
         // fontSize: 13,
       },
-      config
+      config,
     );
 
     this.editor = monaco.editor.create(container, options);
-    this.editor.setValue(this.config.content || "");
+    this.editor.setValue(this.config.content || '');
     this.editor.layout();
 
     // https://github.com/microsoft/monaco-editor/issues/794#issuecomment-688959283
@@ -224,7 +224,7 @@ export class CodeFE {
     });
 
     const lineHeight = this.editor.getOption(
-      monaco.editor.EditorOption.lineHeight
+      monaco.editor.EditorOption.lineHeight,
     );
     const lineCount = this.editor.getModel()?.getLineCount() || 1;
     let prevHeight =
@@ -238,7 +238,7 @@ export class CodeFE {
       }
 
       const lineHeight = this.editor.getOption(
-        monaco.editor.EditorOption.lineHeight
+        monaco.editor.EditorOption.lineHeight,
       );
       const lineCount = this.editor.getModel()?.getLineCount() || 1;
       const height =
@@ -259,7 +259,7 @@ export class CodeFE {
     const columnEntries = [];
     const lineEntries = [];
     for (const entry of editorSelectionEntries) {
-      if (entry[0].includes("Column")) {
+      if (entry[0].includes('Column')) {
         columnEntries.push(entry);
       } else {
         lineEntries.push(entry);
@@ -275,39 +275,38 @@ export class CodeFE {
       return this.editor.getValue();
     }
 
-    let selection = "";
+    let selection = '';
     const start = editorSelection.startLineNumber;
     const end = editorSelection.endLineNumber;
     const getFromThis =
-      typeof this.editor.getModel === "function"
+      typeof this.editor.getModel === 'function'
         ? this.editor.getModel()
         : this.editor;
     for (let i = start; i <= end; i++) {
-      selection += getFromThis.getLineContent(i) + "\n";
+      selection += getFromThis.getLineContent(i) + '\n';
     }
 
     return selection;
   }
 
-  openWith(queryKey, code = "", cb) {
+  openWith(queryKey, code = '', cb) {
     const pseudoResource = {
       resource: {
         content: code,
         info: {
           ext: this.config.ext,
-          type: "file",
+          type: 'file',
         },
       },
     };
     // console.log(pseudoResource);
 
     const stringifiedResource = encodeURIComponent(
-      JSON.stringify(pseudoResource)
+      JSON.stringify(pseudoResource),
     );
 
     const baseConfig = {
       code,
-      ext: this.config.ext,
     };
     // const queryValue = encodeURIComponent(JSON.stringify(baseConfig));
     const finalConfig = Object.assign(baseConfig, this.config);
@@ -320,14 +319,14 @@ export class CodeFE {
       (queryValue
         ? `?${queryKey}&--resource=${stringifiedResource}`
         : `?${queryKey}=${queryValue}&--resource=${stringifiedResource}`);
-    if (typeof cb === "function") {
+    if (typeof cb === 'function') {
       cb(url);
     } else {
-      window.open(url, "_blank");
+      window.open(url, '_blank');
     }
   }
 
-  openSelectionWith(queryKey, code = "", cb) {
+  openSelectionWith(queryKey, code = '', cb) {
     const selectedCode = code || getMonacoSelection(this.editor);
     code = code || selectedCode || this.editor.getValue();
 

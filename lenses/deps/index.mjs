@@ -18,6 +18,7 @@ const cruiserOptions = JSON.parse(
   ),
 );
 
+// maybe an exec setting cwd would make for smaller file names?
 export default async ({ resource }) => {
   let resourcePath = resource.path;
   if (resource.info.type !== 'directory') {

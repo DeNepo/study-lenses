@@ -4,22 +4,24 @@ const path = require('path');
 
 const { ESLint } = require('eslint');
 
-const eslintLens = async ({ config, resource }) => {
+const eslintLens = async ({ config, resource, requestData }) => {
   if (resource.info.ext !== '.js') {
     return;
   }
 
   let lintResult = '';
   try {
+    const resourcePath = path.normalize(
+      path.join(process.cwd(), requestData.path),
+    );
+
     const eslint = new ESLint({
-      cwd: resource.path
-        ? path.normalize(path.join(resource.path, '..'))
-        : process.cwd(),
+      cwd: path.join(resourcePath, '..'),
     });
 
     // 2. Lint files.
     const results = await eslint.lintText(resource.content, {
-      filePath: resource.path,
+      filePath: resourcePath,
     });
 
     // 3. Format the results.
