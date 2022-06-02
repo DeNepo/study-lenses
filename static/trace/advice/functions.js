@@ -59,7 +59,8 @@ export default {
     const nodeIsInRange = isInRange(state.node);
 
     // priority to console trace configuration
-    const isConsoleCall = Object.values(console).includes(f) || t === console;
+    const isConsoleCall =
+      Object.values(console).includes(f) || t === nativeConsole;
 
     // because of instrumentation
     // if (f.name === "get" && xs[0] === console && xs[2] === console) {
