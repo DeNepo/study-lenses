@@ -136,7 +136,9 @@ runTests(${activeSolution.name}, tests);`;
     await saveChanges(false)();
   }
 
-  return runnerCode;
+  return Promise.resolve(runnerCode).then(() =>
+    saveChanges(false)(activeSolution.code),
+  );
 };
 
 document.getElementById('lens-it-el').code = () => {
@@ -211,32 +213,34 @@ if (solutionButtons.children[0]) {
 
 // --- save changes ---
 
-const saveChanges = (alertIt) => () => {
-  const solutionFileName = config.solutions.find(
-    (solution) => solution.active,
-  ).fileName;
+const saveChanges =
+  (alertIt) =>
+  (code = config.editor.getValue()) => {
+    const solutionFileName = config.solutions.find(
+      (solution) => solution.active,
+    ).fileName;
 
-  fetch(window.location.origin + window.location.pathname + '?fuzz', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      text: config.editor.getValue(),
-      fileName: solutionFileName,
-    }),
-  })
-    .then((response) => response.text())
-    .then((message) => {
-      alertIt ? alert(solutionFileName + ' ' + message) : null;
-      console.log(solutionFileName + ' ' + message);
+    fetch(window.location.origin + window.location.pathname + '?fuzz', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        text: code,
+        fileName: solutionFileName,
+      }),
     })
-    .catch((err) => {
-      alert(err.name + ': ' + err.message);
-      console.error('Error:', err);
-    });
-};
+      .then((response) => response.text())
+      .then((message) => {
+        alertIt ? alert(solutionFileName + ' ' + message) : null;
+        console.log(solutionFileName + ' ' + message);
+      })
+      .catch((err) => {
+        alert(err.name + ': ' + err.message);
+        console.error('Error:', err);
+      });
+  };
 
 if (config.locals.save === true) {
   document

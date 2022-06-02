@@ -1,4 +1,4 @@
-import { CodeConsumer } from "../base/class-code-consumer.js";
+import { CodeConsumer } from '../base/class-code-consumer.js';
 
 /* implicit global dependencies
 
@@ -16,11 +16,11 @@ export class RunIt extends CodeConsumer {
       active: false,
       max: 20,
     },
-    type: "script",
+    type: 'script',
     debug: false,
     container: null,
     globals: {},
-    text: "run",
+    text: 'run',
   };
 
   constructor(config) {
@@ -28,20 +28,20 @@ export class RunIt extends CodeConsumer {
 
     Object.assign(this.config, config);
 
-    this.config.debug = this.hasAttribute("debug");
-    this.config.type = this.hasAttribute("module") ? "module" : "script";
-    this.config.loopGuard.active = this.hasAttribute("loop-guard");
-    const maxAttributeValue = this.getAttribute("loop-guard");
+    this.config.debug = this.hasAttribute('debug');
+    this.config.type = this.hasAttribute('module') ? 'module' : 'script';
+    this.config.loopGuard.active = this.hasAttribute('loop-guard');
+    const maxAttributeValue = this.getAttribute('loop-guard');
     if (
-      maxAttributeValue !== "" &&
+      maxAttributeValue !== '' &&
       maxAttributeValue !== null &&
       !isNaN(maxAttributeValue)
     ) {
       this.config.loopGuard.max = Number(maxAttributeValue);
     }
 
-    if (this.hasAttribute("text") && this.getAttribute("text")) {
-      this.config.text = this.getAttribute("text");
+    if (this.hasAttribute('text') && this.getAttribute('text')) {
+      this.config.text = this.getAttribute('text');
     }
   }
 
@@ -50,7 +50,7 @@ export class RunIt extends CodeConsumer {
     //  loopGuard already handles errors
     try {
       return prettier.format(code, {
-        parser: "babel",
+        parser: 'babel',
         plugins: prettierPlugins,
       });
     } catch (err) {
@@ -80,7 +80,7 @@ export class RunIt extends CodeConsumer {
       const variable = Acorn.parse(`let loopGuard_${id} = 0;`).body[0];
       variable.generated = true;
       const check = Acorn.parse(
-        `++loopGuard_${id}; if (loopGuard_${id} > ${max}) { throw new RangeError("loopGuard_${id} is greater than ${max}"); }`
+        `++loopGuard_${id}; if (loopGuard_${id} > ${max}) { throw new RangeError("loopGuard_${id} is greater than ${max}"); }`,
       );
       check.generated = true;
       return {
@@ -96,7 +96,7 @@ export class RunIt extends CodeConsumer {
     const runItInstance = this;
 
     const blockify = (...body) => {
-      const blockStatement = Acorn.parse("{}").body[0];
+      const blockStatement = Acorn.parse('{}').body[0];
       blockStatement.body = body;
       return blockStatement;
     };
@@ -108,11 +108,11 @@ export class RunIt extends CodeConsumer {
       },
       leave(node, parent, prop, index) {
         if (
-          node.type !== "WhileStatement" &&
-          node.type !== "ForStatement" &&
-          node.type !== "ForOfStatement" &&
-          node.type !== "ForInStatement" &&
-          node.type !== "DoWhileStatement"
+          node.type !== 'WhileStatement' &&
+          node.type !== 'ForStatement' &&
+          node.type !== 'ForOfStatement' &&
+          node.type !== 'ForInStatement' &&
+          node.type !== 'DoWhileStatement'
         ) {
           return;
         }
@@ -121,9 +121,9 @@ export class RunIt extends CodeConsumer {
 
         const { variable, check } = generateLoopGuard(
           loopNumber,
-          runItInstance.config.loopGuard.max
+          runItInstance.config.loopGuard.max,
         );
-        if (node.body && node.body.type !== "BlockStatement") {
+        if (node.body && node.body.type !== 'BlockStatement') {
           node.body = blockify(node.body);
         }
 
@@ -154,39 +154,40 @@ export class RunIt extends CodeConsumer {
 
   async runIt(code = this.code) {
     code = await code;
+
     if (code === undefined) {
       return;
     }
-    if (typeof code !== "string") {
+    if (typeof code !== 'string') {
       // this should never happen, but just in case ....
-      throw new TypeError("code is not a string");
+      throw new TypeError('code is not a string');
     }
 
     const guardedCode =
       this.config.loopGuard.active === true ? this.loopGuard(code) : code;
 
     const finalCode = this.config.debug
-      ? "/* ------------------------ */ debugger;\n\n\n\n\n" +
+      ? '/* ------------------------ */ debugger;\n\n\n\n\n' +
         guardedCode +
-        "\n\n\n\n\n/* ------------------------ */ debugger;"
+        '\n\n\n\n\n/* ------------------------ */ debugger;'
       : guardedCode;
 
     while (this.config.container.childElementCount !== 0) {
       this.config.container.removeChild(this.config.container.firstChild);
     }
 
-    const evaller = document.createElement("iframe");
-    evaller.style.display = "none";
+    const evaller = document.createElement('iframe');
+    evaller.style.display = 'none';
     evaller.id = Math.random();
 
     evaller.onload = () => {
       Object.assign(evaller.contentWindow, this.config.globals);
 
-      const script = document.createElement("script");
+      const script = document.createElement('script');
       script.innerHTML = finalCode;
 
-      if (this.config.type === "module") {
-        script.type = "module";
+      if (this.config.type === 'module') {
+        script.type = 'module';
       }
 
       evaller.contentDocument.body.appendChild(script);
@@ -197,7 +198,7 @@ export class RunIt extends CodeConsumer {
   }
 
   connectedCallback() {
-    const shadow = this.attachShadow({ mode: "open" });
+    const shadow = this.attachShadow({ mode: 'open' });
     shadow.innerHTML = `
         <style>
           .panel-element {
@@ -242,26 +243,26 @@ export class RunIt extends CodeConsumer {
         </div>
         `;
 
-    const runItButton = shadow.getElementById("run-it-button");
+    const runItButton = shadow.getElementById('run-it-button');
     // eventually: a convention for defining code source
-    runItButton.addEventListener("click", () => this.runIt());
+    runItButton.addEventListener('click', () => this.runIt());
 
-    const evalContainer = document.createElement("div");
+    const evalContainer = document.createElement('div');
     this.config.container = evalContainer;
     shadow.appendChild(evalContainer);
 
-    const runItConfigEl = shadow.getElementById("run-it-config");
+    const runItConfigEl = shadow.getElementById('run-it-config');
 
-    runItConfigEl.addEventListener("change", (event) => {
+    runItConfigEl.addEventListener('change', (event) => {
       const target = event.target;
 
-      if (target.id === "loop-guard-active") {
+      if (target.id === 'loop-guard-active') {
         this.config.loopGuard.active = target.checked;
-      } else if (target.id === "loop-guard-max") {
+      } else if (target.id === 'loop-guard-max') {
         this.config.loopGuard.max = Number(target.value);
-      } else if (target.id === "module") {
-        this.config.type = target.checked ? "module" : "script";
-      } else if (target.id === "debug") {
+      } else if (target.id === 'module') {
+        this.config.type = target.checked ? 'module' : 'script';
+      } else if (target.id === 'debug') {
         this.config.debug = target.checked;
       }
 
@@ -269,20 +270,20 @@ export class RunIt extends CodeConsumer {
     });
 
     for (const child of runItConfigEl.children) {
-      if (child.nodeName !== "INPUT") {
+      if (child.nodeName !== 'INPUT') {
         continue;
       }
-      if (child.id === "loop-guard-active") {
+      if (child.id === 'loop-guard-active') {
         child.checked = this.config.loopGuard.active;
-      } else if (child.id === "loop-guard-max") {
+      } else if (child.id === 'loop-guard-max') {
         child.value = this.config.loopGuard.max;
-      } else if (child.id === "module") {
-        child.checked = this.config.type === "module";
-      } else if (child.id === "debug") {
+      } else if (child.id === 'module') {
+        child.checked = this.config.type === 'module';
+      } else if (child.id === 'debug') {
         child.checked = this.config.debug;
       }
     }
   }
 }
 
-customElements.define("run-it", RunIt);
+customElements.define('run-it', RunIt);
