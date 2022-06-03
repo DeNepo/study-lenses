@@ -115,15 +115,17 @@ click the [+] button to start a new solution`);
     ? `import { args, solution } from './${window.location.pathname
         .split('/')
         .pop()}/fuzz.js';
-import { ${activeSolution.name} } from './solutions/${activeSolution.fileName}'
+import { ${activeSolution.name} } from './${window.location.pathname
+        .split('/')
+        .pop()}/solutions/${activeSolution.fileName}'
 
 const tests = generateTests(args, solution, 10);
 
 runTests(${activeSolution.name}, tests);
 `
-    : `import { args, solution } from './${window.location.pathname
-        .split('/')
-        .pop()}/fuzz.js';
+    : `import { args, solution } from './${window.location.pathname.split(
+        '/',
+      )}/fuzz.js';
 
 
 ${solution}
@@ -136,9 +138,7 @@ runTests(${activeSolution.name}, tests);`;
     await saveChanges(false)();
   }
 
-  return Promise.resolve(runnerCode).then(() =>
-    saveChanges(false)(activeSolution.code),
-  );
+  return runnerCode;
 };
 
 document.getElementById('lens-it-el').code = () => {
