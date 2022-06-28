@@ -103,6 +103,11 @@ class JavaScriptSSR extends CodeSSR {
     </form>
     ${superConfigOptions}
     <form>
+      <input id='deps-input' type='checkbox' ${
+        this.config.locals.deps ? 'checked' : ''
+      } /> <label for='deps-input'>dependencies</label>
+    </form>
+    <form>
       <input id='eslint-input' type='checkbox' ${
         this.config.locals.eslint ? 'checked' : ''
       } /> <label for='eslint-input'>eslint</label>
@@ -267,19 +272,22 @@ class JavaScriptSSR extends CodeSSR {
         <label for='tests'>tests</label>
       </form>`;
 
-    // if (locals.clearScheduled) {
     const clearScheduledDisplay = locals.clearScheduled
       ? 'inline-block'
       : 'none';
     superPanel += `
       <button id='clear-scheduled-button' style='display: ${clearScheduledDisplay};'>clear scheduled</button>`;
-    // }
 
-    // if (locals.eval) {
     const eslintDisplay = locals.eslint ? 'inline-block' : 'none';
     superPanel += `
     <div id='eslint-container' style='display: ${eslintDisplay};'>
       <button id='eslint-button'>eslint</button>
+    </div>`;
+
+    const depsDisplay = locals.deps ? 'inline-block' : 'none';
+    superPanel += `
+    <div id='deps-container' style='display: ${depsDisplay};'>
+      <button id='deps-button'>dependencies</button>
     </div>`;
 
     const tableDisplay = locals.table ? 'inline-block' : 'none';

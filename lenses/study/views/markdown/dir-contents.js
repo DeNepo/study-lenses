@@ -1,12 +1,14 @@
 /* UPDATE
-
+  compile configs for each dir to know when to render dep graph
 */
 
 'use strict';
 
 const path = require('path');
 
-const dirContents = ({ dirElement, top = false, defaults = {} }) => {
+const dirContents = (dirElement = {}, top = false) => {
+  const locals = dirElement.locals;
+
   if (dirElement.type === 'file') {
     const isRe = dirElement.base.toLowerCase().includes('.re.');
     const relativePath = path.join(
@@ -16,12 +18,12 @@ const dirContents = ({ dirElement, top = false, defaults = {} }) => {
     );
 
     // obfuscate .js files, minify html and CSS
-    return `<li><a href="${relativePath}?${
-      isRe && /.js$/i.test(dirElement.base) ? 'obf&min&' : isRe ? 'min&' : ''
-    }--defaults">${dirElement.base}</a></li>\n`;
     // return `<li><a href="${relativePath}?${
     //   isRe && /.js$/i.test(dirElement.base) ? 'obf&min&' : isRe ? 'min&' : ''
-    // }--defaults" target="_blank">${dirElement.base}</a></li>\n`;
+    // }--defaults">${dirElement.base}</a></li>\n`;
+    return `<li><a href="${relativePath}?${
+      isRe && /.js$/i.test(dirElement.base) ? 'obf&min&' : isRe ? 'min&' : ''
+    }--defaults" target="_blank">${dirElement.base}</a></li>\n`;
   }
 
   if (dirElement.type === 'directory') {
@@ -41,16 +43,9 @@ const dirContents = ({ dirElement, top = false, defaults = {} }) => {
 
             return hasPair ? false : true;
           })
-          .map((child) =>
-            dirContents({
-              dirElement: child,
-              defaults: Object.assign(
-                {},
-                defaults,
-                dirElement.locals['--defaults'] || {},
-              ),
-            }),
-          )
+          .map((child) => {
+            return dirContents(child);
+          })
           .join('\n')
       : '';
 
@@ -59,11 +54,21 @@ const dirContents = ({ dirElement, top = false, defaults = {} }) => {
       dirElement.dir,
       dirElement.base,
     );
+
     return top
-      ? subIndex
+      ? (locals?.study?.deps
+          ? `<li><a href="./?deps" target="_blank" style="font-style: italic; font-size: 0.8em;">dependency graph</a></li>`
+          : '') + subIndex
       : `<li><details style="margin-bottom: 0px;"><summary><a href="${relativePath}?--defaults">${nameElement}</a></summary>\n` +
           (subIndex
-            ? '\n<ul style="list-style-type: none;">' + subIndex + '</ul>'
+            ? '\n<ul style="list-style-type: none;">' +
+              (locals?.study?.deps
+                ? `<li><a href="${
+                    top ? './' : relativePath
+                  }?deps" target="_blank" style="font-style: italic; font-size: 0.8em;">dependency graph</a></li>`
+                : '') +
+              subIndex +
+              '</ul>'
             : '') +
           '</details></li>';
   }

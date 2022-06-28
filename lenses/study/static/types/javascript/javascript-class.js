@@ -204,6 +204,27 @@ export class JavaScriptFE extends CodeFE {
         this.studyWith('pseudo&highlight', true),
       );
     }
+
+    const depsButton = document.getElementById('deps-button');
+    document
+      .getElementById('deps-input')
+      .addEventListener('change', (event) => {
+        if (event.target.checked) {
+          pseudoButton.style = 'display: inline-block;';
+        } else {
+          pseudoButton.style = 'display: none;';
+        }
+      });
+
+    depsButton.addEventListener('click', () =>
+      save().then(() =>
+        window.open(
+          `${window.location.origin}/${window.location.pathname}?deps`,
+          '_blank',
+        ),
+      ),
+    );
+
     // }
 
     const variablesButton = document.getElementById('variables-button');

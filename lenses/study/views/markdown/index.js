@@ -125,11 +125,7 @@ class MarkdownSSR extends JavaScriptSSR {
         virtualDirectory.content.children.filter(
           (i) => path.join(i.root, i.dir, i.base) !== thisFile,
         );
-      const dirToc = dirContents({
-        dirElement: virtualDirectory.content,
-        top: true,
-        defaults: this.config.locals,
-      });
+      const dirToc = dirContents(virtualDirectory.content, true);
       content = content.replace(
         // this.dirRegex,
         dirRegex,

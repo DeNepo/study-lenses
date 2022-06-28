@@ -5,7 +5,8 @@
   },
   "reporterOptions": {
     "dot": {
-      "collapsePattern": "^((node_modules)/[^/]+)"
+      "collapsePattern": "^((node_modules)/[^/]+)",
+      "orderBy": "name"
     }
   }
 }

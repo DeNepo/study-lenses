@@ -51,16 +51,21 @@ export class DirectoryFE extends MarkdownFE {
     const base = document.createElement('base');
     base.target = '_blank';
 
+    const toggleNewTab = (e) => {
+      if (newTabCheckbox.checked) {
+        newTabCheckbox.checked = false;
+        try {
+          document.head.removeChild(base);
+        } catch (err) {}
+      } else {
+        newTabCheckbox.checked = true;
+        document.head.appendChild(base);
+      }
+    };
+
+    newTabCheckbox.addEventListener('change', toggleNewTab);
     document
       .getElementById('new-tab-container')
-      .addEventListener('click', (e) => {
-        if (newTabCheckbox.checked) {
-          newTabCheckbox.checked = false;
-          document.head.removeChild(base);
-        } else {
-          newTabCheckbox.checked = true;
-          document.head.appendChild(base);
-        }
-      });
+      .addEventListener('click', toggleNewTab);
   }
 }
