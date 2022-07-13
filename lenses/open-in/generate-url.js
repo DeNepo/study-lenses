@@ -5,25 +5,20 @@ const btoa = (string) => Buffer.from(string).toString('base64');
 const sanitize = (str) =>
   str.replace(/\(/g, '%28').replace(/\)/g, '%29').replace(/%09/g, '%20%20');
 
+const jsTutor = function (code) {
+  const encodedJST = encodeURIComponent(code);
+  const sanitizedJST = sanitize(encodedJST);
+  const jsTutorURL =
+    // 'http://www.pythontutor.com/visualize.html#code=' +
+    'http://www.pythontutor.com/iframe-embed.html#code=' +
+    sanitizedJST +
+    '&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false';
+  return jsTutorURL;
+};
+
 module.exports = {
-  jstutorlive: (code) => {
-    const encodedJST = encodeURIComponent(code);
-    const sanitizedJST = sanitize(encodedJST);
-    const jsTutorURL =
-      'http://www.pythontutor.com/live.html#code=' +
-      sanitizedJST +
-      '&cumulative=false&curInstr=2&heapPrimitives=false&mode=display&origin=opt-live.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false';
-    return jsTutorURL;
-  },
-  jstutor: (code) => {
-    const encodedJST = encodeURIComponent(code);
-    const sanitizedJST = sanitize(encodedJST);
-    const jsTutorURL =
-      'http://www.pythontutor.com/visualize.html#code=' +
-      sanitizedJST +
-      '&cumulative=false&curInstr=0&heapPrimitives=nevernest&mode=display&origin=opt-frontend.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false';
-    return jsTutorURL;
-  },
+  jstutorlive: jsTutor,
+  jstutor: jsTutor,
   learnwithtrace: function (code) {
     const mainedCode = `export const main = () => {\n\n${code}\n\n};`;
     const lwtURL = createTracePlaygroundUrlForCode(mainedCode);
