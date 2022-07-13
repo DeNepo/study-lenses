@@ -6,7 +6,17 @@
   "reporterOptions": {
     "dot": {
       "collapsePattern": "^((node_modules)/[^/]+)",
-      "orderBy": "name"
+      "orderBy": "name",
+      "theme": {
+        "edge": {
+          "arrowsize": "0.5",
+          "penwidth": "1.0",
+          "color": "darkgrey"
+        },
+        "graph": {
+          "splines": "ortho"
+        }
+      }
     }
   }
 }

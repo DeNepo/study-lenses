@@ -329,7 +329,8 @@ class JavaScriptSSR extends CodeSSR {
 
     const openInDisplay = locals.openIn ? 'inline-block' : 'none';
     const openable = [
-      'jsTutorLive',
+      //  deprecated
+      // 'jsTutorLive',
       'jsTutor',
       'jsviz2',
       'learnWithTrace',

@@ -57,7 +57,7 @@ const dirContents = (dirElement = {}, top = false) => {
 
     return top
       ? (locals?.study?.deps
-          ? `<li><a href="./?deps" target="_blank" style="font-style: italic; font-size: 0.8em;">dependency graph</a></li>`
+          ? `<li><a href="./${relativePath}/?deps" target="_blank" style="font-style: italic; font-size: 0.8em;">dependency graph</a></li>`
           : '') + subIndex
       : `<li><details style="margin-bottom: 0px;"><summary><a href="${relativePath}?--defaults">${nameElement}</a></summary>\n` +
           (subIndex

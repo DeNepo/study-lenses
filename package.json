@@ -26,6 +26,7 @@
     "csso": "^4.2.0",
     "deepmerge": "^4.2.2",
     "dependency-cruiser": "^10.0.6",
+    "docsify-cli": "^4.4.4",
     "eslint": "^7.25.0",
     "eslint-plugin-jsdoc": "^33.0.0",
     "estree-walker": "^2.0.2",
