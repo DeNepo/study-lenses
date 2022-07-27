@@ -454,7 +454,7 @@ try {
     return isLit ? litProgram : code;
   }
 } catch (o_0) {
-  console.error(o_0);
+  // console.error(o_0);
 }
 
 // Prism.plugins.toolbar.registerButton('copy', function (env) {

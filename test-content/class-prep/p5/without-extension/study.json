@@ -1,4 +1,7 @@
 {
+  "--defaults": {
+    ".js": "p5"
+  },
   "study": {
     "run": false,
     "debug": false,
