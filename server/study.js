@@ -130,7 +130,7 @@ module.exports = async (req, res, next) => {
       const key = param.split('=')[0];
       const value = param.split('=')[1];
       if (value) {
-        let parsedValue = value.replaceAll('+', ' ');
+        let parsedValue = value.replace(/\+/g, ' ');
         try {
           parsedValue = JSON.parse(value);
         } catch (o_0) {}

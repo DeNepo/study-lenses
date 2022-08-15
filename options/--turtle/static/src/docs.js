@@ -635,7 +635,7 @@ const list = (category = All) => {
   console.log(blurb);
   console.log(Object.keys(category_lists[category]).join(', '));
   console.log(
-    'For more information on any of these functions, call help() on the function.',
+    'For more information on any of these functions, pass them as an argument to help(function_name).',
   );
 };
 
