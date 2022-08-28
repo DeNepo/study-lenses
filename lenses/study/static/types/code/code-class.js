@@ -25,6 +25,12 @@ export class CodeFE {
     //   })
 
     const theme = document.getElementById('dark-checkbox');
+
+    if (this.config.locals.dark === false) {
+      theme.checked = false;
+      this.theme = 'vs-light';
+    }
+
     theme.addEventListener('click', (event) => {
       if (event.target.checked) {
         this.editor.updateOptions({ theme: 'vs-dark' });
@@ -61,14 +67,30 @@ export class CodeFE {
       .addEventListener('click', () => this.openSelectionWith('print'));
 
     if (this.config.locals.save === true) {
-      window.save = () =>
-        fetch(window.location.origin + window.location.pathname + '?study', {
+      const getFileName = () => {
+        const proceed = confirm('would you like to save this as a new file?');
+        if (proceed) {
+          let fileName = '';
+          while (!fileName) {
+            fileName = prompt('enter the new file name:');
+          }
+          return fileName;
+        } else {
+          return '';
+        }
+      };
+
+      window.save = () => {
+        fetch(`${window.location.origin}${window.location.pathname}?study`, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ text: this.editor.getValue() }),
+          body: JSON.stringify({
+            text: this.editor.getValue(),
+            fileName: this.config.locals.newFile ? getFileName() : '',
+          }),
         })
           .then((response) => response.text())
           .then((message) => {
@@ -79,6 +101,7 @@ export class CodeFE {
             alert(err.name + ': ' + err.message);
             console.error('Error:', err);
           });
+      };
 
       document
         .getElementById('save-button')

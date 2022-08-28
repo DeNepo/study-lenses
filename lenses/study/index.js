@@ -16,7 +16,7 @@ const studyLens = async ({ config, resource, responseData, requestData }) => {
       const absolutePath = path.join(
         resource.info.root,
         resource.info.dir,
-        resource.info.base,
+        requestData.body.fileName || resource.info.base,
       );
       await writeFilePromise(absolutePath, requestData.body.text, 'utf-8');
       resource.content = ': changes were saved';
