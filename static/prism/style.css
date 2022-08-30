@@ -62,7 +62,7 @@ pre[class*='language-'] {
 }
 
 .token.punctuation {
-  color: firebrick;
+  color: red;
 }
 
 .token.namespace {
