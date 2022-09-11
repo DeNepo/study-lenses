@@ -153,7 +153,9 @@ const studyLens = async ({ config, resource, responseData, requestData }) => {
         <br>
         ${await typeView.configOptions()}
         <hr />
-        <a href='?--docs' target='_blank'><code>--docs</code></a>
+        <a href='?--docs' target='_blank'><code>--docs</code></a> - version ${
+          config.version
+        }
       </div>
     </div>
     ${await typeView.panel()}

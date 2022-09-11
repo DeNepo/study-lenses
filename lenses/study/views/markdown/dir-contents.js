@@ -31,7 +31,7 @@ const dirContents = (dirElement = {}, top = false) => {
     const subIndex = Array.isArray(dirElement.children)
       ? dirElement.children
           .filter((child) => {
-            const isReJS = child?.base.toLowerCase().includes('.re.js');
+            const isReJS = child && child.base.toLowerCase().includes('.re.js');
             if (!isReJS) {
               return true;
             }
@@ -56,13 +56,13 @@ const dirContents = (dirElement = {}, top = false) => {
     );
 
     return top
-      ? (locals?.study?.deps
+      ? (locals && locals.study && locals.study.deps
           ? `<li><a href="./${relativePath}/?deps" target="_blank" style="font-style: italic; font-size: 0.8em;">dependency graph</a></li>`
           : '') + subIndex
       : `<li><details style="margin-bottom: 0px;"><summary><a href="${relativePath}?--defaults">${nameElement}</a></summary>\n` +
           (subIndex
             ? '\n<ul style="list-style-type: none;">' +
-              (locals?.study?.deps
+              (locals && locals.study && locals.study.deps
                 ? `<li><a href="${
                     top ? './' : relativePath
                   }?deps" target="_blank" style="font-style: italic; font-size: 0.8em;">dependency graph</a></li>`

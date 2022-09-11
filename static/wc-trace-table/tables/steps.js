@@ -31,6 +31,7 @@ export const table = `
     <tbody id="table-body">
       <tr>
         <th><button id='close-button'>X</button></th>
+        <th>line</th>
         <th>name</th>
         <th>action</th>
         <th>value</th>
@@ -43,9 +44,10 @@ export const table = `
 </div>`;
 
 export const init = (shadow) => {
-  const tableBody = shadow.getElementById("table-body");
+  const tableBody = shadow.getElementById('table-body');
 
   const row = `
+            <td><input type="radio" name="step" checked /></td>
             <td><input class="line-number" type="number" min="1" /></td>
             <td><input class='name-input' /></td>
             <td>
@@ -62,7 +64,7 @@ export const init = (shadow) => {
 
   // -- handlers --
   const addRow = () => {
-    const tr = document.createElement("tr");
+    const tr = document.createElement('tr');
     tr.innerHTML = row;
     tableBody.appendChild(tr);
   };
@@ -75,8 +77,8 @@ export const init = (shadow) => {
   };
 
   // -- listeners --
-  shadow.getElementById("add-row").addEventListener("click", addRow);
-  shadow.getElementById("remove-row").addEventListener("click", removeRow);
+  shadow.getElementById('add-row').addEventListener('click', addRow);
+  shadow.getElementById('remove-row').addEventListener('click', removeRow);
 
   // -- init --
   addRow();

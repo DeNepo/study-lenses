@@ -68,7 +68,9 @@ export class CodeFE {
 
     if (this.config.locals.save === true) {
       const getFileName = () => {
-        const proceed = confirm('would you like to save this as a new file?');
+        const proceed = confirm(
+          'would you like to save this as a new file?\n- "ok" to create a new file\n- "cancel" to save to the same file',
+        );
         if (proceed) {
           let fileName = '';
           while (!fileName) {

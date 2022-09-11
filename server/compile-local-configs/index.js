@@ -1,20 +1,20 @@
-"use strict";
+'use strict';
 
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-const util = require("util");
+const util = require('util');
 
-const deepMerge = require("deepmerge");
+const deepMerge = require('deepmerge');
 const combineMerge = (target, source, options) => {
   const destination = target.slice();
 
   source.forEach((item, index) => {
-    if (typeof destination[index] === "undefined") {
+    if (typeof destination[index] === 'undefined') {
       destination[index] = options.cloneUnlessOtherwiseSpecified(item, options);
     } else if (options.isMergeableObject(item)) {
       const alreadyExists = destination.some((entry) =>
-        util.isDeepStrictEqual(entry, item)
+        util.isDeepStrictEqual(entry, item),
       );
       if (!alreadyExists) {
         destination.push(item);
@@ -47,8 +47,8 @@ const compileLocalConfigs = (absPath, config) => {
     return compileLocalConfigs(path.dirname(absPath), config);
   }
 
-  const studyConfigPath = path.normalize(path.join(absPath, "study.json"));
-  const lensesConfigPath = path.normalize(path.join(absPath, "lenses.json"));
+  const studyConfigPath = path.normalize(path.join(absPath, 'study.json'));
+  const lensesConfigPath = path.normalize(path.join(absPath, 'lenses.json'));
   const hasLensesConfig = fs.existsSync(lensesConfigPath);
   const hasConfig = hasLensesConfig || fs.existsSync(studyConfigPath);
 
@@ -62,8 +62,8 @@ const compileLocalConfigs = (absPath, config) => {
     currentConfig = JSON.parse(
       fs.readFileSync(
         hasLensesConfig ? lensesConfigPath : studyConfigPath,
-        "utf-8"
-      )
+        'utf-8',
+      ),
     );
   } catch (err) {
     console.error(err);

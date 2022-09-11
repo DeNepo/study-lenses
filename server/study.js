@@ -7,6 +7,10 @@ const config = require('config');
 
 const mime = require('mime');
 
+const { version } = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf-8'),
+);
+
 const deepClone = require('./lib/deep-clone.js');
 const deepParseQuery = require('./lib/deep-parse-query.js');
 

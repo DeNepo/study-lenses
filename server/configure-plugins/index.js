@@ -1,6 +1,13 @@
 'use strict';
 
+const path = require('path');
+const fs = require('fs');
+
 const deepClone = require('../lib/deep-clone.js');
+
+const { version } = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '..', '..', 'package.json'), 'utf-8'),
+);
 
 const configurePlugins = (plugins, localConfigs, parsedQuery) => {
   if (!plugins) {
@@ -34,6 +41,7 @@ const configurePlugins = (plugins, localConfigs, parsedQuery) => {
 
     // assign local configurations
     plugin.locals = Object.assign({}, localConfigs[plugin.queryKey]);
+    plugin.version = version;
   }
 
   // assign other configs to a plugin according to the "--use" option

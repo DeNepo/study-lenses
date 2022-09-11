@@ -58,11 +58,11 @@ export const init = (shadow) => {
   };
 
   // --- constant elements ---
-  const tableBody = shadow.getElementById("table-body");
+  const tableBody = shadow.getElementById('table-body');
 
   // --- element strings ---
   const variableTh = () => {
-    const th = document.createElement("th");
+    const th = document.createElement('th');
     th.innerHTML = `<input class="varname-header" placeholder='variable name' />`;
     return th;
   };
@@ -70,17 +70,17 @@ export const init = (shadow) => {
     '<td><input class="line-number" type="number" min="1" /></td>';
 
   const lineNumberTr = () => {
-    const tr = document.createElement("tr");
+    const tr = document.createElement('tr');
     tr.innerHTML =
       lineNumberTd +
       new Array(state.columns)
         .fill("<td><input class='standard-column' /></td>")
-        .join("");
+        .join('');
     return tr;
   };
 
   const variableTd = () => {
-    const td = document.createElement("td");
+    const td = document.createElement('td');
     td.innerHTML = "<input class='standard-column' />";
     return td;
   };
@@ -123,12 +123,12 @@ export const init = (shadow) => {
   };
 
   // --- listeners ---
-  shadow.getElementById("add-row").addEventListener("click", addRow);
-  shadow.getElementById("remove-row").addEventListener("click", removeRow);
-  shadow.getElementById("add-column").addEventListener("click", addColumn);
+  shadow.getElementById('add-row').addEventListener('click', addRow);
+  shadow.getElementById('remove-row').addEventListener('click', removeRow);
+  shadow.getElementById('add-column').addEventListener('click', addColumn);
   shadow
-    .getElementById("remove-column")
-    .addEventListener("click", removeColumn);
+    .getElementById('remove-column')
+    .addEventListener('click', removeColumn);
 
   // --- init ---
   addRow();
