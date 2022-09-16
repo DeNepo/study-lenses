@@ -59,7 +59,8 @@ export const table = `
   </table>
 
   add step:
-  <button id="unary">unary</button>
+  <button id="unaryPre">unary prefix</button>
+  <button id="unaryPost">unary postfix</button>
   <button id="binary">binary</button>
   <!-- <button id="shortCircuit">short-circuit</button> -->
   <button id="ternary">ternary</button>
@@ -72,11 +73,19 @@ export const init = (shadow) => {
   let step = 1;
 
   const rows = {
-    unary: () => `
+    unaryPre: () => `
             <td><text>${step}. </text></td>
             <td>
               <input placeholder='op' class='operator' />
               <input placeholder='value' class='value' />
+            </td>
+            <td><input class='value-input' /></td>
+          `,
+    unaryPost: () => `
+            <td><text>${step}. </text></td>
+            <td>
+              <input placeholder='value' class='value' />
+              <input placeholder='op' class='operator' />
             </td>
             <td><input class='value-input' /></td>
           `,
@@ -128,7 +137,8 @@ export const init = (shadow) => {
   };
 
   // -- listeners --
-  shadow.getElementById('unary').addEventListener('click', addRow);
+  shadow.getElementById('unaryPre').addEventListener('click', addRow);
+  shadow.getElementById('unaryPost').addEventListener('click', addRow);
   shadow.getElementById('binary').addEventListener('click', addRow);
   // shadow.getElementById('shortCircuit').addEventListener('click', addRow);
   shadow.getElementById('ternary').addEventListener('click', addRow);

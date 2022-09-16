@@ -10,7 +10,13 @@ const detectType = require('./lib/detect-type');
 const renderDependencies = require('./lib/render-dependencies');
 const renderAppendices = require('./lib/render-appendices');
 
-const studyLens = async ({ config, resource, responseData, requestData }) => {
+const studyLens = async ({
+  config,
+  resource,
+  responseData,
+  requestData,
+  lenses,
+}) => {
   if (config.locals.save === true && requestData.method === 'POST') {
     try {
       const absolutePath = path.join(
