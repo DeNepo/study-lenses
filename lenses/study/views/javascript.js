@@ -8,8 +8,15 @@ const hasSpec = (info) => {
     return false;
   }
   const absolutePath = path.join(info.root, info.dir, info.base);
-  const absoluteSpecPath = absolutePath.split('.js').join('.spec.js');
-  return fs.existsSync(absoluteSpecPath);
+  const absoluteSpecPath = absolutePath.includes('.mjs')
+    ? absolutePath.split('.mjs').join('.spec.mjs')
+    : absolutePath.split('.js').join('.spec.js');
+
+  const absoluteTestPath = absolutePath.includes('.mjs')
+    ? absolutePath.split('.mjs').join('.test.mjs')
+    : absolutePath.split('.js').join('.test.js');
+
+  return fs.existsSync(absoluteSpecPath) || fs.existsSync(absoluteTestPath);
 };
 
 const hasRe = (info) => {

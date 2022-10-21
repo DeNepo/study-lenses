@@ -62,7 +62,7 @@ const studyLens = async ({
   // console.log(1);
 
   const type = config.queryValue === 'p5' ? 'p5' : detectType(resource);
-  // console.log("--------", type);
+  // console.log('--------', type);
 
   const isStepped =
     !config.isPermalink &&

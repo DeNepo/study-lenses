@@ -6698,6 +6698,38 @@ if (typeof Error.captureStackTrace !== "function") {
               pass: r,
             };
           },
+          // hack: copy-pasted toEqual, good enough to run test suites
+          toStrictEqual: function (e, t) {
+            var n = this,
+              r = M(e, t, [A]);
+            return {
+              actual: e,
+              expected: t,
+              message: r
+                ? function () {
+                    return (
+                      m('.not.toStrictEqual') +
+                      '\n\nExpected value to not equal:\n  ' +
+                      x(t) +
+                      '\nReceived:\n  ' +
+                      b(e)
+                    );
+                  }
+                : function () {
+                    var r = f(t, e, { expand: n.expand });
+                    return (
+                      m('.toStrictEqual') +
+                      '\n\nExpected value to equal:\n  ' +
+                      x(t) +
+                      '\nReceived:\n  ' +
+                      b(e) +
+                      (r ? '\n\nDifference:\n\n' + r : '')
+                    );
+                  },
+              name: 'toStrictEqual',
+              pass: r,
+            };
+          },
           toHaveLength: function (e, t) {
             if ("string" != typeof e && (!e || "number" != typeof e.length))
               throw new Error(
