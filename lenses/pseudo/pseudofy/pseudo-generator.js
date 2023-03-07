@@ -1,5 +1,8 @@
 'use strict';
 
+const Acorn = require('acorn');
+const Astring = require('astring');
+
 // function _classCallCheck(instance, Constructor) {
 //   if (!(instance instanceof Constructor)) {
 //     throw new TypeError("Cannot call a class as a function");
@@ -349,14 +352,42 @@ module.exports = {
     // state.write(") ");
     state.write(state.lineEnd);
 
+    if (!node.consequent) {
+      const block = Acorn.parse('{}').body[0];
+      node.consequent = block;
+    } else if (node.consequent.type !== 'BlockStatement') {
+      const block = Acorn.parse('{}').body[0];
+      block.body.push(node.consequent);
+      node.consequent = block;
+    }
     this[node.consequent.type](node.consequent, state);
 
     if (node.alternate != null) {
       // state.write(" else ");
-      state.write(
-        state.lineEnd + state.indent.repeat(state.indentLevel) + 'ELSE: ',
-      );
-      this[node.alternate.type](node.alternate, state);
+      if (!node.alternate) {
+        const block = Acorn.parse('{}').body[0];
+        node.alternate = block;
+      } else if (
+        node.alternate &&
+        node.alternate.type !== 'BlockStatement' &&
+        node.alternate.type !== 'IfStatement'
+      ) {
+        const block = Acorn.parse('{}').body[0];
+        block.body.push(node.alternate);
+        node.alternate = block;
+      }
+      if (node.alternate === 'IfStatement') {
+        state.write(
+          state.lineEnd + state.indent.repeat(state.indentLevel) + 'ELSE: ',
+        );
+        state.indentLevel--;
+        this[node.alternate.type](node.alternate, state);
+      } else {
+        state.write(
+          state.lineEnd + state.indent.repeat(state.indentLevel) + 'ELSE: ',
+        );
+        this[node.alternate.type](node.alternate, state);
+      }
     }
 
     if (!state.output.endsWith(':END IF')) {
@@ -500,6 +531,14 @@ module.exports = {
     state.write('WHILE: ');
     this[node.test.type](node.test, state);
     // state.write(") ");
+    if (!node.body) {
+      const block = Acorn.parse('{}').body[0];
+      node.body = block;
+    } else if (node.body.type !== 'BlockStatement') {
+      const block = Acorn.parse('{}').body[0];
+      block.body.push(node.body);
+      node.body = block;
+    }
     this[node.body.type](node.body, state);
 
     state.write(
@@ -509,6 +548,14 @@ module.exports = {
   DoWhileStatement: function DoWhileStatement(node, state) {
     // state.write("do ");
     state.write('DO: ');
+    if (!node.body) {
+      const block = Acorn.parse('{}').body[0];
+      node.body = block;
+    } else if (node.body.type !== 'BlockStatement') {
+      const block = Acorn.parse('{}').body[0];
+      block.body.push(node.body);
+      node.body = block;
+    }
     this[node.body.type](node.body, state);
     // state.write(" while (");
     state.write('WHILE: ');
@@ -542,6 +589,14 @@ module.exports = {
     }
 
     // state.write(") ");
+    if (!node.body) {
+      const block = Acorn.parse('{}').body[0];
+      node.body = block;
+    } else if (node.body.type !== 'BlockStatement') {
+      const block = Acorn.parse('{}').body[0];
+      block.body.push(node.body);
+      node.body = block;
+    }
     this[node.body.type](node.body, state);
 
     state.write(
@@ -564,6 +619,15 @@ module.exports = {
     state.write(node.type[3] === 'I' ? ' IN ' : ' OF ');
     this[node.right.type](node.right, state);
     // state.write(") ");
+
+    if (!node.body) {
+      const block = Acorn.parse('{}').body[0];
+      node.body = block;
+    } else if (node.body.type !== 'BlockStatement') {
+      const block = Acorn.parse('{}').body[0];
+      block.body.push(node.body);
+      node.body = block;
+    }
     this[node.body.type](node.body, state);
 
     state.write(

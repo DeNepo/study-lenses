@@ -18,6 +18,7 @@ const pseudoLens = async ({ resource, config }) => {
       resource.content = pseudofy(resource.content);
     }
   } catch (err) {
+    console.error(err);
     resource.info.ext = '.txt';
     resource.content = err.toString();
   }
