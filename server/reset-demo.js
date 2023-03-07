@@ -34,16 +34,16 @@ const resetDemo = async (req, res, next) => {
       demoResetCache.delete(req.path);
     }
 
-    const resetResource = () => {
+    // schedule new reset task
+    const resetTimeoutId = setTimeout(() => {
       reset(req.path);
       demoResetCache.delete(req.path);
-    };
+    }, config.demo.resetDelay);
 
-    demoResetCache.set(
-      req.path,
-      setTimeout(resetResource, config.demo.resetDelay),
-    );
+    // add new timeout id to cache
+    demoResetCache.set(req.path, resetTimeoutId);
   }
+
   next();
 };
 
