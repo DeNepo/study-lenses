@@ -154,7 +154,9 @@ const helpUrl = `http://localhost:${port}?--help`;
 // launch the server
 require('../server/index.js')(port).then((_) => {
   console.log('studying: ', url);
-  open(url);
+  if (!userArgs.includes('-no-open')) {
+    open(url);
+  }
   // if (config.locals["--help"]) {
   //   setTimeout(() => open(helpUrl), 200);
   // }
