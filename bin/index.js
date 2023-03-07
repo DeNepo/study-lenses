@@ -58,7 +58,9 @@ if (isDemo) {
   config.demo.path = path.join(__dirname, '..', '.temp-demo-content');
 
   // clear any old demos
+  console.log('--- emptying backup directory ---');
   emptyDir(config.demo.path);
+  console.log('--- backing up demo content ---');
   copyDir(process.cwd(), config.demo.path, config.demo.resetIgnore);
 
   // https://stackoverflow.com/a/14032965

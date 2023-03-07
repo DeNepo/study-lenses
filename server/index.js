@@ -54,11 +54,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// reset content if in demo mode
-if (config.demo) {
-  app.use(resetDemo);
-}
-
 app.use(sandbox);
 app.use(repl);
 app.use(p5);
@@ -101,6 +96,11 @@ if (config.locals.static && typeof config.locals.static === 'object') {
       express.static(path.join(process.cwd(), actualPath)),
     );
   }
+}
+
+// reset content if in demo mode
+if (config.demo) {
+  app.use(resetDemo);
 }
 
 app.use(study);
