@@ -157,7 +157,7 @@ implementation. Examples:
     type: 'directory',
     toCwd: '../..',
     locals: {
-      "local configurations": "from study.jsons",
+      "local configurations": "from study.jsons or lenses.jsons",
       "lower configs": "are merged with higher configs",
       "lower configs": "have precedence"
     }
@@ -544,7 +544,7 @@ of whether any parameters were passed. particularly helpful for studying
 repositories with markdown and relative links, so you don't need to write
 `?--defaults` into each and every path.
 
-This only exists as a local `study.json` config option. there's not point in
+This only exists as a local `study.json` or `lenses.json` config option. there's not point in
 having it as a URL parameter, it's equivalent to using the `?--defaults` option
 in a query.
 
@@ -572,15 +572,15 @@ all-or-nothing.
 
 ## Local Configurations
 
-The `study` server also supports local configurations in `study.json` files.
+The `study` server also supports local configurations in `study.json` or `lenses.json` files.
 Configurations in a directory apply to all sub-directories. If there is a
-`study.json` file in a sub-directory, matching keys in the lower config will be
+`study.json` or `lenses.json` file in a sub-directory, matching keys in the lower config will be
 assigned onto the higher config (ie. lens configurations are cumulative)
 
 There are two supported local Option configurations and one field per lens.
 
 <details>
-<summary>example `study.json` config file</summary>
+<summary>example `study.json` or `lenses.json` config file</summary>
 
 ```json
 {

@@ -11,7 +11,7 @@ import { config } from './data/config.js';
 import { state } from './data/state.js';
 
 export const pointcut = (name, node) => {
-  // console.log(name, node.type);
+  // console.log(name, node.type, node);
 
   // if (
   //   node.type === "VariableDeclaration" &&

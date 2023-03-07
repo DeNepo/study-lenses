@@ -24,18 +24,25 @@ export const studyWith = {
   //     '&cumulative=false&curInstr=2&heapPrimitives=false&mode=display&origin=opt-live.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false';
   //   window.open(jsTutorURL, '_blank');
   // },
-  // preserve jsTutorLive config option to not break old study.json files
+  // preserve jsTutorLive config option to not break old study.json or lenses.json files
   jsTutorLive: jsTutor,
   jsTutor,
-  learnWithTrace: function (code) {
-    const mainedCode = `export const main = () => {\n\n${code}\n\n};`;
-    const lwtURL = createTracePlaygroundUrlForCode(mainedCode);
-    window.open(lwtURL, '_blank');
+  jsviz: (code) => {
+    const encoded = LZString.compressToEncodedURIComponent(code);
+    const url = `https://jsviz.klve.nl/#?code=${encoded}`;
+    window.open(url, '_blank');
   },
   learnWithTrace: function (code) {
     const mainedCode = `export const main = () => {\n\n${code}\n\n};`;
     const lwtURL = createTracePlaygroundUrlForCode(mainedCode);
     window.open(lwtURL, '_blank');
+  },
+  'ui.dev': (code) => {
+    const encodedJST = encodeURIComponent(code);
+    const sanitizedJST = sanitize(encodedJST);
+    const uiDevURL =
+      'https://ui.dev/javascript-visualizer/?code=' + sanitizedJST;
+    return uiDevURL;
   },
   loupe: function (code) {
     const encoded = encodeURIComponent(btoa(code));

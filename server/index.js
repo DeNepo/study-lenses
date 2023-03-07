@@ -19,6 +19,7 @@ const marked = require('marked');
 
 const Logger = require('./lib/logger.js');
 const study = require('./study.js');
+const resetDemo = require('./reset-demo.js');
 const sandbox = require('./sandbox.js');
 const repl = require('./repl.js');
 const p5 = require('./p5.js');
@@ -52,6 +53,11 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+// reset content if in demo mode
+if (typeof config.demoResetDelay === 'number') {
+  app.use(resetDemo);
+}
 
 app.use(sandbox);
 app.use(repl);

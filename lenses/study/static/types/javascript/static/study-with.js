@@ -89,7 +89,7 @@ export const studyWith = {
   //     '&cumulative=false&curInstr=2&heapPrimitives=false&mode=display&origin=opt-live.js&py=js&rawInputLstJSON=%5B%5D&textReferences=false';
   //   window.open(jsTutorURL, '_blank');
   // },
-  // preserve jsTutorLive config option to not break old study.json files
+  // preserve jsTutorLive config option to not break old study.json/lenses.json files
   jsTutorLive: jsTutor,
   jsTutor,
   learnWithTrace: function (code) {
@@ -134,9 +134,9 @@ export const studyWith = {
       'https://ui.dev/javascript-visualizer/?code=' + sanitizedJST;
     window.open(uiDevURL, '_blank');
   },
-  jsviz2: (code) => {
+  jsviz: (code) => {
     const encoded = LZString.compressToEncodedURIComponent(code);
-    const url = `https://jsviz2.klve.nl/#?code=${encoded}`;
+    const url = `https://jsviz.klve.nl/#?code=${encoded}`;
     window.open(url, '_blank');
   },
   jsv9000: function (code) {

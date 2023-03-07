@@ -493,7 +493,11 @@ export class JavaScriptFE extends CodeFE {
 
     document.getElementById('download-config').addEventListener('click', () => {
       const element = document.createElement('a');
-      element.setAttribute('download', 'study.json');
+      const fileName =
+        prompt(
+          'Enter a file name to save lens configs.\nOr cancel to use "lenses.json"',
+        ) || 'lenses.json';
+      element.setAttribute('download', fileName);
       element.style.display = 'none';
       element.setAttribute(
         'href',

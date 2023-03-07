@@ -1,25 +1,25 @@
-"use strict";
+'use strict';
 
-const fs = require("fs");
-const path = require("path");
-const util = require("util");
+const fs = require('fs');
+const path = require('path');
+const util = require('util');
 const readFilePromise = util.promisify(fs.readFile);
 
-const getInfo = require("../get-info.js");
-const isItAFile = require("../../lib/is-it-a-file");
-const isItADirectory = require("../../lib/is-it-a-directory");
-const deepSortChildren = require("./deep-sort-children.js");
+const getInfo = require('../get-info.js');
+const isItAFile = require('../../lib/is-it-a-file');
+const isItADirectory = require('../../lib/is-it-a-directory');
+const deepSortChildren = require('./deep-sort-children.js');
 
-const deepMerge = require("deepmerge");
+const deepMerge = require('deepmerge');
 const combineMerge = (target, source, options) => {
   const destination = target.slice();
 
   source.forEach((item, index) => {
-    if (typeof destination[index] === "undefined") {
+    if (typeof destination[index] === 'undefined') {
       destination[index] = options.cloneUnlessOtherwiseSpecified(item, options);
     } else if (options.isMergeableObject(item)) {
       const alreadyExists = destination.some((entry) =>
-        util.isDeepStrictEqual(entry, item)
+        util.isDeepStrictEqual(entry, item),
       );
       if (!alreadyExists) {
         destination.push(item);
@@ -50,12 +50,27 @@ const renderVirtualDirectory = async ({
 
   const paths = fs.readdirSync(absolutePath);
 
-  if (paths.includes("study.json")) {
+  if (paths.includes('study.json')) {
     // const thisConfig = fs.readFileSync(path.join(absolutePath, 'study.json'), 'utf-8')
     try {
       const thisConfig = await readFilePromise(
-        path.join(absolutePath, "study.json"),
-        "utf-8"
+        path.join(absolutePath, 'study.json'),
+        'utf-8',
+      );
+      const parsedConfig = JSON.parse(thisConfig);
+      studyConfig = deepMerge(studyConfig, parsedConfig, {
+        arrayMerge: combineMerge,
+      });
+    } catch (o_0) {
+      // console.error(o_0);
+    }
+  }
+
+  if (paths.includes('lenses.json')) {
+    try {
+      const thisConfig = await readFilePromise(
+        path.join(absolutePath, 'lenses.json'),
+        'utf-8',
       );
       const parsedConfig = JSON.parse(thisConfig);
       studyConfig = deepMerge(studyConfig, parsedConfig, {
@@ -71,13 +86,13 @@ const renderVirtualDirectory = async ({
   virDir.locals = studyConfig;
   virDir.children = [];
 
-  if (paths.includes(".gitignore")) {
+  if (paths.includes('.gitignore')) {
     gitignore = [];
     const toIgnore = fs.readFileSync(
-      path.join(absolutePath, ".gitignore"),
-      "utf-8"
+      path.join(absolutePath, '.gitignore'),
+      'utf-8',
     );
-    toIgnore.split("\n").forEach((ignorable) => {
+    toIgnore.split('\n').forEach((ignorable) => {
       gitignore.push(ignorable);
     });
   }
@@ -85,13 +100,13 @@ const renderVirtualDirectory = async ({
   let subPathPromises = [];
   for (let nextSubPath of paths) {
     if (
-      nextSubPath[0] === "." &&
-      !(nextSubPath.startsWith(".study") || nextSubPath.startsWith(".lens"))
+      nextSubPath[0] === '.' &&
+      !(nextSubPath.startsWith('.study') || nextSubPath.startsWith('.lens'))
     ) {
       continue;
     }
     // quick fix to avoid node_modules, full gitignore later
-    if (nextSubPath.match("node_modules")) {
+    if (nextSubPath.match('node_modules')) {
       continue;
     }
 
@@ -105,7 +120,7 @@ const renderVirtualDirectory = async ({
         absolutePath: nextAbsolutePath,
         gitignore,
         studyConfig,
-      })
+      }),
     );
   }
 

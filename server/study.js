@@ -82,7 +82,7 @@ module.exports = async (req, res, next) => {
   }
 
   // build the local configuration for this request path
-  //  all study.json combined from the request path
+  //  all study.json/lenses.json combined from the request path
   //  up to the cwd, then the module's defaults
   const preDefaults = compileLocalConfigs(absolutePath, {});
   const localConfigs = deepMerge(config.locals, preDefaults, {

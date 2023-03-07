@@ -339,9 +339,10 @@ class JavaScriptSSR extends CodeSSR {
       //  deprecated
       // 'jsTutorLive',
       'jsTutor',
-      'jsviz2',
+      'jsviz',
       'learnWithTrace',
       'algoviz',
+      'ui.dev',
       'jsv9000',
       'promisees',
       // "esprima",

@@ -19,6 +19,11 @@ const jsTutor = function (code) {
 module.exports = {
   jstutorlive: jsTutor,
   jstutor: jsTutor,
+  jsviz: (code) => {
+    const encoded = LZString.compressToEncodedURIComponent(code);
+    const url = `https://jsviz.klve.nl/#?code=${encoded}`;
+    window.open(url, '_blank');
+  },
   learnwithtrace: function (code) {
     const mainedCode = `export const main = () => {\n\n${code}\n\n};`;
     const lwtURL = createTracePlaygroundUrlForCode(mainedCode);
