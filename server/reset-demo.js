@@ -1,21 +1,49 @@
-const config = require('config');
+const fsPromise = require('fs/promises');
+const fs = require('fs');
+const path = require('path');
 
+const config = require('config');
 const { copyDir } = require('./lib/copyDir');
 const { emptyDir } = require('./lib/emptyDir');
 
-let lastReset = Date.now();
+const reset = async (subPath) => {
+  const backupPath = path.join(config.demo.path, subPath);
+  const targetPath = path.join(process.cwd(), subPath);
+
+  try {
+    if ((await fsPromise.lstat(backupPath)).isDirectory()) {
+      emptyDir(targetPath, config.demo.resetIgnore);
+      await copyDir(backupPath, targetPath, config.demo.resetIgnore);
+    } else {
+      const backupContent = await fsPromise.readFile(backupPath, 'utf-8');
+      await fsPromise.writeFile(targetPath, backupContent);
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const demoResetCache = new Map();
 
 const resetDemo = async (req, res, next) => {
-  const itsBeenTooLong = Date.now() - lastReset > config.demo.resetDelay;
+  // only handle requests that are trying to save changes
+  if (req.method === 'POST') {
+    // if there is a pending reset, remove it
+    if (demoResetCache.has(req.path)) {
+      clearInterval(demoResetCache.get(req.path));
+      demoResetCache.delete(req.path);
+    }
 
-  if (itsBeenTooLong) {
-    console.log('-------- BEGIN: resetting demo content --------');
-    emptyDir(process.cwd(), config.demo.resetIgnore);
-    await copyDir(config.demo.path, process.cwd(), config.demo.resetIgnore);
-    lastReset = Date.now();
-    console.log('-------- END: resetting demo content --------');
+    const resetResource = () => {
+      reset(req.path);
+      demoResetCache.delete(req.path);
+    };
+
+    demoResetCache.set(
+      req.path,
+      setTimeout(resetResource, config.demo.resetDelay),
+    );
   }
-
   next();
 };
 
