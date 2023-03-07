@@ -13,6 +13,15 @@ const config = require('config');
 const { copyDir } = require('../server/lib/copyDir');
 const { emptyDir } = require('../server/lib/emptyDir');
 
+let rootStudyConfig = {};
+// hack: prefer lenses.json
+try {
+  rootStudyConfig = require(path.join(process.cwd(), 'study.json'));
+} catch (o_0) {}
+try {
+  rootStudyConfig = require(path.join(process.cwd(), 'lenses.json'));
+} catch (o_0) {}
+
 /* The user can optionally launch a sub-path from the directory they are in
   if they do this, localhost will still serve from the root of the directory
     the browser will just open to the selected sub-path
@@ -24,13 +33,18 @@ const userArgs = process.argv.slice(2);
 // use the first arg that doesn't match a port config
 
 // is this a demo run?
-const isDemo = userArgs.find((entry) => entry.includes('-demo-reset'));
+const demoOption = '-demo-reset';
+const isDemo =
+  userArgs.find((entry) => entry.includes(demoOption))?.split('=') ||
+  Object.entries(rootStudyConfig).find((entry) =>
+    entry[0].includes(demoOption),
+  );
 if (isDemo) {
   const defaultDelay = 300000;
-  const userDelay = isDemo.includes('=')
-    ? Number(isDemo.split('=')[1])
-    : defaultDelay;
+  const userDelay = isDemo.length > 1 ? Number(isDemo[1]) : defaultDelay;
   config.demoResetDelay = !Number.isNaN(userDelay) ? userDelay : defaultDelay;
+
+  config.demoResetDelay;
 
   config.demoPath = path.join(__dirname, '..', '.temp-demo-content');
 
@@ -40,14 +54,14 @@ if (isDemo) {
 
   // https://stackoverflow.com/a/14032965
   function clearBackup() {
-    console.log('========= clearing backup');
+    console.log('\n========= clearing demo backup =========');
     emptyDir(config.demoPath);
   }
   //do something when app is closing
   process.on('exit', clearBackup.bind(null, { cleanup: true }));
 
   //catches ctrl+c event
-  process.on('SIGINT', clearBackup.bind(null, { exit: true }));
+  // process.on('SIGINT', clearBackup.bind(null, { exit: true }));
 
   // catches "kill pid" (for example: nodemon restart)
   process.on('SIGUSR1', clearBackup.bind(null, { exit: true }));
@@ -105,15 +119,6 @@ const cliLensSearch = process.argv.find((entry) => /--lens=[\d]*/i.test(entry));
 const cliLens =
   cliLensSearch !== undefined ? cliLensSearch.split('=')[1] : undefined;
 
-let rootStudyConfig = {};
-// hack: prefer lenses.json
-try {
-  rootStudyConfig = require(path.join(process.cwd(), 'study.json'));
-} catch (o_0) {}
-try {
-  rootStudyConfig = require(path.join(process.cwd(), 'lenses.json'));
-} catch (o_0) {}
-
 /**
  * @param {Object} object
  * @param {string} key
@@ -152,9 +157,15 @@ const url = `http://localhost:${port}/${pathToOpen}${queryMarker}${
 const helpUrl = `http://localhost:${port}?--help`;
 
 // launch the server
+
 require('../server/index.js')(port).then((_) => {
   console.log('studying: ', url);
-  if (!userArgs.includes('-no-open')) {
+  if (
+    !userArgs.includes('-no-open') &&
+    !Object.keys(rootStudyConfig).find((configName) =>
+      configName.includes('-no-open'),
+    )
+  ) {
     open(url);
   }
   // if (config.locals["--help"]) {

@@ -5,30 +5,20 @@ const path = require('path');
 
 function emptyDir(dirPath) {
   try {
-    const files = fs.readdirSync(dirPath);
-    for (const fileName of files) {
-      fs.unlinkSync(path.join(dirPath, fileName));
+    const contents = fs.readdirSync(dirPath);
+    for (const next of contents) {
+      const nextAbs = path.join(dirPath, next);
+      if (fs.lstatSync(nextAbs).isFile()) {
+        fs.unlinkSync(nextAbs);
+      } else {
+        fs.rmSync(nextAbs, {
+          recursive: true,
+          force: true,
+        });
+      }
     }
   } catch (err) {
     console.log(err);
   }
 }
 exports.emptyDir = emptyDir;
-
-// const fsPromise = require('fs/promises');
-// const path = require('path');
-
-// // https://stackoverflow.com/a/49421028
-
-// async function emptyDir(dirPath) {
-//   try {
-//     const files = await fsPromise.readdir(dirPath);
-//     const unlinkPromises = files.map((filename) =>
-//       fsPromise.unlink(path.join(dirPath, filename)),
-//     );
-//     return await Promise.all(unlinkPromises);
-//   } catch (err) {
-//     console.log(err);
-//   }
-// }
-// exports.emptyDir = emptyDir;
