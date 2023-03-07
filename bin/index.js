@@ -32,6 +32,7 @@ try {
 const userArgs = process.argv.slice(2);
 // use the first arg that doesn't match a port config
 
+config.demo = null;
 // is this a demo run?
 const demoOption = '-demo-reset';
 const isDemo =
@@ -40,22 +41,30 @@ const isDemo =
     entry[0].includes(demoOption),
   );
 if (isDemo) {
+  config.demo = {};
   const defaultDelay = 300000;
   const userDelay = isDemo.length > 1 ? Number(isDemo[1]) : defaultDelay;
-  config.demoResetDelay = !Number.isNaN(userDelay) ? userDelay : defaultDelay;
+  config.demo.resetDelay = !Number.isNaN(userDelay) ? userDelay : defaultDelay;
 
-  config.demoResetDelay;
+  config.demo.resetIgnore =
+    userArgs
+      .find((entry) => entry.includes('-reset-ignore'))
+      ?.split('=')?.[1]
+      .split(',') ||
+    Object.entries(rootStudyConfig).find((entry) =>
+      entry[0].includes('-reset-ignore'),
+    )?.[1];
 
-  config.demoPath = path.join(__dirname, '..', '.temp-demo-content');
+  config.demo.path = path.join(__dirname, '..', '.temp-demo-content');
 
   // clear any old demos
-  emptyDir(config.demoPath);
-  copyDir(process.cwd(), config.demoPath);
+  emptyDir(config.demo.path);
+  copyDir(process.cwd(), config.demo.path, config.demo.resetIgnore);
 
   // https://stackoverflow.com/a/14032965
   function clearBackup() {
     console.log('\n========= clearing demo backup =========');
-    emptyDir(config.demoPath);
+    emptyDir(config.demo.path);
   }
   //do something when app is closing
   process.on('exit', clearBackup.bind(null, { cleanup: true }));
@@ -66,8 +75,6 @@ if (isDemo) {
   // catches "kill pid" (for example: nodemon restart)
   process.on('SIGUSR1', clearBackup.bind(null, { exit: true }));
   process.on('SIGUSR2', clearBackup.bind(null, { exit: true }));
-} else {
-  config.demoResetDelay = null;
 }
 
 const pathToStudy =
@@ -161,9 +168,11 @@ const helpUrl = `http://localhost:${port}?--help`;
 require('../server/index.js')(port).then((_) => {
   console.log('studying: ', url);
   if (
-    !userArgs.includes('-no-open') &&
-    !Object.keys(rootStudyConfig).find((configName) =>
-      configName.includes('-no-open'),
+    !(
+      userArgs.find((entry) => entry.includes('-no-open')) ||
+      Object.keys(rootStudyConfig).find((configName) =>
+        configName.includes('-no-open'),
+      )
     )
   ) {
     open(url);

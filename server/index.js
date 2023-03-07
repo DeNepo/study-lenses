@@ -55,7 +55,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 
 // reset content if in demo mode
-if (typeof config.demoResetDelay === 'number') {
+if (config.demo) {
   app.use(resetDemo);
 }
 

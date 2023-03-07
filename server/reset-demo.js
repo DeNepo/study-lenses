@@ -5,12 +5,12 @@ const { emptyDir } = require('./lib/emptyDir');
 
 let lastReset = Date.now();
 const resetDemo = async (req, res, next) => {
-  const itsBeenTooLong = Date.now() - lastReset > config.demoResetDelay;
+  const itsBeenTooLong = Date.now() - lastReset > config.demo.resetDelay;
   // console.log(itsBeenTooLong);
   if (itsBeenTooLong) {
     console.log('-------- BEGIN: resetting demo content --------');
-    await emptyDir(process.cwd());
-    await copyDir(config.demoPath, process.cwd());
+    await emptyDir(process.cwd(), config.demo.resetIgnore);
+    await copyDir(config.demo.path, process.cwd(), config.demo.resetIgnore);
     lastReset = Date.now();
     console.log('-------- END: resetting demo content --------');
   }
