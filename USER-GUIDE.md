@@ -1,5 +1,8 @@
 # Study Lenses
 
+> You could read all the words below, or ...
+> <a href="./study_lenses_public/guide.mp4" target="_blank">watch this video</a>
+
 To understand what's going on here the first thing to know is that you are using
 a _static server_, like the `liveServer` extension for Visual Studio Code. This
 means you can use `$ study` to develop your HTML/CSS/JavaScript projects as you
@@ -14,8 +17,8 @@ by writing them directly in
 <a href="https://en.wikipedia.org/wiki/Address_bar" target="_blank">address
 bar</a> and refreshing.
 
-> PS. The links with a `?` in this file will only work properly when you are
-> reading this in Study Lenses
+_PS. The links with a `?` in this file will only work properly when you are
+reading this in Study Lenses_
 
 ---
 
