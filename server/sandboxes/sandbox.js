@@ -4,11 +4,11 @@ const path = require('path');
 
 const config = require('config');
 
-const loadPlugins = require('./load-plugins');
-const configurePlugins = require('./configure-plugins');
-const compileLocalConfigs = require('./compile-local-configs');
+const loadPlugins = require('../load-plugins');
+const configurePlugins = require('../configure-plugins');
+const compileLocalConfigs = require('../compile-local-configs');
 
-const lensesPath = path.join(__dirname, '..', 'lenses');
+const lensesPath = path.join(__dirname, '..', '..', 'lenses');
 const lensesPromise = loadPlugins('lenses', lensesPath);
 
 const deepMerge = require('deepmerge');

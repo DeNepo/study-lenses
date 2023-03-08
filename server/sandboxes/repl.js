@@ -2,10 +2,10 @@
 
 const path = require('path');
 
-const loadPlugins = require('./load-plugins');
-const configurePlugins = require('./configure-plugins');
+const loadPlugins = require('../load-plugins');
+const configurePlugins = require('../configure-plugins');
 
-const lensesPath = path.join(__dirname, '..', 'lenses');
+const lensesPath = path.join(__dirname, '..', '..', 'lenses');
 const lensesPromise = loadPlugins('lenses', lensesPath);
 
 const repl = async (req, res, next) => {

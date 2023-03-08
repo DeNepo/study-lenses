@@ -125,6 +125,10 @@ export default async ({ config, resource, requestData, responseData }) => {
 
     <!-- Icon Copyright info -->
     <small class="copyright-footer">
+      Adapted from <a href="https://github.com/CodingTrain/Logo" target="_blank">The Coding Train</a>
+
+      ---
+
       Icons made by
       <a href="https://www.flaticon.com/authors/freepik" title="Turtle"
         >Turtle</a

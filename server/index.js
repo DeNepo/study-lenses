@@ -20,10 +20,11 @@ const marked = require('marked');
 const Logger = require('./lib/logger.js');
 const study = require('./study.js');
 const resetDemo = require('./reset-demo.js');
-const sandbox = require('./sandbox.js');
-const repl = require('./repl.js');
-const p5 = require('./p5.js');
-const tutor = require('./tutor.js');
+const sandbox = require('./sandboxes/sandbox.js');
+const repl = require('./sandboxes/repl.js');
+const p5 = require('./sandboxes/p5.js');
+const tutor = require('./sandboxes/tutor.js');
+const logo = require('./sandboxes/logo.js');
 
 // error and exit handling ...
 process.on('exit', function onExit(code) {
@@ -58,6 +59,7 @@ app.use(sandbox);
 app.use(repl);
 app.use(p5);
 app.use(tutor);
+app.use(logo);
 
 app.use(
   /[\s\S]*own_static_resources_lenses/,
