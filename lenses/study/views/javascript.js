@@ -24,8 +24,8 @@ const hasRe = (info) => {
     return false;
   }
   const absolutePath = path.join(info.root, info.dir, info.base);
-  const absoluteSpecPath = absolutePath.split('.js').join('.re.js');
-  return fs.existsSync(absoluteSpecPath);
+  const absoluteRePath = absolutePath.replace('.js', '.re.js');
+  return fs.lstatSync(absolutePath).isFile() && fs.existsSync(absoluteRePath);
 };
 
 class JavaScriptSSR extends CodeSSR {
