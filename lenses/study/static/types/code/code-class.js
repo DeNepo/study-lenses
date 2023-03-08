@@ -83,17 +83,20 @@ export class CodeFE {
       };
 
       window.save = () => {
-        fetch(`${window.location.origin}${window.location.pathname}?study`, {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
+        return fetch(
+          `${window.location.origin}${window.location.pathname}?study`,
+          {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              text: this.editor.getValue(),
+              fileName: this.config.locals.newFile ? getFileName() : '',
+            }),
           },
-          body: JSON.stringify({
-            text: this.editor.getValue(),
-            fileName: this.config.locals.newFile ? getFileName() : '',
-          }),
-        })
+        )
           .then((response) => response.text())
           .then((message) => {
             alert(message);
