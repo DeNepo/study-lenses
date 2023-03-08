@@ -1,5 +1,7 @@
 'use strict';
 
+const LZString = require('../../static/lz-string.min.js');
+
 const btoa = (string) => Buffer.from(string).toString('base64');
 
 const sanitize = (str) =>
@@ -21,8 +23,7 @@ module.exports = {
   jstutor: jsTutor,
   jsviz: (code) => {
     const encoded = LZString.compressToEncodedURIComponent(code);
-    const url = `https://jsviz.klve.nl/#?code=${encoded}`;
-    window.open(url, '_blank');
+    return `https://jsviz.klve.nl/#?code=${encoded}`;
   },
   learnwithtrace: function (code) {
     const mainedCode = `export const main = () => {\n\n${code}\n\n};`;
