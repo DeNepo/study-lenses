@@ -1,23 +1,16 @@
 # Hi!
 
-Some simple files of code to test out lenses.
+A markdown file with some JS in it.
 
 ---
 
-Here's some code samples:
+## JavaScript
 
 ```js
-const joy = (food, sleep) => {
-  return 'o_0';
-};
-```
+const greeting = 'o_0';
 
-```html
-<h1>H1</h1>
-```
-
-```css
-.falafel {
-  color: brown
+for (let i = 0; i < 3; i++) {
+  console.log(greeting);
+  alert(greeting);
 }
 ```

@@ -58,7 +58,9 @@ try out to get the feel:
 - <a href="./study_lenses_public/README.md?render" target="_blank"><code>/README.md?render</code></a> -
   or render it into a web page
 - <a href="./study_lenses_public/README.md?study" target="_blank"><code>/README.md?study</code></a> -
-  or study it (.js code blocks will become interactive)
+  or study it (JS code blocks will have lens buttons)
+- <a href="./study_lenses_public/README.md?slides" target="_blank"><code>/README.md?slides</code></a> -
+  each divider (`---`) will be a new slide
 
 </details>
 
