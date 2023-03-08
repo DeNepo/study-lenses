@@ -164,6 +164,9 @@ const studyLens = async ({
         }
       </div>
     </div>
+
+    <span style="float: right;">&#187; <a href='?--help' target='_blank'>Help!  What is this?</a> &#171;</span>
+
     ${await typeView.panel()}
   </section>
   <main>
