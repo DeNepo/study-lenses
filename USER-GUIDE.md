@@ -14,8 +14,8 @@ by writing them directly in
 <a href="https://en.wikipedia.org/wiki/Address_bar" target="_blank">address
 bar</a> and refreshing.
 
-> PS. The links with a `?` in this file will only work properly when you open
-> `/?--help` with Study Lenses
+> PS. The links with a `?` in this file will only work properly when you are
+> reading this in Study Lenses
 
 ---
 
