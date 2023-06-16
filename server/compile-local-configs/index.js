@@ -72,6 +72,7 @@ const compileLocalConfigs = (absPath, config) => {
   // console.log('--- ', absPath)
   // console.log('currentConfig:', currentConfig)
   // console.log('config:', config)
+
   const newConfig = deepMerge(currentConfig, config, {
     arrayMerge: combineMerge,
   });

@@ -1,6 +1,6 @@
 {
   "name": "study-lenses",
-  "version": "0.0.170",
+  "version": "0.0.171",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
@@ -11,7 +11,8 @@
   "repository": "https://github.com/colevandersWands/study-lenses",
   "preferGlobal": true,
   "bin": {
-    "study": "./bin/index.js"
+    "study": "./bin/index.js",
+    "lenses": "./bin/index.js"
   },
   "dependencies": {
     "@gerhobbelt/gitignore-parser": "^0.2.0-8",
