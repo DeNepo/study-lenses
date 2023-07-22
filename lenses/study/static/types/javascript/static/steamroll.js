@@ -1,5 +1,5 @@
 export const steamroll = function steamroll(code) {
-  ("use strict;");
+  ('use strict;');
 
   /*
 
@@ -25,16 +25,16 @@ export const steamroll = function steamroll(code) {
 
   const isFed = (code, cesspool) =>
     function fedHandler({ lineno, error }) {
-      const splitted = code.split("\n");
+      const splitted = code.split('\n');
       const theProblem = splitted[lineno - 1];
       comment
         ? splitted.unshift(
             `// ${++improvements}. ${error.name}: ${
               error.message
-            }\n//    ${splitted.splice(lineno - 1, 1)}\n`
+            }\n//    ${splitted.splice(lineno - 1, 1)}\n`,
           )
         : splitted.splice(lineno - 1, 1);
-      const nextFToGive = splitted.join("\n");
+      const nextFToGive = splitted.join('\n');
       delete fsGiven[fsGiven.length - 1].goodCode;
       fsGiven[fsGiven.length - 1].badCode = code;
       fsGiven[fsGiven.length - 1].error = error;
@@ -44,17 +44,17 @@ export const steamroll = function steamroll(code) {
 
   const evalIt = (cesspool, code) =>
     function evalIt() {
-      cesspool.contentWindow.addEventListener("error", isFed(code, cesspool));
-      const fingersCrossed = document.createElement("script");
+      cesspool.contentWindow.addEventListener('error', isFed(code, cesspool));
+      const fingersCrossed = document.createElement('script');
       fingersCrossed.innerHTML = `eval(decodeURI(\`${encodeURI(code)}\`))`;
       cesspool.contentDocument.body.appendChild(fingersCrossed);
     };
 
   const fit = (code) => {
     fsGiven.push({ goodCode: code });
-    const cesspool = document.createElement("iframe");
-    cesspool.addEventListener("load", evalIt(cesspool, code));
-    cesspool.style.display = "none";
+    const cesspool = document.createElement('iframe');
+    cesspool.addEventListener('load', evalIt(cesspool, code));
+    cesspool.style.display = 'none';
     return cesspool;
   };
 

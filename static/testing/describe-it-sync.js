@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const { describe, it, beforeEach, afterEach } = (() => {
   let beforeEachCallback = null;
@@ -8,13 +8,13 @@ const { describe, it, beforeEach, afterEach } = (() => {
 
   const unit = (description, testFunction) => {
     if (unitIsCalled) {
-      throw new Error("can not call it/test from inside of it/test");
+      throw new Error('can not call it/test from inside of it/test');
     }
-    if (typeof description !== "string") {
-      throw new TypeError("first argument must be a string");
+    if (typeof description !== 'string') {
+      throw new TypeError('first argument must be a string');
     }
-    if (typeof testFunction !== "function") {
-      throw new TypeError("second argument must be a function");
+    if (typeof testFunction !== 'function') {
+      throw new TypeError('second argument must be a function');
     }
 
     unitIsCalled = true;
@@ -23,14 +23,14 @@ const { describe, it, beforeEach, afterEach } = (() => {
       try {
         beforeEachCallback();
       } catch (err) {
-        console.error("%cbeforeEach Error:", "font-weight: bold;", err);
+        console.error('%cbeforeEach Error:', 'font-weight: bold;', err);
       }
     }
 
     const consoleBackup = Object.assign({}, console);
     const consoleCalls = [];
     for (let key in console) {
-      if (typeof console[key] === "function") {
+      if (typeof console[key] === 'function') {
         console[key] = function () {
           consoleCalls.push({ method: key, args: Array.from(arguments) });
         };
@@ -51,7 +51,7 @@ const { describe, it, beforeEach, afterEach } = (() => {
     if (threw) {
       console.groupCollapsed(
         `%c✖ FAIL: ${description}`,
-        "font-weight: bold; color: red;"
+        'font-weight: bold; color: red;',
       );
       for (let call of consoleCalls) {
         console[call.method](...call.args);
@@ -66,12 +66,12 @@ const { describe, it, beforeEach, afterEach } = (() => {
       if (consoleCalls.length === 0) {
         console.log(
           `%c√ PASS: ${description}`,
-          "font-weight: bold; color: green;"
+          'font-weight: bold; color: green;',
         );
       } else {
         console.groupCollapsed(
           `%c√ PASS: ${description}`,
-          "font-weight: bold; color: green;"
+          'font-weight: bold; color: green;',
         );
         for (let call of consoleCalls) {
           console[call.method](...call.args);
@@ -84,7 +84,7 @@ const { describe, it, beforeEach, afterEach } = (() => {
       try {
         afterEachCallback();
       } catch (err) {
-        console.error("%cafterEach Error:", "font-weight: bold;", err);
+        console.error('%cafterEach Error:', 'font-weight: bold;', err);
       }
     }
 
@@ -93,39 +93,39 @@ const { describe, it, beforeEach, afterEach } = (() => {
 
   return {
     beforeEach: (callBack) => {
-      if (typeof callBack !== "function") {
-        throw new TypeError("beforeEach argument is not a function");
+      if (typeof callBack !== 'function') {
+        throw new TypeError('beforeEach argument is not a function');
       }
 
       beforeEachCallback = callBack;
     },
 
     afterEach: (callBack) => {
-      if (typeof callBack !== "function") {
-        throw new TypeError("afterEach argument is not a function");
+      if (typeof callBack !== 'function') {
+        throw new TypeError('afterEach argument is not a function');
       }
 
       afterEachCallback = callBack;
     },
 
     describe: (description, testFunction, collapsed = false) => {
-      if (typeof description !== "string") {
-        throw new TypeError("first argument must be a string");
+      if (typeof description !== 'string') {
+        throw new TypeError('first argument must be a string');
       }
-      if (typeof testFunction !== "function") {
-        throw new TypeError("second argument must be a function");
+      if (typeof testFunction !== 'function') {
+        throw new TypeError('second argument must be a function');
       }
 
       if (collapsed) {
-        console.groupCollapsed(`%c${description}`, "font-weight: bold;");
+        console.groupCollapsed(`%c${description}`, 'font-weight: bold;');
       } else {
-        console.group(`%c${description}`, "font-weight: bold;");
+        console.group(`%c${description}`, 'font-weight: bold;');
       }
 
       try {
         testFunction();
       } catch (err) {
-        console.error("%cSUITE ERROR:", "font-weight: bold;", err);
+        console.error('%cSUITE ERROR:', 'font-weight: bold;', err);
       }
 
       console.groupEnd();

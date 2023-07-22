@@ -12,6 +12,7 @@
       ".html": "",
       ".txt": "",
       ".js": "study",
+      ".mjs": "study",
       ".jsx": "study",
       ".css": "study",
       ".json": "json-explorer",

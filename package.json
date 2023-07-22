@@ -1,6 +1,6 @@
 {
   "name": "study-lenses",
-  "version": "0.0.171",
+  "version": "0.0.172",
   "description": "",
   "main": "./src/index.js",
   "scripts": {

@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-const CodeSSR = require("./code.js");
+const CodeSSR = require('./code.js');
 
 class P5SSR extends CodeSSR {
   constructor({ config, resource }) {
@@ -17,7 +17,7 @@ class P5SSR extends CodeSSR {
   }
 
   configOptions() {
-    return "";
+    return '';
   }
 
   scriptsHead() {
