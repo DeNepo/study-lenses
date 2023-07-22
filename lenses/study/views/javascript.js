@@ -42,8 +42,8 @@ class JavaScriptSSR extends CodeSSR {
 
     this.config.hasRe = hasRe(resource.info);
 
-    if (resource.info.base.endsWith('.mjs')) {
-      config.locals.type = 'module';
+    if (resource?.info?.base?.endsWith('.mjs')) {
+      this.config.locals.type = 'module';
     }
   }
 
