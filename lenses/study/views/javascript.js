@@ -265,20 +265,17 @@ class JavaScriptSSR extends CodeSSR {
       </form>`;
     // }
 
-    const showTests =
-      this.config.hasSpec ||
-      locals.tests ||
-      Array.isArray(this.config.locals.tests)
-        ? this.config.locals.tests.some((ext) =>
-            this.resource?.path?.includes(ext),
-          )
-        : false;
-
+    const isSpecFile = Array.isArray(this.config.locals?.tests)
+      ? this.config.locals?.tests.some((ext) =>
+          this.resource.path.includes(ext),
+        )
+      : false;
+    const showTests = this.config.hasSpec || locals.tests || isSpecFile;
     const testsDisplay = showTests ? 'inline-block' : 'none';
     superPanel += `
       <form id='tests-form' style='display: ${testsDisplay};'>
         <input name='tests' id='tests' type='checkbox' ${
-          locals.loopGuard.tests ? 'checked' : ''
+          isSpecFile ? 'checked' : ''
         } />
         <label for='tests'>tests</label>
       </form>`;
