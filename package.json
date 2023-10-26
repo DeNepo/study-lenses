@@ -1,6 +1,6 @@
 {
   "name": "study-lenses",
-  "version": "0.0.176",
+  "version": "0.0.177",
   "description": "",
   "main": "./src/index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "author": "",
   "license": "MIT",
-  "repository": "https://github.com/colevandersWands/study-lenses",
+  "repository": "https://github.com/DeNepo/study-lenses",
   "preferGlobal": true,
   "bin": {
     "study": "./bin/index.js",
