@@ -4,7 +4,7 @@ a tool to add new perspectives and layers of interactivity on top of existing
 code. Explore a live demo
 [right here](https://study-lenses-demo.onrender.com/?--defaults), learn more
 about the ideas behind Study Lenses
-[right here](https://evancole.be/#/page/Study%20lenses)
+[right here](https://denepo.js.org)
 
 - [Getting Started](#getting-started)
 - [UPI](#upi)
