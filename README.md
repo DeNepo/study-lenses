@@ -38,6 +38,13 @@ If you would like to this server with files from your computer that are not in
      changes in realtime
 4. `npm run test-content`
 
+If everything looks good, and you see `study-lenses` running on your browser, you are good to go!
+
+One last check: stop the tool by pressing `Ctrl+C` on the terminal. 
+Now visit any other folder through your terminal (e.g. `cd` to another folder) 
+and run either the `study` or `lenses` global command and check whether the `study-lenses` loads 
+the current directory's content in the browser.
+
 ---
 
 ## UPI
