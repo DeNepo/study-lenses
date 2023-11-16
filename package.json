@@ -11,8 +11,7 @@
   "repository": "https://github.com/DeNepo/study-lenses",
   "preferGlobal": true,
   "bin": {
-    "study": "./bin/index.js",
-    "lenses": "./bin/index.js"
+    "lenses2": "./bin/index.js"
   },
   "overrides": {
     "graphviz-cli": {
