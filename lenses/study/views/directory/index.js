@@ -80,7 +80,7 @@ class DirectorySSR extends MarkdownSSR {
       <input type='checkbox' id='new-tab'></input></label for='new-tab'>open in new tab</label>
     </span> -->
     <hr>
-    <form onsubmit="return false;">
+    <form class="panel__search-form" onsubmit="return false;">
       <input id="search-button" type="button" value="search:" />
 
       <input name="search" id="search-input" style="width: 15em;" value="${
