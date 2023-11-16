@@ -7,7 +7,7 @@ main.main-container > main.markdown-body {
   max-width: 1000px;
   margin: 0 auto;
   background: white;
-  padding: 1rem;
+  padding: 1rem 2rem;
   border: 2px solid black;
   box-shadow: 0 0 32px rgba(0, 0, 0, 0.3);
 }
@@ -72,7 +72,7 @@ body.markdown-body {
   max-width: 1000px;
   margin: 0 auto;
   background: white;
-  padding: 1rem;
+  padding: 1rem 2rem;
   border: 2px solid black;
   box-shadow: 0 0 32px rgba(0, 0, 0, 0.3);
 }
@@ -84,4 +84,8 @@ body.markdown-body {
   padding: 1rem !important;
   margin: 2rem auto !important;
   color: #222 !important;
+}
+
+.code-toolbar {
+  margin-bottom: 1rem;
 }
