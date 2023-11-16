@@ -13,7 +13,7 @@ class CodeSSR {
       <link rel='stylesheet' href='${this.config.ownStatic}/style.css'>
 
       <!-- CUSTOM THEMING -->
-      <link rel='stylesheet' href='${this.config.ownStatic}/theme.css'>
+      <link rel='stylesheet' href='${this.config.sharedStatic}/theme.css'>
     `;
   }
 
