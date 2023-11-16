@@ -23,7 +23,7 @@ class CodeSSR {
 
   configOptions() {
     return `
-      <form>
+      <form class="diff-form">
         <input id='diff-input' type='checkbox' ${
           this.config.locals.diff ? 'checked' : ''
         } /> <label for='diff-input'>diff</label>
