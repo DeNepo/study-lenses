@@ -169,7 +169,7 @@ const studyLens = async ({
 
     ${await typeView.panel()}
   </section>
-  <main>
+  <main class="main-container">
     ${await typeView.code()}
   </main>
 
