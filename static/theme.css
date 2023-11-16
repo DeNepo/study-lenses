@@ -76,3 +76,12 @@ body.markdown-body {
   border: 2px solid black;
   box-shadow: 0 0 32px rgba(0, 0, 0, 0.3);
 }
+
+/* Blockquotes */
+.markdown-body blockquote {
+  background: #f0f0f0;
+  width: 95%;
+  padding: 1rem !important;
+  margin: 2rem auto !important;
+  color: #222 !important;
+}
