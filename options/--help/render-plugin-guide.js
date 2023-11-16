@@ -35,6 +35,10 @@ const renderMainGuide = async ({ config, lenses, options }) => {
   <head>
     <link rel="stylesheet" href="${config.sharedStatic}/gh-styles.css">
     <link rel="stylesheet" href="${config.sharedStatic}/prism/style.css">
+
+    <!-- CUSTOM THEMING -->
+    <link rel='stylesheet' href='${config.sharedStatic}/theme.css'>
+
   </head>
   <body class="markdown-body">
     ${marked(pluginUserGuide)}
