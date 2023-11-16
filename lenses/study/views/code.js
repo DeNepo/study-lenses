@@ -8,8 +8,13 @@ class CodeSSR {
   }
 
   styles() {
-    return `<link rel="stylesheet" data-name="vs/editor/editor.main" href="${this.config.sharedStatic}/monaco/min/vs/editor/editor.main.css">
-      <link rel='stylesheet' href='${this.config.ownStatic}/style.css' >`;
+    return `
+      <link rel="stylesheet" data-name="vs/editor/editor.main" href="${this.config.sharedStatic}/monaco/min/vs/editor/editor.main.css">
+      <link rel='stylesheet' href='${this.config.ownStatic}/style.css'>
+
+      <!-- CUSTOM THEMING -->
+      <link rel='stylesheet' href='${this.config.ownStatic}/theme.css'>
+    `;
   }
 
   scriptsHead() {
