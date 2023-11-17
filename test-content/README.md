@@ -13,7 +13,7 @@ const y = (x) => {
       }
     }
   }
-}
+};
 
 const x = 'hello';
 console.log(x);
@@ -27,7 +27,7 @@ const y = (x) => {
       }
     }
   }
-}
+};
 ```
 
 ---
@@ -48,8 +48,7 @@ const y = 'bye';
 ```markdown
 ## asfd
 
-- [ ] asdf
-[asdf](asd)
+- [ ] asdf [asdf](asd)
 ```
 
 ```html
@@ -65,33 +64,61 @@ const y = 'bye';
 }
 ```
 
-
-
 ```bash
 cd ./
 ```
 
 ```css
 .example-gradient {
-	background: -webkit-linear-gradient(left,     #cb60b3 0%, #c146a1 50%, #a80077 51%, #db36a4 100%); /* Chrome10+, Safari5.1+ */
-	background:    -moz-linear-gradient(left,     #cb60b3 0%, #c146a1 50%, #a80077 51%, #db36a4 100%); /* FF3.6+ */
-	background:     -ms-linear-gradient(left,     #cb60b3 0%, #c146a1 50%, #a80077 51%, #db36a4 100%); /* IE10+ */
-	background:      -o-linear-gradient(left,     #cb60b3 0%, #c146a1 50%, #a80077 51%, #db36a4 100%); /* Opera 11.10+ */
-	background:         linear-gradient(to right, #cb60b3 0%, #c146a1 50%, #a80077 51%, #db36a4 100%); /* W3C */
+  background: -webkit-linear-gradient(
+    left,
+    #cb60b3 0%,
+    #c146a1 50%,
+    #a80077 51%,
+    #db36a4 100%
+  ); /* Chrome10+, Safari5.1+ */
+  background: -moz-linear-gradient(
+    left,
+    #cb60b3 0%,
+    #c146a1 50%,
+    #a80077 51%,
+    #db36a4 100%
+  ); /* FF3.6+ */
+  background: -ms-linear-gradient(
+    left,
+    #cb60b3 0%,
+    #c146a1 50%,
+    #a80077 51%,
+    #db36a4 100%
+  ); /* IE10+ */
+  background: -o-linear-gradient(
+    left,
+    #cb60b3 0%,
+    #c146a1 50%,
+    #a80077 51%,
+    #db36a4 100%
+  ); /* Opera 11.10+ */
+  background: linear-gradient(
+    to right,
+    #cb60b3 0%,
+    #c146a1 50%,
+    #a80077 51%,
+    #db36a4 100%
+  ); /* W3C */
 }
 .example-angle {
-	transform: rotate(10deg);
+  transform: rotate(10deg);
 }
 .example-color {
-	color: rgba(255, 0, 0, 0.2);
-	background: purple;
-	border: 1px solid hsl(100, 70%, 40%);
+  color: rgba(255, 0, 0, 0.2);
+  background: purple;
+  border: 1px solid hsl(100, 70%, 40%);
 }
 .example-easing {
-	transition-timing-function: linear;
+  transition-timing-function: linear;
 }
 .example-time {
-	transition-duration: 3s;
+  transition-duration: 3s;
 }
 ```
 
@@ -113,6 +140,7 @@ commit
 commit
 merge newbranch
 ```
+
 ```mermaid
 graph TD
     A[Christmas] -->|Get money| B(Go shopping)
@@ -121,6 +149,7 @@ graph TD
     C -->|Two| E[iPhone]
     C -->|Three| F[fa:fa-car Car]
 ```
+
 ```mermaid
 graph TD
     A[Christmas] -->|Get money| B(Go shopping)
@@ -129,6 +158,7 @@ graph TD
     C -->|Two| E[iPhone]
     C -->|Three| F[fa:fa-car Car]
 ```
+
 ```mermaid
 stateDiagram
     [*] --> Still
@@ -137,4 +167,11 @@ stateDiagram
     Moving --> Still
     Moving --> Crash
     Crash --> [*]
+```
+
+<!-- study-lenses: flowchart -->
+
+```js
+const x = 1;
+const y = 2;
 ```

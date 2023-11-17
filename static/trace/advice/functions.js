@@ -145,10 +145,10 @@ export default {
 
     // console.log(7);
     callSymbol = Symbol(f.name);
-    if (!state.builtInEntryPoint && isBuiltIn(f)) {
-      // console.log(f.name);
-      state.builtInEntryPoint = callSymbol;
-    }
+    // if (!state.builtInEntryPoint && isBuiltIn(f)) {
+    //   // console.log(f.name);
+    //   state.builtInEntryPoint = callSymbol;
+    // }
 
     let returnValue = undefined;
     try {
@@ -163,9 +163,9 @@ export default {
       console = nativeConsole;
     }
 
-    if (state.builtInEntryPoint === callSymbol) {
-      state.builtInEntryPoint = null;
-    }
+    // if (state.builtInEntryPoint === callSymbol) {
+    //   state.builtInEntryPoint = null;
+    // }
 
     print({
       prefix: '(returns):',
