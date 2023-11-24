@@ -4,6 +4,7 @@ const path = require('path');
 const fs = require('fs');
 
 const config = require('config');
+console.log(config);
 
 const mime = require('mime');
 
@@ -25,8 +26,25 @@ const optionsPromise = loadPlugins('options', optionsPath);
 const lensesPath = path.join(__dirname, '..', 'lenses');
 const lensesPromise = loadPlugins('lenses', lensesPath);
 
-const localLensesPath = path.join(process.cwd(), '.study-lenses');
-const localLensesPromise = loadPlugins('local_lenses', localLensesPath);
+let localLensesPromise = [];
+try {
+  let { ['--lenses']: localLensPaths } = JSON.parse(
+    fs.existsSync(path.join(process.cwd(), 'lenses.json'))
+      ? fs.readFileSync(path.join(process.cwd(), 'lenses.json'), 'utf-8')
+      : fs.readFileSync(path.join(process.cwd(), 'study.json'), 'utf-8'),
+  );
+
+  if (typeof localLensPaths === 'string') {
+    localLensPaths = [localLensPaths];
+  }
+
+  for (const localLensRelPath of localLensPaths) {
+    const localLensPath = path.normalize(
+      path.join(process.cwd(), localLensRelPath),
+    );
+    localLensesPromise.push(loadPlugins('local_lenses', localLensPath));
+  }
+} catch (_) {}
 
 const deepMerge = require('deepmerge');
 const combineMerge = (target, source, options) => {
@@ -88,6 +106,7 @@ module.exports = async (req, res, next) => {
   const localConfigs = deepMerge(config.locals, preDefaults, {
     arrayMerge: combineMerge,
   });
+
   // the there is a local --ignore option, fall back to static serving
   if (localConfigs['--ignore']) {
     next();
@@ -157,8 +176,9 @@ module.exports = async (req, res, next) => {
   const unconfiguredOptions = await optionsPromise;
   const unconfiguredLenses = [
     ...(await lensesPromise),
-    ...(await localLensesPromise),
+    ...(await Promise.all(localLensesPromise)).flat(),
   ];
+
   const options = configurePlugins(
     unconfiguredOptions,
     localConfigs,

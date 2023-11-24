@@ -10,6 +10,6 @@
   "render": {
     "save": true
   },
-  "--lenses": "./lenses",
+  "--lenses": ["./.study/lenses", "./deeply/nested/local/lenses", "./.lenses"],
   "Port": 8080
 }
