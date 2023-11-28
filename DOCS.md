@@ -44,7 +44,7 @@ parameters in the request:
   - `summary.md`: if this file exists in relative root, the directory is
     rendered like a gitbook
   - `index.html`: if this file exists in relative root, it is served
-  - `readme.md`: inf this file exists in relative root, it is rendered to HTML
+  - `readme.md`: if this file exists in relative root, it is rendered to HTML
     and served
   - otherwise, the server falls back to `express.static` behavior for
     directories
