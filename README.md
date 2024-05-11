@@ -181,42 +181,6 @@ guided walk-through of the code base. Some files will contain a comment at the
 bottom indicating which files to read next. If nothing is mentioned, you can
 take abstractions at face value unless you're the curious type.
 
-If you're a little curious, but not too curious, there's this:
-
-```
-|- bin
-| |- index.js -- entry point for the global cli
-|
-|- config -- global configuration files
-|
-|- lenses
-| |- index.js -- parses and loads the lenses
-| |- lens-name -- each lens is stored in it's own folder
-|   |- static -- (optional) for own static assets if the lens renders a web page
-|   |- index.js -- entry point to the lens
-|   |- README.md -- describe your lens, including specs for other lens authors to compose
-|   |- user-guide.md -- a student-friendly guide, dynamically included by the `--lenses` option
-|
-|- options
-|  |- index.js -- parses and loads the options
-|  |- --option-name -- each option is stored in it's own folder
-|    |- static -- (optional) for own static assets if the option renders a web page
-|    |- index.js -- entry point to the option
-|    |- README.md -- describe your option, including specs
-|    |- user-guide.md -- a student-friendly guide, dynamically included by the `--options` option
-|
-|- server
-| |- index.js -- entry point for the server, uses /handle-request
-| |- handle-request
-|   |- lib
-|   |- index.js -- reads the requested resource, executes options, pipes the resource+lenses and responds
-|   |- (go there to see the rest in detail)
-|
-|- static -- shared static resources (monaco editor, parsons library, mermaid, prism, ...)
-|
-|- test-content -- a whole bunch of code and markdown for testing out lenses
-```
-
 ---
 
 ## Known Bugs
