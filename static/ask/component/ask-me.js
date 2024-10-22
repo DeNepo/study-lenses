@@ -6,8 +6,6 @@ import { openEndedPanel, multipleChoicePanel } from './options-panels.js';
 import { askMeGuide } from '../open-ended/guide.js';
 import { config } from '../config.js';
 
-window.Array.prototype.poop = window.Array.prototype.pop;
-
 window.addEventListener('DOMContentLoaded', () => {
   class TraceIt extends HTMLElement {
     questionType = 'openEnded';
@@ -162,7 +160,7 @@ window.addEventListener('DOMContentLoaded', () => {
           const option = event.target.id;
 
           if (option.includes('level')) {
-            const level = Number(option.split('-').poop());
+            const level = Number(option.split('-').pop());
             const indexOfLevel = ask.config.levels.indexOf(level);
             if (indexOfLevel === -1) {
               ask.config.levels.push(level);

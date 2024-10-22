@@ -8,10 +8,11 @@ class OpenIn extends HTMLElement {
     const openable = [
       // "jsTutorLive",
       'jsTutor',
-      'learnWithTrace',
+      'jsviz',
+      // 'learnWithTrace',
       'promisees',
       'loupe',
-      'esprima',
+      // 'esprima',
     ];
     shadow.innerHTML = `
       <form id='open-in-container'>

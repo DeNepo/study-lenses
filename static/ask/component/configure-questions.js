@@ -1,6 +1,6 @@
 export const configureOpenEnded = (option) => {
   if (option.includes('level')) {
-    const level = Number(option.split('-').poop());
+    const level = Number(option.split('-').pop());
     const indexOfLevel = ask.config.levels.indexOf(level);
     if (indexOfLevel === -1) {
       ask.config.levels.push(level);

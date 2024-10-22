@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /*
   if folder contains none of stepped type
@@ -7,26 +7,26 @@
     extend buttons to include steppedness
 */
 
-const DirectorySSR = require("../directory");
+const DirectorySSR = require('../directory');
 
-const SteppedCodeSSR = require("./code");
-const SteppedJavaScriptSSR = require("./javascript");
-const SteppedHtmlSSR = require("./html");
+const SteppedCodeSSR = require('./code');
+const SteppedJavaScriptSSR = require('./javascript');
+const SteppedHtmlSSR = require('./html');
 
-const isStepped = require("./lib/is-stepped");
+const isStepped = require('./lib/is-stepped');
 
 const SteppedSSR = class {
   constructor({ config, resource, requestData }) {
     const paramExt =
-      config.queryValue.includes("stepped") &&
-      config.queryValue.split(" ").filter((param) => param !== "stepped")[0];
+      config.queryValue.includes('stepped') &&
+      config.queryValue.split(' ').filter((param) => param !== 'stepped')[0];
 
     const localExt =
-      typeof config.locals.stepped === "string" ? config.locals.stepped : "";
+      typeof config.locals.stepped === 'string' ? config.locals.stepped : '';
 
-    const preExt = paramExt || localExt || ".js";
+    const preExt = paramExt || localExt || '.js';
     const stepsExt = (
-      preExt.startsWith(".") ? preExt : `.${preExt}`
+      preExt.startsWith('.') ? preExt : `.${preExt}`
     ).toLowerCase();
 
     if (!isStepped(resource, stepsExt)) {
@@ -35,9 +35,9 @@ const SteppedSSR = class {
 
     config.stepsExt = stepsExt;
 
-    return stepsExt === ".js"
+    return stepsExt === '.js'
       ? new SteppedJavaScriptSSR({ config, resource })
-      : stepsExt === ".html"
+      : stepsExt === '.html'
       ? new SteppedHtmlSSR({ config, resource })
       : new SteppedCodeSSR({ config, resource, stepsExt });
   }

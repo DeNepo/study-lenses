@@ -25,21 +25,21 @@ module.exports = {
     const encoded = LZString.compressToEncodedURIComponent(code);
     return `https://jsviz.klve.nl/#?code=${encoded}`;
   },
-  learnwithtrace: function (code) {
-    const mainedCode = `export const main = () => {\n\n${code}\n\n};`;
-    const lwtURL = createTracePlaygroundUrlForCode(mainedCode);
-    return lwtURL;
-  },
+  // learnwithtrace: function (code) {
+  //   const mainedCode = `export const main = () => {\n\n${code}\n\n};`;
+  //   const lwtURL = createTracePlaygroundUrlForCode(mainedCode);
+  //   return lwtURL;
+  // },
   // algoviz: (code) => {
   //   return "https://algoviz.io/#/";
   // },
-  'ui.dev': (code) => {
-    const encodedJST = encodeURIComponent(code);
-    const sanitizedJST = sanitize(encodedJST);
-    const uiDevURL =
-      'https://ui.dev/javascript-visualizer/?code=' + sanitizedJST;
-    return uiDevURL;
-  },
+  // 'ui.dev': (code) => {
+  //   const encodedJST = encodeURIComponent(code);
+  //   const sanitizedJST = sanitize(encodedJST);
+  //   const uiDevURL =
+  //     'https://ui.dev/javascript-visualizer/?code=' + sanitizedJST;
+  //   return uiDevURL;
+  // },
   jsv9000: (code) => {
     const encoded = encodeURIComponent(btoa(code));
     const jsvURL = 'https://www.jsv9000.app/?code=' + encoded;
@@ -62,35 +62,35 @@ module.exports = {
   },
 };
 
-// --- for learnWithTrace ---
-function createTracePlaygroundUrlForCode(code) {
-  const url = new URL('https://www.learnwithtrace.com/playground/code');
+// // --- for learnWithTrace ---
+// function createTracePlaygroundUrlForCode(code) {
+//   const url = new URL('https://www.learnwithtrace.com/playground/code');
 
-  // if (options.isEmbed) {
-  url.searchParams.append('embed', 'false');
-  // }
-  url.searchParams.append('files', createTraceFilesParam(code));
-  url.searchParams.append('language', 'javascript');
-  url.searchParams.append('hideReadonlyFiles', 'true');
+//   // if (options.isEmbed) {
+//   url.searchParams.append('embed', 'false');
+//   // }
+//   url.searchParams.append('files', createTraceFilesParam(code));
+//   url.searchParams.append('language', 'javascript');
+//   url.searchParams.append('hideReadonlyFiles', 'true');
 
-  return url.toString();
-}
-function createTraceFilesParam(code) {
-  const payload = {
-    version: 0,
-    files: [
-      {
-        version: 0,
-        filename: 'main.js',
-        directory: 'src',
-        contents: code,
-        editable: true,
-      },
-    ],
-  };
-  const stringified = JSON.stringify(payload);
-  const encoded = encodeURIComponent(
-    Buffer.from(stringified).toString('base64'),
-  );
-  return encoded;
-}
+//   return url.toString();
+// }
+// function createTraceFilesParam(code) {
+//   const payload = {
+//     version: 0,
+//     files: [
+//       {
+//         version: 0,
+//         filename: 'main.js',
+//         directory: 'src',
+//         contents: code,
+//         editable: true,
+//       },
+//     ],
+//   };
+//   const stringified = JSON.stringify(payload);
+//   const encoded = encodeURIComponent(
+//     Buffer.from(stringified).toString('base64'),
+//   );
+//   return encoded;
+// }

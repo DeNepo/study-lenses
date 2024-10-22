@@ -92,48 +92,48 @@ export const studyWith = {
   // preserve jsTutorLive config option to not break old study.json/lenses.json files
   jsTutorLive: jsTutor,
   jsTutor,
-  learnWithTrace: function (code) {
-    const mainedCode = `export const main = () => {\n\n${code}\n\n};`;
-    const lwtURL = createTracePlaygroundUrlForCode(mainedCode);
-    window.open(lwtURL, '_blank');
-  },
-  algoviz: (code) => {
-    alert(
-      'your code is copied, you can paste it in algoviz after the site opens',
-    );
+  // learnWithTrace: function (code) {
+  //   const mainedCode = `export const main = () => {\n\n${code}\n\n};`;
+  //   const lwtURL = createTracePlaygroundUrlForCode(mainedCode);
+  //   window.open(lwtURL, '_blank');
+  // },
+  // algoviz: (code) => {
+  //   alert(
+  //     'your code is copied, you can paste it in algoviz after the site opens',
+  //   );
 
-    // https://stackoverflow.com/a/30810322
-    // if (!navigator.clipboard) {
-    var textArea = document.createElement('textarea');
-    textArea.value = code;
+  //   // https://stackoverflow.com/a/30810322
+  //   // if (!navigator.clipboard) {
+  //   var textArea = document.createElement('textarea');
+  //   textArea.value = code;
 
-    // Avoid scrolling to bottom
-    textArea.style.top = '0';
-    textArea.style.left = '0';
-    textArea.style.position = 'fixed';
+  //   // Avoid scrolling to bottom
+  //   textArea.style.top = '0';
+  //   textArea.style.left = '0';
+  //   textArea.style.position = 'fixed';
 
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
+  //   document.body.appendChild(textArea);
+  //   textArea.focus();
+  //   textArea.select();
 
-    try {
-      var successful = document.execCommand('copy');
-      var msg = successful ? 'successful' : 'unsuccessful';
-      console.log('Fallback: Copying text command was ' + msg);
-      window.open('_blank').location.href = 'https://algoviz.io/#/';
-    } catch (err) {
-      console.error('Fallback: Oops, unable to copy', err);
-    }
+  //   try {
+  //     var successful = document.execCommand('copy');
+  //     var msg = successful ? 'successful' : 'unsuccessful';
+  //     console.log('Fallback: Copying text command was ' + msg);
+  //     window.open('_blank').location.href = 'https://algoviz.io/#/';
+  //   } catch (err) {
+  //     console.error('Fallback: Oops, unable to copy', err);
+  //   }
 
-    document.body.removeChild(textArea);
-  },
-  'ui.dev': function (code) {
-    const encodedJST = encodeURIComponent(code);
-    const sanitizedJST = this.utils.sanitize(encodedJST);
-    const uiDevURL =
-      'https://ui.dev/javascript-visualizer/?code=' + sanitizedJST;
-    window.open(uiDevURL, '_blank');
-  },
+  //   document.body.removeChild(textArea);
+  // },
+  // 'ui.dev': function (code) {
+  //   const encodedJST = encodeURIComponent(code);
+  //   const sanitizedJST = this.utils.sanitize(encodedJST);
+  //   const uiDevURL =
+  //     'https://ui.dev/javascript-visualizer/?code=' + sanitizedJST;
+  //   window.open(uiDevURL, '_blank');
+  // },
   jsviz: (code) => {
     const encoded = LZString.compressToEncodedURIComponent(code);
     const url = `https://jsviz.klve.nl/#?code=${encoded}`;
@@ -177,35 +177,35 @@ export const studyWith = {
   },
 };
 
-// --- for learnWithTrace ---
-function createTracePlaygroundUrlForCode(code) {
-  const url = new URL('https://www.learnwithtrace.com/playground/code');
+// // --- for learnWithTrace ---
+// function createTracePlaygroundUrlForCode(code) {
+//   const url = new URL('https://www.learnwithtrace.com/playground/code');
 
-  // if (options.isEmbed) {
-  url.searchParams.append('embed', 'false');
-  // }
-  url.searchParams.append('files', createTraceFilesParam(code));
-  url.searchParams.append('language', 'javascript');
-  url.searchParams.append('hideReadonlyFiles', 'true');
+//   // if (options.isEmbed) {
+//   url.searchParams.append('embed', 'false');
+//   // }
+//   url.searchParams.append('files', createTraceFilesParam(code));
+//   url.searchParams.append('language', 'javascript');
+//   url.searchParams.append('hideReadonlyFiles', 'true');
 
-  return url.toString();
-}
-function createTraceFilesParam(code) {
-  const payload = {
-    version: 0,
-    files: [
-      {
-        version: 0,
-        filename: 'main.js',
-        directory: 'src',
-        contents: code,
-        editable: true,
-      },
-    ],
-  };
-  const stringified = JSON.stringify(payload);
-  const encoded = encodeURIComponent(
-    Buffer.from(stringified).toString('base64'),
-  );
-  return encoded;
-}
+//   return url.toString();
+// }
+// function createTraceFilesParam(code) {
+//   const payload = {
+//     version: 0,
+//     files: [
+//       {
+//         version: 0,
+//         filename: 'main.js',
+//         directory: 'src',
+//         contents: code,
+//         editable: true,
+//       },
+//     ],
+//   };
+//   const stringified = JSON.stringify(payload);
+//   const encoded = encodeURIComponent(
+//     Buffer.from(stringified).toString('base64'),
+//   );
+//   return encoded;
+// }
