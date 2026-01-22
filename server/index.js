@@ -1,3 +1,6 @@
+// MODIFIED FILE FROM: study-lenses/server/index.js
+// CHANGES: Added HOST environment variable support for proper binding (see lines 173-186)
+
 'use strict';
 
 // start an express server, pretty standard stuff
@@ -170,15 +173,19 @@ app.use(express.static(process.cwd()));
 
 // launch the app
 // to open browser after success
-const serverPromiseCloser = (PORT) =>
+// MODIFIED: Added HOST support for deployment environments like Fly.io
+const serverPromiseCloser = (PORT, HOST) =>
   new Promise((resolve, reject) => {
-    app.listen(PORT, (err) => {
+    // Use HOST from parameter, environment variable, or default to '0.0.0.0' for better compatibility
+    const bindHost = HOST || process.env.HOST || '0.0.0.0';
+
+    app.listen(PORT, bindHost, (err) => {
       if (err) {
-        Logger.error(`Failed to start server on port: ${PORT}`, err);
+        Logger.error(`Failed to start server on ${bindHost}:${PORT}`, err);
         process.exit(1);
       }
 
-      Logger.info(`Server started successfully on port: ${PORT}`);
+      Logger.info(`Server started successfully on ${bindHost}:${PORT}`);
       resolve();
     });
   });
